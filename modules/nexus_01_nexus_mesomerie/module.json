@@ -1,0 +1,51 @@
+{
+  "module_id": "glossai.nexus.01.nexus-mesomerie",
+  "title": "Nexus 01 - Nexus-Mesomerie",
+  "subtitle": "INSERT RESPONSE",
+  "status": "concept-seed",
+  "module_type": "retro-terminal-escape",
+  "standalone": true,
+  "local_first": true,
+  "internet_required": false,
+  "activation_supported": true,
+  "reference_implementation": "undecided",
+  "intended_play_modes": [
+    "solo",
+    "two_players"
+  ],
+  "planned_result_types": [
+    "message_unlock",
+    "quest_trace",
+    "action_prompt",
+    "pass_on",
+    "return_trace",
+    "hall_entry"
+  ],
+  "planned_command_language": [
+    "help",
+    "status",
+    "scan",
+    "read",
+    "connect",
+    "rotate",
+    "echo",
+    "unlock",
+    "carry"
+  ],
+  "quest_tags": [
+    "resonance",
+    "open-source",
+    "ai-ambivalence",
+    "democracy",
+    "speaking-code",
+    "carried-traces",
+    "data-minimization"
+  ],
+  "privacy_principles": {
+    "personal_data_minimized": true,
+    "aliases_preferred": true,
+    "automatic_uploads": false,
+    "telemetry": false
+  },
+  "notes": "This metadata file is provisional and describes the intended design direction of Nexus 01. It does not describe a playable implementation yet."
+}
