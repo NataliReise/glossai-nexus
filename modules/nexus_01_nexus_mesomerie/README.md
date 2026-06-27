@@ -8,7 +8,7 @@ It is currently a concept seed, not a playable module yet.
 
 ## Core idea
 
-Nexus 01 is intended as a retro-terminal escape module for one or two players.
+Nexus 01 is intended as a retro-terminal escape module for a single player or a team.
 
 The Nexus itself is the object of play.
 
