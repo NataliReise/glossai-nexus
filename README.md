@@ -44,6 +44,15 @@ A Nexus module contains the shared structure. An activation contains the concret
 - [Speaking code](docs/SPEAKING_CODE.md)
 - [Playing a Nexus](docs/PLAYING_A_NEXUS.md)
 
+## Narrative layer
+
+This repository is a real open-source project.
+
+It may also be read as a trace within the GlossAI cosmos. The fictional frame is documented here:
+
+- [Fictional Wrapper](FICTIONAL_WRAPPER.md)
+- [German version](FICTIONAL_WRAPPER.de.md)
+
 ## Planned first seed
 
 The first planned module is currently called:
