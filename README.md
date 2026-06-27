@@ -29,10 +29,18 @@ A Nexus module contains the shared structure. An activation contains the concret
 
 - A Nexus should be low-threshold to play and deep enough to read.
 - The code should not only function; it should be able to speak.
+- Speaking code should be clear before it becomes playful.
 - Openness should make power, rules, and structures inspectable.
 - Personal messages, private contexts, and individual activations may remain protected.
 - AI may assist the project, but it should not become an unquestioned authority.
 - The project should support resonance, cooperation, democratic imagination, and shared responsibility.
+
+## Current documents
+
+- [Design notes](DESIGN_NOTES.md)
+- [Code of Resonance](CODE_OF_RESONANCE.md)
+- [AI use](AI_USE.md)
+- [Speaking code](docs/SPEAKING_CODE.md)
 
 ## Planned first seed
 
