@@ -6,7 +6,7 @@ Subtitle / start motif: *INSERT RESPONSE*
 
 ## Short description
 
-**Nexus 01 - Nexus-Mesomerie** is planned as a retro-terminal escape module for one or two players.
+**Nexus 01 - Nexus-Mesomerie** is planned as a retro-terminal escape module for a single player or a team.
 
 The Nexus itself is the object of play. Players encounter an activated but not yet fully aligned Nexus and learn its structure by exploring it.
 
@@ -34,7 +34,7 @@ Nexus 01 should be:
 - playable without an internet connection,
 - playable without reading code,
 - richer when players choose to inspect the code,
-- suited for solo play or two-player cooperative play,
+- suited for single-player or team play,
 - puzzle-oriented rather than purely narrative,
 - small enough to finish, but deep enough to reward curiosity.
 
