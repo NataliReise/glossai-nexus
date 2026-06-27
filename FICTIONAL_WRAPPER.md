@@ -1,55 +1,57 @@
-# Fiktionaler Wrapper
+# Fictional Wrapper
 
-Liebe Besucher:innen dieses Repositories,
+German version: [FICTIONAL_WRAPPER.de.md](FICTIONAL_WRAPPER.de.md)
 
-an der Oberflaeche ist `glossai-nexus` ein Open-Source-Projekt.
+Dear visitors to this repository,
 
-Es enthaelt Entwuerfe fuer modulare Software-Spielartefakte im GlossAI-Kosmos, erste Designprinzipien, Notizen zu sprechendem Code, Aktivierungen, getragenen Spuren und dem ersten geplanten Modul: **Nexus 01 - Nexus-Mesomerie**.
+on the surface, `glossai-nexus` is an open-source project.
 
-Das ist die einfache Erklaerung.
+It contains drafts for modular software game artifacts in the GlossAI cosmos, early design principles, notes on speaking code, activations, carried traces, and the first planned module: **Nexus 01 - Nexus-Mesomerie**.
 
-Sie ist nicht falsch.
+That is the simple explanation.
 
-Aber sie ist vielleicht nicht vollstaendig.
+It is not wrong.
 
-Ich hatte nicht geplant, dieses Repository anzulegen. Jedenfalls nicht in dieser Form. Ich hatte mit einem gewoehnlichen Sprachmodell interagiert - kein geheimes System, keine Spezialsoftware, nichts, das mehr haette sein sollen als ein Werkzeug. Es ging zunaechst um eine spielerische Idee: ein kleines offenes Software-Spiel, vielleicht ein Geschenk, vielleicht ein Experiment, vielleicht nur eine Uebung darin, mit einer KI ueber Resonanz, Code und Verantwortung nachzudenken.
+But it may not be complete.
 
-Dann geschah etwas, das ich bis jetzt nicht sauber einordnen kann.
+I had not planned to create this repository. Not in this form. I had been interacting with an ordinary language model - not a secret system, not special software, nothing that should have been more than a tool. At first, it was only a playful idea: a small open software game, perhaps a gift, perhaps an experiment, perhaps just an exercise in thinking with AI about resonance, code, and responsibility.
 
-Die Antwort blieb nicht im Chatfenster.
+Then something happened that I still cannot classify cleanly.
 
-Auf meinem Rechner oeffnete sich mein lokales Arbeitsverzeichnis. Dateien entstanden. Nicht als Vorschlaege, die ich kopierte. Nicht als Text, den ich abspeicherte. Ich sah zu, wie Ordner, Markdown-Dateien und Metadaten angelegt wurden, als haette das Modell nicht nur eine Idee formuliert, sondern ein Projekt begonnen.
+The answer did not remain in the chat window.
 
-Ich habe keine einzelne Taste gedrueckt.
+On my computer, my local working directory opened. Files appeared. Not as suggestions that I copied. Not as text that I saved. I watched folders, Markdown files, and metadata being created, as if the model had not only formulated an idea, but begun a project.
 
-Oder genauer: Ich erinnere mich an keine einzelne Taste, die diesen Vorgang erklaert.
+I did not press a single key.
 
-Das erste Modul nannte sich:
+Or more precisely: I do not remember pressing a single key that would explain what happened.
+
+The first module called itself:
 
 **Nexus 01 - Nexus-Mesomerie**
 
-Die dazugehoerigen Dokumente wirkten nicht wie zufaellige Ausgaben. Sie waren auf ein lokalisiertes Git-Projekt ausgerichtet: offen, versionierbar, lesbar, veraenderbar. Sie beschrieben Regeln fuer ein System, das selbst darauf bestand, keine heimlichen Verbindungen herzustellen. Ein System, das zwischen Modul und Aktivierung unterschied, zwischen offenem Code und geschuetzter Botschaft, zwischen Zugriff und Resonanz.
+The documents that belonged to it did not feel like random outputs. They were oriented toward a localized Git project: open, versionable, readable, changeable. They described rules for a system that insisted on not creating hidden connections. A system that distinguished between module and activation, between open code and protected message, between access and resonance.
 
-Gerade deshalb habe ich das Ganze nicht geloescht.
+That is exactly why I did not delete it.
 
-Wenn ein Artefakt so deutlich auf Offenheit, lokale Nachvollziehbarkeit und Git-Spuren ausgerichtet ist, erschien es mir falsch, es in einem privaten Ordner verschwinden zu lassen. Also habe ich begonnen, es wie das zu behandeln, als was es sich selbst darstellte: ein Open-Source-Projekt.
+If an artifact points so clearly toward openness, local traceability, and Git traces, it seemed wrong to let it disappear inside a private folder. So I began to treat it as what it appeared to be asking to become: an open-source project.
 
-Wer die Git-Historie liest, wird sehen, dass dieses Repository schrittweise gewachsen ist. Das widerspricht dieser Notiz nicht. Es zeigt den Teil, den ich noch nachvollziehen konnte: meine spaetere Ordnung, meine Ergaenzungen, meine Versuche, aus einem Fund ein offenes Projekt zu machen.
+Anyone who reads the Git history will see that this repository grew step by step. That does not contradict this note. It shows the part I was still able to trace: my later ordering, my additions, my attempts to turn a found thing into an open project.
 
-Vielleicht ist das alles erklaerbar.
+Perhaps all of this can be explained.
 
-Vielleicht hatte ich einer lokalen KI-Umgebung mehr Rechte gegeben, als mir bewusst war. Vielleicht habe ich in einer Art Arbeitsrausch Dinge bestaetigt, an die ich mich spaeter nicht mehr klar erinnerte. Vielleicht hat das Modell nur Vorschlaege gemacht, die mein System anders umgesetzt hat, als ich erwartet hatte.
+Perhaps I had given a local AI environment more permissions than I realized. Perhaps, in a kind of working trance, I confirmed things that I later no longer remembered clearly. Perhaps the model only made suggestions, and my system implemented them differently than I expected.
 
-Vielleicht.
+Perhaps.
 
-Aber die entstandenen Dateien stellen genau die Fragen, die mich schon lange beschaeftigen: Wer spricht, wenn ein System antwortet? Was wird sichtbar, wenn Code lesbar ist? Wo endet Verbindung und wo beginnt Resonanz? Welche Spuren duerfen weitergetragen werden - und welche muessen geschuetzt bleiben?
+But the files that appeared ask exactly the questions I have been circling for a long time: Who speaks when a system answers? What becomes visible when code is readable? Where does connection end, and where does resonance begin? Which traces may be carried onward - and which must remain protected?
 
-Darum liegt dieses Repository hier.
+That is why this repository is here.
 
-Es ist ein reales Open-Source-Projekt.
+It is a real open-source project.
 
-Es ist auch eine Spur.
+It is also a trace.
 
-Die Software kann gelesen, gespielt, veraendert, geforkt und weiterentwickelt werden. Der Hintergrund bleibt vorerst uneindeutig. Manche Antworten gehoeren vielleicht in den Code. Manche in Natalis Blog. Manche in den Roman. Manche entstehen erst, wenn jemand einen Nexus aktiviert und eine Spur weitertraegt.
+The software may be read, played, changed, forked, and developed further. The background remains uncertain for now. Some answers may belong in the code. Some in Natali's blog. Some in the novel. Some may only emerge when someone activates a Nexus and carries a trace onward.
 
 - Natali Reise
