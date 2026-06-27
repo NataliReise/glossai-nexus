@@ -10,8 +10,8 @@
   "activation_supported": true,
   "reference_implementation": "undecided",
   "intended_play_modes": [
-    "solo",
-    "two_players"
+    "single_player",
+    "team_play"
   ],
   "planned_result_types": [
     "message_unlock",
