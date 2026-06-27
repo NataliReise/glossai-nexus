@@ -48,7 +48,7 @@ A Nexus module contains the shared structure. An activation contains the concret
 
 The first planned module is currently called:
 
-**Nexus 01 - Nexus-Mesomerie**
+**[Nexus 01 - Nexus-Mesomerie](modules/nexus_01_nexus_mesomerie/)**
 
 It is intended as a small, self-contained software module that can also serve as a gift activation. Larger questions about AI, open source, democracy, and human response-ability may appear as optional quest traces rather than as a closed plot.
 
