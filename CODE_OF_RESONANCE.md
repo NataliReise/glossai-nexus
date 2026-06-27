@@ -14,9 +14,19 @@ It should open a space in which people can play, read, question, answer, and con
 
 A Nexus is an open software artifact. Its code, structure, and rules should be readable and inspectable.
 
+Speaking code has three layers:
+
+- **Clear code:** the functional code should be understandable, maintainable, and well documented.
+- **Playful code:** comments, names, traces, notes, configuration patterns, and Git history may carry optional game meaning.
+- **Ethical code:** the architecture should reflect accessibility, non-elitism, openness, privacy of activations, and human responsibility.
+
 A core principle:
 
 > The code belongs in the light. The message may remain protected.
+
+Another core principle:
+
+> Speaking code should be clear before it becomes playful.
 
 ## 3. Structure and relationship are different
 
