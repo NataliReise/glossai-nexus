@@ -67,3 +67,13 @@ A Nexus should not outsource judgement, authorship, care, or ethical decisions t
 The project is interested in communication, cooperation, democratic imagination, and human dignity.
 
 A Nexus should help create spaces where difference, conflict, and uncertainty can become readable and discussable rather than simply erased.
+
+## 9. The network grows through carried traces
+
+A Nexus should not let systems speak behind people's backs.
+
+Its core play experience should work without an internet connection. If activations connect, they should do so through traces that people choose to carry: resonance keys, shared files, returned codes, pull requests, Hall of Resonance entries, or other voluntary acts of exchange.
+
+Nothing should be tracked, uploaded, or transmitted silently.
+
+The network grows when people choose to carry a trace.
