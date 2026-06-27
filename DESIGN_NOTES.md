@@ -38,6 +38,12 @@ The module should remain shareable without private activation data.
 
 For a Nexus, code is not only infrastructure. It can carry a second game layer.
 
+Speaking code has three layers:
+
+1. **Clear code** - the functional code should be understandable, maintainable, and well documented.
+2. **Playful code** - comments, names, traces, notes, configuration patterns, and Git history may carry optional game meaning.
+3. **Ethical code** - the architecture should reflect accessibility, non-elitism, openness, privacy of activations, and human responsibility.
+
 This may happen through:
 
 - meaningful comments,
@@ -46,17 +52,24 @@ This may happen through:
 - hidden traces,
 - optional developer notes,
 - Git history,
-- configuration patterns.
+- configuration patterns,
+- accessible interfaces,
+- clear module templates,
+- simple activation flows.
 
 A core sentence for the project:
 
 > You do not have to read the code. But the code must be readable.
+
+More detailed guidelines are collected in [docs/SPEAKING_CODE.md](docs/SPEAKING_CODE.md).
 
 ## Openness without elitism
 
 The project should not require every player to understand code.
 
 The surface should be playable. The deeper layers should be available for those who want to look closer, learn, modify, fork, or contribute.
+
+A future module generator should help people create simple modules without first understanding the whole codebase.
 
 ## Open canon
 
