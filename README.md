@@ -32,6 +32,7 @@ A Nexus module contains the shared structure. An activation contains the concret
 - Speaking code should be clear before it becomes playful.
 - Openness should make power, rules, and structures inspectable.
 - Personal messages, private contexts, and individual activations may remain protected.
+- A Nexus should be local-first; its network should grow through human interaction and carried traces, not hidden digital connectivity.
 - AI may assist the project, but it should not become an unquestioned authority.
 - The project should support resonance, cooperation, democratic imagination, and shared responsibility.
 
