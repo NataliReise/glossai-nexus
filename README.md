@@ -41,6 +41,7 @@ A Nexus module contains the shared structure. An activation contains the concret
 - [Code of Resonance](CODE_OF_RESONANCE.md)
 - [AI use](AI_USE.md)
 - [Speaking code](docs/SPEAKING_CODE.md)
+- [Playing a Nexus](docs/PLAYING_A_NEXUS.md)
 
 ## Planned first seed
 
