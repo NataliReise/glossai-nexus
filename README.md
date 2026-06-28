@@ -46,6 +46,14 @@ A Nexus module contains the shared structure. An activation contains the concret
 - [Resonance Arc](docs/RESONANCE_ARC.md)
 - [Discussions Guide](docs/DISCUSSIONS_GUIDE.md)
 
+## Wiki
+
+For a friendly introduction to project terms, public/private layers, resonance nodes, discussions, and future modules, see the project wiki:
+
+```text
+https://github.com/NataliReise/glossai-nexus/wiki
+```
+
 ## Discussions
 
 Project discussions:
