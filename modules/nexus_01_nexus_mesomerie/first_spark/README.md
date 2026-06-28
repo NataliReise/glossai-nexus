@@ -10,7 +10,7 @@ The current prototype contains the first complete mini game loop:
 
 > arrival -> spark chamber -> read traces -> link spark -> unlock activation message
 
-This is still intentionally small. It proves that a Nexus module can start locally, move between small game modules, keep state, complete a first activation-message ending, offer optional gentle guidance through the `trace` command, provide a spoiler-protected `walkthrough`, load a local private activation file, explain confusing pasted input on unknown commands, document the local activation workflow, and protect the main flow with a minimal automated test.
+This is still intentionally small. It proves that a Nexus module can start locally, move between small game modules, keep state, complete a first activation-message ending, offer optional gentle guidance through the `trace` command, provide a spoiler-protected `walkthrough`, load a local private activation file, explain confusing pasted input on unknown commands, document the local activation workflow, show friendly activation-file errors, and protect the main flow with a minimal automated test.
 
 Development principle:
 
@@ -45,7 +45,7 @@ Expected output:
 First Spark flow tests passed.
 ```
 
-The test checks the current main flow from arrival to ending, including state changes for `trace`, `walkthrough`, `read`, `link spark`, `unlock`, `quit`, and unknown-command recovery text.
+The test checks the current main flow from arrival to ending, including state changes for `trace`, `walkthrough`, `read`, `link spark`, `unlock`, `quit`, unknown-command recovery text, and activation-file validation errors.
 
 ## Activation files
 
@@ -74,6 +74,8 @@ Minimal activation fields:
 ```
 
 If no local activation file exists, First Spark uses public demo defaults.
+
+If a local activation file exists but cannot be loaded, First Spark shows a friendly error message and points back to `activation.example.json`.
 
 For the full local workflow, see:
 
@@ -211,10 +213,11 @@ See also:
 12. Local private activation file structure.
 13. Clearer unknown-command recovery text.
 14. Local activation guide.
+15. Friendly activation-file validation errors.
 
 Each unit should remain small and runnable before the next one is added.
 
 ## Possible next running units
 
-- Improve activation validation and error messages.
 - Add a safer helper script for creating a local activation file from the example.
+- Add optional activation field validation for future fields.
