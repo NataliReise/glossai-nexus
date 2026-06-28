@@ -14,6 +14,13 @@ First Spark is a local terminal prototype. It can be played as a neutral public 
 
 ## Quick start
 
+Clone the repository and enter the project folder:
+
+```bash
+git clone https://github.com/NataliReise/glossai-nexus.git
+cd glossai-nexus
+```
+
 Run First Spark from the repository root:
 
 ```bash
