@@ -25,7 +25,7 @@ The public repository must not contain:
 - real activation codes,
 - real return codes,
 - contact data,
-- credentials, tokens, API keys, or passwords.
+- secrets or access data.
 
 ## Local activation file
 
@@ -73,6 +73,14 @@ Example structure:
 ```
 
 Only use safe test values while experimenting.
+
+## If the activation file is broken
+
+If `activation.local.json` is not valid JSON, or if its top-level value is not a JSON object, First Spark stops with a friendly error instead of a Python traceback.
+
+The error message points to the local file, names the problem, and reminds you to compare the file with `activation.example.json`.
+
+Fix the JSON and start First Spark again.
 
 ## Check that the local file stays private
 
@@ -134,7 +142,7 @@ Expected output:
 First Spark flow tests passed.
 ```
 
-The test is activation-agnostic. It should pass with or without a local `activation.local.json` file.
+The test is activation-agnostic. It should pass with or without a valid local `activation.local.json` file.
 
 ## Safe sharing workflow
 
