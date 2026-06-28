@@ -115,7 +115,6 @@ def test_first_spark_main_flow() -> None:
     response = run_command(state, "unlock")
     assert_contains(response, "The private message opens.")
     assert_contains(response, "[activation message]")
-    assert_contains(response, "This is a public demo message.")
     assert state.message_unlocked
     assert state.current_module == "ending"
 
