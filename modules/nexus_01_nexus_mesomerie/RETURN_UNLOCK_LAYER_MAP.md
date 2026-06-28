@@ -110,6 +110,32 @@ yes
 
 ## 4. activation
 
+### Current implementation status
+
+`activation` already exists as a small First Spark component.
+
+Current implementation path:
+
+```text
+first_spark/first_spark/activation.py
+```
+
+It currently handles:
+
+```text
+public activation structure
+local private activation file loading
+public demo fallback
+friendly activation-file errors
+basic fields such as recipient_alias, activation_purpose, and private_message
+```
+
+This means `activation` is not only a future conceptual layer.
+
+It is already present as a small, local, First Spark-level building block.
+
+Future Nexus activation layers may extend this pattern, but they should not overload the First Spark core.
+
 ### Responsibility
 
 `activation` describes how a run is locally configured.
@@ -141,6 +167,13 @@ public-safe trace publishing
 ```text
 Activation configures a run.
 It does not become the whole social chain.
+```
+
+Current implementation formula:
+
+```text
+activation is already a small First Spark component.
+future activation layers may extend the pattern without swallowing the core.
 ```
 
 ---
@@ -533,6 +566,7 @@ Questions for the next architecture pass:
 
 ```text
 Should these conceptual layers later become Python packages, folders, or only documentation boundaries?
+Should the existing First Spark activation component stay inside First Spark or later become a reusable shared module?
 Where should return_unlock live if First Spark remains small?
 Should public_trace be a shared helper used by resonance nodes and return traces?
 How should return_artifact parsing be separated from return_unlock?
@@ -574,4 +608,9 @@ Public trace appears only by consent.
 
 ```text
 Extension points, not entanglement.
+```
+
+```text
+activation is already a small First Spark component.
+future activation layers may extend the pattern without swallowing the core.
 ```
