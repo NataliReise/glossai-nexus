@@ -17,6 +17,10 @@ The return unlock is the moment when a privately returned artifact opens a deepe
 
 It grows out of the current First Spark prototype, but it is not part of the current First Spark 0.1 implementation yet.
 
+For the modular responsibility map behind this extension, see:
+
+- [Return Unlock Layer Map](RETURN_UNLOCK_LAYER_MAP.md)
+
 The design goal is to connect:
 
 ```text
