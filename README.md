@@ -12,6 +12,14 @@ The current focus is **Nexus 01 - Nexus-Mesomerie** and its first small playable
 
 First Spark is a local terminal prototype. It can be played as a neutral public demo or combined with a private activation package to become a personal gift.
 
+## Current platform focus
+
+The current public seed is Linux-first.
+
+First Spark is a local terminal prototype written in Python and currently developed and checked on Linux.
+
+Other platforms may become possible later, but the first stable path is a local Linux terminal.
+
 ## Quick start
 
 Clone the repository and enter the project folder:
