@@ -38,6 +38,24 @@ If you want, you can let the spark travel further:
 
 Passing on a spark is an invitation, not an obligation.
 
+## If you want to explore further
+
+You can also explore the public repository.
+
+You might look at:
+
+- the First Spark source code,
+- the public/private boundary notes,
+- the gift package specification,
+- the review notes for First Spark 0.1,
+- future modules and ideas as they appear.
+
+In the future, this project may also include guidance for creating your own small Nexus modules.
+
+You may also contribute to the project if you want to help it grow. This could mean trying the module, giving feedback, improving documentation, suggesting ideas, or developing new public-safe module pieces.
+
+Any contribution should respect the same boundary: public code and public notes stay public-safe; private activation data and private gift messages stay private.
+
 ## What is a resonance node?
 
 A resonance node is an optional public-safe trace.
