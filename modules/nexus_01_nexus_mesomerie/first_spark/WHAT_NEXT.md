@@ -48,11 +48,20 @@ You might look at:
 - the public/private boundary notes,
 - the gift package specification,
 - the review notes for First Spark 0.1,
+- the resonance arc and discussions guide,
 - future modules and ideas as they appear.
+
+You can also visit the project discussions:
+
+```text
+https://github.com/NataliReise/glossai-nexus/discussions
+```
+
+Use discussions for questions, feedback, public-safe resonance nodes, module ideas, and project orientation.
 
 In the future, this project may also include guidance for creating your own small Nexus modules.
 
-You may also contribute to the project if you want to help it grow. This could mean trying the module, giving feedback, improving documentation, suggesting ideas, or developing new public-safe module pieces.
+You may contribute to the project if you want to help it grow. This could mean trying the module, giving feedback, improving documentation, suggesting ideas, or developing new public-safe module pieces.
 
 Any contribution should respect the same boundary: public code and public notes stay public-safe; private activation data and private gift messages stay private.
 
@@ -85,6 +94,26 @@ The spark arrived, was opened, and may travel further.
 ```
 
 Do not include the private activation message in a resonance node.
+
+## How can I share a resonance node?
+
+Sharing a resonance node is optional.
+
+If you want to share one:
+
+1. Type `resonance-node` in First Spark after completion.
+2. Copy the draft from the terminal.
+3. Edit only the public alias and public note.
+4. Open the project discussions.
+5. Post it in a suitable discussion category, for example `Resonance Nodes`, if that category exists.
+
+Project discussions:
+
+```text
+https://github.com/NataliReise/glossai-nexus/discussions
+```
+
+Before posting, check that the text contains no private activation message, no private file content, and no return artifact.
 
 ## Why does First Spark not save a result file?
 
@@ -125,6 +154,12 @@ Public repository:
 https://github.com/NataliReise/glossai-nexus.git
 ```
 
+Project discussions:
+
+```text
+https://github.com/NataliReise/glossai-nexus/discussions
+```
+
 First Spark folder:
 
 ```text
@@ -135,4 +170,16 @@ First Spark 0.1 review:
 
 ```text
 modules/nexus_01_nexus_mesomerie/first_spark/FIRST_SPARK_0_1_REVIEW.md
+```
+
+Resonance arc:
+
+```text
+docs/RESONANCE_ARC.md
+```
+
+Discussions guide:
+
+```text
+docs/DISCUSSIONS_GUIDE.md
 ```
