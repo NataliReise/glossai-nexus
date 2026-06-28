@@ -85,7 +85,9 @@ Project discussions:
 https://github.com/NataliReise/glossai-nexus/discussions
 ```
 
-Use discussions for questions, feedback, public-safe resonance nodes, module ideas, and project orientation.
+Use discussions for help and support, questions, feedback, public-safe resonance nodes, module ideas, polls, and project orientation.
+
+Current entry points include `Help and Support`, `Ideas`, `Polls`, `Resonance Nodes`, and `Show and tell`.
 
 ## Narrative layer
 
