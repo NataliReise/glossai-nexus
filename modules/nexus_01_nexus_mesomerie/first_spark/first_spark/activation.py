@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import json
+from json import JSONDecodeError
 from pathlib import Path
 from typing import Any
 
@@ -20,6 +21,11 @@ DEFAULT_PRIVATE_MESSAGE = (
 )
 
 LOCAL_ACTIVATION_PATH = Path(__file__).resolve().parents[1] / "activation.local.json"
+EXAMPLE_ACTIVATION_PATH = Path(__file__).resolve().parents[1] / "activation.example.json"
+
+
+class ActivationFileError(ValueError):
+    """Raised when a local activation file cannot be loaded safely."""
 
 
 @dataclass(frozen=True)
@@ -40,12 +46,35 @@ def default_activation() -> Activation:
     )
 
 
+def activation_error_text(path: Path, detail: str) -> str:
+    """Return a friendly activation-file error message."""
+    return (
+        "Activation file could not be loaded.\n\n"
+        f"Please check:\n{path}\n\n"
+        f"Problem:\n{detail}\n\n"
+        "The file must be valid JSON with an object at the top level.\n"
+        f"You can compare it with:\n{EXAMPLE_ACTIVATION_PATH}"
+    )
+
+
 def load_activation(path: Path = LOCAL_ACTIVATION_PATH) -> Activation:
     """Load local activation data, or fall back to the public demo activation."""
     if not path.exists():
         return default_activation()
 
-    data = json.loads(path.read_text(encoding="utf-8"))
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except JSONDecodeError as error:
+        detail = f"Invalid JSON near line {error.lineno}, column {error.colno}: {error.msg}."
+        raise ActivationFileError(activation_error_text(path, detail)) from error
+    except OSError as error:
+        detail = str(error)
+        raise ActivationFileError(activation_error_text(path, detail)) from error
+
+    if not isinstance(data, dict):
+        detail = "The top-level JSON value must be an object like activation.example.json."
+        raise ActivationFileError(activation_error_text(path, detail))
+
     return activation_from_mapping(data)
 
 
