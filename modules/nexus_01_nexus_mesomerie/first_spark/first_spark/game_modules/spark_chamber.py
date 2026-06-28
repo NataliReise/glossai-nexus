@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from first_spark.game_modules import ending
 from first_spark.module_response import ModuleResponse
 from first_spark.state import GameState
 
@@ -29,19 +30,12 @@ Next trace:
 }
 
 
-PUBLIC_DEMO_MESSAGE = """[public demo message]
-
-This is a public demo message.
-Real gift messages belong to the private activation layer.
-"""
-
-
 HELP_TEXT = """Available commands:
   help                 Show this help text.
   look                 Look around the First Spark chamber.
   read <trace-name>    Read a visible trace.
   link spark           Link the first spark fragments.
-  unlock               Open the public demo message after linking the spark.
+  unlock               Move to the ending after linking the spark.
   quit                 Exit First Spark.
 """
 
@@ -133,11 +127,10 @@ def link_spark(state: GameState) -> ModuleResponse:
 
 
 def unlock_message(state: GameState) -> ModuleResponse:
-    """Unlock the public demo message after the spark was linked."""
+    """Move to the ending module after the spark was linked."""
     if state.message_unlocked:
         return ModuleResponse(
-            "The private message is already open.\n\n"
-            f"{PUBLIC_DEMO_MESSAGE.strip()}"
+            "The private message is already open.", next_module="ending"
         )
 
     if not state.spark_linked:
@@ -146,8 +139,4 @@ def unlock_message(state: GameState) -> ModuleResponse:
             "Link the spark first."
         )
 
-    state.message_unlocked = True
-    return ModuleResponse(
-        "The private message opens.\n\n"
-        f"{PUBLIC_DEMO_MESSAGE.strip()}"
-    )
+    return ending.open_ending(state)
