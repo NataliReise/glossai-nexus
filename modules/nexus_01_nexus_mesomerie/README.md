@@ -41,18 +41,31 @@ Current work focuses on:
 - preserving a local-first and data-minimal approach,
 - preparing future module ideas without overloading the first slice.
 
-## Run First Spark
+## Start First Spark
 
-From the repository root:
+The first playable slice of Nexus 01 is:
 
-```bash
-python3 modules/nexus_01_nexus_mesomerie/first_spark/run_first_spark.py
-```
+- [Nexus 0.1 - First Spark](first_spark/)
 
-For the First Spark documentation, see:
+For current start options, see:
 
 - [First Spark README](first_spark/README.md)
+
+First Spark currently supports two intended start paths:
+
+1. from the cloned repository,
+2. from a standalone First Spark package.
+
+If you are new to Git, Python, or terminal-based projects, start with:
+
+- [Getting started on Linux](../../docs/GETTING_STARTED_LINUX.md)
+
+For a short player-facing guide after completion, see:
+
 - [What next after First Spark](first_spark/WHAT_NEXT.md)
+
+For the First Spark 0.1 review, see:
+
 - [First Spark 0.1 Review](first_spark/FIRST_SPARK_0_1_REVIEW.md)
 
 ## Nexus 01 planning documents
@@ -73,6 +86,7 @@ See also:
 - [Speaking code](../../docs/SPEAKING_CODE.md)
 - [Resonance Arc](../../docs/RESONANCE_ARC.md)
 - [Discussions Guide](../../docs/DISCUSSIONS_GUIDE.md)
+- [Getting started on Linux](../../docs/GETTING_STARTED_LINUX.md)
 
 ## Public orientation
 
