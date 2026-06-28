@@ -45,7 +45,15 @@ modules/nexus_01_nexus_mesomerie/first_spark/activation.example.json
 
 ## Create a local activation file
 
-From the repository root:
+From the repository root, use the helper script:
+
+```bash
+python3 modules/nexus_01_nexus_mesomerie/first_spark/create_local_activation.py
+```
+
+The helper copies `activation.example.json` to `activation.local.json` only if the local file does not already exist. Existing local activation data is not overwritten.
+
+You can still create the file manually if you prefer:
 
 ```bash
 cp modules/nexus_01_nexus_mesomerie/first_spark/activation.example.json \
