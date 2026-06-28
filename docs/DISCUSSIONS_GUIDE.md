@@ -2,7 +2,7 @@
 
 GitHub Discussions are the public conversation space for glossai-nexus.
 
-Discussions can be used for questions, feedback, resonance nodes, project orientation, and ideas that are not yet concrete code tasks.
+Discussions can be used for help, questions, feedback, resonance nodes, project orientation, polls, and ideas that are not yet concrete code tasks.
 
 Project discussions:
 
@@ -20,12 +20,14 @@ German is also okay if English would make participation difficult. If useful, a 
 
 Good topics for Discussions:
 
+- practical questions and help requests,
 - questions about First Spark or the project idea,
 - public-safe resonance nodes,
 - feedback after trying a module,
 - ideas for future modules,
 - documentation suggestions,
 - general project orientation,
+- small polls and preference checks,
 - thoughts about public/private boundaries.
 
 ## What belongs in Issues?
@@ -40,29 +42,45 @@ Examples:
 - a concrete documentation fix,
 - a small implementation task.
 
-## Possible discussion categories
+## Current discussion categories
 
-A small starting structure could be:
+The current starting structure is:
 
 ### Announcements
 
-Project updates, stable milestones, and important notes.
+Project updates, stable milestones, and important notes from maintainers.
 
 ### General
 
-Open questions, impressions, and general orientation.
+Open questions, first impressions, and general orientation.
 
-### Resonance Nodes
+### Help and Support
 
-Optional public-safe resonance node posts.
+Practical questions, explanations, setup help, and safe use of glossai-nexus.
+
+Use this category if you need help finding your way around the project, running First Spark, understanding activation files, or deciding where to post.
 
 ### Ideas
 
 Future module ideas, design thoughts, and possible extensions.
 
-### Q&A
+### Polls
 
-Practical questions about running First Spark, activation files, privacy boundaries, or contribution workflows.
+Small project polls and preference checks.
+
+Polls are not binding votes. They are only a lightweight way to gather orientation and resonance.
+
+### Resonance Nodes
+
+Optional public-safe resonance node posts.
+
+Use this category when you want to share a visible public-safe trace that a spark was seen, completed, or carried further.
+
+### Show and tell
+
+Public-safe project experiences, small experiments, workflows, screenshots without private content, and examples of how glossai-nexus is being explored.
+
+For formal public-safe resonance node posts, use `Resonance Nodes` instead.
 
 The category list can stay small at first and grow only when needed.
 
@@ -96,6 +114,7 @@ Only fill in `Public alias` and `Public note` if you want to.
 Do not post:
 
 - `activation.local.json`,
+- private activation messages,
 - private gift messages,
 - recipient-specific private data,
 - return artifacts,
