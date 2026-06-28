@@ -64,3 +64,9 @@ It is intended as a small, self-contained software module that can also serve as
 ## License
 
 The repository currently uses the MIT License for code. Creative texts, lore, and future content licensing may be refined as the project develops.
+
+## Legal notice / Impressum
+
+For legal notice and contact information, see:
+
+- [LEGAL_NOTICE.md](LEGAL_NOTICE.md)
