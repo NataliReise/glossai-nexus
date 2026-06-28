@@ -120,6 +120,10 @@ It may contain or derive key material.
 
 It must not be posted publicly.
 
+For the first proposed player-facing return artifact shape, see:
+
+- [Return Artifact MVP](RETURN_ARTIFACT_MVP.md)
+
 Example placeholder:
 
 ```text
