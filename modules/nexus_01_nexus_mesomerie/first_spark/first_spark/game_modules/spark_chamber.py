@@ -123,8 +123,7 @@ def link_spark(state: GameState) -> ModuleResponse:
         "  welcome.log\n"
         "  spark.note\n\n"
         "The private message reacts, but remains locked.\n"
-        "Next trace:\n"
-        "  Try: unlock"
+        "The lock no longer feels silent."
     )
 
 
