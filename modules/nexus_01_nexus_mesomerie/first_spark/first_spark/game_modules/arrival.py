@@ -10,6 +10,7 @@ from first_spark.state import GameState
 HELP_TEXT = """Available commands:
   help                 Show this help text.
   look                 Enter the First Spark chamber.
+  trace                Reveal a gentle next trace.
   quit                 Exit First Spark.
 """
 
@@ -37,6 +38,9 @@ def handle_command(command: str, state: GameState) -> ModuleResponse:
 
     if command == "look":
         return ModuleResponse("Entering the First Spark chamber.", next_module="spark_chamber")
+
+    if command == "trace":
+        return ModuleResponse("Next trace:\n  Look for the entrance.")
 
     if command == "quit":
         return ModuleResponse("First Spark closed.", should_quit=True)
