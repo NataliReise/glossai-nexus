@@ -10,7 +10,7 @@ The current prototype contains the first complete mini game loop:
 
 > arrival -> spark chamber -> read traces -> link spark -> unlock activation message
 
-This is still intentionally small. It proves that a Nexus module can start locally, move between small game modules, keep state, complete a first activation-message ending, offer optional gentle guidance through the `trace` command, provide a spoiler-protected `walkthrough`, load a local private activation file, explain confusing pasted input on unknown commands, and protect the main flow with a minimal automated test.
+This is still intentionally small. It proves that a Nexus module can start locally, move between small game modules, keep state, complete a first activation-message ending, offer optional gentle guidance through the `trace` command, provide a spoiler-protected `walkthrough`, load a local private activation file, explain confusing pasted input on unknown commands, document the local activation workflow, and protect the main flow with a minimal automated test.
 
 Development principle:
 
@@ -74,6 +74,10 @@ Minimal activation fields:
 ```
 
 If no local activation file exists, First Spark uses public demo defaults.
+
+For the full local workflow, see:
+
+- [`LOCAL_ACTIVATION_GUIDE.md`](LOCAL_ACTIVATION_GUIDE.md)
 
 ## Current module flow
 
@@ -189,6 +193,7 @@ Real gift messages, real recipient data, real activation codes, return codes, pr
 See also:
 
 - [`docs/PUBLIC_PRIVATE_BOUNDARY.md`](../../../docs/PUBLIC_PRIVATE_BOUNDARY.md)
+- [`LOCAL_ACTIVATION_GUIDE.md`](LOCAL_ACTIVATION_GUIDE.md)
 
 ## Completed running units
 
@@ -205,6 +210,7 @@ See also:
 11. `walkthrough` command with spoiler warning.
 12. Local private activation file structure.
 13. Clearer unknown-command recovery text.
+14. Local activation guide.
 
 Each unit should remain small and runnable before the next one is added.
 
