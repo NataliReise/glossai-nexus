@@ -94,7 +94,7 @@ First Spark needs only one activation configuration.
   "activation": {
     "mode": "personal_activation",
     "purpose": "gift",
-    "recipient_alias": "Sascha",
+    "recipient_alias": "recipient_name",
     "visible_personalization": true
   },
   "play": {
@@ -142,7 +142,7 @@ Example tone:
 ```text
 Nexus 0.1 – First Spark
 Activation detected.
-Recipient: Sascha
+Recipient: Recipient Name
 Private message: locked.
 ```
 
@@ -219,7 +219,7 @@ Example:
 
 ```json
 {
-  "recipient_alias": "Sascha",
+  "recipient_alias": "recipient_name",
   "known_commands": ["help", "look", "read"],
   "found_fragments": [],
   "linked_fragments": [],
