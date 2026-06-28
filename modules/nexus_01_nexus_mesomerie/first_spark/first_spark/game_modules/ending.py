@@ -2,22 +2,21 @@
 
 from __future__ import annotations
 
+from first_spark.config import PRIVATE_MESSAGE
 from first_spark.guidance import WALKTHROUGH_TEXT
 from first_spark.module_response import ModuleResponse
 from first_spark.state import GameState
 
 
-PUBLIC_DEMO_MESSAGE = """[public demo message]
+ACTIVATION_MESSAGE = f"""[activation message]
 
-This is a public demo message.
-Real gift messages belong to the private activation layer.
-"""
+{PRIVATE_MESSAGE}"""
 
 
 HELP_TEXT = """Available commands:
   help         Show this help text.
-  look         Look at the opened public demo message.
-  unlock       Show the already opened public demo message again.
+  look         Look at the opened activation message.
+  unlock       Show the already opened activation message again.
   trace        Reveal a gentle next trace.
   walkthrough  Show the full solution path with a spoiler warning.
   quit         Exit First Spark.
@@ -26,16 +25,16 @@ HELP_TEXT = """Available commands:
 
 ENDING_TEXT = f"""The private message opens.
 
-{PUBLIC_DEMO_MESSAGE.strip()}"""
+{ACTIVATION_MESSAGE.strip()}"""
 
 
 ALREADY_OPEN_TEXT = f"""The private message is already open.
 
-{PUBLIC_DEMO_MESSAGE.strip()}"""
+{ACTIVATION_MESSAGE.strip()}"""
 
 
 def handle_command(command: str, state: GameState) -> ModuleResponse:
-    """Handle commands after the public demo message was opened."""
+    """Handle commands after the activation message was opened."""
     if command == "help":
         return ModuleResponse(HELP_TEXT.strip())
 
@@ -60,6 +59,6 @@ def handle_command(command: str, state: GameState) -> ModuleResponse:
 
 
 def open_ending(state: GameState) -> ModuleResponse:
-    """Open the public demo ending and move into the ending module."""
+    """Open the activation message and move into the ending module."""
     state.message_unlocked = True
     return ModuleResponse(ENDING_TEXT, next_module="ending")
