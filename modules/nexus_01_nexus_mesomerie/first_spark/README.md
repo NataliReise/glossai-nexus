@@ -10,7 +10,7 @@ The current prototype contains the first complete mini game loop:
 
 > arrival -> spark chamber -> read traces -> link spark -> unlock activation message
 
-This is still intentionally small. It proves that a Nexus module can start locally, move between small game modules, keep state, complete a first activation-message ending, offer optional gentle guidance through the `trace` command, provide a spoiler-protected `walkthrough`, load a local private activation file, explain confusing pasted input on unknown commands, document the local activation workflow, show friendly activation-file errors, provide a safe helper for creating the local activation file, show a first after-play message, separate ending sections with a reusable Ankh divider, handle Ctrl-C interruption gracefully, show and explain a public-safe resonance node draft after completion, and protect the main flow with a minimal automated test.
+This is still intentionally small. It proves that a Nexus module can start locally, move between small game modules, keep state, complete a first activation-message ending, offer optional gentle guidance through the `trace` command, provide a spoiler-protected `walkthrough`, load a local private activation file, explain confusing pasted input on unknown commands, document the local activation workflow, show friendly activation-file errors, provide a safe helper for creating the local activation file, show a first after-play message, separate ending sections with a reusable Ankh divider, handle Ctrl-C interruption gracefully, show and explain a public-safe resonance node draft after completion, point players to a short what-next guide, and protect the main flow with a minimal automated test.
 
 Development principle:
 
@@ -47,7 +47,7 @@ Expected output:
 First Spark flow tests passed.
 ```
 
-The test checks the current main flow from arrival to ending, including state changes for `trace`, `walkthrough`, `read`, `link spark`, `unlock`, `quit`, unknown-command recovery text, activation-file validation errors, the local activation creation helper, the after-play message, the Ankh section divider, the friendly Ctrl-C interrupt text, the public-safe resonance node draft, and the after-play hint for showing it.
+The test checks the current main flow from arrival to ending, including state changes for `trace`, `walkthrough`, `read`, `link spark`, `unlock`, `quit`, unknown-command recovery text, activation-file validation errors, the local activation creation helper, the after-play message, the Ankh section divider, the friendly Ctrl-C interrupt text, the public-safe resonance node draft, the after-play hint for showing it, and the what-next guide path.
 
 ## Activation files
 
@@ -199,6 +199,7 @@ Expected behavior:
 - `unlock` opens the activation message after the spark was linked.
 - The activation message and after-play message are separated by the simplified First Spark Ankh divider.
 - The after-play message explains that the gift is complete, passing the spark onward is optional, and public traces must stay public-safe.
+- The after-play message points players to [`WHAT_NEXT.md`](WHAT_NEXT.md) for a short explanation of the project and further options.
 - The after-play message tells players to type `resonance-node` if they want to show an optional public-safe draft.
 - `resonance-node` shows an optional public-safe resonance node draft without private activation data.
 - `trace` in the ending module reports that the First Spark is complete.
@@ -217,6 +218,7 @@ See also:
 - [`PUBLIC_HANDOFF_CHECKLIST.md`](PUBLIC_HANDOFF_CHECKLIST.md)
 - [`GIFT_PACKAGE_SPEC.md`](GIFT_PACKAGE_SPEC.md)
 - [`FIRST_SPARK_AFTER_PLAY.md`](FIRST_SPARK_AFTER_PLAY.md)
+- [`WHAT_NEXT.md`](WHAT_NEXT.md)
 
 ## Public handoff
 
@@ -248,6 +250,12 @@ For the current narrow specification, see:
 
 - [`FIRST_SPARK_AFTER_PLAY.md`](FIRST_SPARK_AFTER_PLAY.md)
 
+## What next guide
+
+For a short player-facing explanation of First Spark, the resonance node draft, and public/private boundaries, see:
+
+- [`WHAT_NEXT.md`](WHAT_NEXT.md)
+
 ## Completed running units
 
 1. Start script with boot sequence.
@@ -273,6 +281,7 @@ For the current narrow specification, see:
 21. Reusable simplified Ankh section divider for the ending output.
 22. Friendly Ctrl-C interrupt handling.
 23. Public-safe resonance node draft command with after-play hint.
+24. What-next guide for completed First Spark players.
 
 Each unit should remain small and runnable before the next one is added.
 
