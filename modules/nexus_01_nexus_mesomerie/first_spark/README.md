@@ -10,7 +10,7 @@ The current prototype contains the first complete mini game loop:
 
 > arrival -> spark chamber -> read traces -> link spark -> unlock activation message
 
-This is still intentionally small. It proves that a Nexus module can start locally, move between small game modules, keep state, complete a first activation-message ending, offer optional gentle guidance through the `trace` command, provide a spoiler-protected `walkthrough`, load a local private activation file, explain confusing pasted input on unknown commands, document the local activation workflow, show friendly activation-file errors, provide a safe helper for creating the local activation file, show a first after-play message, separate ending sections with a reusable Ankh divider, and protect the main flow with a minimal automated test.
+This is still intentionally small. It proves that a Nexus module can start locally, move between small game modules, keep state, complete a first activation-message ending, offer optional gentle guidance through the `trace` command, provide a spoiler-protected `walkthrough`, load a local private activation file, explain confusing pasted input on unknown commands, document the local activation workflow, show friendly activation-file errors, provide a safe helper for creating the local activation file, show a first after-play message, separate ending sections with a reusable Ankh divider, handle Ctrl-C interruption gracefully, and protect the main flow with a minimal automated test.
 
 Development principle:
 
@@ -31,6 +31,8 @@ Or from this directory:
 python3 run_first_spark.py
 ```
 
+Press `Ctrl-C` to interrupt First Spark and return to the terminal.
+
 ## Test
 
 From the repository root:
@@ -45,7 +47,7 @@ Expected output:
 First Spark flow tests passed.
 ```
 
-The test checks the current main flow from arrival to ending, including state changes for `trace`, `walkthrough`, `read`, `link spark`, `unlock`, `quit`, unknown-command recovery text, activation-file validation errors, the local activation creation helper, the after-play message, and the Ankh section divider.
+The test checks the current main flow from arrival to ending, including state changes for `trace`, `walkthrough`, `read`, `link spark`, `unlock`, `quit`, unknown-command recovery text, activation-file validation errors, the local activation creation helper, the after-play message, the Ankh section divider, and the friendly Ctrl-C interrupt text.
 
 ## Activation files
 
@@ -195,6 +197,7 @@ Expected behavior:
 - The activation message and after-play message are separated by the simplified First Spark Ankh divider.
 - The after-play message explains that the gift is complete, passing the spark onward is optional, and public traces must stay public-safe.
 - `trace` in the ending module reports that the First Spark is complete.
+- `Ctrl-C` interrupts First Spark with a friendly message instead of a traceback.
 
 ## Public / private boundary
 
@@ -263,6 +266,7 @@ For the current narrow specification, see:
 19. First Spark after-play specification.
 20. After-play message after the final activation message.
 21. Reusable simplified Ankh section divider for the ending output.
+22. Friendly Ctrl-C interrupt handling.
 
 Each unit should remain small and runnable before the next one is added.
 
