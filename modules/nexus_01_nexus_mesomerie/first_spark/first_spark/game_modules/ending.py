@@ -38,13 +38,39 @@ Later, you may also share a public-safe resonance node to show that a spark was 
 A resonance node must not include private messages, activation files, or return artifacts."""
 
 
+RESONANCE_NODE_TEXT = f"""[public-safe resonance node draft]
+
+This is an optional public-safe note.
+Copy it only if you want to leave a visible trace.
+Do not add private activation data, private gift messages, or return artifacts.
+
+---
+Resonance Node: N01-RN-draft
+Module: Nexus 01 - First Spark
+Run type: private gift / neutral / carried spark
+Status: completed
+Trace visibility: public-safe summary only
+Forwarded: optional / yes / no / not shared
+Return: optional / received / not shared
+Public project: {PUBLIC_REPOSITORY_URL}
+
+Public alias:
+Public note:
+
+Consent:
+I choose to share this public trace.
+No private activation data, private gift text, or return artifact is included.
+---"""
+
+
 HELP_TEXT = """Available commands:
-  help         Show this help text.
-  look         Look at the opened activation message.
-  unlock       Show the already opened activation message again.
-  trace        Reveal a gentle next trace.
-  walkthrough  Show the full solution path with a spoiler warning.
-  quit         Exit First Spark and return to your terminal.
+  help            Show this help text.
+  look            Look at the opened activation message.
+  unlock          Show the already opened activation message again.
+  trace           Reveal a gentle next trace.
+  resonance-node  Show a public-safe resonance node draft.
+  walkthrough     Show the full solution path with a spoiler warning.
+  quit            Exit First Spark and return to your terminal.
 """
 
 
@@ -83,6 +109,9 @@ def handle_command(command: str, state: GameState) -> ModuleResponse:
 
     if command == "trace":
         return ModuleResponse("Next trace:\n  The First Spark is complete.")
+
+    if command == "resonance-node":
+        return ModuleResponse(RESONANCE_NODE_TEXT)
 
     if command == "walkthrough":
         return ModuleResponse(WALKTHROUGH_TEXT.strip())
