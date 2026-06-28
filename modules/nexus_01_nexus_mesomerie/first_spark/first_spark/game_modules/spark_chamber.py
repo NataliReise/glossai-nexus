@@ -15,17 +15,14 @@ VISIBLE_TRACES = {
 
 The chamber is small on purpose.
 A spark does not need to become a system before it can glow.
-
-Visible instruction:
-  Try: read spark.note
 """,
     "spark.note": """[first-spark / spark.note]
 
 This Nexus has been activated as a gift.
 The private message is present, but still locked.
 
-Next trace:
-  Fragment logic has not been installed yet.
+A single trace can be read.
+Two traces can begin to resonate.
 """,
 }
 
@@ -35,7 +32,8 @@ HELP_TEXT = """Available commands:
   look                 Look around the First Spark chamber.
   read <trace-name>    Read a visible trace.
   link spark           Link the first spark fragments.
-  unlock               Move to the ending after linking the spark.
+  unlock               Open the private message after linking the spark.
+  trace                Reveal a gentle next trace.
   quit                 Exit First Spark.
 """
 
@@ -57,6 +55,9 @@ def handle_command(command: str, state: GameState) -> ModuleResponse:
 
     if command == "look":
         return ModuleResponse(LOOK_TEXT.strip())
+
+    if command == "trace":
+        return next_trace(state)
 
     if command.startswith("read "):
         trace_name = command.removeprefix("read ").strip()
@@ -122,7 +123,8 @@ def link_spark(state: GameState) -> ModuleResponse:
         "  welcome.log\n"
         "  spark.note\n\n"
         "The private message reacts, but remains locked.\n"
-        "Next unit: unlock command."
+        "Next trace:\n"
+        "  Try: unlock"
     )
 
 
@@ -140,3 +142,21 @@ def unlock_message(state: GameState) -> ModuleResponse:
         )
 
     return ending.open_ending(state)
+
+
+def next_trace(state: GameState) -> ModuleResponse:
+    """Reveal a gentle next trace based on the current chamber state."""
+    if state.message_unlocked:
+        return ModuleResponse("Next trace:\n  The First Spark is complete.")
+
+    if state.spark_linked:
+        return ModuleResponse("Next trace:\n  The private message reacts. Try to open it.")
+
+    if not state.read_traces:
+        return ModuleResponse("Next trace:\n  Start with what is visible.")
+
+    missing_traces = REQUIRED_TRACES_FOR_LINK - state.read_traces
+    if missing_traces:
+        return ModuleResponse("Next trace:\n  The spark has another visible trace.")
+
+    return ModuleResponse("Next trace:\n  Two visible traces may form one spark.")
