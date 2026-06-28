@@ -24,11 +24,13 @@ For project orientation, see the project wiki:
 https://github.com/NataliReise/glossai-nexus/wiki
 ```
 
-For questions, feedback, or public-safe resonance nodes, see project discussions:
+For help, feedback, ideas, or public-safe resonance nodes, see project discussions:
 
 ```text
 https://github.com/NataliReise/glossai-nexus/discussions
 ```
+
+Use `Help and Support` for practical questions and `Resonance Nodes` for optional public-safe resonance node posts.
 
 ## What First Spark currently does
 
