@@ -29,7 +29,10 @@ from first_spark.state import GameState
 
 
 PUBLIC_REPOSITORY_URL = "https://github.com/NataliReise/glossai-nexus.git"
-WHAT_NEXT_GUIDE_PATH = "modules/nexus_01_nexus_mesomerie/first_spark/WHAT_NEXT.md"
+WHAT_NEXT_GUIDE_URL = (
+    "https://github.com/NataliReise/glossai-nexus/blob/main/"
+    "modules/nexus_01_nexus_mesomerie/first_spark/WHAT_NEXT.md"
+)
 SECTION_DIVIDER = "︵‿︵‿୨ ☾𓋹☽ ୧‿︵‿︵"
 
 
@@ -72,7 +75,7 @@ def assert_after_play_message(response: str) -> None:
     assert_contains(response, "let the spark travel further")
     assert_contains(response, PUBLIC_REPOSITORY_URL)
     assert_contains(response, "Short guide:")
-    assert_contains(response, WHAT_NEXT_GUIDE_PATH)
+    assert_contains(response, WHAT_NEXT_GUIDE_URL)
     assert_contains(response, "Never post private activation data")
     assert_contains(response, "public-safe resonance node")
     assert_contains(response, "Type 'resonance-node'")
