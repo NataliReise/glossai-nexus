@@ -36,6 +36,13 @@ def assert_walkthrough(response: str) -> None:
     assert_contains(response, "unlock")
 
 
+def assert_unknown_command_recovery(response: str) -> None:
+    """Assert that unknown commands explain possible pasted input."""
+    assert_contains(response, "Unknown command:")
+    assert_contains(response, "pasted input")
+    assert_contains(response, "fresh prompt")
+
+
 def test_first_spark_main_flow() -> None:
     """Test the current First Spark happy path and guidance flow."""
     state = GameState()
@@ -43,6 +50,11 @@ def test_first_spark_main_flow() -> None:
     response = run_command(state, "help")
     assert_contains(response, "trace")
     assert_contains(response, "walkthrough")
+    assert_contains(response, "return to your terminal")
+    assert state.current_module == "arrival"
+
+    response = run_command(state, "git statusquit")
+    assert_unknown_command_recovery(response)
     assert state.current_module == "arrival"
 
     response = run_command(state, "walkthrough")
@@ -59,6 +71,7 @@ def test_first_spark_main_flow() -> None:
 
     response = run_command(state, "help")
     assert_contains(response, "walkthrough")
+    assert_contains(response, "return to your terminal")
 
     response = run_command(state, "walkthrough")
     assert_walkthrough(response)
@@ -108,6 +121,11 @@ def test_first_spark_main_flow() -> None:
 
     response = run_command(state, "help")
     assert_contains(response, "walkthrough")
+    assert_contains(response, "return to your terminal")
+
+    response = run_command(state, "git statusquit")
+    assert_unknown_command_recovery(response)
+    assert state.current_module == "ending"
 
     response = run_command(state, "walkthrough")
     assert_walkthrough(response)
