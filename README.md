@@ -43,6 +43,18 @@ A Nexus module contains the shared structure. An activation contains the concret
 - [AI use](AI_USE.md)
 - [Speaking code](docs/SPEAKING_CODE.md)
 - [Playing a Nexus](docs/PLAYING_A_NEXUS.md)
+- [Resonance Arc](docs/RESONANCE_ARC.md)
+- [Discussions Guide](docs/DISCUSSIONS_GUIDE.md)
+
+## Discussions
+
+Project discussions:
+
+```text
+https://github.com/NataliReise/glossai-nexus/discussions
+```
+
+Use discussions for questions, feedback, public-safe resonance nodes, module ideas, and project orientation.
 
 ## Narrative layer
 
