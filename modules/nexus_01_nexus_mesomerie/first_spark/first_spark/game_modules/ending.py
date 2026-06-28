@@ -10,7 +10,8 @@ from first_spark.state import GameState
 
 
 PUBLIC_REPOSITORY_URL = "https://github.com/NataliReise/glossai-nexus.git"
-WHAT_NEXT_GUIDE_PATH = (
+WHAT_NEXT_GUIDE_URL = (
+    "https://github.com/NataliReise/glossai-nexus/blob/main/"
     "modules/nexus_01_nexus_mesomerie/first_spark/WHAT_NEXT.md"
 )
 SECTION_DIVIDER = "︵‿︵‿୨ ☾𓋹☽ ୧‿︵‿︵"
@@ -36,7 +37,7 @@ Public project:
   {PUBLIC_REPOSITORY_URL}
 
 Short guide:
-  {WHAT_NEXT_GUIDE_PATH}
+  {WHAT_NEXT_GUIDE_URL}
 
 Never post private activation data, private gift messages, or return artifacts publicly.
 
