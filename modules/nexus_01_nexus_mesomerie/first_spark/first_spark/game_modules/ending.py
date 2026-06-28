@@ -17,6 +17,7 @@ HELP_TEXT = """Available commands:
   help     Show this help text.
   look     Look at the opened public demo message.
   unlock   Show the already opened public demo message again.
+  trace    Reveal a gentle next trace.
   quit     Exit First Spark.
 """
 
@@ -41,6 +42,9 @@ def handle_command(command: str, state: GameState) -> ModuleResponse:
 
     if command == "unlock":
         return ModuleResponse(ALREADY_OPEN_TEXT)
+
+    if command == "trace":
+        return ModuleResponse("Next trace:\n  The First Spark is complete.")
 
     if command == "quit":
         return ModuleResponse("First Spark closed.", should_quit=True)
