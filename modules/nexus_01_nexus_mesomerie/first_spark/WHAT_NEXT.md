@@ -51,6 +51,12 @@ You might look at:
 - the resonance arc and discussions guide,
 - future modules and ideas as they appear.
 
+For a friendly introduction to project terms, public/private layers, resonance nodes, discussions, and future modules, visit the project wiki:
+
+```text
+https://github.com/NataliReise/glossai-nexus/wiki
+```
+
 You can also visit the project discussions:
 
 ```text
@@ -152,6 +158,12 @@ Public repository:
 
 ```text
 https://github.com/NataliReise/glossai-nexus.git
+```
+
+Project wiki:
+
+```text
+https://github.com/NataliReise/glossai-nexus/wiki
 ```
 
 Project discussions:
