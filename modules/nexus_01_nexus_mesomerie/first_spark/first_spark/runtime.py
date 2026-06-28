@@ -13,6 +13,10 @@ from first_spark.state import GameState
 ModuleHandler = Callable[[str, GameState], ModuleResponse]
 
 
+INTERRUPT_TEXT = """First Spark interrupted.
+Returning to your terminal."""
+
+
 MODULES: dict[str, ModuleHandler] = {
     "arrival": arrival.handle_command,
     "spark_chamber": spark_chamber.handle_command,
@@ -42,6 +46,19 @@ def dispatch_command(command: str, state: GameState) -> ModuleResponse:
     return response
 
 
+def read_command() -> str | None:
+    """Read one command from the terminal.
+
+    Return None when the player interrupts First Spark with Ctrl-C.
+    """
+    try:
+        return input(PROMPT).strip().lower()
+    except KeyboardInterrupt:
+        print()
+        print(INTERRUPT_TEXT)
+        return None
+
+
 def run_terminal() -> None:
     """Run the modular First Spark terminal."""
     state = GameState()
@@ -50,7 +67,9 @@ def run_terminal() -> None:
     print()
 
     while not state.should_quit:
-        command = input(PROMPT).strip().lower()
+        command = read_command()
+        if command is None:
+            break
         if command == "":
             continue
 
