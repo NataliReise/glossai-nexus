@@ -10,7 +10,7 @@ The current prototype contains the first complete mini game loop:
 
 > arrival -> spark chamber -> read traces -> link spark -> unlock activation message
 
-This is still intentionally small. It proves that a Nexus module can start locally, move between small game modules, keep state, complete a first activation-message ending, offer optional gentle guidance through the `trace` command, provide a spoiler-protected `walkthrough`, load a local private activation file, explain confusing pasted input on unknown commands, document the local activation workflow, show friendly activation-file errors, provide a safe helper for creating the local activation file, and protect the main flow with a minimal automated test.
+This is still intentionally small. It proves that a Nexus module can start locally, move between small game modules, keep state, complete a first activation-message ending, offer optional gentle guidance through the `trace` command, provide a spoiler-protected `walkthrough`, load a local private activation file, explain confusing pasted input on unknown commands, document the local activation workflow, show friendly activation-file errors, provide a safe helper for creating the local activation file, show a first after-play message, and protect the main flow with a minimal automated test.
 
 Development principle:
 
@@ -45,7 +45,7 @@ Expected output:
 First Spark flow tests passed.
 ```
 
-The test checks the current main flow from arrival to ending, including state changes for `trace`, `walkthrough`, `read`, `link spark`, `unlock`, `quit`, unknown-command recovery text, activation-file validation errors, and the local activation creation helper.
+The test checks the current main flow from arrival to ending, including state changes for `trace`, `walkthrough`, `read`, `link spark`, `unlock`, `quit`, unknown-command recovery text, activation-file validation errors, the local activation creation helper, and the after-play message.
 
 ## Activation files
 
@@ -130,8 +130,8 @@ After `unlock`, the player enters the ending module.
 Available commands:
 
 - `help` - Show available commands for the current module.
-- `look` - Look at the opened activation message.
-- `unlock` - Show the already opened activation message again.
+- `look` - Look at the opened activation message and after-play message.
+- `unlock` - Show the already opened activation message and after-play message again.
 - `trace` - Confirm that the First Spark is complete.
 - `walkthrough` - Show the full solution path with a spoiler warning.
 - `quit` - Exit First Spark and return to your terminal.
@@ -192,6 +192,7 @@ Expected behavior:
 - `trace` in the spark chamber changes according to the current state.
 - `link spark` only succeeds after both visible traces were read.
 - `unlock` opens the activation message after the spark was linked.
+- The after-play message explains that the gift is complete, passing the spark onward is optional, and public traces must stay public-safe.
 - `trace` in the ending module reports that the First Spark is complete.
 
 ## Public / private boundary
@@ -230,9 +231,9 @@ For the current narrow specification, see:
 
 ## After-play layer
 
-The first after-play layer should appear after the unlocked final message.
+The first after-play layer appears after the unlocked final message.
 
-It should make clear that the gift is complete, passing the spark onward is optional, and any public resonance node must be public-safe.
+It makes clear that the gift is complete, passing the spark onward is optional, and any public resonance node must be public-safe.
 
 For the current narrow specification, see:
 
@@ -259,11 +260,12 @@ For the current narrow specification, see:
 17. Public handoff checklist.
 18. Gift package specification.
 19. First Spark after-play specification.
+20. After-play message after the final activation message.
 
 Each unit should remain small and runnable before the next one is added.
 
 ## Possible next running units
 
-- Show a short after-play message after the final activation message.
+- Add a public-safe resonance node draft template.
 - Add optional activation field validation for future fields.
 - Prepare resonance artifact and return artifact concepts after the after-play layer works.
