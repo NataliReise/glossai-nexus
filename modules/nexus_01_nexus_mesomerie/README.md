@@ -73,6 +73,7 @@ For the First Spark 0.1 review, see:
 - [Nexus Module Map](NEXUS_MODULE_MAP.md)
 - [First Spark Scope](FIRST_SPARK_SCOPE.md)
 - [MVP Specification](MVP_NEXUS_01.md)
+- [Return Unlock Design](RETURN_UNLOCK_DESIGN.md)
 - [Nexus Activity System](NEXUS_ACTIVITY_SYSTEM.md)
 
 ## General project documents
