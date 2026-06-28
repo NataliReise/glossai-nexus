@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from first_spark.game_modules import ending
+from first_spark.guidance import WALKTHROUGH_TEXT
 from first_spark.module_response import ModuleResponse
 from first_spark.state import GameState
 
@@ -34,6 +35,7 @@ HELP_TEXT = """Available commands:
   link spark           Link the first spark fragments.
   unlock               Open the private message after linking the spark.
   trace                Reveal a gentle next trace.
+  walkthrough          Show the full solution path with a spoiler warning.
   quit                 Exit First Spark.
 """
 
@@ -58,6 +60,9 @@ def handle_command(command: str, state: GameState) -> ModuleResponse:
 
     if command == "trace":
         return next_trace(state)
+
+    if command == "walkthrough":
+        return ModuleResponse(WALKTHROUGH_TEXT.strip())
 
     if command.startswith("read "):
         trace_name = command.removeprefix("read ").strip()
