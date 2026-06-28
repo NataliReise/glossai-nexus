@@ -84,7 +84,7 @@ human-readable wrapper
 + safe identifiers
 + guided symbolic fields
 + opaque private return code
-+ optional public-safe trace suggestion
++ optional public-safe trace suggestion or preview
 ```
 
 Why not only one short phrase?
@@ -123,7 +123,7 @@ Private return code:
 <opaque private code or payload>
 
 Public-safe trace suggestion:
-<optional generated public-safe phrase>
+<optional generated public-safe phrase preview>
 
 Privacy:
 Do not post this return artifact publicly.
@@ -268,11 +268,13 @@ This field must never be posted publicly.
 
 The public-safe trace suggestion is optional.
 
+It is not the final return trace.
+
 It is not the return artifact.
 
 It cannot unlock anything.
 
-It may be shown as a convenience to help participants create a public-safe reward after a successful unlock.
+It may be shown as a preview or raw ingredient, but it should not be treated as proof that the return layer has opened.
 
 Example:
 
@@ -283,7 +285,7 @@ The lantern answered through courage.
 
 If it is included inside the return artifact, it should still be treated carefully.
 
-The final public-safe return trace should ideally be generated or confirmed after B successfully unlocks the return layer.
+The final public-safe return trace should be generated or confirmed only after B successfully unlocks the return layer.
 
 ---
 
@@ -326,7 +328,7 @@ statement that no private data is included
 
 ```text
 The Return Artifact itself is never the forum post.
-The forum post may only be a public-safe trace derived from or inspired by the completed return.
+The forum post may only be a public-safe trace generated or confirmed after the completed return.
 ```
 
 ---
@@ -335,9 +337,23 @@ The forum post may only be a public-safe trace derived from or inspired by the c
 
 A public-safe return trace is a separate object.
 
-It may be generated after B successfully unlocks the return layer.
+It is the publishable reward that may appear after B successfully unlocks the return layer.
 
-It may include:
+It may contain generated content, public aliases, public notes, and consent text.
+
+It should be generated or confirmed at B's unlock stage, not treated as complete at C's return stage.
+
+The return artifact may contain a suggestion or preview, but the final public-safe return trace should appear only after the private return has actually worked.
+
+This preserves the meaning of the public trace:
+
+```text
+C brought the answer back.
+B opened the layer.
+Only then may the public trace appear.
+```
+
+A public-safe return trace may include:
 
 ```text
 Return Trace: N01-RT-draft
@@ -410,7 +426,50 @@ This keeps the poetic input useful without accidentally exposing key material or
 
 ---
 
-## 10. MVP Example
+## 10. Current Design Decisions
+
+This section records design decisions that have become stable enough to guide the next planning step.
+
+### Decision 01: Public-safe return trace timing
+
+The return artifact may include a public-safe trace suggestion or preview.
+
+However, the final public-safe return trace should be generated or confirmed only after B successfully unlocks the return layer.
+
+The public-safe return trace is the publishable reward.
+
+It may include generated content, public aliases, public notes, and consent text.
+
+It must never include:
+
+```text
+return artifact
+private return code
+return key
+key material
+raw seed
+encrypted layer content
+private return message
+private gift text
+private activation data
+private relationship context
+```
+
+C may receive a carrier reward or carrier trace at the return stage.
+
+B receives the main public-safe return trace after successful unlock.
+
+Working formula:
+
+```text
+C brings the answer back.
+B opens the layer.
+Only then may the public trace appear.
+```
+
+---
+
+## 11. MVP Example
 
 Example private return artifact:
 
@@ -459,7 +518,7 @@ No private activation data, private gift text, return artifact, key material, or
 
 ---
 
-## 11. MVP Constraints
+## 12. MVP Constraints
 
 For the first MVP planning pass, the return artifact format should remain:
 
@@ -486,7 +545,7 @@ complex binary packaging
 
 ---
 
-## 12. Open Questions
+## 13. Open Questions
 
 Questions for the next design pass:
 
@@ -497,14 +556,13 @@ Should there also be an internal JSON representation behind the text block?
 How long should the private return code be?
 How should copy/paste errors be detected?
 Should package_id and layer_id be human-readable, random, or both?
-Should the public-safe trace suggestion be included inside the return artifact or only generated after unlock?
 How should the system distinguish private human trace from public trace word?
 Which fields become cryptographically relevant later?
 ```
 
 ---
 
-## 13. Working Formulas
+## 14. Working Formulas
 
 ```text
 The Return Artifact itself is never the forum post.
@@ -524,4 +582,10 @@ Public-safe trace separate.
 ```text
 The return artifact may open the layer.
 The public trace only says that the answer arrived.
+```
+
+```text
+C brings the answer back.
+B opens the layer.
+Only then may the public trace appear.
 ```
