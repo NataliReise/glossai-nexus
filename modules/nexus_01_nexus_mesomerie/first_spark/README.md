@@ -10,7 +10,7 @@ The current prototype contains the first complete mini game loop:
 
 > arrival -> spark chamber -> read traces -> link spark -> unlock activation message
 
-This is still intentionally small. It proves that a Nexus module can start locally, move between small game modules, keep state, complete a first activation-message ending, offer optional gentle guidance through the `trace` command, provide a spoiler-protected `walkthrough`, load a local private activation file, explain confusing pasted input on unknown commands, document the local activation workflow, show friendly activation-file errors, provide a safe helper for creating the local activation file, show a first after-play message, separate ending sections with a reusable Ankh divider, handle Ctrl-C interruption gracefully, show and explain a public-safe resonance node draft after completion, point players to a short what-next guide, and protect the main flow with a minimal automated test.
+This is still intentionally small. It proves that a Nexus module can start locally, move between small game modules, keep state, complete a first activation-message ending, offer optional gentle guidance through the `trace` command, provide a spoiler-protected `walkthrough`, load a local private activation file, explain confusing pasted input on unknown commands, document the local activation workflow, show friendly activation-file errors, provide a safe helper for creating the local activation file, show a first after-play message, separate ending sections with a reusable Ankh divider, handle Ctrl-C interruption gracefully, show and explain a public-safe resonance node draft after completion, point players to a short what-next guide, document the First Spark 0.1 review/freeze, and protect the main flow with a minimal automated test.
 
 Development principle:
 
@@ -219,6 +219,7 @@ See also:
 - [`GIFT_PACKAGE_SPEC.md`](GIFT_PACKAGE_SPEC.md)
 - [`FIRST_SPARK_AFTER_PLAY.md`](FIRST_SPARK_AFTER_PLAY.md)
 - [`WHAT_NEXT.md`](WHAT_NEXT.md)
+- [`FIRST_SPARK_0_1_REVIEW.md`](FIRST_SPARK_0_1_REVIEW.md)
 
 ## Public handoff
 
@@ -256,6 +257,12 @@ For a short player-facing explanation of First Spark, the resonance node draft, 
 
 - [`WHAT_NEXT.md`](WHAT_NEXT.md)
 
+## First Spark 0.1 review
+
+For the current stability review, design freeze notes, and data-minimization decision, see:
+
+- [`FIRST_SPARK_0_1_REVIEW.md`](FIRST_SPARK_0_1_REVIEW.md)
+
 ## Completed running units
 
 1. Start script with boot sequence.
@@ -282,11 +289,12 @@ For a short player-facing explanation of First Spark, the resonance node draft, 
 22. Friendly Ctrl-C interrupt handling.
 23. Public-safe resonance node draft command with after-play hint.
 24. What-next guide for completed First Spark players.
+25. First Spark 0.1 review and data-minimization freeze.
 
 Each unit should remain small and runnable before the next one is added.
 
 ## Possible next running units
 
-- Add optional result or resonance-node file saving.
 - Add optional activation field validation for future fields.
+- Refine the resonance node draft language after external reading.
 - Prepare resonance artifact and return artifact concepts after the after-play layer works.
