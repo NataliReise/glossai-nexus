@@ -10,6 +10,9 @@ from first_spark.state import GameState
 
 
 PUBLIC_REPOSITORY_URL = "https://github.com/NataliReise/glossai-nexus.git"
+WHAT_NEXT_GUIDE_PATH = (
+    "modules/nexus_01_nexus_mesomerie/first_spark/WHAT_NEXT.md"
+)
 SECTION_DIVIDER = "︵‿︵‿୨ ☾𓋹☽ ୧‿︵‿︵"
 
 
@@ -31,6 +34,9 @@ Add a private activation package only through a private channel.
 
 Public project:
   {PUBLIC_REPOSITORY_URL}
+
+Short guide:
+  {WHAT_NEXT_GUIDE_PATH}
 
 Never post private activation data, private gift messages, or return artifacts publicly.
 
