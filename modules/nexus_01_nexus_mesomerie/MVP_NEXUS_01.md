@@ -1,956 +1,622 @@
-# Nexus 01 – MVP Specification
+# Nexus 01 - MVP Specification
 
-Working title: **Nexus 01 – Nexus-Mesomerie**  
+Working title: **Nexus 01 - Nexus-Mesomerie**  
 Project: **glossAI Nexus**  
-Document status: First working specification  
+Document status: Refocused working specification  
 Suggested file name: `MVP_NEXUS_01.md`
 
 ---
 
 ## 1. Purpose
 
-**Nexus 01 – Nexus-Mesomerie** is the first playable module of the glossAI Nexus project.
+**Nexus 01 - Nexus-Mesomerie** is the first larger playable target state of the glossAI Nexus project.
 
-It should be a small, complete, locally playable software game artifact. It should work as:
+It should grow out of the current First Spark prototype without losing the safety and clarity of the public/private boundary.
 
-- a standalone playable Nexus module,
-- a neutral glossAI/Nexus lore experience,
-- a personal activation for a person, group, or occasion,
-- a gift activation as a special personal activation,
-- a prototype for social resonance through carried codes and returned answers,
-- an example of open code with protected activation content.
-
-The MVP should not implement the full future vision of glossAI Nexus. It should demonstrate the core idea in a limited but meaningful form:
+The MVP should demonstrate this limited but meaningful idea:
 
 > A Nexus is not only played.  
-> It can be activated, carried, answered, and returned.
+> It can be activated, privately carried onward, answered, and remembered.
+
+This version does not require a server, accounts, automatic networking, or GitHub API integration.
+
+The first Nexus network is human-mediated.
 
 ---
 
-## 2. Core Design Principles
+## 2. Current Foundation
+
+First Spark already provides:
+
+- a local terminal prototype
+- a neutral public fallback
+- local private activation support
+- safe example activation data
+- friendly activation-file errors
+- a helper for creating local activation data
+- a public handoff checklist
+- a private gift package specification
+
+Relevant First Spark documents:
+
+```text
+first_spark/README.md
+first_spark/LOCAL_ACTIVATION_GUIDE.md
+first_spark/PUBLIC_HANDOFF_CHECKLIST.md
+first_spark/GIFT_PACKAGE_SPEC.md
+```
+
+MVP Nexus 01 should build on this foundation instead of replacing it.
+
+---
+
+## 3. Core Design Principles
 
 Nexus 01 should follow these principles:
 
 - The module structure is open.
 - The code is readable.
 - The game can be played without reading the code.
-- Code reading may reveal additional layers, but should not replace the full resonance experience.
 - Personal activation content must not be required to be public.
+- The public module stays neutral and inspectable.
+- The private gift layer stays private.
 - The social network created by Nexus is not automatic or digital by default.
-- Resonance codes are carried by people.
-- A returned answer can unlock a deeper encrypted layer.
-- A trace may be shared, but it should never be taken.
+- The spark travels from person to person.
+- The forum does not carry the spark.
+- The forum may only record voluntary public traces of sparks that have already travelled privately.
+- Passing on a spark is an invitation, not an obligation.
+- A received gift remains complete even if it is never forwarded.
 
 Important guiding formulas:
 
 > The code belongs in the light.  
 > The message may remain protected.
 
-> You do not have to read the code.  
-> But the code must be readable.
+> The public module stays neutral.  
+> The gift is created by a private wrapper.
 
-> A code can open a door.  
-> Only a person can return through it.
-
----
-
-## 3. Core Resonance Loop
-
-The MVP should implement one complete resonance loop:
-
-### Step 1: Origin Play
-
-Player or Team A starts Nexus 01 with an activation.
-
-This activation can be:
-
-- a neutral activation,
-- a personal activation,
-- a gift activation as a personal activation with purpose `gift`.
-
-Team A plays the main game and reaches the first ending.
-
-At the end, Nexus 01 unlocks a primary result:
-
-- a personal message,
-- a gift message,
-- or a lore fragment.
-
-It also generates a resonance code.
-
-### Step 2: Carrying the Trace
-
-Team A gives the module and resonance code to Player or Team B.
-
-This is not automatic. No online connection is required.
-
-The trace is carried by a person.
-
-### Step 3: Carried Play
-
-Team B starts Nexus 01 with the resonance code from Team A.
-
-This creates a carried activation.
-
-Team B plays a modified version of the game.
-
-During this run, Team B makes a small number of guided choices and contributes at least one human resonance word.
-
-At the end, Nexus 01 generates a return key.
-
-### Step 4: Return
-
-Team B gives the return key back to Team A.
-
-Team A enters the return key into the original Nexus activation.
-
-The origin Nexus combines:
-
-- the original resonance code,
-- the return key,
-- optional activation-specific secret material,
-- and/or a resonance word.
-
-If the combined key is valid, an encrypted return layer is decrypted and shown.
-
-### Step 5: Returned Layer
-
-The returned layer may reveal:
-
-- a second message,
-- a deeper lore fragment,
-- a bonus resonance text,
-- or a poetic answer connecting both playthroughs.
-
-This completes the MVP resonance loop:
-
-> A → B → A
-
-Longer chains are not part of the MVP.
+> The spark travels from person to person.  
+> The forum only shows where light was seen.
 
 ---
 
-## 4. Module States
+## 4. MVP Goal
 
-### 4.1 `module_only`
-
-The module exists as open source structure.
-
-It contains:
-
-- code,
-- module metadata,
-- general fragments,
-- game rules,
-- documentation,
-- schema files,
-- example activation files,
-- optional demo encrypted content.
-
-This state is not playable as a concrete run.
-
-A Nexus must be activated before it can be played.
-
-### 4.2 `activated`
-
-The Nexus has been activated through one of the supported activation modes.
-
-The game can be started.
-
-### 4.3 `completed`
-
-The first playthrough has been completed.
-
-A primary result has been unlocked.
-
-A resonance code may be generated.
-
-### 4.4 `carried`
-
-The Nexus has been started with an incoming resonance code from another completed run.
-
-This is a carried activation.
-
-### 4.5 `returned`
-
-A return key has been entered into the original activation.
-
-If valid, the encrypted return layer has been opened.
-
----
-
-## 5. Activation Model
-
-The activation model has three separate layers:
-
-1. **Activation mode** — how the Nexus is activated.
-2. **Activation purpose** — why this activation exists.
-3. **Play mode** — how the module is played.
-
-This separation is important.
-
-For example:
-
-- `gift` is a purpose.
-- `team_play` is a play mode.
-- `personal_activation` is an activation mode.
-
----
-
-## 6. Activation Modes
-
-### 6.1 `neutral_activation`
-
-A neutral activation is a playable activation without a private gift purpose and without a specific recipient.
-
-It is suitable for:
-
-- testing,
-- public play,
-- general lore access,
-- sharing Nexus 01 without personal content.
-
-Typical primary result:
-
-- `lore_unlock`
-
-A neutral activation is not the same as `module_only`.
-
-`module_only` is not playable.  
-`neutral_activation` is a playable activation.
-
-### 6.2 `personal_activation`
-
-A personal activation is a concrete activation for a person, team, occasion, or relationship context.
-
-It may contain:
-
-- recipient alias,
-- group or team alias,
-- occasion,
-- tone,
-- personal message,
-- optional gift instruction,
-- optional private secret material for encrypted layers.
-
-Typical primary result:
-
-- `message_unlock`
-
-Personal activation files should not be committed to the public repository unless intentionally anonymized.
-
-### 6.3 Gift Activation
-
-A gift activation is not a separate activation mode.
-
-It is a personal activation with:
-
-```json
-"purpose": "gift"
-```
-
-A gift activation may show visible personalization from the beginning.
-
-Example:
-
-> Nexus 01 has been activated for Sascha.  
-> Occasion: birthday.  
-> Private message: locked.  
-> Resonance layer: waiting.
-
-The actual gift message remains locked until the module is completed.
-
-Typical primary result:
-
-- `message_unlock`
-
-Typical message type:
-
-- `gift_message`
-
-### 6.4 `carried_activation`
-
-A carried activation starts when a player or team enters a resonance code received from another completed Nexus run.
-
-It may change:
-
-- intro text,
-- available fragments,
-- response prompts,
-- return key generation,
-- resonance wording,
-- final carried result.
-
-Typical primary result:
-
-- a return key,
-- possibly also a small lore or reflection fragment.
-
-### 6.5 `return_input`
-
-This is not a full new activation mode.
-
-It is a return action inside the original activation.
-
-A player enters a return key received from another carried activation.
-
-If the key is valid, the encrypted return layer opens.
-
----
-
-## 7. Activation Purposes
-
-For Version 1, the following purposes should be supported or prepared:
-
-### 7.1 `public_play`
-
-Used with `neutral_activation`.
-
-Purpose:
-
-- general play,
-- public demo,
-- lore exploration,
-- testing without private content.
-
-Typical primary result:
-
-- `lore_unlock`
-
-### 7.2 `gift`
-
-Used with `personal_activation`.
-
-Purpose:
-
-- gift,
-- invitation,
-- birthday,
-- symbolic present,
-- personal surprise.
-
-Typical primary result:
-
-- `message_unlock`
-
-Typical message type:
-
-- `gift_message`
-
-### 7.3 `personal_resonance`
-
-Used with `personal_activation`.
-
-Purpose:
-
-- personal note,
-- shared reflection,
-- friendship or group resonance,
-- individually configured play without gift character.
-
-Typical primary result:
-
-- `message_unlock`
-
-Typical message type:
-
-- `personal_note`
-
-### 7.4 Later Possible Purposes
-
-Possible later values:
-
-- `workshop`
-- `learning_context`
-- `community_play`
-- `module_test`
-- `artistic_prompt`
-
-These are not required for Version 1.
-
----
-
-## 8. Play Modes
-
-### 8.1 `solo`
-
-The module is played by one person.
-
-This is suitable for:
-
-- neutral play,
-- personal play,
-- gift play,
-- carried activation.
-
-### 8.2 `team_play`
-
-The module is played by two or more people as a team.
-
-This is suitable for:
-
-- cooperative puzzle solving,
-- gift play for a couple or group,
-- neutral group play,
-- carried activation by a team.
-
-`team_play` is not a purpose.
-
-It is a play mode.
-
-Example:
-
-```json
-"play": {
-  "mode": "team_play",
-  "team_alias_enabled": true
-}
-```
-
----
-
-## 9. Primary Result Types
-
-### 9.1 `message_unlock`
-
-A personal message, gift message, invitation, dedication, or concrete instruction is unlocked.
-
-This is mainly used in personal activations.
-
-The message may be:
-
-- plain in a private local activation file,
-- or encrypted, if the activation creator chooses this.
-
-Possible message types:
-
-- `gift_message`
-- `personal_note`
-- `invitation`
-- `dedication`
-- `return_prompt`
-
-### 9.2 `lore_unlock`
-
-A general Nexus/glossAI lore fragment is unlocked.
-
-This is mainly used in neutral activations.
-
-It may reveal:
-
-- a fragment of the Nexus mythos,
-- a reflection about openness, boundaries, access, response, or resonance,
-- a small text from the glossAI matrix.
-
-### 9.3 `encrypted_return_layer`
-
-This is not the first primary result.
-
-It is an optional second layer.
-
-It opens only after a return key is entered into the original activation.
-
-It should be symmetrically encrypted in Version 1.
-
----
-
-## 10. Encryption in Version 1
-
-Nexus 01 MVP should include one symmetrically encrypted return layer.
-
-Recommended approach:
-
-- Python implementation,
-- `cryptography` library,
-- preferably Fernet for the first version.
-
-The full decryption key should not be stored directly in the public code.
-
-The decryption key should be derived from multiple parts, for example:
-
-- origin resonance code,
-- return key from carried play,
-- optional activation-specific secret,
-- optional resonance word contributed by Team B.
-
-The encrypted layer may be public if it contains general lore.
-
-Private messages should remain in local activation files and should not be committed publicly.
-
-### 10.1 Key Principle
-
-The encryption should not pretend to be unbreakable magic.
-
-It should provide meaningful protection against simply reading the answer in the source code.
-
-It should also embody the project idea:
-
-> The text is present in the Nexus.  
-> But it becomes readable only when an answer returns.
-
-### 10.2 Human Contribution
-
-At least one element of the return key should depend on a human contribution by Team B.
-
-Examples:
-
-- a resonance word,
-- a guided choice,
-- a short answer,
-- a team alias,
-- a combination of choice and word.
-
-This makes the returned layer less predictable from code inspection alone.
-
----
-
-## 11. Resonance Codes
-
-A resonance code is generated after a completed origin playthrough.
-
-It should be:
-
-- readable,
-- short enough to share,
-- thematically meaningful,
-- parseable by the game,
-- not secret in the same way as a password.
-
-Example format:
+MVP Nexus 01 should define and later support one private human-mediated resonance chain:
 
 ```text
-N01-MIRROR-BOUNDARY-314
+A -> B -> C -> B
 ```
 
-Possible parts:
+This means:
 
-- module id,
-- fragment signature,
-- symbolic pair,
-- short checksum or code suffix.
+1. A gives a First Spark gift to B.
+2. B plays and receives the gift.
+3. B may privately pass a spark onward to C.
+4. C plays and returns a response artifact to B.
+5. B enters or places the return artifact locally.
+6. B unlocks a deeper return layer.
 
-The resonance code is not the full key.
+This is the first meaningful resonance chain.
 
-It is a carried trace.
+The origin giver A may start the trace, but the first deeper return experience may happen one generation later, when B passes the spark onward to C and receives a return artifact back.
 
 ---
 
-## 12. Return Keys
+## 5. Actors
 
-A return key is generated after a carried activation has been completed.
+### 5.1 A - Origin Giver
 
-It should depend on:
+A creates or chooses the first private gift activation.
 
-- incoming resonance code,
-- carried play choices,
-- at least one human resonance word,
-- possibly difficulty or fragment result.
+A gives B:
 
-Example format:
+- the public module or a link to it
+- a private gift package
+- optional start instructions
+
+In the first real project use case, A may be the project creator.
+
+A does not need to be the first person who receives a return unlock.
+
+### 5.2 B - First Recipient / Next Giver
+
+B receives and plays the First Spark gift.
+
+At the end, B may receive:
+
+- the gift message
+- an invitation to pass a spark onward
+- a link to the public Git repository
+- a resonance artifact
+- optionally a locally generated resonance node draft
+
+B may stop here.
+
+The gift remains complete even if B never passes it onward.
+
+If B chooses to continue the trace, B creates or chooses a private First Spark activation for C.
+
+### 5.3 C - Next Recipient / Return Sender
+
+C receives and plays the First Spark gift or resonance activation from B.
+
+At the end, C may receive:
+
+- a final message, either neutral or gift-based
+- an invitation to pass a spark onward
+- a link to the public Git repository
+- a new resonance artifact
+- a return artifact for B
+- optionally a locally generated resonance node draft
+
+C may privately send the return artifact back to B.
+
+### 5.4 Later Participants
+
+Later participants may repeat the same pattern:
+
+```text
+B -> C -> D -> C
+C -> D -> E -> D
+D -> E -> F -> E
+```
+
+Longer chains may emerge socially, but MVP 01 only needs to specify and support the first full private chain.
+
+---
+
+## 6. Core Private Resonance Flow
+
+### Step 1: Origin Gift
+
+A creates or chooses a First Spark gift activation for B.
+
+A privately gives B:
+
+- the public module or a link to it
+- a private gift package
+- optional start instructions
+
+### Step 2: Gift Play
+
+B installs or opens First Spark locally.
+
+B plays the activated First Spark.
+
+At the end, B receives:
+
+- the gift message
+- a public Git/project invitation
+- an invitation to pass a Nexus spark onward
+- a resonance artifact
+
+Optional message idea:
+
+```text
+You may keep this spark as a completed gift.
+If you want, you may also let it travel further.
+```
+
+### Step 3: Private Pass-On
+
+B may create or choose a First Spark activation for C.
+
+B privately gives C:
+
+- the public module or a link to it
+- a private gift package
+- optional start instructions
+- the resonance artifact, either separately or embedded in the activation
+
+This may be called a `resonance_activation` if the activation carries an incoming resonance artifact.
+
+### Step 4: Carried Gift Play
+
+C plays the activated First Spark locally.
+
+At the end, C receives:
+
+- the final message, either neutral or gift-based
+- a public Git/project invitation
+- an invitation to pass a Nexus spark onward
+- a new resonance artifact
+- a return artifact for B
+
+### Step 5: Private Return
+
+C privately gives the return artifact back to B.
+
+The return artifact is not posted publicly.
+
+It may be:
+
+- a short text phrase
+- a structured text block
+- a local JSON file
+- another simple locally transferable artifact
+
+MVP 01 should prefer a simple human-readable text form unless a file becomes clearly necessary.
+
+### Step 6: Return Unlock
+
+B places or enters the return artifact locally.
+
+B unlocks a deeper return layer.
+
+The return layer may reveal:
+
+- a second message
+- a deeper lore fragment
+- a reflection about the trace
+- a poetic answer connecting B's gift and C's response
+
+---
+
+## 7. Voluntary Pass-On Rule
+
+Passing on a spark must remain voluntary.
+
+A Nexus gift must never become a chain letter, obligation, or growth hack.
+
+The game may invite continuation, but it must not pressure the player.
+
+Suggested rule text:
+
+```text
+Passing on a spark is an invitation, not an obligation.
+A received gift remains complete even if it is never forwarded.
+```
+
+Anti-chain-letter boundary:
+
+```text
+Nexus does not demand continuation.
+It offers a trace that may be carried onward.
+```
+
+---
+
+## 8. Artifact Terms
+
+MVP 01 should prefer the word `artifact` over `token` unless a more technical implementation requires token language.
+
+Reason:
+
+- `token` may sound like a secret, permission object, access credential, or security-sensitive value.
+- `artifact` can mean a portable symbolic result without implying secrecy or authorization.
+
+### 8.1 Resonance Artifact
+
+A resonance artifact travels forward.
+
+It marks that a spark may continue.
+
+It may be embedded in a private activation for the next recipient.
+
+It should not contain private gift text.
+
+It may be human-readable.
+
+Example placeholder format:
+
+```text
+N01-RA-MIRROR-BOUNDARY-7KQ2
+```
+
+### 8.2 Return Artifact
+
+A return artifact travels backward.
+
+It is created or revealed after a carried gift run.
+
+It allows the previous giver to unlock a deeper return layer.
+
+It should be privately returned to the previous giver.
+
+Example placeholder format:
 
 ```text
 N01-RETURN-LANTERN-courage-827
 ```
 
-The return key is given back to the origin player or team.
+### 8.3 Resonance Node Draft
 
-It should not need to be published anywhere.
+A resonance node draft is not an activation artifact.
 
----
+It is not used to unlock gameplay.
 
-## 13. Player Inputs
-
-The MVP should keep player inputs small and manageable.
-
-### 13.1 Command Input
-
-Terminal-style commands such as:
-
-```text
-status
-scan
-read
-connect
-unlock
-return
-help
-```
-
-### 13.2 Guided Choices
-
-Small choices during carried activation.
-
-Example:
-
-```text
-Choose what the trace found behind the boundary:
-
-1. a mirror
-2. a lantern
-3. a fox
-```
-
-### 13.3 Resonance Word
-
-One freely entered word from the carried player or team.
-
-Example:
-
-```text
-Leave one word inside the returning trace:
-> courage
-```
-
-This word may become part of the return key or encrypted-layer key derivation.
+It is a public-safe local text draft that a player may optionally post in a GitHub Discussion or other public project space to help make the spread of Nexus visible.
 
 ---
 
-## 14. Game Content Scope
+## 9. Activation Types
 
-The MVP should include:
+### 9.1 Neutral Activation
 
-- a small terminal interface,
-- a limited command language,
-- 5 main fragments,
-- 2 optional bonus fragments,
-- a neutral activation,
-- a personal activation example,
-- a gift activation example,
-- a carried activation path,
-- one encrypted return layer,
-- after-play options.
+A neutral activation is playable without private gift content.
 
-Possible main fragments:
+It is suitable for:
 
-- ACCESS
-- BOUNDARY
-- OPENNESS
-- TRACE
-- RESPONSE
+- public demo play
+- testing
+- lore exploration
+- general First Spark access
 
-Possible bonus fragments:
+### 9.2 Gift Activation
 
-- RESONANCE
-- RETURN
+A gift activation is a private activation for a specific person, group, occasion, or relationship context.
 
-These names may change during writing.
+It may contain:
 
----
+- recipient alias
+- occasion
+- tone
+- private message
+- optional gift instruction
 
-## 15. After-Play Options
+It must not be committed to the public repository.
 
-After a completed run, the game may offer optional follow-up actions.
+### 9.3 Resonance Activation
 
-These are not primary results.
+A resonance activation is a private activation that also carries an incoming resonance artifact.
 
-### 15.1 Show Pass-On Trace
+It is used when B passes the spark onward to C.
 
-The game displays the resonance code and explains how it may be carried to another person.
+It may contain:
 
-### 15.2 Generate Hall-of-Resonance Draft
+- recipient alias
+- private gift message
+- incoming resonance artifact
+- optional instructions for return
 
-The game may generate a local Markdown or JSON file.
-
-This file may include:
-
-- module id,
-- activation type,
-- play mode,
-- team alias,
-- completion status,
-- fragments found,
-- hints used,
-- optional player note,
-- consent marker.
-
-No automatic publication.
-
-### 15.3 Generate Resonance Note
-
-The game may offer a reflection prompt and create a local note.
-
-Example prompt:
-
-> Which boundary protected resonance in this run?
-
-This note may remain private or be shared voluntarily.
-
-### 15.4 Generate Contact Node Draft
-
-The game may prepare a short text for a GitHub Discussion contact node.
-
-No automatic posting.
-
-The player decides whether to copy and publish it.
+It must not be committed to the public repository.
 
 ---
 
-## 16. Hall of Resonance
+## 10. Forum / GitHub Discussion Role
 
-The Hall of Resonance is not a score table.
+GitHub Discussions are not part of the private handoff path in MVP 01.
 
-It is a voluntary collection of shared traces.
+The forum does not carry:
 
-In Version 1, the game should only generate a local draft.
+- private activations
+- private gift messages
+- private resonance activations
+- private return artifacts
+- personal contact data
+- private relationship context
 
-Possible future repository structure:
+The forum may later help make the spread of Nexus visible through voluntary public resonance nodes.
+
+Core rule:
 
 ```text
-hall_of_resonance/
-  README.md
-  entries/
+The forum does not carry the spark.
+It only records voluntary public traces of sparks that have already travelled privately.
 ```
 
-Or initially:
+Poetic rule:
 
 ```text
-HALL_OF_RESONANCE.md
+The spark travels from person to person.
+The forum only shows where light was seen.
 ```
-
-The Hall should only include what players choose to share.
 
 ---
 
-## 17. Contact Nodes
+## 11. Resonance Nodes
 
-A contact node is a voluntary public invitation for resonance.
+A resonance node is a voluntary public trace.
 
-It may be posted in GitHub Discussions.
+It may be posted after a player has completed a run.
 
-Purpose:
+It should help make the growing Nexus network visible without exposing private data.
 
-- find someone to carry a trace,
-- invite a return response,
-- start a small social resonance chain,
-- connect players without automatic tracking.
+A resonance node should not contain:
 
-A contact node should not contain:
+- private activation data
+- private gift text
+- private return artifacts
+- email addresses
+- phone numbers
+- real names unless intentionally shared
+- sensitive information
+- instructions that pressure others to continue the chain
 
-- private activation data,
-- personal gift text,
-- full private return keys,
-- real names unless intentionally shared,
-- sensitive information.
+A resonance node may contain:
 
-Possible draft format:
+- module id
+- module name
+- public run type
+- completion marker
+- optional public alias
+- optional public note
+- consent marker
+- statement that no private activation data is included
+
+Possible local draft format:
 
 ```text
-Contact Node: N01-CN-0001
-Module: Nexus 01 – Nexus-Mesomerie
-Trace type: carried response
-Team/Alias:
-Looking for:
+Resonance Node: N01-RN-0001
+Module: Nexus 01 - First Spark
+Run type: private gift / neutral / carried spark
+Status: completed
+Trace visibility: public-safe summary only
+Forwarded: optional / yes / no / not shared
+Return: optional / received / not shared
+Public alias:
 Public note:
+Consent: I choose to share this public trace. No private activation data, gift text, or return artifact is included.
 ```
 
-GitHub Discussions may later use structured Discussion Forms.
+This draft may be copied manually into a GitHub Discussion.
 
-This is not required for the playable MVP.
+No automatic posting is part of MVP 01.
 
 ---
 
-## 18. Example Configurations
+## 12. Public Git Invitation
 
-### 18.1 Neutral Solo Activation
+At the end of a run, First Spark may show a short public project invitation.
 
-```json
-{
-  "activation": {
-    "mode": "neutral_activation",
-    "purpose": "public_play"
-  },
-  "play": {
-    "mode": "solo"
-  },
-  "result": {
-    "primary_type": "lore_unlock",
-    "return_layer_enabled": true,
-    "encrypted_layer_id": "n01_return_layer_01"
-  },
-  "after_play": {
-    "offer_pass_on_trace": true,
-    "offer_hall_entry": true,
-    "offer_resonance_note": true,
-    "offer_contact_node": true
-  }
-}
-```
+This message should invite the player to:
 
-### 18.2 Personal Resonance Activation
+- visit the public Git repository
+- inspect or fork the project
+- read the documentation
+- optionally post a public-safe resonance node draft
+- optionally pass the spark onward privately
 
-```json
-{
-  "activation": {
-    "mode": "personal_activation",
-    "purpose": "personal_resonance",
-    "recipient_alias": "Terminal Owls",
-    "visible_personalization": true
-  },
-  "play": {
-    "mode": "team_play",
-    "team_alias_enabled": true
-  },
-  "result": {
-    "primary_type": "message_unlock",
-    "message_type": "personal_note",
-    "return_layer_enabled": true
-  },
-  "after_play": {
-    "offer_pass_on_trace": true,
-    "offer_hall_entry": true,
-    "offer_resonance_note": true,
-    "offer_contact_node": true
-  }
-}
-```
+It must not pressure the player.
 
-### 18.3 Gift Activation
+Suggested tone:
 
-```json
-{
-  "activation": {
-    "mode": "personal_activation",
-    "purpose": "gift",
-    "recipient_alias": "Sascha",
-    "occasion": "birthday",
-    "visible_personalization": true
-  },
-  "play": {
-    "mode": "solo"
-  },
-  "result": {
-    "primary_type": "message_unlock",
-    "message_type": "gift_message",
-    "return_layer_enabled": true
-  },
-  "after_play": {
-    "offer_pass_on_trace": true,
-    "offer_hall_entry": true,
-    "offer_resonance_note": true,
-    "offer_contact_node": true
-  }
-}
-```
-
-### 18.4 Carried Activation
-
-```json
-{
-  "activation": {
-    "mode": "carried_activation",
-    "incoming_resonance_code": "N01-MIRROR-BOUNDARY-314"
-  },
-  "play": {
-    "mode": "solo"
-  },
-  "result": {
-    "primary_type": "lore_unlock",
-    "generates_return_key": true
-  },
-  "after_play": {
-    "offer_hall_entry": true,
-    "offer_resonance_note": true,
-    "offer_contact_node": true
-  }
-}
+```text
+This First Spark can end here.
+If you want, you may visit the public project, read how it works, or leave a public-safe resonance node to show that a spark was seen.
+No private message or activation data should be posted publicly.
 ```
 
 ---
 
-## 19. In Scope for Version 1
+## 13. Local Draft Generation
 
-Version 1 should include:
+MVP 01 may later generate local text drafts.
 
-- local terminal play,
-- neutral activation,
-- personal activation support,
-- gift activation as personal activation with purpose `gift`,
-- solo and team play mode as configuration values,
-- carried activation support,
-- return input support,
-- `message_unlock`,
-- `lore_unlock`,
-- one encrypted return layer,
-- resonance code generation,
-- return key generation,
-- guided choices in carried activation,
-- one human resonance word,
-- local Hall-of-Resonance draft generation,
-- local resonance note generation,
-- local contact node draft generation,
-- clear documentation.
+Possible drafts:
+
+- `resonance_node_draft.md`
+- `recipient_start_note.md`
+- `return_artifact_note.txt`
+
+For the current MVP specification, only the resonance node draft is relevant as a public-facing optional after-play artifact.
+
+A generated resonance node draft must be public-safe by design.
+
+It should include an explicit privacy reminder.
 
 ---
 
-## 20. Out of Scope for Version 1
+## 14. In Scope for MVP 01
 
-Version 1 should not include:
+MVP 01 should specify or prepare:
 
-- automatic online networking,
-- automatic GitHub posting,
-- GitHub API integration,
-- user accounts,
-- server infrastructure,
-- database,
-- long resonance chains beyond A → B → A,
-- multiple modules,
-- full module creation wizard,
-- complex community governance,
-- advanced cryptographic protocol design,
-- AI-generated live responses,
-- dependency-heavy packaging,
-- graphical interface.
+- local terminal play
+- neutral play
+- private gift activation
+- private resonance activation
+- private pass-on flow from B to C
+- private return artifact flow from C back to B
+- local return unlock for B
+- resonance artifact concept
+- return artifact concept
+- optional public Git/project invitation
+- optional local resonance node draft
+- documentation of the public/private boundary
+- no automatic online behavior
 
 ---
 
-## 21. Later Extensions
+## 15. Out of Scope for MVP 01
+
+MVP 01 should not include:
+
+- automatic online networking
+- GitHub API integration
+- automatic GitHub Discussion posting
+- GitHub Discussions as a token or artifact transfer channel
+- public matching between strangers
+- public exchange of private activations
+- public exchange of private return artifacts
+- user accounts
+- server infrastructure
+- database
+- moderation system
+- full Hall of Resonance workflow
+- advanced cryptographic protocol design
+- AI-generated live responses
+- graphical interface
+- dependency-heavy packaging
+
+---
+
+## 16. Later Extensions
 
 Possible later extensions:
 
-- longer resonance chains,
-- multiple return layers,
-- module templates,
-- browser-based version,
-- GitHub Discussion templates,
-- Hall-of-Resonance contribution workflow,
-- module creation guide,
-- additional Nexus modules,
-- cooperative two-person puzzle modes,
-- Git history as optional puzzle layer,
-- translations,
-- accessibility improvements,
-- workshop activations,
-- learning-context activations.
+- GitHub Discussion templates for resonance nodes
+- Hall of Resonance contribution workflow
+- public-safe resonance map
+- optional contact nodes for people seeking resonance partners
+- longer resonance chains
+- multiple return layers
+- encrypted return layers
+- browser-based version
+- module templates
+- module creation guide
+- additional Nexus modules
+- cooperative two-person puzzle modes
+- Git history as optional puzzle layer
+- translations
+- accessibility improvements
+- workshop activations
+- learning-context activations
+
+Contact nodes may be reconsidered later, but they are not part of the first private resonance-chain MVP.
 
 ---
 
-## 22. MVP Success Criteria
+## 17. MVP Success Criteria
 
-The MVP is successful if:
+The MVP direction is successful if:
 
-1. A neutral activation can be played from start to finish.
-2. A personal activation can unlock a message.
-3. A gift activation can show visible personalization from the beginning and unlock a gift message only after completion.
-4. A completed origin playthrough generates a resonance code.
-5. A carried activation accepts that resonance code.
-6. The carried activation produces a return key.
-7. The origin activation accepts the return key.
-8. The encrypted return layer decrypts only with the correct combined key material.
-9. Solo and team play are represented as configuration options.
-10. The game remains playable without code reading.
-11. The code remains readable for people who want to inspect it.
-12. The after-play options are voluntary and local.
+1. First Spark remains publicly shareable in neutral form.
+2. A private gift package can activate First Spark for B.
+3. B can complete the gift without any obligation to continue.
+4. B can optionally pass a spark onward to C through a private channel.
+5. C can complete the carried gift or resonance activation.
+6. C can produce or receive a return artifact for B.
+7. B can enter or place the return artifact locally.
+8. B can unlock a deeper return layer.
+9. The public repository never contains private activation data.
+10. The forum is used only for optional public-safe resonance traces, not private transfer.
+11. Any generated resonance node draft is safe to post publicly.
+12. The project remains understandable without server infrastructure.
 
 ---
 
-## 23. Working Formula
+## 18. Working Formula
 
-Nexus 01 Version 1 should prove this idea:
+Public module:
 
-> Open code can carry protected meaning.  
-> A message can be unlocked by play.  
-> A deeper answer can be unlocked only by return.
+```text
+clean code + neutral fallback + safe example activation
+```
 
-Or shorter:
+Private gift package:
 
-> A Nexus becomes deeper when someone carries a trace back.
+```text
+private activation + recipient instructions + private transfer
+```
+
+Private resonance chain:
+
+```text
+A gives to B.
+B may give to C.
+C may return to B.
+B may unlock a deeper layer.
+```
+
+Public resonance node:
+
+```text
+public-safe trace that a spark was seen
+```
+
+Core formula:
+
+> The spark travels privately.  
+> The network may become visible publicly.  
+> The gift remains complete even if the trace stops.
