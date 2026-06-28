@@ -1,10 +1,12 @@
 # Nexus 01 - Nexus-Mesomerie
 
-*INSERT RESPONSE*
+Nexus 01 - Nexus-Mesomerie is the first module line in the **glossai-nexus** project.
 
-This is the first planned Nexus module in the **glossai-nexus** project.
+Its first small playable slice is:
 
-It is currently a concept seed, not a playable module yet.
+**[Nexus 0.1 - First Spark](first_spark/)**
+
+First Spark is a local terminal prototype. It can be played as a neutral public demo or combined with a private activation package to become a personal gift.
 
 ## Core idea
 
@@ -28,17 +30,30 @@ It should be playable at the surface and readable in the depth.
 
 ## Current status
 
-This module is not implemented yet.
+Nexus 01 is still an early module line, but its first playable slice exists.
 
 Current work focuses on:
 
-- defining the module concept,
-- clarifying activation and result types,
-- exploring a Nexus command language,
-- designing spoiler-aware code areas,
-- keeping the module local-first and data-minimal,
-- defining a small internal activity system that supports meaningful variation without making Nexus 01 too large,
-- cutting the first playable gift slice down to **Nexus 0.1 – First Spark**.
+- keeping **Nexus 0.1 - First Spark** small, stable, playable, and public-safe,
+- clarifying activation and gift package boundaries,
+- explaining resonance nodes and public-safe traces,
+- connecting the repository, wiki, and discussions,
+- preserving a local-first and data-minimal approach,
+- preparing future module ideas without overloading the first slice.
+
+## Run First Spark
+
+From the repository root:
+
+```bash
+python3 modules/nexus_01_nexus_mesomerie/first_spark/run_first_spark.py
+```
+
+For the First Spark documentation, see:
+
+- [First Spark README](first_spark/README.md)
+- [What next after First Spark](first_spark/WHAT_NEXT.md)
+- [First Spark 0.1 Review](first_spark/FIRST_SPARK_0_1_REVIEW.md)
 
 ## Nexus 01 planning documents
 
@@ -56,3 +71,19 @@ See also:
 - [Code of Resonance](../../CODE_OF_RESONANCE.md)
 - [Playing a Nexus](../../docs/PLAYING_A_NEXUS.md)
 - [Speaking code](../../docs/SPEAKING_CODE.md)
+- [Resonance Arc](../../docs/RESONANCE_ARC.md)
+- [Discussions Guide](../../docs/DISCUSSIONS_GUIDE.md)
+
+## Public orientation
+
+Project wiki:
+
+```text
+https://github.com/NataliReise/glossai-nexus/wiki
+```
+
+Project discussions:
+
+```text
+https://github.com/NataliReise/glossai-nexus/discussions
+```
