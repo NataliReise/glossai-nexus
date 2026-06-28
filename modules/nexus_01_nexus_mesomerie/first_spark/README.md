@@ -8,9 +8,9 @@ This directory contains the local terminal prototype.
 
 The current prototype contains the first complete mini game loop:
 
-> arrival -> spark chamber -> read traces -> link spark -> unlock public demo message
+> arrival -> spark chamber -> read traces -> link spark -> unlock activation message
 
-This is still intentionally small. It proves that a Nexus module can start locally, move between small game modules, keep state, complete a first public demo ending, offer optional gentle guidance through the `trace` command, provide a spoiler-protected `walkthrough`, and protect the main flow with a minimal automated test.
+This is still intentionally small. It proves that a Nexus module can start locally, move between small game modules, keep state, complete a first activation-message ending, offer optional gentle guidance through the `trace` command, provide a spoiler-protected `walkthrough`, load a local private activation file, and protect the main flow with a minimal automated test.
 
 Development principle:
 
@@ -47,6 +47,34 @@ First Spark flow tests passed.
 
 The test checks the current main flow from arrival to ending, including state changes for `trace`, `walkthrough`, `read`, `link spark`, `unlock`, and `quit`.
 
+## Activation files
+
+First Spark can load a local private activation file:
+
+```text
+modules/nexus_01_nexus_mesomerie/first_spark/activation.local.json
+```
+
+This file is ignored by Git and must not be committed.
+
+A safe public example is included:
+
+```text
+modules/nexus_01_nexus_mesomerie/first_spark/activation.example.json
+```
+
+Minimal activation fields:
+
+```json
+{
+  "recipient_alias": "recipient_name",
+  "activation_purpose": "gift",
+  "private_message": "This is a public demo placeholder. Real private messages belong to activation.local.json."
+}
+```
+
+If no local activation file exists, First Spark uses public demo defaults.
+
 ## Current module flow
 
 ### Arrival module
@@ -71,7 +99,7 @@ Available commands:
 - `look` - Look around the First Spark chamber.
 - `read <trace-name>` - Read a visible trace.
 - `link spark` - Link the first spark fragments after the required traces were read.
-- `unlock` - Open the public demo message after the spark was linked.
+- `unlock` - Open the activation message after the spark was linked.
 - `trace` - Reveal a gentle next trace based on the current state.
 - `walkthrough` - Show the full solution path with a spoiler warning.
 - `quit` - Exit First Spark.
@@ -88,8 +116,8 @@ After `unlock`, the player enters the ending module.
 Available commands:
 
 - `help` - Show available commands for the current module.
-- `look` - Look at the opened public demo message.
-- `unlock` - Show the already opened public demo message again.
+- `look` - Look at the opened activation message.
+- `unlock` - Show the already opened activation message again.
 - `trace` - Confirm that the First Spark is complete.
 - `walkthrough` - Show the full solution path with a spoiler warning.
 - `quit` - Exit First Spark.
@@ -133,12 +161,12 @@ Expected behavior:
 - `trace` in the arrival module points toward the entrance.
 - `trace` in the spark chamber changes according to the current state.
 - `link spark` only succeeds after both visible traces were read.
-- `unlock` opens the public demo message after the spark was linked.
+- `unlock` opens the activation message after the spark was linked.
 - `trace` in the ending module reports that the First Spark is complete.
 
 ## Public / private boundary
 
-The public repository contains only a public demo message.
+The public repository contains public code, a public demo fallback, and a safe public activation example.
 
 Real gift messages, real recipient data, real activation codes, return codes, private notes, and personal configuration belong to the private activation layer and must not be committed to the public repository.
 
@@ -159,10 +187,11 @@ See also:
 9. `trace` command for gentle state-based guidance.
 10. Minimal automated flow test.
 11. `walkthrough` command with spoiler warning.
+12. Local private activation file structure.
 
 Each unit should remain small and runnable before the next one is added.
 
 ## Possible next running units
 
-- Add a small private activation file format for local-only use.
-- Add a safe example activation file that contains only demo placeholders.
+- Improve activation validation and error messages.
+- Add a safer helper script for creating a local activation file from the example.
