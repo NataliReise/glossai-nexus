@@ -865,7 +865,84 @@ Should the public trace be generated at B's unlock stage, C's return stage, or b
 
 ---
 
-## 18. Working Formulas
+## 18. Current Design Decisions
+
+This section records design decisions that have become stable enough to guide the next planning step.
+
+They may still be refined later, but they should be treated as the current working direction.
+
+### Decision 01: Return layer structure and public-safe rewards
+
+The private return message should be prepared and encrypted.
+
+It should be similar to the current after-play messages in spirit: a deliberately written message that waits inside the Nexus or private package.
+
+It should not be generated from scratch by the return artifact.
+
+The return artifact unlocks the prepared message.
+
+The human trace may shape how the prepared message appears.
+
+Working formula:
+
+```text
+The message is prepared.
+The return unlocks it.
+The human trace colors its revelation.
+The public trace may be generated.
+```
+
+This means the return layer may combine:
+
+```text
+prepared encrypted private message
++ generated return frame
++ optional public-safe generated trace
+```
+
+B receives the private return revelation after a successful unlock.
+
+B may also receive an optional public-safe return trace.
+
+C should not automatically see B's private return layer if that layer is meant for B.
+
+C may receive a separate carrier reward after returning the artifact.
+
+C may also receive an optional public-safe carrier trace.
+
+Public-safe traces may include:
+
+```text
+module id
+public status
+generated public-safe phrase
+public aliases
+public note
+consent marker
+statement that no private data is included
+```
+
+Public-safe traces must never include:
+
+```text
+return artifact
+return key
+key material
+raw seed
+encrypted layer content
+private return message
+private gift text
+private activation data
+private relationship context
+```
+
+A public-safe carrier trace may appear at C's return stage.
+
+The main public-safe return trace should appear at B's unlock stage, after the return artifact has successfully opened the private return layer.
+
+---
+
+## 19. Working Formulas
 
 ```text
 The private return opens the layer.
