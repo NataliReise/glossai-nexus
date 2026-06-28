@@ -69,6 +69,7 @@ A Nexus module contains the shared structure. An activation contains the concret
 
 ## Current documents
 
+- [Getting started on Linux](docs/GETTING_STARTED_LINUX.md)
 - [Design notes](DESIGN_NOTES.md)
 - [Code of Resonance](CODE_OF_RESONANCE.md)
 - [AI use](AI_USE.md)
