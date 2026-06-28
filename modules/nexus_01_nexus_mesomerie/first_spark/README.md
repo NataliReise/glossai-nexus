@@ -10,7 +10,7 @@ The current prototype contains the first complete mini game loop:
 
 > arrival -> spark chamber -> read traces -> link spark -> unlock public demo message
 
-This is still intentionally small. It proves that a Nexus module can start locally, move between small game modules, keep state, complete a first public demo ending, and offer optional gentle guidance through the `trace` command.
+This is still intentionally small. It proves that a Nexus module can start locally, move between small game modules, keep state, complete a first public demo ending, offer optional gentle guidance through the `trace` command, and protect the main flow with a minimal automated test.
 
 Development principle:
 
@@ -30,6 +30,22 @@ Or from this directory:
 ```bash
 python3 run_first_spark.py
 ```
+
+## Test
+
+From the repository root:
+
+```bash
+python3 modules/nexus_01_nexus_mesomerie/first_spark/tests/test_first_spark_flow.py
+```
+
+Expected output:
+
+```text
+First Spark flow tests passed.
+```
+
+The test checks the current main flow from arrival to ending, including state changes for `trace`, `read`, `link spark`, `unlock`, and `quit`.
 
 ## Current module flow
 
@@ -85,7 +101,7 @@ First Spark separates three kinds of orientation:
 
 A future running unit may add a stronger spoiler-style command such as `walkthrough` or `spoiler` for players who have little time or little puzzle energy. That command should include a warning before revealing the full solution path.
 
-## Suggested test run
+## Suggested manual test run
 
 ```text
 nexus> help
@@ -132,6 +148,7 @@ See also:
 7. `unlock` command with public demo message.
 8. Dedicated ending module.
 9. `trace` command for gentle state-based guidance.
+10. Minimal automated flow test.
 
 Each unit should remain small and runnable before the next one is added.
 
@@ -140,4 +157,3 @@ Each unit should remain small and runnable before the next one is added.
 - Add a spoiler-style command with a warning and a full walkthrough.
 - Add a small private activation file format for local-only use.
 - Add a safe example activation file that contains only demo placeholders.
-- Add minimal automated checks for the current command flow.
