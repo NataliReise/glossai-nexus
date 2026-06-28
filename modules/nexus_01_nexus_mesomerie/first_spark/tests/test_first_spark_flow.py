@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import importlib.util
 from pathlib import Path
 import sys
 import tempfile
@@ -9,6 +10,18 @@ import tempfile
 
 FIRST_SPARK_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(FIRST_SPARK_ROOT))
+
+CREATE_LOCAL_ACTIVATION_PATH = FIRST_SPARK_ROOT / "create_local_activation.py"
+CREATE_LOCAL_ACTIVATION_SPEC = importlib.util.spec_from_file_location(
+    "create_local_activation", CREATE_LOCAL_ACTIVATION_PATH
+)
+if CREATE_LOCAL_ACTIVATION_SPEC is None or CREATE_LOCAL_ACTIVATION_SPEC.loader is None:
+    raise ImportError(f"Could not load {CREATE_LOCAL_ACTIVATION_PATH}")
+CREATE_LOCAL_ACTIVATION_MODULE = importlib.util.module_from_spec(
+    CREATE_LOCAL_ACTIVATION_SPEC
+)
+CREATE_LOCAL_ACTIVATION_SPEC.loader.exec_module(CREATE_LOCAL_ACTIVATION_MODULE)
+create_local_activation = CREATE_LOCAL_ACTIVATION_MODULE.create_local_activation
 
 from first_spark.activation import ActivationFileError, load_activation
 from first_spark.runtime import dispatch_command
@@ -43,6 +56,27 @@ def assert_unknown_command_recovery(response: str) -> None:
     assert_contains(response, "Unknown command:")
     assert_contains(response, "pasted input")
     assert_contains(response, "fresh prompt")
+
+
+def test_local_activation_creation_helper() -> None:
+    """Test safe creation of activation.local.json from an example file."""
+    with tempfile.TemporaryDirectory() as directory:
+        example_path = Path(directory) / "activation.example.json"
+        local_path = Path(directory) / "activation.local.json"
+        example_content = '{"recipient_alias": "recipient_name"}\n'
+        existing_content = '{"recipient_alias": "already_exists"}\n'
+        example_path.write_text(example_content, encoding="utf-8")
+
+        message = create_local_activation(example_path, local_path)
+        assert_contains(message, "Local activation file created.")
+        assert_contains(message, "ignored by Git")
+        assert local_path.read_text(encoding="utf-8") == example_content
+
+        local_path.write_text(existing_content, encoding="utf-8")
+        message = create_local_activation(example_path, local_path)
+        assert_contains(message, "already exists")
+        assert_contains(message, "Nothing was changed")
+        assert local_path.read_text(encoding="utf-8") == existing_content
 
 
 def test_activation_file_validation_errors() -> None:
@@ -171,6 +205,7 @@ def test_first_spark_main_flow() -> None:
 
 
 if __name__ == "__main__":
+    test_local_activation_creation_helper()
     test_activation_file_validation_errors()
     test_first_spark_main_flow()
     print("First Spark flow tests passed.")
