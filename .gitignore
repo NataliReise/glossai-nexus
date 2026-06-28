@@ -6,6 +6,12 @@ __pycache__/
 .venv/
 venv/
 
+# Local activation files
+activation.local.json
+activation.local.*.json
+modules/**/activation.local.json
+modules/**/activation.local.*.json
+
 # Local editor and OS files
 .vscode/
 .idea/
