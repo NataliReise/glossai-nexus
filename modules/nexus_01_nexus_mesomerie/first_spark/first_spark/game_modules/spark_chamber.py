@@ -29,11 +29,19 @@ Next trace:
 }
 
 
+PUBLIC_DEMO_MESSAGE = """[public demo message]
+
+This is a public demo message.
+Real gift messages belong to the private activation layer.
+"""
+
+
 HELP_TEXT = """Available commands:
   help                 Show this help text.
   look                 Look around the First Spark chamber.
   read <trace-name>    Read a visible trace.
   link spark           Link the first spark fragments.
+  unlock               Open the public demo message after linking the spark.
   quit                 Exit First Spark.
 """
 
@@ -73,6 +81,9 @@ def handle_command(command: str, state: GameState) -> ModuleResponse:
 
     if command == "link":
         return ModuleResponse("Usage: link spark")
+
+    if command == "unlock":
+        return unlock_message(state)
 
     if command == "quit":
         return ModuleResponse("First Spark closed.", should_quit=True)
@@ -118,4 +129,25 @@ def link_spark(state: GameState) -> ModuleResponse:
         "  spark.note\n\n"
         "The private message reacts, but remains locked.\n"
         "Next unit: unlock command."
+    )
+
+
+def unlock_message(state: GameState) -> ModuleResponse:
+    """Unlock the public demo message after the spark was linked."""
+    if state.message_unlocked:
+        return ModuleResponse(
+            "The private message is already open.\n\n"
+            f"{PUBLIC_DEMO_MESSAGE.strip()}"
+        )
+
+    if not state.spark_linked:
+        return ModuleResponse(
+            "The private message does not open yet.\n"
+            "Link the spark first."
+        )
+
+    state.message_unlocked = True
+    return ModuleResponse(
+        "The private message opens.\n\n"
+        f"{PUBLIC_DEMO_MESSAGE.strip()}"
     )
