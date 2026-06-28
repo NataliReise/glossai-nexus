@@ -83,6 +83,19 @@ def assert_section_divider(response: str) -> None:
         )
 
 
+def assert_resonance_node(response: str) -> None:
+    """Assert that the resonance node draft remains public-safe."""
+    assert_contains(response, "[public-safe resonance node draft]")
+    assert_contains(response, "This is an optional public-safe note.")
+    assert_contains(response, "Resonance Node: N01-RN-draft")
+    assert_contains(response, "Module: Nexus 01 - First Spark")
+    assert_contains(response, "Status: completed")
+    assert_contains(response, "Trace visibility: public-safe summary only")
+    assert_contains(response, PUBLIC_REPOSITORY_URL)
+    assert_contains(response, "No private activation data")
+    assert "[activation message]" not in response
+
+
 def test_local_activation_creation_helper() -> None:
     """Test safe creation of activation.local.json from an example file."""
     with tempfile.TemporaryDirectory() as directory:
@@ -226,6 +239,11 @@ def test_first_spark_main_flow() -> None:
     response = run_command(state, "help")
     assert_contains(response, "walkthrough")
     assert_contains(response, "return to your terminal")
+    assert_contains(response, "resonance-node")
+
+    response = run_command(state, "resonance-node")
+    assert_resonance_node(response)
+    assert state.current_module == "ending"
 
     response = run_command(state, "git statusquit")
     assert_unknown_command_recovery(response)
