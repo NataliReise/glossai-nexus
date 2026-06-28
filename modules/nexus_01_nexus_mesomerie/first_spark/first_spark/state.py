@@ -14,4 +14,5 @@ class GameState:
     current_module: str = START_MODULE
     read_traces: set[str] = field(default_factory=set)
     spark_linked: bool = False
+    message_unlocked: bool = False
     should_quit: bool = False
