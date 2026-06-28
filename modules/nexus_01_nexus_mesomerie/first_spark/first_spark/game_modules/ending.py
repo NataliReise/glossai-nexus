@@ -10,6 +10,7 @@ from first_spark.state import GameState
 
 
 PUBLIC_REPOSITORY_URL = "https://github.com/NataliReise/glossai-nexus.git"
+SECTION_DIVIDER = "︵‿︵‿୨🜂 ☾𓋹☽ 🜄୧‿︵‿︵"
 
 
 ACTIVATION_MESSAGE = f"""[activation message]
@@ -49,14 +50,22 @@ HELP_TEXT = """Available commands:
 
 ENDING_TEXT = f"""The private message opens.
 
+{SECTION_DIVIDER}
+
 {ACTIVATION_MESSAGE.strip()}
+
+{SECTION_DIVIDER}
 
 {AFTER_PLAY_MESSAGE.strip()}"""
 
 
 ALREADY_OPEN_TEXT = f"""The private message is already open.
 
+{SECTION_DIVIDER}
+
 {ACTIVATION_MESSAGE.strip()}
+
+{SECTION_DIVIDER}
 
 {AFTER_PLAY_MESSAGE.strip()}"""
 
