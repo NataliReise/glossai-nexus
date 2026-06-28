@@ -263,6 +263,12 @@ For the current stability review, design freeze notes, and data-minimization dec
 
 - [`FIRST_SPARK_0_1_REVIEW.md`](FIRST_SPARK_0_1_REVIEW.md)
 
+## Legal notice / Impressum
+
+For legal notice and contact information for the project, see:
+
+- [`LEGAL_NOTICE.md`](../../../LEGAL_NOTICE.md)
+
 ## Completed running units
 
 1. Start script with boot sequence.
