@@ -176,6 +176,35 @@ activation is already a small First Spark component.
 future activation layers may extend the pattern without swallowing the core.
 ```
 
+### Decision 01: Keep activation local until reuse is real
+
+The existing First Spark activation component should stay inside First Spark for now.
+
+It already works as a small local component for:
+
+```text
+demo fallback
+private activation loading
+friendly activation-file errors
+basic activation fields
+```
+
+For the current stage, extracting it into a shared module would create more architecture than the project actually needs.
+
+However, the activation pattern should be named and documented as reusable.
+
+If a second Nexus module later needs the same activation logic, the shared pattern may be extracted into a reusable activation layer.
+
+Working formulas:
+
+```text
+Keep it local until reuse is real.
+```
+
+```text
+A pattern may be named before it is extracted.
+```
+
 ---
 
 ## 5. gift_package
@@ -566,7 +595,6 @@ Questions for the next architecture pass:
 
 ```text
 Should these conceptual layers later become Python packages, folders, or only documentation boundaries?
-Should the existing First Spark activation component stay inside First Spark or later become a reusable shared module?
 Where should return_unlock live if First Spark remains small?
 Should public_trace be a shared helper used by resonance nodes and return traces?
 How should return_artifact parsing be separated from return_unlock?
@@ -613,4 +641,12 @@ Extension points, not entanglement.
 ```text
 activation is already a small First Spark component.
 future activation layers may extend the pattern without swallowing the core.
+```
+
+```text
+Keep it local until reuse is real.
+```
+
+```text
+A pattern may be named before it is extracted.
 ```
