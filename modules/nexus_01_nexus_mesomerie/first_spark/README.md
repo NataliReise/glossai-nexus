@@ -6,13 +6,58 @@ It is a local terminal prototype in the **glossai-nexus** project.
 
 First Spark can be played as a neutral public demo or combined with a private activation package to become a personal gift.
 
-## Start here
+## Start options
+
+There are two intended ways to run First Spark.
+
+### 1. From the cloned repository
+
+Use this path if you want to inspect the project, follow development, modify files, or run the current public seed directly from Git.
+
+This path currently assumes:
+
+- a Linux terminal,
+- Git,
+- Python 3,
+- a local clone of this repository.
+
+Clone the repository and enter the project folder:
+
+```bash
+git clone https://github.com/NataliReise/glossai-nexus.git
+cd glossai-nexus
+```
 
 From the repository root, run:
 
 ```bash
 python3 modules/nexus_01_nexus_mesomerie/first_spark/run_first_spark.py
 ```
+
+If you are new to Git, Python, or terminal-based projects, see:
+
+- [`docs/GETTING_STARTED_LINUX.md`](../../../docs/GETTING_STARTED_LINUX.md)
+
+### 2. From a standalone First Spark package
+
+Use this path if you received First Spark as a separate local folder.
+
+This may be:
+
+- a neutral public demo package,
+- or a personalized private gift package.
+
+Open a terminal in the First Spark folder and run:
+
+```bash
+python3 run_first_spark.py
+```
+
+A personalized package may include private activation data.
+
+Do not post or commit private activation files publicly.
+
+The standalone package path is part of the intended module workflow and may be refined as the project grows.
 
 After completing First Spark, see:
 
