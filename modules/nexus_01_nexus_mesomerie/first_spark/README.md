@@ -10,7 +10,7 @@ The current prototype contains the first complete mini game loop:
 
 > arrival -> spark chamber -> read traces -> link spark -> unlock public demo message
 
-This is still intentionally small. It proves that a Nexus module can start locally, move between small game modules, keep state, complete a first public demo ending, offer optional gentle guidance through the `trace` command, and protect the main flow with a minimal automated test.
+This is still intentionally small. It proves that a Nexus module can start locally, move between small game modules, keep state, complete a first public demo ending, offer optional gentle guidance through the `trace` command, provide a spoiler-protected `walkthrough`, and protect the main flow with a minimal automated test.
 
 Development principle:
 
@@ -45,7 +45,7 @@ Expected output:
 First Spark flow tests passed.
 ```
 
-The test checks the current main flow from arrival to ending, including state changes for `trace`, `read`, `link spark`, `unlock`, and `quit`.
+The test checks the current main flow from arrival to ending, including state changes for `trace`, `walkthrough`, `read`, `link spark`, `unlock`, and `quit`.
 
 ## Current module flow
 
@@ -58,6 +58,7 @@ Available commands:
 - `help` - Show available commands for the current module.
 - `look` - Enter the First Spark chamber.
 - `trace` - Reveal a gentle next trace.
+- `walkthrough` - Show the full solution path with a spoiler warning.
 - `quit` - Exit First Spark.
 
 ### Spark chamber module
@@ -72,6 +73,7 @@ Available commands:
 - `link spark` - Link the first spark fragments after the required traces were read.
 - `unlock` - Open the public demo message after the spark was linked.
 - `trace` - Reveal a gentle next trace based on the current state.
+- `walkthrough` - Show the full solution path with a spoiler warning.
 - `quit` - Exit First Spark.
 
 Visible traces:
@@ -89,24 +91,28 @@ Available commands:
 - `look` - Look at the opened public demo message.
 - `unlock` - Show the already opened public demo message again.
 - `trace` - Confirm that the First Spark is complete.
+- `walkthrough` - Show the full solution path with a spoiler warning.
 - `quit` - Exit First Spark.
 
 ## Guidance commands
 
-First Spark separates three kinds of orientation:
+First Spark separates four kinds of orientation:
 
 - `help` shows the available commands for the current module.
 - `look` describes the current room or state.
 - `trace` gives a gentle next hint without showing a full walkthrough.
+- `walkthrough` shows the complete solution path with a spoiler warning.
 
-A future running unit may add a stronger spoiler-style command such as `walkthrough` or `spoiler` for players who have little time or little puzzle energy. That command should include a warning before revealing the full solution path.
+The walkthrough is intentionally available in all modules so players with little time or little puzzle energy can choose a direct route from anywhere.
 
 ## Suggested manual test run
 
 ```text
 nexus> help
+nexus> walkthrough
 nexus> trace
 nexus> look
+nexus> walkthrough
 nexus> trace
 nexus> read welcome.log
 nexus> trace
@@ -115,12 +121,15 @@ nexus> trace
 nexus> link spark
 nexus> trace
 nexus> unlock
+nexus> walkthrough
 nexus> trace
 nexus> quit
 ```
 
 Expected behavior:
 
+- `walkthrough` shows a spoiler warning and the complete path.
+- `walkthrough` does not change the current module or game state.
 - `trace` in the arrival module points toward the entrance.
 - `trace` in the spark chamber changes according to the current state.
 - `link spark` only succeeds after both visible traces were read.
@@ -149,11 +158,11 @@ See also:
 8. Dedicated ending module.
 9. `trace` command for gentle state-based guidance.
 10. Minimal automated flow test.
+11. `walkthrough` command with spoiler warning.
 
 Each unit should remain small and runnable before the next one is added.
 
 ## Possible next running units
 
-- Add a spoiler-style command with a warning and a full walkthrough.
 - Add a small private activation file format for local-only use.
 - Add a safe example activation file that contains only demo placeholders.
