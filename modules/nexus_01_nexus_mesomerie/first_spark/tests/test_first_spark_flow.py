@@ -29,6 +29,7 @@ from first_spark.state import GameState
 
 
 PUBLIC_REPOSITORY_URL = "https://github.com/NataliReise/glossai-nexus.git"
+SECTION_DIVIDER = "︵‿︵‿୨🜂 ☾𓋹☽ 🜄୧‿︵‿︵"
 
 
 def assert_contains(text: str, expected: str) -> None:
@@ -71,6 +72,15 @@ def assert_after_play_message(response: str) -> None:
     assert_contains(response, PUBLIC_REPOSITORY_URL)
     assert_contains(response, "Never post private activation data")
     assert_contains(response, "public-safe resonance node")
+
+
+def assert_section_divider(response: str) -> None:
+    """Assert that the First Spark section divider separates ending sections."""
+    assert_contains(response, SECTION_DIVIDER)
+    if response.count(SECTION_DIVIDER) < 2:
+        raise AssertionError(
+            f"Expected at least two section dividers in response:\n{response}"
+        )
 
 
 def test_local_activation_creation_helper() -> None:
@@ -197,12 +207,14 @@ def test_first_spark_main_flow() -> None:
     assert_contains(response, "The private message opens.")
     assert_contains(response, "[activation message]")
     assert_after_play_message(response)
+    assert_section_divider(response)
     assert state.message_unlocked
     assert state.current_module == "ending"
 
     response = run_command(state, "look")
     assert_contains(response, "The private message is already open.")
     assert_after_play_message(response)
+    assert_section_divider(response)
 
     response = run_command(state, "help")
     assert_contains(response, "walkthrough")
