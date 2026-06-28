@@ -162,7 +162,7 @@ Example:
   "activation_mode": "personal_activation",
   "purpose": "gift",
   "play_mode": "solo",
-  "player_alias": "Sascha",
+  "player_alias": "recipient_name",
   "known_commands": ["look", "read", "echo"],
   "found_fragments": ["ACCESS", "BOUNDARY"],
   "chosen_symbol": "lantern",
