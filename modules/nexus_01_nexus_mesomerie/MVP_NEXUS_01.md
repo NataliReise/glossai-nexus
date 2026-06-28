@@ -48,6 +48,17 @@ first_spark/GIFT_PACKAGE_SPEC.md
 
 MVP Nexus 01 should build on this foundation instead of replacing it.
 
+Larger Nexus extensions should follow the architecture note:
+
+- [Nexus Modularity Rules](NEXUS_MODULARITY_RULES.md)
+
+Core modularity rule:
+
+```text
+The spark must remain small.
+The Nexus may grow around it.
+```
+
 ---
 
 ## 3. Core Design Principles
@@ -60,6 +71,7 @@ Nexus 01 should follow these principles:
 - Personal activation content must not be required to be public.
 - The public module stays neutral and inspectable.
 - The private gift layer stays private.
+- Larger extensions should remain optional layers, not hidden dependencies of the playable core.
 - The social network created by Nexus is not automatic or digital by default.
 - The spark travels from person to person.
 - The forum does not carry the spark.
@@ -77,6 +89,9 @@ Important guiding formulas:
 
 > The spark travels from person to person.  
 > The forum only shows where light was seen.
+
+> The spark must remain small.  
+> The Nexus may grow around it.
 
 ---
 
@@ -604,6 +619,7 @@ The MVP direction is successful if:
 10. The forum is used only for optional public-safe resonance traces, not private transfer.
 11. Any generated resonance node draft is safe to post publicly.
 12. The project remains understandable without server infrastructure.
+13. Larger extensions remain optional layers rather than hidden dependencies of First Spark.
 
 ---
 
@@ -634,6 +650,13 @@ Public resonance node:
 
 ```text
 public-safe trace that a spark was seen
+```
+
+Modularity rule:
+
+```text
+The spark must remain small.
+The Nexus may grow around it.
 ```
 
 Core formula:
