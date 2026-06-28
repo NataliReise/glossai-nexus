@@ -25,12 +25,28 @@ def run_command(state: GameState, command: str) -> str:
     return response.text
 
 
+def assert_walkthrough(response: str) -> None:
+    """Assert that a response contains the full spoiler walkthrough."""
+    assert_contains(response, "Spoiler warning:")
+    assert_contains(response, "Complete path:")
+    assert_contains(response, "look")
+    assert_contains(response, "read welcome.log")
+    assert_contains(response, "read spark.note")
+    assert_contains(response, "link spark")
+    assert_contains(response, "unlock")
+
+
 def test_first_spark_main_flow() -> None:
     """Test the current First Spark happy path and guidance flow."""
     state = GameState()
 
     response = run_command(state, "help")
     assert_contains(response, "trace")
+    assert_contains(response, "walkthrough")
+    assert state.current_module == "arrival"
+
+    response = run_command(state, "walkthrough")
+    assert_walkthrough(response)
     assert state.current_module == "arrival"
 
     response = run_command(state, "trace")
@@ -39,6 +55,13 @@ def test_first_spark_main_flow() -> None:
 
     response = run_command(state, "look")
     assert_contains(response, "Entering the First Spark chamber.")
+    assert state.current_module == "spark_chamber"
+
+    response = run_command(state, "help")
+    assert_contains(response, "walkthrough")
+
+    response = run_command(state, "walkthrough")
+    assert_walkthrough(response)
     assert state.current_module == "spark_chamber"
 
     response = run_command(state, "trace")
@@ -80,6 +103,13 @@ def test_first_spark_main_flow() -> None:
     assert_contains(response, "The private message opens.")
     assert_contains(response, "[public demo message]")
     assert state.message_unlocked
+    assert state.current_module == "ending"
+
+    response = run_command(state, "help")
+    assert_contains(response, "walkthrough")
+
+    response = run_command(state, "walkthrough")
+    assert_walkthrough(response)
     assert state.current_module == "ending"
 
     response = run_command(state, "trace")
