@@ -10,7 +10,7 @@ The current prototype contains the first complete mini game loop:
 
 > arrival -> spark chamber -> read traces -> link spark -> unlock activation message
 
-This is still intentionally small. It proves that a Nexus module can start locally, move between small game modules, keep state, complete a first activation-message ending, offer optional gentle guidance through the `trace` command, provide a spoiler-protected `walkthrough`, load a local private activation file, explain confusing pasted input on unknown commands, document the local activation workflow, show friendly activation-file errors, provide a safe helper for creating the local activation file, show a first after-play message, separate ending sections with a reusable Ankh divider, handle Ctrl-C interruption gracefully, and protect the main flow with a minimal automated test.
+This is still intentionally small. It proves that a Nexus module can start locally, move between small game modules, keep state, complete a first activation-message ending, offer optional gentle guidance through the `trace` command, provide a spoiler-protected `walkthrough`, load a local private activation file, explain confusing pasted input on unknown commands, document the local activation workflow, show friendly activation-file errors, provide a safe helper for creating the local activation file, show a first after-play message, separate ending sections with a reusable Ankh divider, handle Ctrl-C interruption gracefully, show a public-safe resonance node draft after completion, and protect the main flow with a minimal automated test.
 
 Development principle:
 
@@ -47,7 +47,7 @@ Expected output:
 First Spark flow tests passed.
 ```
 
-The test checks the current main flow from arrival to ending, including state changes for `trace`, `walkthrough`, `read`, `link spark`, `unlock`, `quit`, unknown-command recovery text, activation-file validation errors, the local activation creation helper, the after-play message, the Ankh section divider, and the friendly Ctrl-C interrupt text.
+The test checks the current main flow from arrival to ending, including state changes for `trace`, `walkthrough`, `read`, `link spark`, `unlock`, `quit`, unknown-command recovery text, activation-file validation errors, the local activation creation helper, the after-play message, the Ankh section divider, the friendly Ctrl-C interrupt text, and the public-safe resonance node draft.
 
 ## Activation files
 
@@ -135,6 +135,7 @@ Available commands:
 - `look` - Look at the opened activation message and after-play message.
 - `unlock` - Show the already opened activation message and after-play message again.
 - `trace` - Confirm that the First Spark is complete.
+- `resonance-node` - Show an optional public-safe resonance node draft.
 - `walkthrough` - Show the full solution path with a spoiler warning.
 - `quit` - Exit First Spark and return to your terminal.
 
@@ -180,6 +181,8 @@ nexus> trace
 nexus> link spark
 nexus> trace
 nexus> unlock
+nexus> help
+nexus> resonance-node
 nexus> walkthrough
 nexus> trace
 nexus> quit
@@ -196,6 +199,7 @@ Expected behavior:
 - `unlock` opens the activation message after the spark was linked.
 - The activation message and after-play message are separated by the simplified First Spark Ankh divider.
 - The after-play message explains that the gift is complete, passing the spark onward is optional, and public traces must stay public-safe.
+- `resonance-node` shows an optional public-safe resonance node draft without private activation data.
 - `trace` in the ending module reports that the First Spark is complete.
 - `Ctrl-C` interrupts First Spark with a friendly message instead of a traceback.
 
@@ -267,11 +271,12 @@ For the current narrow specification, see:
 20. After-play message after the final activation message.
 21. Reusable simplified Ankh section divider for the ending output.
 22. Friendly Ctrl-C interrupt handling.
+23. Public-safe resonance node draft command.
 
 Each unit should remain small and runnable before the next one is added.
 
 ## Possible next running units
 
-- Add a public-safe resonance node draft template.
+- Add optional result or resonance-node file saving.
 - Add optional activation field validation for future fields.
 - Prepare resonance artifact and return artifact concepts after the after-play layer works.
