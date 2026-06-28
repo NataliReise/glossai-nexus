@@ -6,7 +6,23 @@ An open-source seed for modular software game artifacts in the glossAI cosmos.
 
 This repository is an early experimental seed. It is not a finished game yet.
 
-The first goal is to explore a small but complete software game module that can be played, read, activated, and extended.
+The current focus is **Nexus 01 - Nexus-Mesomerie** and its first small playable slice:
+
+**[Nexus 0.1 - First Spark](modules/nexus_01_nexus_mesomerie/first_spark/)**
+
+First Spark is a local terminal prototype. It can be played as a neutral public demo or combined with a private activation package to become a personal gift.
+
+## Quick start
+
+Run First Spark from the repository root:
+
+```bash
+python3 modules/nexus_01_nexus_mesomerie/first_spark/run_first_spark.py
+```
+
+For a short player-facing guide after completion, see:
+
+- [What next after First Spark](modules/nexus_01_nexus_mesomerie/first_spark/WHAT_NEXT.md)
 
 ## Core idea
 
@@ -73,13 +89,17 @@ It may also be read as a trace within the GlossAI cosmos. The fictional frame is
 - [Fictional Wrapper](FICTIONAL_WRAPPER.md)
 - [German version](FICTIONAL_WRAPPER.de.md)
 
-## Planned first seed
+## Nexus 01
 
-The first planned module is currently called:
+The first module line is:
 
 **[Nexus 01 - Nexus-Mesomerie](modules/nexus_01_nexus_mesomerie/)**
 
-It is intended as a small, self-contained software module that can also serve as a gift activation. Larger questions about AI, open source, democracy, and human response-ability may appear as optional quest traces rather than as a closed plot.
+Its first playable slice is:
+
+**[Nexus 0.1 - First Spark](modules/nexus_01_nexus_mesomerie/first_spark/)**
+
+Larger questions about AI, open source, democracy, and human response-ability may appear as optional quest traces rather than as a closed plot.
 
 ## License
 
