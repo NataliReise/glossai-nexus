@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from first_spark.guidance import WALKTHROUGH_TEXT
 from first_spark.module_response import ModuleResponse
 from first_spark.state import GameState
 
@@ -14,11 +15,12 @@ Real gift messages belong to the private activation layer.
 
 
 HELP_TEXT = """Available commands:
-  help     Show this help text.
-  look     Look at the opened public demo message.
-  unlock   Show the already opened public demo message again.
-  trace    Reveal a gentle next trace.
-  quit     Exit First Spark.
+  help         Show this help text.
+  look         Look at the opened public demo message.
+  unlock       Show the already opened public demo message again.
+  trace        Reveal a gentle next trace.
+  walkthrough  Show the full solution path with a spoiler warning.
+  quit         Exit First Spark.
 """
 
 
@@ -45,6 +47,9 @@ def handle_command(command: str, state: GameState) -> ModuleResponse:
 
     if command == "trace":
         return ModuleResponse("Next trace:\n  The First Spark is complete.")
+
+    if command == "walkthrough":
+        return ModuleResponse(WALKTHROUGH_TEXT.strip())
 
     if command == "quit":
         return ModuleResponse("First Spark closed.", should_quit=True)
