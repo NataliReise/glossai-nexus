@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from first_spark.command_feedback import unknown_command_text
 from first_spark.config import MODULE_TITLE, RECIPIENT_ALIAS
 from first_spark.guidance import WALKTHROUGH_TEXT
 from first_spark.module_response import ModuleResponse
@@ -13,7 +14,7 @@ HELP_TEXT = """Available commands:
   look                 Enter the First Spark chamber.
   trace                Reveal a gentle next trace.
   walkthrough          Show the full solution path with a spoiler warning.
-  quit                 Exit First Spark.
+  quit                 Exit First Spark and return to your terminal.
 """
 
 
@@ -50,6 +51,4 @@ def handle_command(command: str, state: GameState) -> ModuleResponse:
     if command == "quit":
         return ModuleResponse("First Spark closed.", should_quit=True)
 
-    return ModuleResponse(
-        f"Unknown command: {command}\nType 'help' for available commands."
-    )
+    return ModuleResponse(unknown_command_text(command))
