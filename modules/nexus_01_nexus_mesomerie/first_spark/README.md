@@ -2,20 +2,60 @@
 
 First Spark is the first small playable slice of **Nexus 01 - Nexus-Mesomerie**.
 
-This directory contains the local terminal prototype.
+It is a local terminal prototype in the **glossai-nexus** project.
 
-## Current running unit
+First Spark can be played as a neutral public demo or combined with a private activation package to become a personal gift.
+
+## Start here
+
+From the repository root, run:
+
+```bash
+python3 modules/nexus_01_nexus_mesomerie/first_spark/run_first_spark.py
+```
+
+After completing First Spark, see:
+
+- [`WHAT_NEXT.md`](WHAT_NEXT.md)
+
+For project orientation, see the project wiki:
+
+```text
+https://github.com/NataliReise/glossai-nexus/wiki
+```
+
+For questions, feedback, or public-safe resonance nodes, see project discussions:
+
+```text
+https://github.com/NataliReise/glossai-nexus/discussions
+```
+
+## What First Spark currently does
 
 The current prototype contains the first complete mini game loop:
 
-> arrival -> spark chamber -> read traces -> link spark -> unlock activation message
+```text
+arrival -> spark chamber -> read traces -> link spark -> unlock activation message -> after-play
+```
 
-This is still intentionally small. It proves that a Nexus module can start locally, move between small game modules, keep state, complete a first activation-message ending, offer optional gentle guidance through the `trace` command, provide a spoiler-protected `walkthrough`, load a local private activation file, explain confusing pasted input on unknown commands, document the local activation workflow, show friendly activation-file errors, provide a safe helper for creating the local activation file, show a first after-play message, separate ending sections with a reusable Ankh divider, handle Ctrl-C interruption gracefully, show and explain a public-safe resonance node draft after completion, point players to a short what-next guide, document the First Spark 0.1 review/freeze, and protect the main flow with a minimal automated test.
+It proves that a Nexus module can:
+
+- run locally in a terminal,
+- move between small game modules,
+- keep simple state,
+- complete a first activation-message ending,
+- load a local private activation file,
+- fall back to safe public demo data,
+- show an optional public-safe resonance node draft,
+- stay data-minimal and avoid automatic result saving,
+- protect the main flow with a minimal automated test.
 
 Development principle:
 
-> First make the spark run.  
-> Then widen the trace.
+```text
+First make the spark run.
+Then widen the trace.
+```
 
 ## Run
 
@@ -47,8 +87,6 @@ Expected output:
 First Spark flow tests passed.
 ```
 
-The test checks the current main flow from arrival to ending, including state changes for `trace`, `walkthrough`, `read`, `link spark`, `unlock`, `quit`, unknown-command recovery text, activation-file validation errors, the local activation creation helper, the after-play message, the Ankh section divider, the friendly Ctrl-C interrupt text, the public-safe resonance node draft, the after-play hint for showing it, and the what-next guide path.
-
 ## Activation files
 
 First Spark can load a local private activation file:
@@ -73,141 +111,29 @@ python3 modules/nexus_01_nexus_mesomerie/first_spark/create_local_activation.py
 
 The helper does not overwrite an existing `activation.local.json` file.
 
-Minimal activation fields:
-
-```json
-{
-  "recipient_alias": "recipient_name",
-  "activation_purpose": "gift",
-  "private_message": "This is a public demo placeholder. Real private messages belong to activation.local.json."
-}
-```
-
-If no local activation file exists, First Spark uses public demo defaults.
-
-If a local activation file exists but cannot be loaded, First Spark shows a friendly error message and points back to `activation.example.json`.
-
 For the full local workflow, see:
 
 - [`LOCAL_ACTIVATION_GUIDE.md`](LOCAL_ACTIVATION_GUIDE.md)
 
-## Current module flow
+## Main commands
 
-### Arrival module
+The exact available commands depend on the current module state.
 
-The player starts in the arrival module.
-
-Available commands:
+Useful commands include:
 
 - `help` - Show available commands for the current module.
-- `look` - Enter the First Spark chamber.
-- `trace` - Reveal a gentle next trace.
-- `walkthrough` - Show the full solution path with a spoiler warning.
-- `quit` - Exit First Spark and return to your terminal.
-
-### Spark chamber module
-
-After `look`, the player enters the spark chamber.
-
-Available commands:
-
-- `help` - Show available commands for the current module.
-- `look` - Look around the First Spark chamber.
+- `look` - Look around or enter the next visible space.
 - `read <trace-name>` - Read a visible trace.
 - `link spark` - Link the first spark fragments after the required traces were read.
 - `unlock` - Open the activation message after the spark was linked.
-- `trace` - Reveal a gentle next trace based on the current state.
+- `trace` - Reveal a gentle next hint.
 - `walkthrough` - Show the full solution path with a spoiler warning.
+- `resonance-node` - Show an optional public-safe resonance node draft after completion.
 - `quit` - Exit First Spark and return to your terminal.
-
-Visible traces:
-
-- `welcome.log`
-- `spark.note`
-
-### Ending module
-
-After `unlock`, the player enters the ending module.
-
-Available commands:
-
-- `help` - Show available commands for the current module.
-- `look` - Look at the opened activation message and after-play message.
-- `unlock` - Show the already opened activation message and after-play message again.
-- `trace` - Confirm that the First Spark is complete.
-- `resonance-node` - Show an optional public-safe resonance node draft.
-- `walkthrough` - Show the full solution path with a spoiler warning.
-- `quit` - Exit First Spark and return to your terminal.
-
-## Guidance commands
-
-First Spark separates four kinds of orientation:
-
-- `help` shows the available commands for the current module.
-- `look` describes the current room or state.
-- `trace` gives a gentle next hint without showing a full walkthrough.
-- `walkthrough` shows the complete solution path with a spoiler warning.
-
-The walkthrough is intentionally available in all modules so players with little time or little puzzle energy can choose a direct route from anywhere.
-
-## Unknown command recovery
-
-Unknown commands show the text First Spark actually received. This can help explain confusing terminal copy-and-paste situations where pasted input was still waiting in the terminal.
-
-Example:
-
-```text
-Unknown command: git statusquit
-
-This may include pasted input that was still waiting in the terminal.
-Type 'help' for available commands.
-Type 'quit' on a fresh prompt to leave First Spark.
-```
-
-## Suggested manual test run
-
-```text
-nexus> help
-nexus> git statusquit
-nexus> walkthrough
-nexus> trace
-nexus> look
-nexus> walkthrough
-nexus> trace
-nexus> read welcome.log
-nexus> trace
-nexus> read spark.note
-nexus> trace
-nexus> link spark
-nexus> trace
-nexus> unlock
-nexus> help
-nexus> resonance-node
-nexus> walkthrough
-nexus> trace
-nexus> quit
-```
-
-Expected behavior:
-
-- Unknown commands show a short explanation about possible pasted input.
-- `walkthrough` shows a spoiler warning and the complete path.
-- `walkthrough` does not change the current module or game state.
-- `trace` in the arrival module points toward the entrance.
-- `trace` in the spark chamber changes according to the current state.
-- `link spark` only succeeds after both visible traces were read.
-- `unlock` opens the activation message after the spark was linked.
-- The activation message and after-play message are separated by the simplified First Spark Ankh divider.
-- The after-play message explains that the gift is complete, passing the spark onward is optional, and public traces must stay public-safe.
-- The after-play message points players to [`WHAT_NEXT.md`](WHAT_NEXT.md) for a short explanation of the project and further options.
-- The after-play message tells players to type `resonance-node` if they want to show an optional public-safe draft.
-- `resonance-node` shows an optional public-safe resonance node draft without private activation data.
-- `trace` in the ending module reports that the First Spark is complete.
-- `Ctrl-C` interrupts First Spark with a friendly message instead of a traceback.
 
 ## Public / private boundary
 
-The public repository contains public code, a public demo fallback, and a safe public activation example.
+The public repository contains public code, a public demo fallback, and safe public example data.
 
 Real gift messages, real recipient data, real activation codes, return codes, private notes, and personal configuration belong to the private activation layer and must not be committed to the public repository.
 
@@ -251,12 +177,6 @@ For the current narrow specification, see:
 
 - [`FIRST_SPARK_AFTER_PLAY.md`](FIRST_SPARK_AFTER_PLAY.md)
 
-## What next guide
-
-For a short player-facing explanation of First Spark, the resonance node draft, and public/private boundaries, see:
-
-- [`WHAT_NEXT.md`](WHAT_NEXT.md)
-
 ## First Spark 0.1 review
 
 For the current stability review, design freeze notes, and data-minimization decision, see:
@@ -268,36 +188,6 @@ For the current stability review, design freeze notes, and data-minimization dec
 For legal notice and contact information for the project, see:
 
 - [`LEGAL_NOTICE.md`](../../../LEGAL_NOTICE.md)
-
-## Completed running units
-
-1. Start script with boot sequence.
-2. `help` command.
-3. `look` command.
-4. `read` command for virtual traces.
-5. Modular runtime with autonomous game modules.
-6. `link spark` command with shared game state.
-7. `unlock` command with public demo message.
-8. Dedicated ending module.
-9. `trace` command for gentle state-based guidance.
-10. Minimal automated flow test.
-11. `walkthrough` command with spoiler warning.
-12. Local private activation file structure.
-13. Clearer unknown-command recovery text.
-14. Local activation guide.
-15. Friendly activation-file validation errors.
-16. Safe local activation creation helper.
-17. Public handoff checklist.
-18. Gift package specification.
-19. First Spark after-play specification.
-20. After-play message after the final activation message.
-21. Reusable simplified Ankh section divider for the ending output.
-22. Friendly Ctrl-C interrupt handling.
-23. Public-safe resonance node draft command with after-play hint.
-24. What-next guide for completed First Spark players.
-25. First Spark 0.1 review and data-minimization freeze.
-
-Each unit should remain small and runnable before the next one is added.
 
 ## Possible next running units
 
