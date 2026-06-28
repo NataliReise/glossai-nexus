@@ -36,7 +36,13 @@ Current work focuses on:
 - clarifying activation and result types,
 - exploring a Nexus command language,
 - designing spoiler-aware code areas,
-- keeping the module local-first and data-minimal.
+- keeping the module local-first and data-minimal,
+- defining a small internal activity system that supports meaningful variation without making Nexus 01 too large.
+
+## Nexus 01 planning documents
+
+- [MVP Specification](MVP_NEXUS_01.md)
+- [Nexus Activity System](NEXUS_ACTIVITY_SYSTEM.md)
 
 ## General project documents
 
