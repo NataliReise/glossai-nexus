@@ -6,6 +6,9 @@ from first_spark.module_response import ModuleResponse
 from first_spark.state import GameState
 
 
+REQUIRED_TRACES_FOR_LINK = {"welcome.log", "spark.note"}
+
+
 VISIBLE_TRACES = {
     "welcome.log": """[first-spark / welcome.log]
 
@@ -30,6 +33,7 @@ HELP_TEXT = """Available commands:
   help                 Show this help text.
   look                 Look around the First Spark chamber.
   read <trace-name>    Read a visible trace.
+  link spark           Link the first spark fragments.
   quit                 Exit First Spark.
 """
 
@@ -61,6 +65,15 @@ def handle_command(command: str, state: GameState) -> ModuleResponse:
     if command == "read":
         return ModuleResponse("Usage: read <trace-name>\nType 'look' to see visible traces.")
 
+    if command == "link spark":
+        return link_spark(state)
+
+    if command.startswith("link "):
+        return ModuleResponse("Unknown link target.\nTry: link spark")
+
+    if command == "link":
+        return ModuleResponse("Usage: link spark")
+
     if command == "quit":
         return ModuleResponse("First Spark closed.", should_quit=True)
 
@@ -80,3 +93,29 @@ def read_trace(trace_name: str, state: GameState) -> ModuleResponse:
 
     state.read_traces.add(trace_name)
     return ModuleResponse(trace_text.strip())
+
+
+def link_spark(state: GameState) -> ModuleResponse:
+    """Link the first spark fragments after the visible traces were read."""
+    if state.spark_linked:
+        return ModuleResponse(
+            "The spark fragments are already linked.\n"
+            "The private message is still locked."
+        )
+
+    missing_traces = REQUIRED_TRACES_FOR_LINK - state.read_traces
+    if missing_traces:
+        return ModuleResponse(
+            "The spark is not ready to link.\n"
+            "Read the visible traces first."
+        )
+
+    state.spark_linked = True
+    return ModuleResponse(
+        "Fragment connection detected.\n"
+        "Linked fragments:\n"
+        "  welcome.log\n"
+        "  spark.note\n\n"
+        "The private message reacts, but remains locked.\n"
+        "Next unit: unlock command."
+    )
