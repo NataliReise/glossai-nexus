@@ -204,6 +204,28 @@ See also:
 
 - [`docs/PUBLIC_PRIVATE_BOUNDARY.md`](../../../docs/PUBLIC_PRIVATE_BOUNDARY.md)
 - [`LOCAL_ACTIVATION_GUIDE.md`](LOCAL_ACTIVATION_GUIDE.md)
+- [`PUBLIC_HANDOFF_CHECKLIST.md`](PUBLIC_HANDOFF_CHECKLIST.md)
+- [`GIFT_PACKAGE_SPEC.md`](GIFT_PACKAGE_SPEC.md)
+
+## Public handoff
+
+Before sharing First Spark publicly, use:
+
+- [`PUBLIC_HANDOFF_CHECKLIST.md`](PUBLIC_HANDOFF_CHECKLIST.md)
+
+Public handoff means sharing a neutral, inspectable version of First Spark without real private activation data.
+
+Private gift handoff is a separate process and should use a separate private activation package.
+
+## Private gift package
+
+A private gift package is a private wrapper around the public First Spark module.
+
+It may carry private activation for a specific recipient, but it must not redefine what belongs to the public module or the public repository.
+
+For the current narrow specification, see:
+
+- [`GIFT_PACKAGE_SPEC.md`](GIFT_PACKAGE_SPEC.md)
 
 ## Completed running units
 
@@ -223,10 +245,12 @@ See also:
 14. Local activation guide.
 15. Friendly activation-file validation errors.
 16. Safe local activation creation helper.
+17. Public handoff checklist.
+18. Gift package specification.
 
 Each unit should remain small and runnable before the next one is added.
 
 ## Possible next running units
 
 - Add optional activation field validation for future fields.
-- Add a short module handoff checklist for public sharing.
+- Specify the larger A -> B -> A resonance flow.
