@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections.abc import Callable
 
 from first_spark.config import PROMPT
-from first_spark.game_modules import arrival, spark_chamber
+from first_spark.game_modules import arrival, ending, spark_chamber
 from first_spark.module_response import ModuleResponse
 from first_spark.state import GameState
 
@@ -16,6 +16,7 @@ ModuleHandler = Callable[[str, GameState], ModuleResponse]
 MODULES: dict[str, ModuleHandler] = {
     "arrival": arrival.handle_command,
     "spark_chamber": spark_chamber.handle_command,
+    "ending": ending.handle_command,
 }
 
 
