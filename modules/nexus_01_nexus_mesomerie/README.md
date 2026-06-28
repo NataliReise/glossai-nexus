@@ -37,10 +37,13 @@ Current work focuses on:
 - exploring a Nexus command language,
 - designing spoiler-aware code areas,
 - keeping the module local-first and data-minimal,
-- defining a small internal activity system that supports meaningful variation without making Nexus 01 too large.
+- defining a small internal activity system that supports meaningful variation without making Nexus 01 too large,
+- cutting the first playable gift slice down to **Nexus 0.1 – First Spark**.
 
 ## Nexus 01 planning documents
 
+- [Nexus Module Map](NEXUS_MODULE_MAP.md)
+- [First Spark Scope](FIRST_SPARK_SCOPE.md)
 - [MVP Specification](MVP_NEXUS_01.md)
 - [Nexus Activity System](NEXUS_ACTIVITY_SYSTEM.md)
 
