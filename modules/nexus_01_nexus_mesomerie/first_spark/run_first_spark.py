@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Nexus 0.1 - First Spark.
 
-Third running unit: print a boot sequence and accept simple commands.
+Fourth running unit: print a boot sequence and accept simple commands.
 
 This file is still intentionally tiny. It proves that the first playable slice
-can start locally, accept a minimal command loop, and show a first view into
-the Nexus space before file reading or puzzle logic is added.
+can start locally, accept a minimal command loop, show a first view into the
+Nexus space, and read visible traces before puzzle logic is added.
 """
 
 from __future__ import annotations
@@ -16,10 +16,31 @@ RECIPIENT_ALIAS = "recipient_name"
 PROMPT = "nexus> "
 
 
+VISIBLE_TRACES = {
+    "welcome.log": """[first-spark / welcome.log]
+
+The chamber is small on purpose.
+A spark does not need to become a system before it can glow.
+
+Visible instruction:
+  Try: read spark.note
+""",
+    "spark.note": """[first-spark / spark.note]
+
+This Nexus has been activated as a gift.
+The private message is present, but still locked.
+
+Next trace:
+  Fragment logic has not been installed yet.
+""",
+}
+
+
 HELP_TEXT = """Available commands:
-  help   Show this help text.
-  look   Look around the First Spark chamber.
-  quit   Exit First Spark.
+  help                 Show this help text.
+  look                 Look around the First Spark chamber.
+  read <trace-name>    Read a visible trace.
+  quit                 Exit First Spark.
 """
 
 
@@ -44,7 +65,7 @@ def print_boot_sequence() -> None:
     print(f"Recipient: {RECIPIENT_ALIAS}")
     print("Private message: locked.")
     print()
-    print("Third running unit online.")
+    print("Fourth running unit online.")
     print("Type 'help' for available commands.")
     print()
 
@@ -61,6 +82,19 @@ def print_look() -> None:
     print(LOOK_TEXT)
 
 
+def read_trace(trace_name: str) -> None:
+    """Read a visible trace by name."""
+    trace_text = VISIBLE_TRACES.get(trace_name)
+
+    print()
+    if trace_text is None:
+        print(f"Trace not found: {trace_name}")
+        print("Type 'look' to see visible traces.")
+    else:
+        print(trace_text)
+    print()
+
+
 def command_loop() -> None:
     """Run the minimal command loop."""
     while True:
@@ -70,6 +104,20 @@ def command_loop() -> None:
             print_help()
         elif command == "look":
             print_look()
+        elif command.startswith("read "):
+            trace_name = command.removeprefix("read ").strip()
+            if trace_name:
+                read_trace(trace_name)
+            else:
+                print()
+                print("Usage: read <trace-name>")
+                print("Type 'look' to see visible traces.")
+                print()
+        elif command == "read":
+            print()
+            print("Usage: read <trace-name>")
+            print("Type 'look' to see visible traces.")
+            print()
         elif command == "quit":
             print()
             print("First Spark closed.")
