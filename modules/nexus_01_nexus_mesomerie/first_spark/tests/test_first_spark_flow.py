@@ -24,7 +24,7 @@ CREATE_LOCAL_ACTIVATION_SPEC.loader.exec_module(CREATE_LOCAL_ACTIVATION_MODULE)
 create_local_activation = CREATE_LOCAL_ACTIVATION_MODULE.create_local_activation
 
 from first_spark.activation import ActivationFileError, load_activation
-from first_spark.runtime import dispatch_command
+from first_spark.runtime import INTERRUPT_TEXT, dispatch_command
 from first_spark.state import GameState
 
 
@@ -134,6 +134,13 @@ def test_activation_file_validation_errors() -> None:
             raise AssertionError("Expected ActivationFileError for non-object JSON.")
 
 
+def test_interrupt_text() -> None:
+    """Test the friendly Ctrl-C interrupt text."""
+    assert_contains(INTERRUPT_TEXT, "First Spark interrupted.")
+    assert_contains(INTERRUPT_TEXT, "Returning to your terminal.")
+    assert "Traceback" not in INTERRUPT_TEXT
+
+
 def test_first_spark_main_flow() -> None:
     """Test the current First Spark happy path and guidance flow."""
     state = GameState()
@@ -239,5 +246,6 @@ def test_first_spark_main_flow() -> None:
 if __name__ == "__main__":
     test_local_activation_creation_helper()
     test_activation_file_validation_errors()
+    test_interrupt_text()
     test_first_spark_main_flow()
     print("First Spark flow tests passed.")
