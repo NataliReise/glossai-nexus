@@ -72,6 +72,8 @@ def assert_after_play_message(response: str) -> None:
     assert_contains(response, PUBLIC_REPOSITORY_URL)
     assert_contains(response, "Never post private activation data")
     assert_contains(response, "public-safe resonance node")
+    assert_contains(response, "Type 'resonance-node'")
+    assert_contains(response, "edit only the public alias and public note")
 
 
 def assert_section_divider(response: str) -> None:
