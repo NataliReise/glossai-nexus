@@ -2,10 +2,16 @@
 
 from __future__ import annotations
 
-from first_spark.activation import load_activation
+import sys
+
+from first_spark.activation import ActivationFileError, load_activation
 
 
-ACTIVATION = load_activation()
+try:
+    ACTIVATION = load_activation()
+except ActivationFileError as error:
+    print(error, file=sys.stderr)
+    raise SystemExit(1) from error
 
 MODULE_TITLE = "Nexus 0.1 - First Spark"
 RECIPIENT_ALIAS = ACTIVATION.recipient_alias
