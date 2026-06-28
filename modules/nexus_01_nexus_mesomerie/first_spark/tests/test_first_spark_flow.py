@@ -4,11 +4,13 @@ from __future__ import annotations
 
 from pathlib import Path
 import sys
+import tempfile
 
 
 FIRST_SPARK_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(FIRST_SPARK_ROOT))
 
+from first_spark.activation import ActivationFileError, load_activation
 from first_spark.runtime import dispatch_command
 from first_spark.state import GameState
 
@@ -41,6 +43,36 @@ def assert_unknown_command_recovery(response: str) -> None:
     assert_contains(response, "Unknown command:")
     assert_contains(response, "pasted input")
     assert_contains(response, "fresh prompt")
+
+
+def test_activation_file_validation_errors() -> None:
+    """Test friendly errors for invalid local activation files."""
+    with tempfile.TemporaryDirectory() as directory:
+        invalid_json_path = Path(directory) / "activation.local.json"
+        invalid_json_path.write_text("{not valid json", encoding="utf-8")
+
+        try:
+            load_activation(invalid_json_path)
+        except ActivationFileError as error:
+            message = str(error)
+            assert_contains(message, "Activation file could not be loaded.")
+            assert_contains(message, "Invalid JSON")
+            assert_contains(message, "activation.example.json")
+        else:
+            raise AssertionError("Expected ActivationFileError for invalid JSON.")
+
+        wrong_shape_path = Path(directory) / "activation.local.json"
+        wrong_shape_path.write_text("[]", encoding="utf-8")
+
+        try:
+            load_activation(wrong_shape_path)
+        except ActivationFileError as error:
+            message = str(error)
+            assert_contains(message, "Activation file could not be loaded.")
+            assert_contains(message, "top-level JSON value must be an object")
+            assert_contains(message, "activation.example.json")
+        else:
+            raise AssertionError("Expected ActivationFileError for non-object JSON.")
 
 
 def test_first_spark_main_flow() -> None:
@@ -139,5 +171,6 @@ def test_first_spark_main_flow() -> None:
 
 
 if __name__ == "__main__":
+    test_activation_file_validation_errors()
     test_first_spark_main_flow()
     print("First Spark flow tests passed.")
