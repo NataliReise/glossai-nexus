@@ -74,6 +74,7 @@ For the First Spark 0.1 review, see:
 - [First Spark Scope](FIRST_SPARK_SCOPE.md)
 - [MVP Specification](MVP_NEXUS_01.md)
 - [Nexus Modularity Rules](NEXUS_MODULARITY_RULES.md)
+- [Return Unlock Layer Map](RETURN_UNLOCK_LAYER_MAP.md)
 - [Return Unlock Design](RETURN_UNLOCK_DESIGN.md)
 - [Return Artifact MVP](RETURN_ARTIFACT_MVP.md)
 - [Nexus Activity System](NEXUS_ACTIVITY_SYSTEM.md)
