@@ -498,7 +498,28 @@ It should include an explicit privacy reminder.
 
 ---
 
-## 14. In Scope for MVP 01
+## 14. Return Unlock Design
+
+The return unlock mechanism is specified in more detail in:
+
+- [Return Unlock Design](RETURN_UNLOCK_DESIGN.md)
+
+That design note expands the MVP return-artifact idea with:
+
+- local return unlock
+- encrypted return layer
+- symmetric encryption direction
+- human unpredictability component
+- generated return revelation
+- public-safe return trace
+- friendly failure behavior
+- public/private boundaries for return artifacts and encrypted layers
+
+The return unlock design remains an early working design and does not yet require implementation.
+
+---
+
+## 15. In Scope for MVP 01
 
 MVP 01 should specify or prepare:
 
@@ -518,7 +539,7 @@ MVP 01 should specify or prepare:
 
 ---
 
-## 15. Out of Scope for MVP 01
+## 16. Out of Scope for MVP 01
 
 MVP 01 should not include:
 
@@ -541,7 +562,7 @@ MVP 01 should not include:
 
 ---
 
-## 16. Later Extensions
+## 17. Later Extensions
 
 Possible later extensions:
 
@@ -567,7 +588,7 @@ Contact nodes may be reconsidered later, but they are not part of the first priv
 
 ---
 
-## 17. MVP Success Criteria
+## 18. MVP Success Criteria
 
 The MVP direction is successful if:
 
@@ -586,7 +607,7 @@ The MVP direction is successful if:
 
 ---
 
-## 18. Working Formula
+## 19. Working Formula
 
 Public module:
 
