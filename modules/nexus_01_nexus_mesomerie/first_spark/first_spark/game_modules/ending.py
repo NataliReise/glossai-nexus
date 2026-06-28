@@ -35,7 +35,10 @@ Public project:
 Never post private activation data, private gift messages, or return artifacts publicly.
 
 Later, you may also share a public-safe resonance node to show that a spark was seen.
-A resonance node must not include private messages, activation files, or return artifacts."""
+A resonance node must not include private messages, activation files, or return artifacts.
+
+Type 'resonance-node' to show an optional public-safe draft.
+You can copy that draft, edit only the public alias and public note, and share it manually if you choose."""
 
 
 RESONANCE_NODE_TEXT = f"""[public-safe resonance node draft]
