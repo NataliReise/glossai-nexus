@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Nexus 0.1 - First Spark.
 
-Second running unit: print a boot sequence and accept two commands.
+Third running unit: print a boot sequence and accept simple commands.
 
 This file is still intentionally tiny. It proves that the first playable slice
-can start locally and accept a minimal command loop before file inspection or
-puzzle logic is added.
+can start locally, accept a minimal command loop, and show a first view into
+the Nexus space before file reading or puzzle logic is added.
 """
 
 from __future__ import annotations
@@ -18,7 +18,18 @@ PROMPT = "nexus> "
 
 HELP_TEXT = """Available commands:
   help   Show this help text.
+  look   Look around the First Spark chamber.
   quit   Exit First Spark.
+"""
+
+
+LOOK_TEXT = """You are inside the First Spark chamber.
+
+Visible traces:
+  welcome.log
+  spark.note
+
+The private message is still locked.
 """
 
 
@@ -33,7 +44,7 @@ def print_boot_sequence() -> None:
     print(f"Recipient: {RECIPIENT_ALIAS}")
     print("Private message: locked.")
     print()
-    print("Second running unit online.")
+    print("Third running unit online.")
     print("Type 'help' for available commands.")
     print()
 
@@ -44,6 +55,12 @@ def print_help() -> None:
     print(HELP_TEXT)
 
 
+def print_look() -> None:
+    """Print the first view into the First Spark chamber."""
+    print()
+    print(LOOK_TEXT)
+
+
 def command_loop() -> None:
     """Run the minimal command loop."""
     while True:
@@ -51,6 +68,8 @@ def command_loop() -> None:
 
         if command == "help":
             print_help()
+        elif command == "look":
+            print_look()
         elif command == "quit":
             print()
             print("First Spark closed.")
