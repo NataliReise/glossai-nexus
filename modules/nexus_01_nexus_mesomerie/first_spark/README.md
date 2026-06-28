@@ -206,6 +206,7 @@ See also:
 - [`LOCAL_ACTIVATION_GUIDE.md`](LOCAL_ACTIVATION_GUIDE.md)
 - [`PUBLIC_HANDOFF_CHECKLIST.md`](PUBLIC_HANDOFF_CHECKLIST.md)
 - [`GIFT_PACKAGE_SPEC.md`](GIFT_PACKAGE_SPEC.md)
+- [`FIRST_SPARK_AFTER_PLAY.md`](FIRST_SPARK_AFTER_PLAY.md)
 
 ## Public handoff
 
@@ -227,6 +228,16 @@ For the current narrow specification, see:
 
 - [`GIFT_PACKAGE_SPEC.md`](GIFT_PACKAGE_SPEC.md)
 
+## After-play layer
+
+The first after-play layer should appear after the unlocked final message.
+
+It should make clear that the gift is complete, passing the spark onward is optional, and any public resonance node must be public-safe.
+
+For the current narrow specification, see:
+
+- [`FIRST_SPARK_AFTER_PLAY.md`](FIRST_SPARK_AFTER_PLAY.md)
+
 ## Completed running units
 
 1. Start script with boot sequence.
@@ -247,10 +258,12 @@ For the current narrow specification, see:
 16. Safe local activation creation helper.
 17. Public handoff checklist.
 18. Gift package specification.
+19. First Spark after-play specification.
 
 Each unit should remain small and runnable before the next one is added.
 
 ## Possible next running units
 
+- Show a short after-play message after the final activation message.
 - Add optional activation field validation for future fields.
-- Specify the larger A -> B -> A resonance flow.
+- Prepare resonance artifact and return artifact concepts after the after-play layer works.
