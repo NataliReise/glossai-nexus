@@ -10,7 +10,7 @@ The current prototype contains the first complete mini game loop:
 
 > arrival -> spark chamber -> read traces -> link spark -> unlock activation message
 
-This is still intentionally small. It proves that a Nexus module can start locally, move between small game modules, keep state, complete a first activation-message ending, offer optional gentle guidance through the `trace` command, provide a spoiler-protected `walkthrough`, load a local private activation file, and protect the main flow with a minimal automated test.
+This is still intentionally small. It proves that a Nexus module can start locally, move between small game modules, keep state, complete a first activation-message ending, offer optional gentle guidance through the `trace` command, provide a spoiler-protected `walkthrough`, load a local private activation file, explain confusing pasted input on unknown commands, and protect the main flow with a minimal automated test.
 
 Development principle:
 
@@ -45,7 +45,7 @@ Expected output:
 First Spark flow tests passed.
 ```
 
-The test checks the current main flow from arrival to ending, including state changes for `trace`, `walkthrough`, `read`, `link spark`, `unlock`, and `quit`.
+The test checks the current main flow from arrival to ending, including state changes for `trace`, `walkthrough`, `read`, `link spark`, `unlock`, `quit`, and unknown-command recovery text.
 
 ## Activation files
 
@@ -87,7 +87,7 @@ Available commands:
 - `look` - Enter the First Spark chamber.
 - `trace` - Reveal a gentle next trace.
 - `walkthrough` - Show the full solution path with a spoiler warning.
-- `quit` - Exit First Spark.
+- `quit` - Exit First Spark and return to your terminal.
 
 ### Spark chamber module
 
@@ -102,7 +102,7 @@ Available commands:
 - `unlock` - Open the activation message after the spark was linked.
 - `trace` - Reveal a gentle next trace based on the current state.
 - `walkthrough` - Show the full solution path with a spoiler warning.
-- `quit` - Exit First Spark.
+- `quit` - Exit First Spark and return to your terminal.
 
 Visible traces:
 
@@ -120,7 +120,7 @@ Available commands:
 - `unlock` - Show the already opened activation message again.
 - `trace` - Confirm that the First Spark is complete.
 - `walkthrough` - Show the full solution path with a spoiler warning.
-- `quit` - Exit First Spark.
+- `quit` - Exit First Spark and return to your terminal.
 
 ## Guidance commands
 
@@ -133,10 +133,25 @@ First Spark separates four kinds of orientation:
 
 The walkthrough is intentionally available in all modules so players with little time or little puzzle energy can choose a direct route from anywhere.
 
+## Unknown command recovery
+
+Unknown commands show the text First Spark actually received. This can help explain confusing terminal copy-and-paste situations where pasted input was still waiting in the terminal.
+
+Example:
+
+```text
+Unknown command: git statusquit
+
+This may include pasted input that was still waiting in the terminal.
+Type 'help' for available commands.
+Type 'quit' on a fresh prompt to leave First Spark.
+```
+
 ## Suggested manual test run
 
 ```text
 nexus> help
+nexus> git statusquit
 nexus> walkthrough
 nexus> trace
 nexus> look
@@ -156,6 +171,7 @@ nexus> quit
 
 Expected behavior:
 
+- Unknown commands show a short explanation about possible pasted input.
 - `walkthrough` shows a spoiler warning and the complete path.
 - `walkthrough` does not change the current module or game state.
 - `trace` in the arrival module points toward the entrance.
@@ -188,6 +204,7 @@ See also:
 10. Minimal automated flow test.
 11. `walkthrough` command with spoiler warning.
 12. Local private activation file structure.
+13. Clearer unknown-command recovery text.
 
 Each unit should remain small and runnable before the next one is added.
 
