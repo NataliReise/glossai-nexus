@@ -63,7 +63,7 @@ You can also visit the project discussions:
 https://github.com/NataliReise/glossai-nexus/discussions
 ```
 
-Use discussions for questions, feedback, public-safe resonance nodes, module ideas, and project orientation.
+Use discussions for help, questions, feedback, public-safe resonance nodes, module ideas, polls, and project orientation.
 
 In the future, this project may also include guidance for creating your own small Nexus modules.
 
@@ -111,7 +111,7 @@ If you want to share one:
 2. Copy the draft from the terminal.
 3. Edit only the public alias and public note.
 4. Open the project discussions.
-5. Post it in a suitable discussion category, for example `Resonance Nodes`, if that category exists.
+5. Post it in the `Resonance Nodes` category.
 
 Project discussions:
 
