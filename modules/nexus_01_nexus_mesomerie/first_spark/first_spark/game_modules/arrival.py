@@ -25,7 +25,7 @@ Activation detected.
 Recipient: {RECIPIENT_ALIAS}
 Private message: locked.
 
-Refactoring running unit online.
+First Spark online.
 Type 'help' for available commands.
 """.strip()
 
