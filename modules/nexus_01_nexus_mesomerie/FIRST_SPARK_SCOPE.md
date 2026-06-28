@@ -85,7 +85,38 @@ Guiding rule:
 
 ---
 
-## 4. Required Configuration
+## 4. Development Principle: Small Running Units
+
+First Spark should be developed in very small running units.
+
+Each new unit should be:
+
+- small enough to understand,
+- runnable as early as possible,
+- tested before the next unit is added,
+- connected to the larger Nexus structure only as much as needed.
+
+The project should not wait until many parts are finished before anything can run.
+
+Recommended build order:
+
+1. Start script runs and prints the boot text.
+2. `help` works.
+3. `look` works.
+4. `read` works for a small set of virtual files.
+5. `link` can connect fragments.
+6. `unlock` opens the gift message.
+
+After each step, the prototype should still be runnable.
+
+Working formula:
+
+> First make the spark run.  
+> Then widen the trace.
+
+---
+
+## 5. Required Configuration
 
 First Spark needs only one activation configuration.
 
@@ -113,7 +144,7 @@ Private gift activation files should not be committed publicly unless intentiona
 
 ---
 
-## 5. Activity Flow
+## 6. Activity Flow
 
 First Spark should use a simple linear activity flow.
 
@@ -131,9 +162,9 @@ Optional steps should only be added if they make the gift game clearer, not larg
 
 ---
 
-## 6. Activities in Scope
+## 7. Activities in Scope
 
-### 6.1 `personal_boot_sequence`
+### 7.1 `personal_boot_sequence`
 
 Shows that the Nexus has been activated for the player.
 
@@ -150,7 +181,7 @@ The personalization may be visible from the beginning.
 
 The gift message itself remains locked until completion.
 
-### 6.2 `mini_language_lesson`
+### 7.2 `mini_language_lesson`
 
 Introduces a tiny command language.
 
@@ -158,7 +189,7 @@ The player should learn commands by using them.
 
 Commands should be simple and discoverable.
 
-### 6.3 `file_inspection`
+### 7.3 `file_inspection`
 
 Lets the player inspect a few virtual files, logs, or fragments.
 
@@ -166,13 +197,13 @@ The files should contain clues.
 
 They should also make the Nexus feel like a small readable software artifact.
 
-### 6.4 `fragment_connection`
+### 7.4 `fragment_connection`
 
 Lets the player connect found fragments.
 
 This should be the central small puzzle.
 
-### 6.5 `gift_message_unlock`
+### 7.5 `gift_message_unlock`
 
 Unlocks the final gift message.
 
@@ -180,7 +211,7 @@ This is the completion point of First Spark.
 
 ---
 
-## 7. Tiny Command Language
+## 8. Tiny Command Language
 
 First Spark should use only a very small command set.
 
@@ -211,7 +242,7 @@ Design principle:
 
 ---
 
-## 8. Minimal Game State
+## 9. Minimal Game State
 
 First Spark needs only a tiny game state.
 
@@ -231,7 +262,7 @@ The game state should be simple enough to inspect and understand.
 
 ---
 
-## 9. Virtual Files and Fragments
+## 10. Virtual Files and Fragments
 
 First Spark should include only a few virtual files.
 
@@ -256,7 +287,7 @@ This keeps the puzzle small.
 
 ---
 
-## 10. Completion Criteria
+## 11. Completion Criteria
 
 First Spark is complete when:
 
@@ -271,7 +302,7 @@ First Spark is complete when:
 
 ---
 
-## 11. Explicit Parking Lot
+## 12. Explicit Parking Lot
 
 The following ideas are important, but parked for later:
 
@@ -294,7 +325,7 @@ They should not be implemented in First Spark unless intentionally promoted late
 
 ---
 
-## 12. Working Formula
+## 13. Working Formula
 
 First Spark should stay small enough to finish.
 
