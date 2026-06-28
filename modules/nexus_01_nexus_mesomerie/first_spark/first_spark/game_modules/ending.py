@@ -10,7 +10,7 @@ from first_spark.state import GameState
 
 
 PUBLIC_REPOSITORY_URL = "https://github.com/NataliReise/glossai-nexus.git"
-SECTION_DIVIDER = "︵‿︵‿୨🜂 ☾𓋹☽ 🜄୧‿︵‿︵"
+SECTION_DIVIDER = "︵‿︵‿୨ ☾𓋹☽ ୧‿︵‿︵"
 
 
 ACTIVATION_MESSAGE = f"""[activation message]
