@@ -22,7 +22,7 @@ Examples:
 
 - private activation files
 - private gift messages
-- private recipient data
+- private personal data
 - return artifacts
 - private notes
 
@@ -44,7 +44,7 @@ Examples:
 
 The community layer can grow through GitHub Discussions, issues, pull requests, and shared documentation.
 
-Discussions are for questions, impressions, resonance nodes, ideas, and orientation.
+Discussions are for help, questions, impressions, resonance nodes, ideas, polls, and orientation.
 
 Issues are better for concrete bugs or actionable tasks.
 
@@ -78,7 +78,7 @@ A resonance node must not include:
 
 - private activation messages,
 - `activation.local.json`,
-- private recipient data,
+- private personal data,
 - return artifacts,
 - private notes from a gift package.
 
@@ -90,7 +90,7 @@ Project discussions live here:
 https://github.com/NataliReise/glossai-nexus/discussions
 ```
 
-A public-safe resonance node may be shared there if discussions are open and the person sharing it chooses to do so.
+A public-safe resonance node may be shared in the `Resonance Nodes` category if the person sharing it chooses to do so.
 
 Sharing is optional.
 
