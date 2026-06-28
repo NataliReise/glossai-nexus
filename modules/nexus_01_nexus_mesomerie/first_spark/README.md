@@ -10,7 +10,7 @@ The current prototype contains the first complete mini game loop:
 
 > arrival -> spark chamber -> read traces -> link spark -> unlock activation message
 
-This is still intentionally small. It proves that a Nexus module can start locally, move between small game modules, keep state, complete a first activation-message ending, offer optional gentle guidance through the `trace` command, provide a spoiler-protected `walkthrough`, load a local private activation file, explain confusing pasted input on unknown commands, document the local activation workflow, show friendly activation-file errors, and protect the main flow with a minimal automated test.
+This is still intentionally small. It proves that a Nexus module can start locally, move between small game modules, keep state, complete a first activation-message ending, offer optional gentle guidance through the `trace` command, provide a spoiler-protected `walkthrough`, load a local private activation file, explain confusing pasted input on unknown commands, document the local activation workflow, show friendly activation-file errors, provide a safe helper for creating the local activation file, and protect the main flow with a minimal automated test.
 
 Development principle:
 
@@ -45,7 +45,7 @@ Expected output:
 First Spark flow tests passed.
 ```
 
-The test checks the current main flow from arrival to ending, including state changes for `trace`, `walkthrough`, `read`, `link spark`, `unlock`, `quit`, unknown-command recovery text, and activation-file validation errors.
+The test checks the current main flow from arrival to ending, including state changes for `trace`, `walkthrough`, `read`, `link spark`, `unlock`, `quit`, unknown-command recovery text, activation-file validation errors, and the local activation creation helper.
 
 ## Activation files
 
@@ -62,6 +62,14 @@ A safe public example is included:
 ```text
 modules/nexus_01_nexus_mesomerie/first_spark/activation.example.json
 ```
+
+You can create the local activation file safely from the example:
+
+```bash
+python3 modules/nexus_01_nexus_mesomerie/first_spark/create_local_activation.py
+```
+
+The helper does not overwrite an existing `activation.local.json` file.
 
 Minimal activation fields:
 
@@ -214,10 +222,11 @@ See also:
 13. Clearer unknown-command recovery text.
 14. Local activation guide.
 15. Friendly activation-file validation errors.
+16. Safe local activation creation helper.
 
 Each unit should remain small and runnable before the next one is added.
 
 ## Possible next running units
 
-- Add a safer helper script for creating a local activation file from the example.
 - Add optional activation field validation for future fields.
+- Add a short module handoff checklist for public sharing.
