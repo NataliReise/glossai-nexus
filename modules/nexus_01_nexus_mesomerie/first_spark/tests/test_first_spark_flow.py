@@ -28,6 +28,9 @@ from first_spark.runtime import dispatch_command
 from first_spark.state import GameState
 
 
+PUBLIC_REPOSITORY_URL = "https://github.com/NataliReise/glossai-nexus.git"
+
+
 def assert_contains(text: str, expected: str) -> None:
     """Assert that a response contains the expected text."""
     if expected not in text:
@@ -56,6 +59,18 @@ def assert_unknown_command_recovery(response: str) -> None:
     assert_contains(response, "Unknown command:")
     assert_contains(response, "pasted input")
     assert_contains(response, "fresh prompt")
+
+
+def assert_after_play_message(response: str) -> None:
+    """Assert that the after-play message is shown after unlock."""
+    assert_contains(response, "[after-play]")
+    assert_contains(response, "The First Spark is complete.")
+    assert_contains(response, "You may keep this as a finished gift.")
+    assert_contains(response, "Nothing else is required.")
+    assert_contains(response, "let the spark travel further")
+    assert_contains(response, PUBLIC_REPOSITORY_URL)
+    assert_contains(response, "Never post private activation data")
+    assert_contains(response, "public-safe resonance node")
 
 
 def test_local_activation_creation_helper() -> None:
@@ -181,8 +196,13 @@ def test_first_spark_main_flow() -> None:
     response = run_command(state, "unlock")
     assert_contains(response, "The private message opens.")
     assert_contains(response, "[activation message]")
+    assert_after_play_message(response)
     assert state.message_unlocked
     assert state.current_module == "ending"
+
+    response = run_command(state, "look")
+    assert_contains(response, "The private message is already open.")
+    assert_after_play_message(response)
 
     response = run_command(state, "help")
     assert_contains(response, "walkthrough")
