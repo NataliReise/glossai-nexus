@@ -138,6 +138,12 @@ Exit codes:
 2 -> file, parsing, slot-loading, or result-opening error
 ```
 
+For a recommended private local folder layout, see:
+
+```text
+../RETURN_RESONANCE_LOCAL_WORKSPACE.md
+```
+
 ## Local files and Git
 
 Generated local result files should stay local.
