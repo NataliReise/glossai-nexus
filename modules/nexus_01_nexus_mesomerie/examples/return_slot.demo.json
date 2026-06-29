@@ -1,0 +1,16 @@
+{
+  "document_status": "safe public demo example",
+  "slots": [
+    {
+      "origin_trace_id": "n01-demo-origin-7kq2",
+      "return_slot_id": "lantern-river-01",
+      "module_id": "N01",
+      "package_id": "demo-package",
+      "layer_id": "return-resonance-1",
+      "status": "waiting",
+      "result_file": "return_resonance_lantern_river.local.md",
+      "public_safe_label": "lantern river",
+      "note": "origin_trace_id identifies a local resonance arc, not a person"
+    }
+  ]
+}
