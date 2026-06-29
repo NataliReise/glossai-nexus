@@ -12,6 +12,8 @@ The current focus is **Nexus 01 - Nexus-Mesomerie** and its first small playable
 
 First Spark is a local terminal prototype. It can be played as a neutral public demo or combined with a private activation package to become a personal gift.
 
+The next design direction explores a small local return layer based on return slots, matching return artifacts, and generated local return resonance. This is narrative decryption first, not a cryptographic security promise.
+
 ## Current platform focus
 
 The current public seed is Linux-first.
@@ -64,6 +66,7 @@ A Nexus module contains the shared structure. An activation contains the concret
 - Openness should make power, rules, and structures inspectable.
 - Personal messages, private contexts, and individual activations may remain protected.
 - A Nexus should be local-first; its network should grow through human interaction and carried traces, not hidden digital connectivity.
+- Return layers should begin with local, public-safe, inspectable mechanics before any optional later encryption layer.
 - AI may assist the project, but it should not become an unquestioned authority.
 - The project should support resonance, cooperation, democratic imagination, and shared responsibility.
 
@@ -76,6 +79,7 @@ A Nexus module contains the shared structure. An activation contains the concret
 - [Speaking code](docs/SPEAKING_CODE.md)
 - [Playing a Nexus](docs/PLAYING_A_NEXUS.md)
 - [Resonance Arc](docs/RESONANCE_ARC.md)
+- [Return Resonance Slots](modules/nexus_01_nexus_mesomerie/RETURN_RESONANCE_SLOTS.md)
 - [Discussions Guide](docs/DISCUSSIONS_GUIDE.md)
 
 ## Wiki
