@@ -172,6 +172,12 @@ For a recommended private local folder layout, see:
 ../RETURN_RESONANCE_LOCAL_WORKSPACE.md
 ```
 
+For the boundary between private activations and public-safe return slots, see:
+
+```text
+../RETURN_SLOT_FROM_PRIVATE_ACTIVATION.md
+```
+
 ## Local files and Git
 
 Generated local result files should stay local.
