@@ -52,6 +52,10 @@ Generated Return Resonance MVP
 
 This means the first return layer may match a return artifact to a local return slot and generate a stable local result file. It should not promise real cryptographic decryption unless a later crypto layer explicitly implements it.
 
+For the current Return Resonance implementation guide, see:
+
+- [Return Resonance README](return_resonance/README.md)
+
 For the current MVP boundary specification, see:
 
 - [Return Resonance MVP](RETURN_RESONANCE_MVP.md)
