@@ -60,6 +60,10 @@ For the local Return Resonance workspace guide, see:
 
 - [Return Resonance Local Workspace](RETURN_RESONANCE_LOCAL_WORKSPACE.md)
 
+For the boundary between private activations and public-safe return slots, see:
+
+- [Return Slot from Private Activation](RETURN_SLOT_FROM_PRIVATE_ACTIVATION.md)
+
 For the Return Resonance 0.1 milestone review, see:
 
 - [Return Resonance 0.1 Review](RETURN_RESONANCE_0_1_REVIEW.md)
@@ -114,6 +118,7 @@ For the First Spark 0.1 review, see:
 - [Nexus Modularity Rules](NEXUS_MODULARITY_RULES.md)
 - [Return Resonance MVP](RETURN_RESONANCE_MVP.md)
 - [Return Resonance Local Workspace](RETURN_RESONANCE_LOCAL_WORKSPACE.md)
+- [Return Slot from Private Activation](RETURN_SLOT_FROM_PRIVATE_ACTIVATION.md)
 - [Return Resonance 0.1 Review](RETURN_RESONANCE_0_1_REVIEW.md)
 - [Return Unlock Layer Map](RETURN_UNLOCK_LAYER_MAP.md)
 - [Return Unlock Design](RETURN_UNLOCK_DESIGN.md)
