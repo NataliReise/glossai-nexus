@@ -52,6 +52,10 @@ Generated Return Resonance MVP
 
 This means the first return layer may match a return artifact to a local return slot and generate a stable local result file. It should not promise real cryptographic decryption unless a later crypto layer explicitly implements it.
 
+For the current MVP boundary specification, see:
+
+- [Return Resonance MVP](RETURN_RESONANCE_MVP.md)
+
 For the current bridge note between the older return unlock design and the newer slot-based direction, see:
 
 - [Return Unlock Current Direction](RETURN_UNLOCK_CURRENT_DIRECTION.md)
@@ -89,6 +93,7 @@ For the First Spark 0.1 review, see:
 - [First Spark Scope](FIRST_SPARK_SCOPE.md)
 - [MVP Specification](MVP_NEXUS_01.md)
 - [Nexus Modularity Rules](NEXUS_MODULARITY_RULES.md)
+- [Return Resonance MVP](RETURN_RESONANCE_MVP.md)
 - [Return Unlock Layer Map](RETURN_UNLOCK_LAYER_MAP.md)
 - [Return Unlock Design](RETURN_UNLOCK_DESIGN.md)
 - [Return Unlock Current Direction](RETURN_UNLOCK_CURRENT_DIRECTION.md)
