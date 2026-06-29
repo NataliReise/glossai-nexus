@@ -11,7 +11,14 @@ sys.path.insert(0, str(NEXUS_01_ROOT))
 
 BEFORE_RETURN_RESONANCE_IMPORTS = set(sys.modules)
 
-from return_resonance import MatchStatus, load_return_slots, match_return_artifact, parse_return_artifact
+from return_resonance import (
+    MatchStatus,
+    ReturnResultError,
+    load_return_slots,
+    match_return_artifact,
+    open_return_result,
+    parse_return_artifact,
+)
 from return_resonance.artifact import ReturnArtifactParseError
 from return_resonance.slots import ReturnSlotState
 
@@ -26,6 +33,12 @@ DEMO_SLOT_PATH = EXAMPLES_DIR / "return_slot.demo.json"
 def assert_contains(text: str, expected: str) -> None:
     if expected not in text:
         raise AssertionError(f"Expected to find {expected!r} in text:\n{text}")
+
+
+def load_demo_match():
+    artifact = parse_return_artifact(DEMO_ARTIFACT_PATH.read_text(encoding="utf-8"))
+    slots = load_return_slots(DEMO_SLOT_PATH)
+    return artifact, match_return_artifact(artifact, slots)
 
 
 def test_parse_demo_return_artifact() -> None:
@@ -77,11 +90,9 @@ def test_load_demo_return_slot() -> None:
 
 
 def test_match_demo_artifact_to_waiting_slot() -> None:
-    artifact = parse_return_artifact(DEMO_ARTIFACT_PATH.read_text(encoding="utf-8"))
-    slots = load_return_slots(DEMO_SLOT_PATH)
+    artifact, result = load_demo_match()
 
-    result = match_return_artifact(artifact, slots)
-
+    assert artifact.return_slot_id == "lantern-river-01"
     assert result.status == MatchStatus.MATCH_WAITING
     assert result.is_match
     assert result.slot is not None
@@ -155,6 +166,68 @@ def test_match_already_opened_slot() -> None:
     assert_contains(result.message, "already opened")
 
 
+def test_open_return_result_generates_once_then_reuses() -> None:
+    artifact, match = load_demo_match()
+
+    with tempfile.TemporaryDirectory() as directory:
+        first_result = open_return_result(artifact, match, directory)
+
+        assert first_result.created
+        assert first_result.path.name == "return_resonance_lantern_river.local.md"
+        assert first_result.path.exists()
+        assert first_result.path.read_text(encoding="utf-8") == first_result.content
+        assert_contains(first_result.content, "# Return Resonance: lantern-river-01")
+        assert_contains(first_result.content, "Status: opened")
+        assert_contains(first_result.content, "trust")
+        assert_contains(first_result.content, "Generate once") is None
+        assert_contains(first_result.content, "Do not publish it unless")
+
+        first_result.path.write_text("already remembered\n", encoding="utf-8")
+        second_result = open_return_result(artifact, match, directory)
+
+        assert not second_result.created
+        assert second_result.content == "already remembered\n"
+
+
+def test_open_return_result_rejects_non_matching_result() -> None:
+    artifact_text = DEMO_ARTIFACT_PATH.read_text(encoding="utf-8").replace(
+        "Return Slot: lantern-river-01", "Return Slot: unknown-slot"
+    )
+    artifact = parse_return_artifact(artifact_text)
+    slots = load_return_slots(DEMO_SLOT_PATH)
+    match = match_return_artifact(artifact, slots)
+
+    with tempfile.TemporaryDirectory() as directory:
+        try:
+            open_return_result(artifact, match, directory)
+        except ReturnResultError as error:
+            assert_contains(str(error), "without a matching slot")
+        else:
+            raise AssertionError("Expected ReturnResultError for non-matching result.")
+
+
+def test_open_return_result_requires_existing_file_for_opened_slot() -> None:
+    with tempfile.TemporaryDirectory() as directory:
+        opened_slot_path = Path(directory) / "return_slot.demo.json"
+        opened_slot_path.write_text(
+            DEMO_SLOT_PATH.read_text(encoding="utf-8").replace(
+                '"status": "waiting"', '"status": "opened"'
+            ),
+            encoding="utf-8",
+        )
+
+        artifact = parse_return_artifact(DEMO_ARTIFACT_PATH.read_text(encoding="utf-8"))
+        slots = load_return_slots(opened_slot_path)
+        match = match_return_artifact(artifact, slots)
+
+        try:
+            open_return_result(artifact, match, directory)
+        except ReturnResultError as error:
+            assert_contains(str(error), "marked as opened")
+        else:
+            raise AssertionError("Expected ReturnResultError for missing opened result file.")
+
+
 def test_return_resonance_import_does_not_load_first_spark() -> None:
     newly_imported = AFTER_RETURN_RESONANCE_IMPORTS - BEFORE_RETURN_RESONANCE_IMPORTS
     forbidden_imports = {
@@ -177,5 +250,8 @@ if __name__ == "__main__":
     test_match_package_mismatch()
     test_match_layer_mismatch()
     test_match_already_opened_slot()
+    test_open_return_result_generates_once_then_reuses()
+    test_open_return_result_rejects_non_matching_result()
+    test_open_return_result_requires_existing_file_for_opened_slot()
     test_return_resonance_import_does_not_load_first_spark()
     print("Return Resonance MVP tests passed.")
