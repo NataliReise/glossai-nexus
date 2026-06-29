@@ -28,6 +28,7 @@ AFTER_RETURN_RESONANCE_IMPORTS = set(sys.modules)
 
 EXAMPLES_DIR = NEXUS_01_ROOT / "examples"
 DEMO_ARTIFACT_PATH = EXAMPLES_DIR / "return_artifact.demo.txt"
+UNKNOWN_SLOT_ARTIFACT_PATH = EXAMPLES_DIR / "return_artifact.unknown_slot.demo.txt"
 DEMO_SLOT_PATH = EXAMPLES_DIR / "return_slot.demo.json"
 DEMO_RUNNER_PATH = NEXUS_01_ROOT / "run_return_resonance_demo.py"
 CLI_RUNNER_PATH = NEXUS_01_ROOT / "run_return_resonance.py"
@@ -77,6 +78,17 @@ def test_parse_demo_return_artifact() -> None:
     assert artifact.return_tone == "luminous"
 
 
+def test_parse_unknown_slot_return_artifact() -> None:
+    artifact = parse_return_artifact(UNKNOWN_SLOT_ARTIFACT_PATH.read_text(encoding="utf-8"))
+
+    assert artifact.version == "N01-RA-GEN-1"
+    assert artifact.origin_trace_id == "n01-demo-origin-7kq2"
+    assert artifact.return_slot_id == "unknown-slot"
+    assert artifact.package_id == "demo-package"
+    assert artifact.layer_id == "return-resonance-1"
+    assert artifact.return_word == "trust"
+
+
 def test_parse_return_artifact_requires_core_fields() -> None:
     text = """NEXUS RETURN ARTIFACT
 Version: N01-RA-GEN-1
@@ -121,10 +133,7 @@ def test_match_demo_artifact_to_waiting_slot() -> None:
 
 
 def test_match_unknown_slot() -> None:
-    artifact_text = DEMO_ARTIFACT_PATH.read_text(encoding="utf-8").replace(
-        "Return Slot: lantern-river-01", "Return Slot: unknown-slot"
-    )
-    artifact = parse_return_artifact(artifact_text)
+    artifact = parse_return_artifact(UNKNOWN_SLOT_ARTIFACT_PATH.read_text(encoding="utf-8"))
     slots = load_return_slots(DEMO_SLOT_PATH)
 
     result = match_return_artifact(artifact, slots)
@@ -209,10 +218,7 @@ def test_open_return_result_generates_once_then_reuses() -> None:
 
 
 def test_open_return_result_rejects_non_matching_result() -> None:
-    artifact_text = DEMO_ARTIFACT_PATH.read_text(encoding="utf-8").replace(
-        "Return Slot: lantern-river-01", "Return Slot: unknown-slot"
-    )
-    artifact = parse_return_artifact(artifact_text)
+    artifact = parse_return_artifact(UNKNOWN_SLOT_ARTIFACT_PATH.read_text(encoding="utf-8"))
     slots = load_return_slots(DEMO_SLOT_PATH)
     match = match_return_artifact(artifact, slots)
 
@@ -287,18 +293,10 @@ def test_return_resonance_cli_returns_one_for_non_match() -> None:
     cli_runner = load_cli_runner_module()
 
     with tempfile.TemporaryDirectory() as directory:
-        artifact_path = Path(directory) / "unknown_artifact.txt"
-        artifact_path.write_text(
-            DEMO_ARTIFACT_PATH.read_text(encoding="utf-8").replace(
-                "Return Slot: lantern-river-01", "Return Slot: unknown-slot"
-            ),
-            encoding="utf-8",
-        )
-
         exit_code = cli_runner.main(
             [
                 "--artifact",
-                str(artifact_path),
+                str(UNKNOWN_SLOT_ARTIFACT_PATH),
                 "--slots",
                 str(DEMO_SLOT_PATH),
                 "--output-dir",
@@ -325,6 +323,7 @@ def test_return_resonance_import_does_not_load_first_spark() -> None:
 
 if __name__ == "__main__":
     test_parse_demo_return_artifact()
+    test_parse_unknown_slot_return_artifact()
     test_parse_return_artifact_requires_core_fields()
     test_load_demo_return_slot()
     test_match_demo_artifact_to_waiting_slot()
