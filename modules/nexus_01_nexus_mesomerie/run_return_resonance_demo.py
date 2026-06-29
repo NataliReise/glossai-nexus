@@ -51,11 +51,12 @@ def main() -> int:
         return 1
 
     result = open_return_result(artifact, match, OUTPUT_DIR)
+    result_display_path = _display_path(result.path)
 
     if result.created:
-        print("Local result created:", result.path.relative_to(NEXUS_01_ROOT))
+        print("Local result created:", result_display_path)
     else:
-        print("Local result reused:", result.path.relative_to(NEXUS_01_ROOT))
+        print("Local result reused:", result_display_path)
 
     print()
     print("--- Local result preview ---")
@@ -68,6 +69,13 @@ def main() -> int:
     print("Do not publish real return artifacts or local return results unless reviewed carefully.")
 
     return 0
+
+
+def _display_path(path: Path) -> Path:
+    try:
+        return path.relative_to(NEXUS_01_ROOT)
+    except ValueError:
+        return path
 
 
 def _preview(content: str, max_lines: int = 24) -> str:
