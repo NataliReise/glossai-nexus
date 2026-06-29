@@ -9,9 +9,13 @@ import tempfile
 NEXUS_01_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(NEXUS_01_ROOT))
 
+BEFORE_RETURN_RESONANCE_IMPORTS = set(sys.modules)
+
 from return_resonance import MatchStatus, load_return_slots, match_return_artifact, parse_return_artifact
 from return_resonance.artifact import ReturnArtifactParseError
 from return_resonance.slots import ReturnSlotState
+
+AFTER_RETURN_RESONANCE_IMPORTS = set(sys.modules)
 
 
 EXAMPLES_DIR = NEXUS_01_ROOT / "examples"
@@ -151,15 +155,15 @@ def test_match_already_opened_slot() -> None:
     assert_contains(result.message, "already opened")
 
 
-def test_first_spark_is_not_imported_by_return_resonance() -> None:
-    imported_names = set(sys.modules)
+def test_return_resonance_import_does_not_load_first_spark() -> None:
+    newly_imported = AFTER_RETURN_RESONANCE_IMPORTS - BEFORE_RETURN_RESONANCE_IMPORTS
     forbidden_imports = {
-        name for name in imported_names if name == "first_spark" or name.startswith("first_spark.")
+        name for name in newly_imported if name == "first_spark" or name.startswith("first_spark.")
     }
 
     if forbidden_imports:
         raise AssertionError(
-            "Return Resonance tests imported First Spark unexpectedly: "
+            "Return Resonance imported First Spark unexpectedly: "
             + ", ".join(sorted(forbidden_imports))
         )
 
@@ -173,5 +177,5 @@ if __name__ == "__main__":
     test_match_package_mismatch()
     test_match_layer_mismatch()
     test_match_already_opened_slot()
-    test_first_spark_is_not_imported_by_return_resonance()
+    test_return_resonance_import_does_not_load_first_spark()
     print("Return Resonance MVP tests passed.")
