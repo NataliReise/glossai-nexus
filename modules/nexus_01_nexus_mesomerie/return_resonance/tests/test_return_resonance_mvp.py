@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import importlib.util
 from pathlib import Path
 import sys
 import tempfile
@@ -28,6 +29,7 @@ AFTER_RETURN_RESONANCE_IMPORTS = set(sys.modules)
 EXAMPLES_DIR = NEXUS_01_ROOT / "examples"
 DEMO_ARTIFACT_PATH = EXAMPLES_DIR / "return_artifact.demo.txt"
 DEMO_SLOT_PATH = EXAMPLES_DIR / "return_slot.demo.json"
+DEMO_RUNNER_PATH = NEXUS_01_ROOT / "run_return_resonance_demo.py"
 
 
 def assert_contains(text: str, expected: str) -> None:
@@ -39,6 +41,15 @@ def load_demo_match():
     artifact = parse_return_artifact(DEMO_ARTIFACT_PATH.read_text(encoding="utf-8"))
     slots = load_return_slots(DEMO_SLOT_PATH)
     return artifact, match_return_artifact(artifact, slots)
+
+
+def load_demo_runner_module():
+    spec = importlib.util.spec_from_file_location("run_return_resonance_demo", DEMO_RUNNER_PATH)
+    if spec is None or spec.loader is None:
+        raise ImportError(f"Could not load {DEMO_RUNNER_PATH}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 def test_parse_demo_return_artifact() -> None:
@@ -227,6 +238,21 @@ def test_open_return_result_requires_existing_file_for_opened_slot() -> None:
             raise AssertionError("Expected ReturnResultError for missing opened result file.")
 
 
+def test_return_resonance_demo_runner_uses_local_result() -> None:
+    demo_runner = load_demo_runner_module()
+
+    with tempfile.TemporaryDirectory() as directory:
+        demo_runner.OUTPUT_DIR = Path(directory)
+        first_exit_code = demo_runner.main()
+        second_exit_code = demo_runner.main()
+
+        result_path = Path(directory) / "return_resonance_lantern_river.local.md"
+        assert first_exit_code == 0
+        assert second_exit_code == 0
+        assert result_path.exists()
+        assert_contains(result_path.read_text(encoding="utf-8"), "# Return Resonance: lantern-river-01")
+
+
 def test_return_resonance_import_does_not_load_first_spark() -> None:
     newly_imported = AFTER_RETURN_RESONANCE_IMPORTS - BEFORE_RETURN_RESONANCE_IMPORTS
     forbidden_imports = {
@@ -252,5 +278,6 @@ if __name__ == "__main__":
     test_open_return_result_generates_once_then_reuses()
     test_open_return_result_rejects_non_matching_result()
     test_open_return_result_requires_existing_file_for_opened_slot()
+    test_return_resonance_demo_runner_uses_local_result()
     test_return_resonance_import_does_not_load_first_spark()
     print("Return Resonance MVP tests passed.")
