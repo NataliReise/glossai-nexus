@@ -1,0 +1,29 @@
+NEXUS RETURN ARTIFACT
+Version: N01-RA-GEN-1
+Module: Nexus 01 - First Spark
+Origin Trace: n01-demo-origin-7kq2
+Return Slot: unknown-slot
+Package: demo-package
+Layer: return-resonance-1
+
+Carrier image:
+lantern
+
+Carrier movement:
+across the river
+
+Return word:
+trust
+
+Return image:
+window
+
+Return tone:
+luminous
+
+Privacy:
+This is safe public demo data.
+This artifact intentionally uses an unknown return slot.
+It should not open a local result.
+Do not post real return artifacts publicly.
+Send real return artifacts only through the intended private channel.
