@@ -178,6 +178,12 @@ For the boundary between private activations and public-safe return slots, see:
 ../RETURN_SLOT_FROM_PRIVATE_ACTIVATION.md
 ```
 
+For a copy-before-use return slot template, see:
+
+```text
+../templates/return_slot.template.json
+```
+
 ## Local files and Git
 
 Generated local result files should stay local.
