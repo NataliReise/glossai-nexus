@@ -30,6 +30,7 @@ AFTER_RETURN_RESONANCE_IMPORTS = set(sys.modules)
 EXAMPLES_DIR = NEXUS_01_ROOT / "examples"
 DEMO_ARTIFACT_PATH = EXAMPLES_DIR / "return_artifact.demo.txt"
 UNKNOWN_SLOT_ARTIFACT_PATH = EXAMPLES_DIR / "return_artifact.unknown_slot.demo.txt"
+QUIET_GARDEN_ARTIFACT_PATH = EXAMPLES_DIR / "return_artifact.quiet_garden.demo.txt"
 DEMO_SLOT_PATH = EXAMPLES_DIR / "return_slot.demo.json"
 DEMO_RUNNER_PATH = NEXUS_01_ROOT / "run_return_resonance_demo.py"
 CLI_RUNNER_PATH = NEXUS_01_ROOT / "run_return_resonance.py"
@@ -93,6 +94,17 @@ def test_parse_unknown_slot_return_artifact() -> None:
     assert artifact.package_id == "demo-package"
     assert artifact.layer_id == "return-resonance-1"
     assert artifact.return_word == "trust"
+
+
+def test_parse_quiet_garden_return_artifact() -> None:
+    artifact = parse_return_artifact(QUIET_GARDEN_ARTIFACT_PATH.read_text(encoding="utf-8"))
+
+    assert artifact.version == "N01-RA-GEN-1"
+    assert artifact.origin_trace_id == "n01-local-origin-a4m9"
+    assert artifact.return_slot_id == "quiet-garden-01"
+    assert artifact.package_id == "local-package-garden-01"
+    assert artifact.layer_id == "return-resonance-1"
+    assert artifact.return_word == "patience"
 
 
 def test_parse_return_artifact_requires_core_fields() -> None:
@@ -354,6 +366,46 @@ def test_make_return_slot_creates_loadable_slot_file() -> None:
         assert slot.result_file == "return_resonance_quiet_garden.local.md"
 
 
+def test_generated_slot_can_open_matching_return_artifact() -> None:
+    slot_generator = load_slot_generator_module()
+    artifact = parse_return_artifact(QUIET_GARDEN_ARTIFACT_PATH.read_text(encoding="utf-8"))
+
+    with tempfile.TemporaryDirectory() as directory:
+        base_dir = Path(directory)
+        slot_path = base_dir / "slots" / "return_slots.local.json"
+        result_dir = base_dir / "results"
+
+        exit_code = slot_generator.main(
+            [
+                "--origin-trace-id",
+                "n01-local-origin-a4m9",
+                "--return-slot-id",
+                "quiet-garden-01",
+                "--package-id",
+                "local-package-garden-01",
+                "--result-file",
+                "return_resonance_quiet_garden.local.md",
+                "--public-safe-label",
+                "quiet garden",
+                "--output",
+                str(slot_path),
+            ]
+        )
+
+        assert exit_code == 0
+        slots = load_return_slots(slot_path)
+        match = match_return_artifact(artifact, slots)
+        result = open_return_result(artifact, match, result_dir)
+
+        assert match.status == MatchStatus.MATCH_WAITING
+        assert match.is_match
+        assert result.created
+        assert result.path.name == "return_resonance_quiet_garden.local.md"
+        assert result.path.exists()
+        assert_contains(result.content, "# Return Resonance: quiet-garden-01")
+        assert_contains(result.content, "patience")
+
+
 def test_make_return_slot_does_not_overwrite_without_flag() -> None:
     slot_generator = load_slot_generator_module()
 
@@ -398,6 +450,7 @@ def test_return_resonance_import_does_not_load_first_spark() -> None:
 if __name__ == "__main__":
     test_parse_demo_return_artifact()
     test_parse_unknown_slot_return_artifact()
+    test_parse_quiet_garden_return_artifact()
     test_parse_return_artifact_requires_core_fields()
     test_load_demo_return_slot()
     test_match_demo_artifact_to_waiting_slot()
@@ -412,6 +465,7 @@ if __name__ == "__main__":
     test_return_resonance_cli_uses_explicit_paths()
     test_return_resonance_cli_returns_one_for_non_match()
     test_make_return_slot_creates_loadable_slot_file()
+    test_generated_slot_can_open_matching_return_artifact()
     test_make_return_slot_does_not_overwrite_without_flag()
     test_return_resonance_import_does_not_load_first_spark()
     print("Return Resonance MVP tests passed.")
