@@ -52,6 +52,10 @@ Generated Return Resonance MVP
 
 This means the first return layer may match a return artifact to a local return slot and generate a stable local result file. It should not promise real cryptographic decryption unless a later crypto layer explicitly implements it.
 
+For the current bridge note between the older return unlock design and the newer slot-based direction, see:
+
+- [Return Unlock Current Direction](RETURN_UNLOCK_CURRENT_DIRECTION.md)
+
 ## Start First Spark
 
 The first playable slice of Nexus 01 is:
@@ -87,6 +91,7 @@ For the First Spark 0.1 review, see:
 - [Nexus Modularity Rules](NEXUS_MODULARITY_RULES.md)
 - [Return Unlock Layer Map](RETURN_UNLOCK_LAYER_MAP.md)
 - [Return Unlock Design](RETURN_UNLOCK_DESIGN.md)
+- [Return Unlock Current Direction](RETURN_UNLOCK_CURRENT_DIRECTION.md)
 - [Return Artifact MVP](RETURN_ARTIFACT_MVP.md)
 - [Return Resonance Slots](RETURN_RESONANCE_SLOTS.md)
 - [Nexus Activity System](NEXUS_ACTIVITY_SYSTEM.md)
