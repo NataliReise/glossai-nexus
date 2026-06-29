@@ -64,6 +64,10 @@ For the boundary between private activations and public-safe return slots, see:
 
 - [Return Slot from Private Activation](RETURN_SLOT_FROM_PRIVATE_ACTIVATION.md)
 
+For the copy-before-use return slot template, see:
+
+- [Return slot template](templates/return_slot.template.json)
+
 For the Return Resonance 0.1 milestone review, see:
 
 - [Return Resonance 0.1 Review](RETURN_RESONANCE_0_1_REVIEW.md)
@@ -126,6 +130,10 @@ For the First Spark 0.1 review, see:
 - [Return Artifact MVP](RETURN_ARTIFACT_MVP.md)
 - [Return Resonance Slots](RETURN_RESONANCE_SLOTS.md)
 - [Nexus Activity System](NEXUS_ACTIVITY_SYSTEM.md)
+
+## Templates
+
+- [Return slot template](templates/return_slot.template.json)
 
 ## General project documents
 
