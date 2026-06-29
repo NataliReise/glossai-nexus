@@ -68,6 +68,10 @@ For the copy-before-use return slot template, see:
 
 - [Return slot template](templates/return_slot.template.json)
 
+For the return slot template review, see:
+
+- [Return Slot Template Review](RETURN_SLOT_TEMPLATE_REVIEW.md)
+
 For the Return Resonance 0.1 milestone review, see:
 
 - [Return Resonance 0.1 Review](RETURN_RESONANCE_0_1_REVIEW.md)
@@ -123,6 +127,7 @@ For the First Spark 0.1 review, see:
 - [Return Resonance MVP](RETURN_RESONANCE_MVP.md)
 - [Return Resonance Local Workspace](RETURN_RESONANCE_LOCAL_WORKSPACE.md)
 - [Return Slot from Private Activation](RETURN_SLOT_FROM_PRIVATE_ACTIVATION.md)
+- [Return Slot Template Review](RETURN_SLOT_TEMPLATE_REVIEW.md)
 - [Return Resonance 0.1 Review](RETURN_RESONANCE_0_1_REVIEW.md)
 - [Return Unlock Layer Map](RETURN_UNLOCK_LAYER_MAP.md)
 - [Return Unlock Design](RETURN_UNLOCK_DESIGN.md)
