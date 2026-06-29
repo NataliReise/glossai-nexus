@@ -164,6 +164,12 @@ For the integration review, see:
 ../RETURN_SLOT_GENERATOR_INTEGRATION_REVIEW.md
 ```
 
+For a practical walkthrough, see:
+
+```text
+../RETURN_SLOT_GENERATOR_WALKTHROUGH.md
+```
+
 ## Run with explicit local paths
 
 For local experiments beyond the fixed public demo, use:
