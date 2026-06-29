@@ -12,6 +12,12 @@ activation.local.*.json
 modules/**/activation.local.json
 modules/**/activation.local.*.json
 
+# Local return resonance files
+return_resonance_*.local.md
+return_result.local.md
+modules/**/return_resonance_*.local.md
+modules/**/return_result.local.md
+
 # Local editor and OS files
 .vscode/
 .idea/
