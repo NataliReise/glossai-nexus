@@ -68,6 +68,10 @@ For the copy-before-use return slot template, see:
 
 - [Return slot template](templates/return_slot.template.json)
 
+For the first explicit local return slot generator, see:
+
+- [Make return slot CLI](make_return_slot.py)
+
 For the return slot template review, see:
 
 - [Return Slot Template Review](RETURN_SLOT_TEMPLATE_REVIEW.md)
@@ -139,6 +143,11 @@ For the First Spark 0.1 review, see:
 ## Templates
 
 - [Return slot template](templates/return_slot.template.json)
+
+## Local CLIs
+
+- [Make return slot CLI](make_return_slot.py)
+- [Run return resonance CLI](run_return_resonance.py)
 
 ## General project documents
 
