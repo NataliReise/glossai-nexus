@@ -170,6 +170,12 @@ For a practical walkthrough, see:
 ../RETURN_SLOT_GENERATOR_WALKTHROUGH.md
 ```
 
+For the generated-slot milestone, see:
+
+```text
+../RETURN_RESONANCE_GENERATED_SLOT_MILESTONE.md
+```
+
 ## Run with explicit local paths
 
 For local experiments beyond the fixed public demo, use:
