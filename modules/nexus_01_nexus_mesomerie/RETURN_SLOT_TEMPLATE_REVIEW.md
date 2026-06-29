@@ -1,6 +1,6 @@
 # Return Slot Template Review
 
-Status: template bridge in place
+Status: template bridge and first explicit local generator in place
 
 This document reviews the first Return Resonance slot template.
 
@@ -9,11 +9,15 @@ It marks a small transition:
 ```text
 conceptual boundary
 -> copy-before-use template
--> later local generator
+-> explicit local generator
+-> later private activation generator
 ```
 
 The template does not create private slots automatically.
 It gives a safe shape that can be copied into a private local workspace.
+
+A first local generator now exists, but it only accepts explicit safe values.
+It does not read private activation packages.
 
 ## Template file
 
@@ -24,6 +28,26 @@ templates/return_slot.template.json
 ```
 
 It is intentionally public-safe and contains only placeholder values.
+
+## First local generator
+
+The first explicit local slot generator is:
+
+```text
+make_return_slot.py
+```
+
+It writes a local slot JSON file from explicit CLI arguments.
+
+It does not:
+
+```text
+read private activations
+infer private meaning
+generate secret keys
+publish anything online
+modify First Spark
+```
 
 ## Why this template exists
 
@@ -94,17 +118,19 @@ It can wait for a return without revealing why the return matters.
 The slot only needs to know where to wait.
 ```
 
-### 2. A future generator has a clear target shape
+### 2. A generator has a clear target shape
 
-A later generator does not need to invent the slot format from scratch.
+The explicit local generator does not need to invent the slot format from scratch.
 
-It can fill the same fields the template already names.
+It fills the same fields the template already names.
 
-### 3. Local users can start manually
+### 3. Local users can start manually or with explicit generation
 
-Before a generator exists, a user can copy the template into a local workspace and fill it by hand.
+A user can copy the template into a local workspace and fill it by hand.
 
-This keeps the project usable without adding premature automation.
+Alternatively, the explicit generator can write the local slot file from safe CLI values.
+
+This keeps the project usable without adding premature private activation parsing.
 
 ### 4. The public/private boundary is visible inside the file
 
@@ -126,7 +152,7 @@ The template does not:
 generate slot IDs
 generate origin trace IDs
 read private activations
-validate slot values
+validate private meaning
 create return artifacts
 open return results
 perform encryption
@@ -134,7 +160,7 @@ verify identity
 publish anything online
 ```
 
-It is a shape, not a tool.
+It is a shape, not a private activation tool.
 
 ## Copy-before-use flow
 
@@ -151,9 +177,25 @@ Then edit the copied local file.
 
 Do not edit the template itself for private use.
 
-## Values to replace
+## Explicit generator flow
 
-A local user should replace:
+Recommended explicit local generation:
+
+```bash
+python3 modules/nexus_01_nexus_mesomerie/make_return_slot.py \
+  --origin-trace-id n01-local-origin-a4m9 \
+  --return-slot-id quiet-garden-01 \
+  --package-id local-package-garden-01 \
+  --result-file return_resonance_quiet_garden.local.md \
+  --public-safe-label "quiet garden" \
+  --output ~/Dokumente/glossai-local/nexus-01-return-workspace/slots/return_slots.local.json
+```
+
+The generator refuses to overwrite an existing output file unless `--overwrite` is provided.
+
+## Values to replace or provide
+
+A local user should replace or provide:
 
 ```text
 n01-local-origin-CHANGE-ME
@@ -202,7 +244,7 @@ return_resonance/matching.py
 return_resonance/result.py
 ```
 
-The template is intentionally compatible with the current local CLI:
+The template and generator are intentionally compatible with the current local CLI:
 
 ```bash
 python3 modules/nexus_01_nexus_mesomerie/run_return_resonance.py \
@@ -211,13 +253,13 @@ python3 modules/nexus_01_nexus_mesomerie/run_return_resonance.py \
   --output-dir path/to/results
 ```
 
-## Relationship to a future generator
+## Relationship to a future private activation generator
 
-The next possible technical slice may be a small local generator that writes a slot file from explicit safe CLI values.
+A later generator may read a private activation package locally and derive safe structural slot fields from it.
 
-Such a generator should not read private activation packages yet.
+That is not implemented yet.
 
-A first generator could accept only explicit arguments such as:
+The current generator accepts only explicit arguments such as:
 
 ```text
 --origin-trace-id
@@ -228,7 +270,7 @@ A first generator could accept only explicit arguments such as:
 --output
 ```
 
-This would move from:
+This moves from:
 
 ```text
 manual template copy
@@ -242,15 +284,16 @@ safe explicit local slot creation
 
 without introducing private activation parsing too early.
 
-## Why not build the full generator yet?
+## Why not build the full private activation generator yet?
 
-The template step gives the project time to stabilize the structure.
+The template and explicit generator give the project time to stabilize the structure.
 
-A generator should come after the fields, naming rules, and privacy boundary feel clear.
+A private activation generator should come after the fields, naming rules, and privacy boundary feel clear.
 
 ```text
 First make the shape visible.
 Then automate the shape.
+Then decide what private activation may safely translate.
 ```
 
 ## Review conclusion
@@ -259,15 +302,16 @@ The slot template is a useful bridge.
 
 It is small enough to stay safe.
 It is concrete enough to guide local use.
-It is stable enough to prepare a generator.
+It is stable enough to support a first explicit generator.
 
 Current milestone:
 
 ```text
 Return slot boundary exists.
 Return slot template exists.
-Manual local slot creation is now possible.
-A future generator has a clear target.
+Manual local slot creation is possible.
+Explicit local slot generation is possible.
+A future private activation generator has a clearer target.
 ```
 
 ## Working formulas
@@ -280,9 +324,10 @@ The local copy carries the meaning.
 ```text
 First make the slot readable.
 Then make it generatable.
+Then decide what may become automatic.
 ```
 
 ```text
 A template is not automation.
-It is a promise about structure.
+A first generator is not a private activation parser.
 ```
