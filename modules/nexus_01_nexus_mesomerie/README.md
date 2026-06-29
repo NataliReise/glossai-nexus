@@ -76,6 +76,10 @@ For a practical generated-slot walkthrough, see:
 
 - [Return Slot Generator Walkthrough](RETURN_SLOT_GENERATOR_WALKTHROUGH.md)
 
+For the generated-slot milestone, see:
+
+- [Return Resonance Generated Slot Milestone](RETURN_RESONANCE_GENERATED_SLOT_MILESTONE.md)
+
 For the return slot template review, see:
 
 - [Return Slot Template Review](RETURN_SLOT_TEMPLATE_REVIEW.md)
@@ -148,6 +152,7 @@ For the First Spark 0.1 review, see:
 - [Return Slot Generator Review](RETURN_SLOT_GENERATOR_REVIEW.md)
 - [Return Slot Generator Integration Review](RETURN_SLOT_GENERATOR_INTEGRATION_REVIEW.md)
 - [Return Slot Generator Walkthrough](RETURN_SLOT_GENERATOR_WALKTHROUGH.md)
+- [Return Resonance Generated Slot Milestone](RETURN_RESONANCE_GENERATED_SLOT_MILESTONE.md)
 - [Return Resonance 0.1 Review](RETURN_RESONANCE_0_1_REVIEW.md)
 - [Return Unlock Layer Map](RETURN_UNLOCK_LAYER_MAP.md)
 - [Return Unlock Design](RETURN_UNLOCK_DESIGN.md)
