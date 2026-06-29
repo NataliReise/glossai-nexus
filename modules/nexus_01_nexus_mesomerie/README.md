@@ -56,6 +56,12 @@ For the current MVP boundary specification, see:
 
 - [Return Resonance MVP](RETURN_RESONANCE_MVP.md)
 
+For safe public demo examples of the return slot, return artifact, and generated result shape, see:
+
+- [Return slot demo](examples/return_slot.demo.json)
+- [Return artifact demo](examples/return_artifact.demo.txt)
+- [Return resonance result demo](examples/return_resonance_result.demo.md)
+
 For the current bridge note between the older return unlock design and the newer slot-based direction, see:
 
 - [Return Unlock Current Direction](RETURN_UNLOCK_CURRENT_DIRECTION.md)
