@@ -56,6 +56,10 @@ For the current Return Resonance implementation guide, see:
 
 - [Return Resonance README](return_resonance/README.md)
 
+For the Return Resonance 0.1 milestone review, see:
+
+- [Return Resonance 0.1 Review](RETURN_RESONANCE_0_1_REVIEW.md)
+
 For the current MVP boundary specification, see:
 
 - [Return Resonance MVP](RETURN_RESONANCE_MVP.md)
@@ -104,6 +108,7 @@ For the First Spark 0.1 review, see:
 - [MVP Specification](MVP_NEXUS_01.md)
 - [Nexus Modularity Rules](NEXUS_MODULARITY_RULES.md)
 - [Return Resonance MVP](RETURN_RESONANCE_MVP.md)
+- [Return Resonance 0.1 Review](RETURN_RESONANCE_0_1_REVIEW.md)
 - [Return Unlock Layer Map](RETURN_UNLOCK_LAYER_MAP.md)
 - [Return Unlock Design](RETURN_UNLOCK_DESIGN.md)
 - [Return Unlock Current Direction](RETURN_UNLOCK_CURRENT_DIRECTION.md)
