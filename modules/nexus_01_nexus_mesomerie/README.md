@@ -88,11 +88,12 @@ For the current MVP boundary specification, see:
 
 - [Return Resonance MVP](RETURN_RESONANCE_MVP.md)
 
-For safe public demo examples of the return slot, return artifact, generated result shape, and a non-matching return artifact, see:
+For safe public demo examples of the return slot, return artifact, generated result shape, a non-matching return artifact, and a return artifact for the generated-slot test, see:
 
 - [Return slot demo](examples/return_slot.demo.json)
 - [Return artifact demo](examples/return_artifact.demo.txt)
 - [Unknown slot return artifact demo](examples/return_artifact.unknown_slot.demo.txt)
+- [Quiet garden return artifact demo](examples/return_artifact.quiet_garden.demo.txt)
 - [Return resonance result demo](examples/return_resonance_result.demo.md)
 
 For the current bridge note between the older return unlock design and the newer slot-based direction, see:
