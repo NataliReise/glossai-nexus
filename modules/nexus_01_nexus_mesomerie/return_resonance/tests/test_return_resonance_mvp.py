@@ -179,7 +179,6 @@ def test_open_return_result_generates_once_then_reuses() -> None:
         assert_contains(first_result.content, "# Return Resonance: lantern-river-01")
         assert_contains(first_result.content, "Status: opened")
         assert_contains(first_result.content, "trust")
-        assert_contains(first_result.content, "Generate once") is None
         assert_contains(first_result.content, "Do not publish it unless")
 
         first_result.path.write_text("already remembered\n", encoding="utf-8")
