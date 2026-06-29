@@ -72,12 +72,13 @@ The public demo uses safe example files from:
 ```text
 ../examples/return_slot.demo.json
 ../examples/return_artifact.demo.txt
+../examples/return_artifact.unknown_slot.demo.txt
 ../examples/return_resonance_result.demo.md
 ```
 
 These files contain fictional demo data only.
 
-They show the shape of the return flow without exposing real private activation data, gift text, return artifacts, key material, or private relationship context.
+They show the shape of the return flow and the non-match boundary without exposing real private activation data, gift text, return artifacts, key material, or private relationship context.
 
 ## Run the demo
 
@@ -136,6 +137,33 @@ Exit codes:
 0 -> matched and opened or reused a local result
 1 -> artifact did not match a waiting or opened slot
 2 -> file, parsing, slot-loading, or result-opening error
+```
+
+## Run the non-match demo
+
+The unknown-slot demo artifact intentionally does not match the public demo slot.
+
+Run:
+
+```bash
+python3 modules/nexus_01_nexus_mesomerie/run_return_resonance.py \
+  --artifact modules/nexus_01_nexus_mesomerie/examples/return_artifact.unknown_slot.demo.txt \
+  --slots modules/nexus_01_nexus_mesomerie/examples/return_slot.demo.json \
+  --output-dir /tmp/glossai-return-non-match
+```
+
+Expected behavior:
+
+```text
+Match status: unknown_slot
+No local result was opened because the artifact did not match a slot.
+```
+
+This demonstrates the protection boundary:
+
+```text
+The Nexus does not open every return.
+It opens only what belongs to a waiting or already opened slot.
 ```
 
 For a recommended private local folder layout, see:
