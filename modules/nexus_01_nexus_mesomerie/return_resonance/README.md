@@ -107,6 +107,37 @@ Then:
 Local result reused: return_resonance_lantern_river.local.md
 ```
 
+## Run with explicit local paths
+
+For local experiments beyond the fixed public demo, use:
+
+```bash
+python3 modules/nexus_01_nexus_mesomerie/run_return_resonance.py \
+  --artifact path/to/return_artifact.txt \
+  --slots path/to/return_slots.json \
+  --output-dir path/to/local-memory
+```
+
+This command uses the same Return Resonance layer as the demo, but it does not assume the demo paths.
+
+It still stays local:
+
+```text
+no network access
+no public posting
+no First Spark dependency
+no real encryption
+no identity verification
+```
+
+Exit codes:
+
+```text
+0 -> matched and opened or reused a local result
+1 -> artifact did not match a waiting or opened slot
+2 -> file, parsing, slot-loading, or result-opening error
+```
+
 ## Local files and Git
 
 Generated local result files should stay local.
