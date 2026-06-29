@@ -108,6 +108,26 @@ Then:
 Local result reused: return_resonance_lantern_river.local.md
 ```
 
+## Make a local return slot
+
+For explicit local slot creation, use:
+
+```bash
+python3 modules/nexus_01_nexus_mesomerie/make_return_slot.py \
+  --origin-trace-id n01-local-origin-a4m9 \
+  --return-slot-id quiet-garden-01 \
+  --package-id local-package-garden-01 \
+  --result-file return_resonance_quiet_garden.local.md \
+  --public-safe-label "quiet garden" \
+  --output ~/Dokumente/glossai-local/nexus-01-return-workspace/slots/return_slots.local.json
+```
+
+This generator uses explicit values only.
+
+It does not read private activation packages, read First Spark internals, publish anything online, or claim encryption.
+
+If the output file already exists, it refuses to overwrite it unless `--overwrite` is provided.
+
 ## Run with explicit local paths
 
 For local experiments beyond the fixed public demo, use:
