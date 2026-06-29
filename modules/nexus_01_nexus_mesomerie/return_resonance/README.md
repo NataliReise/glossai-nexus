@@ -128,6 +128,12 @@ It does not read private activation packages, read First Spark internals, publis
 
 If the output file already exists, it refuses to overwrite it unless `--overwrite` is provided.
 
+For the generator review, see:
+
+```text
+../RETURN_SLOT_GENERATOR_REVIEW.md
+```
+
 ## Run with explicit local paths
 
 For local experiments beyond the fixed public demo, use:
