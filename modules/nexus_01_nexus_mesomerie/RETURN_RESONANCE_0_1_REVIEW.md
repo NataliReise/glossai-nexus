@@ -36,6 +36,7 @@ return_resonance/matching.py
 return_resonance/result.py
 return_resonance/tests/test_return_resonance_mvp.py
 run_return_resonance_demo.py
+run_return_resonance.py
 return_resonance/README.md
 ```
 
@@ -57,6 +58,24 @@ safe public demo slot
 matching result
 local result file
 reused local result file on later runs
+```
+
+The CLI flow is:
+
+```text
+explicit artifact path
+explicit slot file path
+explicit output directory
+matching result
+local result file
+```
+
+This means Return Resonance now has three layers of use:
+
+```text
+Core code
+Fixed public demo
+Local explicit-path CLI
 ```
 
 ## What was proven
@@ -119,6 +138,21 @@ A matching waiting slot creates a local Markdown result file.
 If that file already exists, it is read again instead of overwritten.
 
 This gives the Nexus a first small memory behavior.
+
+### 6. The return layer can be used through an explicit local CLI
+
+The fixed demo proves the public example path.
+
+The CLI proves that the same local mechanism can be used with explicit paths:
+
+```bash
+python3 modules/nexus_01_nexus_mesomerie/run_return_resonance.py \
+  --artifact path/to/return_artifact.txt \
+  --slots path/to/return_slots.json \
+  --output-dir path/to/local-memory
+```
+
+This moves Return Resonance from a fixed demo toward a locally controlled tool without adding network behavior, identity logic, encryption, or First Spark dependency.
 
 ## What is intentionally not built yet
 
@@ -194,6 +228,8 @@ local result reuse
 non-matching result rejection
 opened-slot missing-file behavior
 demo runner behavior
+CLI explicit-path behavior
+CLI non-match behavior
 First Spark boundary
 ```
 
@@ -224,11 +260,36 @@ On later runs, it reuses the same local result file.
 
 This demonstrates that the return layer has a first local memory behavior.
 
+## Current CLI
+
+The explicit-path CLI is:
+
+```bash
+python3 modules/nexus_01_nexus_mesomerie/run_return_resonance.py \
+  --artifact modules/nexus_01_nexus_mesomerie/examples/return_artifact.demo.txt \
+  --slots modules/nexus_01_nexus_mesomerie/examples/return_slot.demo.json \
+  --output-dir modules/nexus_01_nexus_mesomerie
+```
+
+Exit codes:
+
+```text
+0 -> matched and opened or reused a local result
+1 -> artifact did not match a waiting or opened slot
+2 -> file, parsing, slot-loading, or result-opening error
+```
+
+This CLI is still local-only.
+
+It does not publish, sync, identify people, decrypt real secrets, or modify First Spark.
+
 ## Why this matters
 
 First Spark created a small opening.
 
 Return Resonance creates the first small answer.
+
+The CLI makes the answer locally usable beyond one fixed demo path.
 
 Together, they establish a pattern:
 
@@ -236,24 +297,25 @@ Together, they establish a pattern:
 A spark may be opened.
 A trace may return.
 A local memory may form.
+A local user may choose the paths.
 ```
 
 This is the first practical movement from a single playable slice toward a larger Nexus.
 
 ## Next likely slice
 
-The next technical slice should probably be a minimal command-line runner that accepts explicit paths:
+The next slice should probably not enlarge the protocol yet.
 
-```bash
-python3 modules/nexus_01_nexus_mesomerie/run_return_resonance.py \
-  --artifact path/to/return_artifact.txt \
-  --slots path/to/return_slots.json \
-  --output-dir path/to/local-memory
+A good next step may be one of these small stabilizations:
+
+```text
+add a short CLI help example document
+add a sample local workspace layout
+add one more non-matching artifact example
+clarify how a private activation may create a slot later
 ```
 
-This would move from a fixed public demo to a local user-controlled return run.
-
-It should still avoid:
+The project should still avoid:
 
 ```text
 real encryption
