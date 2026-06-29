@@ -37,6 +37,11 @@ return_resonance/result.py
 return_resonance/tests/test_return_resonance_mvp.py
 run_return_resonance_demo.py
 run_return_resonance.py
+make_return_slot.py
+templates/return_slot.template.json
+RETURN_RESONANCE_LOCAL_WORKSPACE.md
+RETURN_SLOT_FROM_PRIVATE_ACTIVATION.md
+RETURN_SLOT_TEMPLATE_REVIEW.md
 return_resonance/README.md
 ```
 
@@ -60,7 +65,16 @@ local result file
 reused local result file on later runs
 ```
 
-The CLI flow is:
+The explicit slot creation flow is:
+
+```text
+explicit safe CLI values
+-> generated local slot file
+-> loadable slot document
+-> later return matching
+```
+
+The Return Resonance CLI flow is:
 
 ```text
 explicit artifact path
@@ -70,12 +84,13 @@ matching result
 local result file
 ```
 
-This means Return Resonance now has three layers of use:
+This means Return Resonance now has four layers of use:
 
 ```text
 Core code
 Fixed public demo
-Local explicit-path CLI
+Local explicit-path return CLI
+Local explicit slot generator
 ```
 
 ## What was proven
@@ -154,6 +169,33 @@ python3 modules/nexus_01_nexus_mesomerie/run_return_resonance.py \
 
 This moves Return Resonance from a fixed demo toward a locally controlled tool without adding network behavior, identity logic, encryption, or First Spark dependency.
 
+### 7. A local slot file can be generated from explicit safe values
+
+The first slot generator writes a local slot file from CLI arguments:
+
+```bash
+python3 modules/nexus_01_nexus_mesomerie/make_return_slot.py \
+  --origin-trace-id n01-local-origin-a4m9 \
+  --return-slot-id quiet-garden-01 \
+  --package-id local-package-garden-01 \
+  --result-file return_resonance_quiet_garden.local.md \
+  --public-safe-label "quiet garden" \
+  --output path/to/return_slots.local.json
+```
+
+It does not read private activation packages.
+It does not infer private meaning.
+It does not modify First Spark.
+It refuses to overwrite an existing output file unless `--overwrite` is provided.
+
+This proves the next small bridge:
+
+```text
+manual slot template
+-> explicit local slot generation
+-> later private activation translation
+```
+
 ## What is intentionally not built yet
 
 Return Resonance 0.1 does not implement:
@@ -167,6 +209,7 @@ network sync
 GitHub API publishing
 automatic forum posting
 full package generation
+private activation parsing
 private activation workflows
 contact matching
 multi-user state
@@ -188,6 +231,7 @@ safe documentation
 safe demo slots
 safe demo artifacts
 safe demo result shapes
+safe templates
 public-safe terminology
 non-private test data
 ```
@@ -230,6 +274,8 @@ opened-slot missing-file behavior
 demo runner behavior
 CLI explicit-path behavior
 CLI non-match behavior
+slot generator output behavior
+slot generator no-overwrite behavior
 First Spark boundary
 ```
 
@@ -260,9 +306,9 @@ On later runs, it reuses the same local result file.
 
 This demonstrates that the return layer has a first local memory behavior.
 
-## Current CLI
+## Current return CLI
 
-The explicit-path CLI is:
+The explicit-path return CLI is:
 
 ```bash
 python3 modules/nexus_01_nexus_mesomerie/run_return_resonance.py \
@@ -283,13 +329,41 @@ This CLI is still local-only.
 
 It does not publish, sync, identify people, decrypt real secrets, or modify First Spark.
 
+## Current slot generator
+
+The explicit local slot generator is:
+
+```bash
+python3 modules/nexus_01_nexus_mesomerie/make_return_slot.py \
+  --origin-trace-id n01-local-origin-a4m9 \
+  --return-slot-id quiet-garden-01 \
+  --package-id local-package-garden-01 \
+  --result-file return_resonance_quiet_garden.local.md \
+  --public-safe-label "quiet garden" \
+  --output ~/Dokumente/glossai-local/nexus-01-return-workspace/slots/return_slots.local.json
+```
+
+Exit codes:
+
+```text
+0 -> local slot file created
+1 -> generator safety error, such as existing output without --overwrite
+2 -> file system write error
+```
+
+The generator uses explicit values only.
+
+It is not a private activation parser.
+
 ## Why this matters
 
 First Spark created a small opening.
 
 Return Resonance creates the first small answer.
 
-The CLI makes the answer locally usable beyond one fixed demo path.
+The return CLI makes the answer locally usable beyond one fixed demo path.
+
+The slot generator makes the waiting place locally creatable beyond manual template copying.
 
 Together, they establish a pattern:
 
@@ -298,21 +372,22 @@ A spark may be opened.
 A trace may return.
 A local memory may form.
 A local user may choose the paths.
+A local user may create the waiting slot explicitly.
 ```
 
 This is the first practical movement from a single playable slice toward a larger Nexus.
 
 ## Next likely slice
 
-The next slice should probably not enlarge the protocol yet.
+The next slice should probably not enlarge the private protocol yet.
 
 A good next step may be one of these small stabilizations:
 
 ```text
-add a short CLI help example document
-add a sample local workspace layout
-add one more non-matching artifact example
-clarify how a private activation may create a slot later
+add a generator usage document
+add a sample generated local slot fixture
+test overwrite behavior through the shell command path
+clarify how a future private activation parser may call the explicit generator layer
 ```
 
 The project should still avoid:
@@ -321,6 +396,7 @@ The project should still avoid:
 real encryption
 network behavior
 public posting
+private package parsing
 private package generation
 First Spark dependency
 ```
