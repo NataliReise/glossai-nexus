@@ -30,6 +30,7 @@ EXAMPLES_DIR = NEXUS_01_ROOT / "examples"
 DEMO_ARTIFACT_PATH = EXAMPLES_DIR / "return_artifact.demo.txt"
 DEMO_SLOT_PATH = EXAMPLES_DIR / "return_slot.demo.json"
 DEMO_RUNNER_PATH = NEXUS_01_ROOT / "run_return_resonance_demo.py"
+CLI_RUNNER_PATH = NEXUS_01_ROOT / "run_return_resonance.py"
 
 
 def assert_contains(text: str, expected: str) -> None:
@@ -43,13 +44,21 @@ def load_demo_match():
     return artifact, match_return_artifact(artifact, slots)
 
 
-def load_demo_runner_module():
-    spec = importlib.util.spec_from_file_location("run_return_resonance_demo", DEMO_RUNNER_PATH)
+def load_module(path: Path, module_name: str):
+    spec = importlib.util.spec_from_file_location(module_name, path)
     if spec is None or spec.loader is None:
-        raise ImportError(f"Could not load {DEMO_RUNNER_PATH}")
+        raise ImportError(f"Could not load {path}")
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
+
+
+def load_demo_runner_module():
+    return load_module(DEMO_RUNNER_PATH, "run_return_resonance_demo")
+
+
+def load_cli_runner_module():
+    return load_module(CLI_RUNNER_PATH, "run_return_resonance")
 
 
 def test_parse_demo_return_artifact() -> None:
@@ -253,6 +262,54 @@ def test_return_resonance_demo_runner_uses_local_result() -> None:
         assert_contains(result_path.read_text(encoding="utf-8"), "# Return Resonance: lantern-river-01")
 
 
+def test_return_resonance_cli_uses_explicit_paths() -> None:
+    cli_runner = load_cli_runner_module()
+
+    with tempfile.TemporaryDirectory() as directory:
+        exit_code = cli_runner.main(
+            [
+                "--artifact",
+                str(DEMO_ARTIFACT_PATH),
+                "--slots",
+                str(DEMO_SLOT_PATH),
+                "--output-dir",
+                directory,
+            ]
+        )
+
+        result_path = Path(directory) / "return_resonance_lantern_river.local.md"
+        assert exit_code == 0
+        assert result_path.exists()
+        assert_contains(result_path.read_text(encoding="utf-8"), "# Return Resonance: lantern-river-01")
+
+
+def test_return_resonance_cli_returns_one_for_non_match() -> None:
+    cli_runner = load_cli_runner_module()
+
+    with tempfile.TemporaryDirectory() as directory:
+        artifact_path = Path(directory) / "unknown_artifact.txt"
+        artifact_path.write_text(
+            DEMO_ARTIFACT_PATH.read_text(encoding="utf-8").replace(
+                "Return Slot: lantern-river-01", "Return Slot: unknown-slot"
+            ),
+            encoding="utf-8",
+        )
+
+        exit_code = cli_runner.main(
+            [
+                "--artifact",
+                str(artifact_path),
+                "--slots",
+                str(DEMO_SLOT_PATH),
+                "--output-dir",
+                directory,
+            ]
+        )
+
+        assert exit_code == 1
+        assert not (Path(directory) / "return_resonance_lantern_river.local.md").exists()
+
+
 def test_return_resonance_import_does_not_load_first_spark() -> None:
     newly_imported = AFTER_RETURN_RESONANCE_IMPORTS - BEFORE_RETURN_RESONANCE_IMPORTS
     forbidden_imports = {
@@ -279,5 +336,7 @@ if __name__ == "__main__":
     test_open_return_result_rejects_non_matching_result()
     test_open_return_result_requires_existing_file_for_opened_slot()
     test_return_resonance_demo_runner_uses_local_result()
+    test_return_resonance_cli_uses_explicit_paths()
+    test_return_resonance_cli_returns_one_for_non_match()
     test_return_resonance_import_does_not_load_first_spark()
     print("Return Resonance MVP tests passed.")
