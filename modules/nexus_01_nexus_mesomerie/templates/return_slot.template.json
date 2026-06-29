@@ -1,0 +1,20 @@
+{
+  "document_status": "template - copy before use",
+  "template_name": "Nexus 01 Return Resonance Slot Template",
+  "template_version": "N01-RS-TEMPLATE-1",
+  "usage": "Copy this file into a private local workspace before filling it with real local values.",
+  "privacy_note": "Do not put private gift meaning, real names, contact details, key material, or private relationship context into a public-safe slot.",
+  "slots": [
+    {
+      "origin_trace_id": "n01-local-origin-CHANGE-ME",
+      "return_slot_id": "symbolic-slot-id-CHANGE-ME",
+      "module_id": "N01",
+      "package_id": "local-package-CHANGE-ME",
+      "layer_id": "return-resonance-1",
+      "status": "waiting",
+      "result_file": "return_resonance_symbolic_slot.local.md",
+      "public_safe_label": "symbolic label",
+      "note": "Do not put private meaning into this slot. The slot only needs to know where to wait."
+    }
+  ]
+}
