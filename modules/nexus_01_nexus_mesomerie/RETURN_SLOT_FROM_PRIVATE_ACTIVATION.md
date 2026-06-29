@@ -209,6 +209,27 @@ return_resonance_quiet_garden.local.md
 
 Generated local results should not be committed.
 
+## Slot template
+
+A neutral copy-before-use template exists at:
+
+```text
+templates/return_slot.template.json
+```
+
+Use it as a starting point for a local workspace slot file.
+
+Copy it before editing:
+
+```bash
+cp modules/nexus_01_nexus_mesomerie/templates/return_slot.template.json \
+  ~/Dokumente/glossai-local/nexus-01-return-workspace/slots/return_slots.local.json
+```
+
+Then replace the `CHANGE-ME` values with local-safe identifiers.
+
+Do not put private meaning, real names, contact details, key material, or private relationship context into the copied slot file unless it is intentionally private and kept outside the public repository.
+
 ## Private activation to slot translation
 
 A future generator may translate a private activation into a slot by extracting only structural fields:
