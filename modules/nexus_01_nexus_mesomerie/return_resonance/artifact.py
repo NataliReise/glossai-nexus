@@ -95,9 +95,13 @@ def parse_return_artifact(text: str) -> ReturnArtifact:
                 block_lines.append("")
             continue
 
-        if line.endswith(":") and line[:-1] in _BLOCK_FIELDS:
+        if line.endswith(":"):
+            label = line[:-1]
+            if label in _BLOCK_FIELDS:
+                flush_block()
+                current_block = _BLOCK_FIELDS[label]
+                continue
             flush_block()
-            current_block = _BLOCK_FIELDS[line[:-1]]
             continue
 
         matched_header = False
