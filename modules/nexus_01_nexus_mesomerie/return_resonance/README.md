@@ -73,12 +73,13 @@ The public demo uses safe example files from:
 ../examples/return_slot.demo.json
 ../examples/return_artifact.demo.txt
 ../examples/return_artifact.unknown_slot.demo.txt
+../examples/return_artifact.quiet_garden.demo.txt
 ../examples/return_resonance_result.demo.md
 ```
 
 These files contain fictional demo data only.
 
-They show the shape of the return flow and the non-match boundary without exposing real private activation data, gift text, return artifacts, key material, or private relationship context.
+They show the shape of the return flow, the non-match boundary, and a generated-slot end-to-end path without exposing real private activation data, gift text, return artifacts, key material, or private relationship context.
 
 ## Run the demo
 
@@ -132,6 +133,29 @@ For the generator review, see:
 
 ```text
 ../RETURN_SLOT_GENERATOR_REVIEW.md
+```
+
+## Generated-slot end-to-end path
+
+The quiet-garden demo proves this path:
+
+```text
+explicit safe values
+-> generated local slot
+-> matching return artifact
+-> local result file
+```
+
+It uses:
+
+```text
+../examples/return_artifact.quiet_garden.demo.txt
+```
+
+This path is covered by the test:
+
+```text
+test_generated_slot_can_open_matching_return_artifact
 ```
 
 ## Run with explicit local paths
