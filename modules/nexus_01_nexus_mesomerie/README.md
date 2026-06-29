@@ -37,9 +37,20 @@ Current work focuses on:
 - keeping **Nexus 0.1 - First Spark** small, stable, playable, and public-safe,
 - clarifying activation and gift package boundaries,
 - explaining resonance nodes and public-safe traces,
+- exploring **Return Resonance Slots** as a small local-first return MVP,
 - connecting the repository, wiki, and discussions,
 - preserving a local-first and data-minimal approach,
 - preparing future module ideas without overloading the first slice.
+
+The current return direction is:
+
+```text
+Generated Return Resonance MVP
+-> optional narrative decryption
+-> optional real encryption later
+```
+
+This means the first return layer may match a return artifact to a local return slot and generate a stable local result file. It should not promise real cryptographic decryption unless a later crypto layer explicitly implements it.
 
 ## Start First Spark
 
@@ -77,6 +88,7 @@ For the First Spark 0.1 review, see:
 - [Return Unlock Layer Map](RETURN_UNLOCK_LAYER_MAP.md)
 - [Return Unlock Design](RETURN_UNLOCK_DESIGN.md)
 - [Return Artifact MVP](RETURN_ARTIFACT_MVP.md)
+- [Return Resonance Slots](RETURN_RESONANCE_SLOTS.md)
 - [Nexus Activity System](NEXUS_ACTIVITY_SYSTEM.md)
 
 ## General project documents
