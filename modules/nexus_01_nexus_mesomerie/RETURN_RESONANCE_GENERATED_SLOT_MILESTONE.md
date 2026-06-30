@@ -18,6 +18,12 @@ A return can answer it.
 A local result can open.
 ```
 
+Technical short formula:
+
+```text
+Slot -> Artifact -> Local Result
+```
+
 ## What exists now
 
 The current generated-slot layer includes:
@@ -208,6 +214,10 @@ It is small and alive.
 The Nexus can now receive an answer without exposing the meaning behind the waiting place.
 
 ## Working formulas
+
+```text
+Slot -> Artifact -> Local Result
+```
 
 ```text
 Create the waiting place.
