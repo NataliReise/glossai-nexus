@@ -13,6 +13,39 @@ Related documents:
 - [Return Artifact MVP](RETURN_ARTIFACT_MVP.md)
 - [Return Resonance Slots](RETURN_RESONANCE_SLOTS.md)
 
+## Current status note
+
+This document is a bridge between older Return Unlock design notes and the current implemented Return Resonance direction.
+
+Current implemented MVP:
+
+```text
+slot-based Return Resonance
+-> generated local return slot
+-> matching return artifact
+-> local result file
+```
+
+The older Return Unlock documents should be read as legacy/future design notes unless a later milestone explicitly revives them.
+
+The current implementation does not include:
+
+```text
+real encryption
+private activation parsing
+identity verification
+network behavior
+publishing behavior
+GitHub API behavior
+```
+
+Current reading rule:
+
+```text
+Return Resonance Slots are the implemented path.
+Return Unlock remains a legacy/future optional path.
+```
+
 ---
 
 ## 1. Why this note exists
