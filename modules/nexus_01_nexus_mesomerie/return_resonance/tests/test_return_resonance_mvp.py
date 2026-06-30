@@ -22,7 +22,7 @@ from return_resonance import (
     parse_return_artifact,
 )
 from return_resonance.artifact import ReturnArtifactParseError
-from return_resonance.slots import ReturnSlotState
+from return_resonance.slots import ReturnSlotLoadError, ReturnSlotState
 
 AFTER_RETURN_RESONANCE_IMPORTS = set(sys.modules)
 
@@ -125,6 +125,24 @@ Module: Nexus 01 - First Spark
         raise AssertionError("Expected ReturnArtifactParseError for incomplete artifact.")
 
 
+def test_parse_return_artifact_requires_return_word() -> None:
+    text = """NEXUS RETURN ARTIFACT
+Version: N01-RA-GEN-1
+Module: Nexus 01 - First Spark
+Origin Trace: n01-demo-origin-7kq2
+Return Slot: lantern-river-01
+Package: demo-package
+Layer: return-resonance-1
+"""
+
+    try:
+        parse_return_artifact(text)
+    except ReturnArtifactParseError as error:
+        assert_contains(str(error), "return_word")
+    else:
+        raise AssertionError("Expected ReturnArtifactParseError for artifact without return_word.")
+
+
 def test_load_demo_return_slot() -> None:
     slots = load_return_slots(DEMO_SLOT_PATH)
 
@@ -137,6 +155,64 @@ def test_load_demo_return_slot() -> None:
     assert slot.layer_id == "return-resonance-1"
     assert slot.status == ReturnSlotState.WAITING
     assert slot.result_file == "return_resonance_lantern_river.local.md"
+
+
+def test_load_return_slot_requires_slots_list() -> None:
+    with tempfile.TemporaryDirectory() as directory:
+        slot_path = Path(directory) / "return_slots.local.json"
+        slot_path.write_text('{"document_status": "missing slots"}\n', encoding="utf-8")
+
+        try:
+            load_return_slots(slot_path)
+        except ReturnSlotLoadError as error:
+            assert_contains(str(error), "slots list")
+        else:
+            raise AssertionError("Expected ReturnSlotLoadError for missing slots list.")
+
+
+def test_load_return_slot_requires_core_fields() -> None:
+    with tempfile.TemporaryDirectory() as directory:
+        slot_path = Path(directory) / "return_slots.local.json"
+        slot_path.write_text(
+            json.dumps(
+                {
+                    "slots": [
+                        {
+                            "origin_trace_id": "n01-demo-origin-7kq2",
+                            "return_slot_id": "lantern-river-01",
+                            "module_id": "N01",
+                            "package_id": "demo-package",
+                            "status": "waiting",
+                            "result_file": "return_resonance_lantern_river.local.md",
+                        }
+                    ]
+                }
+            ),
+            encoding="utf-8",
+        )
+
+        try:
+            load_return_slots(slot_path)
+        except ReturnSlotLoadError as error:
+            assert_contains(str(error), "layer_id")
+        else:
+            raise AssertionError("Expected ReturnSlotLoadError for incomplete slot.")
+
+
+def test_load_return_slot_rejects_unknown_status() -> None:
+    with tempfile.TemporaryDirectory() as directory:
+        slot_path = Path(directory) / "return_slots.local.json"
+        slot_data = json.loads(DEMO_SLOT_PATH.read_text(encoding="utf-8"))
+        slot_data["slots"][0]["status"] = "half-open"
+        slot_path.write_text(json.dumps(slot_data), encoding="utf-8")
+
+        try:
+            load_return_slots(slot_path)
+        except ReturnSlotLoadError as error:
+            assert_contains(str(error), "unsupported status")
+            assert_contains(str(error), "half-open")
+        else:
+            raise AssertionError("Expected ReturnSlotLoadError for unsupported slot status.")
 
 
 def test_match_demo_artifact_to_waiting_slot() -> None:
@@ -406,6 +482,47 @@ def test_generated_slot_can_open_matching_return_artifact() -> None:
         assert_contains(result.content, "patience")
 
 
+def test_generated_slot_result_reuses_existing_local_file() -> None:
+    slot_generator = load_slot_generator_module()
+    artifact = parse_return_artifact(QUIET_GARDEN_ARTIFACT_PATH.read_text(encoding="utf-8"))
+
+    with tempfile.TemporaryDirectory() as directory:
+        base_dir = Path(directory)
+        slot_path = base_dir / "slots" / "return_slots.local.json"
+        result_dir = base_dir / "results"
+
+        exit_code = slot_generator.main(
+            [
+                "--origin-trace-id",
+                "n01-local-origin-a4m9",
+                "--return-slot-id",
+                "quiet-garden-01",
+                "--package-id",
+                "local-package-garden-01",
+                "--result-file",
+                "return_resonance_quiet_garden.local.md",
+                "--public-safe-label",
+                "quiet garden",
+                "--output",
+                str(slot_path),
+            ]
+        )
+
+        assert exit_code == 0
+        slots = load_return_slots(slot_path)
+        match = match_return_artifact(artifact, slots)
+        first_result = open_return_result(artifact, match, result_dir)
+
+        assert first_result.created
+        first_result.path.write_text("quiet garden already remembered\n", encoding="utf-8")
+
+        second_result = open_return_result(artifact, match, result_dir)
+
+        assert not second_result.created
+        assert second_result.content == "quiet garden already remembered\n"
+        assert first_result.path.read_text(encoding="utf-8") == "quiet garden already remembered\n"
+
+
 def test_make_return_slot_does_not_overwrite_without_flag() -> None:
     slot_generator = load_slot_generator_module()
 
@@ -452,7 +569,11 @@ if __name__ == "__main__":
     test_parse_unknown_slot_return_artifact()
     test_parse_quiet_garden_return_artifact()
     test_parse_return_artifact_requires_core_fields()
+    test_parse_return_artifact_requires_return_word()
     test_load_demo_return_slot()
+    test_load_return_slot_requires_slots_list()
+    test_load_return_slot_requires_core_fields()
+    test_load_return_slot_rejects_unknown_status()
     test_match_demo_artifact_to_waiting_slot()
     test_match_unknown_slot()
     test_match_package_mismatch()
@@ -466,6 +587,7 @@ if __name__ == "__main__":
     test_return_resonance_cli_returns_one_for_non_match()
     test_make_return_slot_creates_loadable_slot_file()
     test_generated_slot_can_open_matching_return_artifact()
+    test_generated_slot_result_reuses_existing_local_file()
     test_make_return_slot_does_not_overwrite_without_flag()
     test_return_resonance_import_does_not_load_first_spark()
     print("Return Resonance MVP tests passed.")
