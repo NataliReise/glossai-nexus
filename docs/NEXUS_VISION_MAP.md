@@ -530,35 +530,76 @@ A Nexus can be played on the surface
 and read in the structure.
 ```
 
-## 14. What should not be built too early
+## 14. Boundaries and not-yet features
 
-Some features may become interesting later, but should not be built too early.
+Some directions are useful future possibilities.
 
-The project should avoid premature complexity.
+Others would break the basic shape of a Nexus module.
 
-Not yet:
+The project should distinguish between:
 
 ```text
-real encryption claims
+not yet
+```
+
+and:
+
+```text
+not as Nexus behavior
+```
+
+### Not yet
+
+These features may become interesting later, but should not be built before their boundaries are clear:
+
+```text
+real encryption implementation
+private activation parsing
+larger workspace configuration
+multi-slot local memory
+package-building automation
+append-mode return slot tools
+AI-assisted text generation with strict local/private boundaries
+```
+
+These are possible future tools.
+
+They should only be added if they deepen careful resonance without adding pressure, exposure, extraction, or unnecessary complexity.
+
+### Not as Nexus behavior
+
+These patterns should not become normal Nexus behavior:
+
+```text
 hidden network behavior
 automatic posting
 automatic sharing
-automatic tracking
+automatic relationship mapping
 automatic social graph behavior
-private activation parsing without clear boundaries
-large account systems
+automatic upload of private artifacts
+automatic upload of local results
+automatic extraction of player data
+large account systems that make play dependent on central identity
 centralized user profiles
 forced sharing mechanics
 opaque AI-generated private meaning
+engagement optimization
 ```
 
-A feature should be questioned if it creates pressure, exposure, extraction, or unnecessary dependence.
+A Nexus module may use digital files and public-safe spaces.
 
-Guiding question:
+But sharing, forwarding, answering, posting, and carrying resonance should remain conscious human acts.
+
+Guiding questions:
 
 ```text
 Does this feature deepen careful resonance,
 or does it create pressure, exposure, or extraction?
+```
+
+```text
+Does this feature support the artifact,
+or does it start managing the relationship?
 ```
 
 ## 15. Design formulas
