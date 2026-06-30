@@ -12,6 +12,12 @@ A returned artifact.
 One local answer.
 ```
 
+Technical short formula:
+
+```text
+Slot -> Artifact -> Local Result
+```
+
 For Nexus 01 terminology and the current Return Resonance / Return Unlock distinction, see:
 
 ```text
@@ -150,6 +156,12 @@ explicit safe values
 -> generated local slot
 -> matching return artifact
 -> local result file
+```
+
+Short form:
+
+```text
+Slot -> Artifact -> Local Result
 ```
 
 It uses:
@@ -332,6 +344,10 @@ complex activity graph
 ```
 
 ## Working formulas
+
+```text
+Slot -> Artifact -> Local Result
+```
 
 ```text
 The Nexus decrypts meaning, not necessarily ciphertext.
