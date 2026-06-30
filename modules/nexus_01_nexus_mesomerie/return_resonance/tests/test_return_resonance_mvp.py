@@ -125,7 +125,7 @@ Module: Nexus 01 - First Spark
         raise AssertionError("Expected ReturnArtifactParseError for incomplete artifact.")
 
 
-def test_parse_return_artifact_requires_return_word() -> None:
+def test_parse_return_artifact_allows_missing_optional_return_word() -> None:
     text = """NEXUS RETURN ARTIFACT
 Version: N01-RA-GEN-1
 Module: Nexus 01 - First Spark
@@ -135,12 +135,11 @@ Package: demo-package
 Layer: return-resonance-1
 """
 
-    try:
-        parse_return_artifact(text)
-    except ReturnArtifactParseError as error:
-        assert_contains(str(error), "return_word")
-    else:
-        raise AssertionError("Expected ReturnArtifactParseError for artifact without return_word.")
+    artifact = parse_return_artifact(text)
+
+    assert artifact.return_word == ""
+    assert artifact.return_image == ""
+    assert artifact.return_tone == ""
 
 
 def test_load_demo_return_slot() -> None:
@@ -569,7 +568,7 @@ if __name__ == "__main__":
     test_parse_unknown_slot_return_artifact()
     test_parse_quiet_garden_return_artifact()
     test_parse_return_artifact_requires_core_fields()
-    test_parse_return_artifact_requires_return_word()
+    test_parse_return_artifact_allows_missing_optional_return_word()
     test_load_demo_return_slot()
     test_load_return_slot_requires_slots_list()
     test_load_return_slot_requires_core_fields()
