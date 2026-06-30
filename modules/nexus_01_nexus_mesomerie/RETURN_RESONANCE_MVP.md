@@ -35,6 +35,12 @@ A returned artifact.
 One local answer.
 ```
 
+Technical short formula:
+
+```text
+Slot -> Artifact -> Local Result
+```
+
 This MVP should make the return path concrete without making First Spark larger and without introducing real cryptography too early.
 
 ---
@@ -519,6 +525,10 @@ Only then extract what truly repeats.
 ---
 
 ## 16. Design Formulas
+
+```text
+Slot -> Artifact -> Local Result
+```
 
 ```text
 A waiting slot.
