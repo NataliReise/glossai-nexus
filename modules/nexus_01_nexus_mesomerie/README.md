@@ -52,6 +52,13 @@ Generated Return Resonance MVP
 
 This means the first return layer may match a return artifact to a local return slot and generate a stable local result file. It should not promise real cryptographic decryption unless a later crypto layer explicitly implements it.
 
+Current orientation:
+
+```text
+Return Resonance Slots are the implemented path.
+Return Unlock remains a legacy/future optional path.
+```
+
 For the current Return Resonance implementation guide, see:
 
 - [Return Resonance README](return_resonance/README.md)
@@ -112,6 +119,13 @@ For the current bridge note between the older return unlock design and the newer
 
 - [Return Unlock Current Direction](RETURN_UNLOCK_CURRENT_DIRECTION.md)
 
+The older Return Unlock documents should be read through that bridge note:
+
+```text
+Return Unlock Layer Map = legacy/future architecture map
+Return Unlock Design = legacy/future design draft
+```
+
 ## Start First Spark
 
 The first playable slice of Nexus 01 is:
@@ -154,9 +168,9 @@ For the First Spark 0.1 review, see:
 - [Return Slot Generator Walkthrough](RETURN_SLOT_GENERATOR_WALKTHROUGH.md)
 - [Return Resonance Generated Slot Milestone](RETURN_RESONANCE_GENERATED_SLOT_MILESTONE.md)
 - [Return Resonance 0.1 Review](RETURN_RESONANCE_0_1_REVIEW.md)
-- [Return Unlock Layer Map](RETURN_UNLOCK_LAYER_MAP.md)
-- [Return Unlock Design](RETURN_UNLOCK_DESIGN.md)
 - [Return Unlock Current Direction](RETURN_UNLOCK_CURRENT_DIRECTION.md)
+- [Return Unlock Layer Map](RETURN_UNLOCK_LAYER_MAP.md) - legacy/future architecture map
+- [Return Unlock Design](RETURN_UNLOCK_DESIGN.md) - legacy/future design draft
 - [Return Artifact MVP](RETURN_ARTIFACT_MVP.md)
 - [Return Resonance Slots](RETURN_RESONANCE_SLOTS.md)
 - [Nexus Activity System](NEXUS_ACTIVITY_SYSTEM.md)
