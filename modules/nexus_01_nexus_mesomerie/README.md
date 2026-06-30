@@ -59,6 +59,10 @@ Return Resonance Slots are the implemented path.
 Return Unlock remains a legacy/future optional path.
 ```
 
+For a short orientation to the current Nexus 01 vocabulary, see:
+
+- [Nexus 01 Terms](NEXUS_01_TERMS.md)
+
 For the current Return Resonance implementation guide, see:
 
 - [Return Resonance README](return_resonance/README.md)
@@ -156,6 +160,7 @@ For the First Spark 0.1 review, see:
 ## Nexus 01 planning documents
 
 - [Nexus Module Map](NEXUS_MODULE_MAP.md)
+- [Nexus 01 Terms](NEXUS_01_TERMS.md)
 - [First Spark Scope](FIRST_SPARK_SCOPE.md)
 - [MVP Specification](MVP_NEXUS_01.md)
 - [Nexus Modularity Rules](NEXUS_MODULARITY_RULES.md)
