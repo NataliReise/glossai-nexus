@@ -69,7 +69,7 @@ Open a terminal in this folder and run:
 If that does not work, run:
 
 ```bash
-python3 run_first_spark.py
+PYTHONDONTWRITEBYTECODE=1 python3 run_first_spark.py
 ```
 
 You need Python 3 and a Linux terminal.
@@ -183,7 +183,7 @@ START_HERE = """#!/usr/bin/env bash
 set -euo pipefail
 
 cd "$(dirname "$0")"
-python3 run_first_spark.py
+PYTHONDONTWRITEBYTECODE=1 python3 run_first_spark.py
 """
 
 
