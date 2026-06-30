@@ -13,6 +13,12 @@ explicit safe values
 -> local result file
 ```
 
+Technical short formula:
+
+```text
+Slot -> Artifact -> Local Result
+```
+
 The goal is not to introduce private activation parsing yet.
 
 The goal is to prove that a generated slot can actually be answered by a return artifact and opened into a local result.
@@ -237,6 +243,12 @@ The slot can be generated.
 The artifact can answer it.
 The local result can open.
 
+Technical short formula:
+
+```text
+Slot -> Artifact -> Local Result
+```
+
 Current milestone:
 
 ```text
@@ -246,6 +258,10 @@ A local result can open.
 ```
 
 ## Working formulas
+
+```text
+Slot -> Artifact -> Local Result
+```
 
 ```text
 The generator prepares the waiting place.
