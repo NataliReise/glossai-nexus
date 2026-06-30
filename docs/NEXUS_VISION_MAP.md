@@ -234,7 +234,61 @@ The player is a counterpart.
 The code should remember that.
 ```
 
-## 8. Public and private layers
+## 8. Social-analog resonance
+
+A real Nexus module may travel digitally.
+
+But its resonance should be carried socially.
+
+This means that digital channels may transport a Nexus artifact, but they should not replace the human act of giving, forwarding, answering, or remembering.
+
+A Nexus module may be shared through:
+
+```text
+a public repository
+a downloaded package
+a ZIP file
+a messenger message
+an email attachment
+a private cloud link
+a USB stick
+a public-safe GitHub discussion post
+```
+
+But the act of sharing should remain conscious, manual, and human.
+
+The module should not automatically send itself to another person.
+
+It should not automatically post resonance nodes.
+
+It should not automatically upload return artifacts.
+
+It should not build or track a social graph.
+
+It should not map relationships between people.
+
+A Nexus may support the artifact that travels through a relationship.
+
+It must not automate, simulate, or extract the relationship itself.
+
+Working formulas:
+
+```text
+The artifact may travel digitally.
+The resonance should be carried socially.
+```
+
+```text
+The Nexus connects artifacts.
+People connect people.
+```
+
+```text
+The Nexus may remember local traces.
+It must not map people.
+```
+
+## 9. Public and private layers
 
 The public/private boundary is a structural principle of **glossai-nexus**.
 
@@ -280,7 +334,7 @@ Private meaning may create structure.
 Structure must not expose private meaning.
 ```
 
-## 9. Speaking code
+## 10. Speaking code
 
 Code in **glossai-nexus** should speak.
 
@@ -321,7 +375,7 @@ Prefer optional resonance over forced interaction.
 Prefer inspectable structure over black boxes.
 ```
 
-## 10. Player experience
+## 11. Player experience
 
 A Nexus player may experience several layers at once.
 
@@ -344,6 +398,7 @@ I explore commands, traces, texts, and files.
 I discover how the public structure works.
 Maybe a private activation opens a personal meaning.
 Maybe I create a public-safe resonance node.
+Maybe I carry the artifact further by sending it to another person.
 Maybe a return path appears.
 Maybe I keep everything private.
 The experience remains complete either way.
@@ -353,7 +408,7 @@ The player should never feel forced to share private meaning.
 
 The project should not hide network behavior, tracking, or extraction behind poetic language.
 
-## 11. Possible module families
+## 12. Possible module families
 
 Future Nexus modules may grow in different directions.
 
@@ -440,7 +495,7 @@ Cooperative Modules may allow people to solve, read, respond, or build together.
 
 They should support collaboration without requiring central tracking or forced identity exposure.
 
-## 12. Code as playable meaning layer
+## 13. Code as playable meaning layer
 
 A later Nexus layer may make code itself part of the game.
 
@@ -475,7 +530,7 @@ A Nexus can be played on the surface
 and read in the structure.
 ```
 
-## 13. What should not be built too early
+## 14. What should not be built too early
 
 Some features may become interesting later, but should not be built too early.
 
@@ -487,7 +542,9 @@ Not yet:
 real encryption claims
 hidden network behavior
 automatic posting
+automatic sharing
 automatic tracking
+automatic social graph behavior
 private activation parsing without clear boundaries
 large account systems
 centralized user profiles
@@ -504,7 +561,7 @@ Does this feature deepen careful resonance,
 or does it create pressure, exposure, or extraction?
 ```
 
-## 14. Design formulas
+## 15. Design formulas
 
 These formulas are not strict rules.
 
@@ -527,6 +584,21 @@ A resonance becomes public only by consent.
 ```
 
 ```text
+The artifact may travel digitally.
+The resonance should be carried socially.
+```
+
+```text
+The Nexus connects artifacts.
+People connect people.
+```
+
+```text
+The Nexus may remember local traces.
+It must not map people.
+```
+
+```text
 Open does not mean exposed.
 Private does not mean isolated.
 ```
@@ -540,6 +612,7 @@ not demand confession.
 No hidden extraction.
 No forced disclosure.
 No automatic resonance.
+No automatic social graph.
 ```
 
 ```text
@@ -561,7 +634,7 @@ A Nexus can be played on the surface
 and read in the structure.
 ```
 
-## 15. Current next orientation
+## 16. Current next orientation
 
 The current seed should stay small and understandable.
 
