@@ -12,6 +12,12 @@ A returned artifact.
 One local answer.
 ```
 
+For Nexus 01 terminology and the current Return Resonance / Return Unlock distinction, see:
+
+```text
+../NEXUS_01_TERMS.md
+```
+
 ## What this layer does
 
 The first Return Resonance MVP can:
