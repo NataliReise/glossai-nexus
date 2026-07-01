@@ -22,7 +22,7 @@ build an optional ZIP archive
 verify that the preview folder is public-safe
 ```
 
-The first personal gift builder also exists.
+The first personal gift workflow also exists.
 
 It can:
 
@@ -31,6 +31,7 @@ require a local activation file
 validate that the local activation file is a JSON object
 build a standalone personal gift folder
 build an optional ZIP archive
+verify that the gift folder has the expected shape
 print manual next steps
 ```
 
@@ -40,6 +41,7 @@ Relevant files:
 modules/nexus_01_nexus_mesomerie/packaging/build_first_spark_package.py
 modules/nexus_01_nexus_mesomerie/packaging/verify_first_spark_package.py
 modules/nexus_01_nexus_mesomerie/packaging/build_first_spark_gift_package.py
+modules/nexus_01_nexus_mesomerie/packaging/verify_first_spark_gift_package.py
 modules/nexus_01_nexus_mesomerie/packaging/README.md
 ```
 
@@ -122,6 +124,7 @@ public example activation data
 preview package builder
 preview package verifier
 gift package builder
+gift package verifier
 gift package planning documentation
 ```
 
@@ -185,11 +188,11 @@ A personal gift builder should follow these principles:
 
 The current gift builder follows this first safety shape.
 
-A personal gift verifier should follow a different rule set from the preview verifier.
+A personal gift verifier follows a different rule set from the preview verifier.
 
 The preview verifier rejects local activation files.
 
-The gift verifier may require exactly one local activation file.
+The gift verifier requires `activation.local.json` and rejects extra local JSON files.
 
 ## Current gift workflow
 
@@ -198,7 +201,8 @@ A careful gift workflow looks like this:
 ```bash
 python3 modules/nexus_01_nexus_mesomerie/first_spark/create_local_activation.py
 # edit modules/nexus_01_nexus_mesomerie/first_spark/activation.local.json locally
-python3 modules/nexus_01_nexus_mesomerie/packaging/build_first_spark_gift_package.py --gift-label first-gift --zip
+python3 modules/nexus_01_nexus_mesomerie/packaging/build_first_spark_gift_package.py --gift-label first-gift --overwrite --zip
+python3 modules/nexus_01_nexus_mesomerie/packaging/verify_first_spark_gift_package.py dist/nexus-01-first-spark-gift-first-gift
 ```
 
 The important point is the order:
@@ -207,21 +211,14 @@ The important point is the order:
 create local activation
 review local activation
 build gift package locally
+verify gift package locally
 review gift package locally
 share manually
 ```
 
-## Proposed next implementation step
+## Gift verifier
 
-The next possible code step is:
-
-```text
-modules/nexus_01_nexus_mesomerie/packaging/verify_first_spark_gift_package.py
-```
-
-The gift verifier should reuse ideas from the preview verifier, but it should intentionally check a different package type.
-
-It should verify that a gift package:
+The current gift verifier checks that a gift package:
 
 ```text
 contains START_HERE.sh
@@ -236,6 +233,8 @@ contains no .git metadata
 contains no Python bytecode
 contains no cache folders
 contains no local result or return files
+contains no extra *.local.json files other than activation.local.json
+has a readable activation.local.json with a JSON object at the top level
 ```
 
 ## Naming idea
@@ -290,9 +289,9 @@ or does it start managing the relationship?
 
 ## Current recommendation
 
-Test the personal gift builder locally before building the gift verifier.
+Test the personal gift builder and verifier locally before using them for a real gift.
 
-The gift builder should stay small, explicit, local-only, and boring in the best possible way.
+The gift workflow should stay small, explicit, local-only, and boring in the best possible way.
 
 Readable code is a form of hospitality.
 Reliable packaging is a form of care.
