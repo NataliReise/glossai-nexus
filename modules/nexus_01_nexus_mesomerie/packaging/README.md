@@ -67,6 +67,35 @@ This also creates:
 dist/nexus-01-first-spark-preview.zip
 ```
 
+## Verify the package
+
+After building the package, run:
+
+```bash
+python3 modules/nexus_01_nexus_mesomerie/packaging/verify_first_spark_package.py
+```
+
+The verifier checks the default preview package folder:
+
+```text
+dist/nexus-01-first-spark-preview/
+```
+
+It verifies that the expected public handoff files are present, that `START_HERE.sh` is executable, and that private or generated files such as `activation.local.json`, `*.local.json`, `*.local.txt`, `*.local.md`, `__pycache__/`, `.git/`, and Python bytecode are not present.
+
+You can also verify a specific package folder:
+
+```bash
+python3 modules/nexus_01_nexus_mesomerie/packaging/verify_first_spark_package.py path/to/package-folder
+```
+
+Recommended build-and-check flow:
+
+```bash
+python3 modules/nexus_01_nexus_mesomerie/packaging/build_first_spark_package.py --overwrite --zip
+python3 modules/nexus_01_nexus_mesomerie/packaging/verify_first_spark_package.py
+```
+
 ## Test the package manually
 
 After building the package, run:
