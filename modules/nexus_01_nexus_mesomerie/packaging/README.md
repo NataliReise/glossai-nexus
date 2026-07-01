@@ -81,7 +81,7 @@ The verifier checks the default preview package folder:
 dist/nexus-01-first-spark-preview/
 ```
 
-It verifies that the expected public handoff files are present, that `START_HERE.sh` is executable, and that private or generated files such as `activation.local.json`, `*.local.json`, `*.local.txt`, `*.local.md`, `__pycache__/`, `.git/`, and Python bytecode are not present.
+It verifies that the expected public package files are present, that `START_HERE.sh` is executable, and that private or generated files such as `activation.local.json`, `*.local.json`, `*.local.txt`, `*.local.md`, `__pycache__/`, `.git/`, and Python bytecode are not present.
 
 You can also verify a specific package folder:
 
@@ -104,7 +104,7 @@ Before adding the next package builder, see:
 modules/nexus_01_nexus_mesomerie/packaging/GIFT_PACKAGE_PLAN.md
 ```
 
-The planning note separates the public preview workflow from a later local-only package workflow.
+The planning note separates the public preview workflow from a later local-only personal gift package workflow.
 
 ## Test the package manually
 
