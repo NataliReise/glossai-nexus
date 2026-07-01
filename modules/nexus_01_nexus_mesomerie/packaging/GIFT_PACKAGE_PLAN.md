@@ -2,7 +2,7 @@
 
 This document prepares the next packaging step for **Nexus 01 - First Spark**.
 
-The current preview package is public-safe. A later personal handoff package may carry local meaning for one intended person. That makes the handoff workflow more delicate than the preview workflow.
+The current preview package is public-safe. A later personal gift package may carry local meaning for one intended person. That makes the gift workflow more delicate than the preview workflow.
 
 The goal of this plan is to keep the boundary clear before adding more automation.
 
@@ -32,7 +32,7 @@ modules/nexus_01_nexus_mesomerie/packaging/README.md
 
 The First Spark game core should stay stable for now.
 
-The next work should improve handoff safety and package clarity, not add new rooms, mechanics, or puzzle text.
+The next work should improve gift safety and package clarity, not add new rooms, mechanics, or puzzle text.
 
 ## Package types
 
@@ -53,7 +53,7 @@ cloud link
 USB stick
 ```
 
-It must not contain local personal handoff data.
+It must not contain local personal gift data.
 
 Expected activation data:
 
@@ -74,9 +74,9 @@ The preview package may travel digitally.
 
 It must not manage relationships.
 
-### Personal handoff package
+### Personal gift package
 
-A personal handoff package is created for one intended person.
+A personal gift package is created for one intended person.
 
 It may contain a real local activation file.
 
@@ -86,7 +86,7 @@ Expected local activation data:
 activation.local.json
 ```
 
-A personal handoff package should be created locally and deliberately.
+A personal gift package should be created locally and deliberately.
 
 It should not be committed to Git.
 
@@ -108,7 +108,7 @@ public documentation
 public example activation data
 preview package builder
 preview package verifier
-handoff planning documentation
+gift package planning documentation
 ```
 
 The public repository must not contain:
@@ -125,7 +125,7 @@ built dist folders
 
 ### Local workspace
 
-The local workspace may contain local files while a handoff package is being prepared.
+The local workspace may contain local files while a personal gift package is being prepared.
 
 Examples:
 
@@ -152,16 +152,16 @@ dist/
 
 The `dist/` folder is ignored by Git and should stay untracked.
 
-Preview and handoff ZIP archives should also remain untracked build artifacts.
+Preview and gift ZIP archives should also remain untracked build artifacts.
 
 ## Safety principles
 
-A personal handoff builder should follow these principles:
+A personal gift builder should follow these principles:
 
 ```text
 1. Refuse to run if the required local activation file is missing.
-2. Refuse to overwrite an existing handoff package unless explicitly requested.
-3. Copy only the files needed for the handoff package.
+2. Refuse to overwrite an existing gift package unless explicitly requested.
+3. Copy only the files needed for the gift package.
 4. Copy local activation data only from the local workspace.
 5. Never create commits.
 6. Never upload, post, send, or sync anything.
@@ -169,21 +169,21 @@ A personal handoff builder should follow these principles:
 8. Make the public/local boundary visible in generated documentation.
 ```
 
-A personal handoff verifier should follow a different rule set from the preview verifier.
+A personal gift verifier should follow a different rule set from the preview verifier.
 
 The preview verifier rejects local activation files.
 
-The handoff verifier may require exactly one local activation file.
+The gift verifier may require exactly one local activation file.
 
 ## Proposed next workflow
 
-A careful handoff workflow could look like this:
+A careful gift workflow could look like this:
 
 ```bash
 python3 modules/nexus_01_nexus_mesomerie/first_spark/create_local_activation.py
 # edit modules/nexus_01_nexus_mesomerie/first_spark/activation.local.json locally
-python3 modules/nexus_01_nexus_mesomerie/packaging/build_first_spark_handoff_package.py --handoff-label first-handoff --zip
-python3 modules/nexus_01_nexus_mesomerie/packaging/verify_first_spark_handoff_package.py dist/nexus-01-first-spark-handoff-first-handoff
+python3 modules/nexus_01_nexus_mesomerie/packaging/build_first_spark_gift_package.py --gift-label first-gift --zip
+python3 modules/nexus_01_nexus_mesomerie/packaging/verify_first_spark_gift_package.py dist/nexus-01-first-spark-gift-first-gift
 ```
 
 The exact names may still change.
@@ -193,8 +193,8 @@ The important point is the order:
 ```text
 create local activation
 review local activation
-build handoff package locally
-verify handoff package locally
+build gift package locally
+verify gift package locally
 share manually
 ```
 
@@ -203,13 +203,13 @@ share manually
 Possible future files:
 
 ```text
-modules/nexus_01_nexus_mesomerie/packaging/build_first_spark_handoff_package.py
-modules/nexus_01_nexus_mesomerie/packaging/verify_first_spark_handoff_package.py
+modules/nexus_01_nexus_mesomerie/packaging/build_first_spark_gift_package.py
+modules/nexus_01_nexus_mesomerie/packaging/verify_first_spark_gift_package.py
 ```
 
-The handoff builder should probably reuse ideas from the preview builder, but it should not blur the public/local boundary.
+The gift builder should probably reuse ideas from the preview builder, but it should not blur the public/local boundary.
 
-The handoff verifier should probably reuse ideas from the preview verifier, but it should intentionally check a different package type.
+The gift verifier should probably reuse ideas from the preview verifier, but it should intentionally check a different package type.
 
 ## Naming idea
 
@@ -219,18 +219,18 @@ Default preview package:
 nexus-01-first-spark-preview
 ```
 
-Possible handoff package pattern:
+Possible gift package pattern:
 
 ```text
-nexus-01-first-spark-handoff-<handoff-label>
+nexus-01-first-spark-gift-<gift-label>
 ```
 
-The `<handoff-label>` should be optional and local. It should not need to be a real name.
+The `<gift-label>` should be optional and local. It should not need to be a real name.
 
 Safe examples:
 
 ```text
-first-handoff
+first-gift
 linux-test
 personal-copy
 ```
@@ -263,15 +263,15 @@ or does it start managing the relationship?
 
 ## Current recommendation
 
-Do not build the personal handoff package builder until the preview workflow has stayed stable through at least one local build-and-verify run.
+Do not build the personal gift package builder until the preview workflow has stayed stable through at least one local build-and-verify run.
 
 Once that is confirmed, the next code step can be:
 
 ```text
-build_first_spark_handoff_package.py
+build_first_spark_gift_package.py
 ```
 
-The handoff builder should be small, explicit, local-only, and boring in the best possible way.
+The gift builder should be small, explicit, local-only, and boring in the best possible way.
 
 Readable code is a form of hospitality.
 Reliable packaging is a form of care.
