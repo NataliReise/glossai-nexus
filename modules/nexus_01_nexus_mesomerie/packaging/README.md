@@ -96,6 +96,16 @@ python3 modules/nexus_01_nexus_mesomerie/packaging/build_first_spark_package.py 
 python3 modules/nexus_01_nexus_mesomerie/packaging/verify_first_spark_package.py
 ```
 
+## Further package planning
+
+Before adding the next package builder, see:
+
+```text
+modules/nexus_01_nexus_mesomerie/packaging/GIFT_PACKAGE_PLAN.md
+```
+
+The planning note separates the public preview workflow from a later local-only package workflow.
+
 ## Test the package manually
 
 After building the package, run:
