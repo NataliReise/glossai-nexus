@@ -1,8 +1,8 @@
 # First Spark Gift Package Plan
 
-This document prepares the next packaging step for **Nexus 01 - First Spark**.
+This document prepares and documents the personal gift packaging step for **Nexus 01 - First Spark**.
 
-The current preview package is public-safe. A later personal gift package may carry local meaning for one intended person. That makes the gift workflow more delicate than the preview workflow.
+The current preview package is public-safe. A personal gift package may carry local meaning for one intended person. That makes the gift workflow more delicate than the preview workflow.
 
 The goal of this plan is to keep the boundary clear before adding more automation.
 
@@ -12,7 +12,7 @@ Open structure. Private meaning. Careful resonance.
 
 ## Current status
 
-The public preview workflow already exists.
+The public preview workflow exists.
 
 It can:
 
@@ -22,11 +22,24 @@ build an optional ZIP archive
 verify that the preview folder is public-safe
 ```
 
+The first personal gift builder also exists.
+
+It can:
+
+```text
+require a local activation file
+validate that the local activation file is a JSON object
+build a standalone personal gift folder
+build an optional ZIP archive
+print manual next steps
+```
+
 Relevant files:
 
 ```text
 modules/nexus_01_nexus_mesomerie/packaging/build_first_spark_package.py
 modules/nexus_01_nexus_mesomerie/packaging/verify_first_spark_package.py
+modules/nexus_01_nexus_mesomerie/packaging/build_first_spark_gift_package.py
 modules/nexus_01_nexus_mesomerie/packaging/README.md
 ```
 
@@ -108,6 +121,7 @@ public documentation
 public example activation data
 preview package builder
 preview package verifier
+gift package builder
 gift package planning documentation
 ```
 
@@ -169,24 +183,23 @@ A personal gift builder should follow these principles:
 8. Make the public/local boundary visible in generated documentation.
 ```
 
+The current gift builder follows this first safety shape.
+
 A personal gift verifier should follow a different rule set from the preview verifier.
 
 The preview verifier rejects local activation files.
 
 The gift verifier may require exactly one local activation file.
 
-## Proposed next workflow
+## Current gift workflow
 
-A careful gift workflow could look like this:
+A careful gift workflow looks like this:
 
 ```bash
 python3 modules/nexus_01_nexus_mesomerie/first_spark/create_local_activation.py
 # edit modules/nexus_01_nexus_mesomerie/first_spark/activation.local.json locally
 python3 modules/nexus_01_nexus_mesomerie/packaging/build_first_spark_gift_package.py --gift-label first-gift --zip
-python3 modules/nexus_01_nexus_mesomerie/packaging/verify_first_spark_gift_package.py dist/nexus-01-first-spark-gift-first-gift
 ```
-
-The exact names may still change.
 
 The important point is the order:
 
@@ -194,22 +207,36 @@ The important point is the order:
 create local activation
 review local activation
 build gift package locally
-verify gift package locally
+review gift package locally
 share manually
 ```
 
-## Proposed files for the next implementation step
+## Proposed next implementation step
 
-Possible future files:
+The next possible code step is:
 
 ```text
-modules/nexus_01_nexus_mesomerie/packaging/build_first_spark_gift_package.py
 modules/nexus_01_nexus_mesomerie/packaging/verify_first_spark_gift_package.py
 ```
 
-The gift builder should probably reuse ideas from the preview builder, but it should not blur the public/local boundary.
+The gift verifier should reuse ideas from the preview verifier, but it should intentionally check a different package type.
 
-The gift verifier should probably reuse ideas from the preview verifier, but it should intentionally check a different package type.
+It should verify that a gift package:
+
+```text
+contains START_HERE.sh
+contains README_FOR_RECIPIENT.md
+contains GIFT_NOTE.md
+contains run_first_spark.py
+contains activation.example.json
+contains activation.local.json
+contains first_spark/
+has an executable START_HERE.sh
+contains no .git metadata
+contains no Python bytecode
+contains no cache folders
+contains no local result or return files
+```
 
 ## Naming idea
 
@@ -219,7 +246,7 @@ Default preview package:
 nexus-01-first-spark-preview
 ```
 
-Possible gift package pattern:
+Gift package pattern:
 
 ```text
 nexus-01-first-spark-gift-<gift-label>
@@ -263,15 +290,9 @@ or does it start managing the relationship?
 
 ## Current recommendation
 
-Do not build the personal gift package builder until the preview workflow has stayed stable through at least one local build-and-verify run.
+Test the personal gift builder locally before building the gift verifier.
 
-Once that is confirmed, the next code step can be:
-
-```text
-build_first_spark_gift_package.py
-```
-
-The gift builder should be small, explicit, local-only, and boring in the best possible way.
+The gift builder should stay small, explicit, local-only, and boring in the best possible way.
 
 Readable code is a form of hospitality.
 Reliable packaging is a form of care.
