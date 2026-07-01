@@ -6,6 +6,9 @@ __pycache__/
 .venv/
 venv/
 
+# Generated package output
+dist/
+
 # Local activation files
 activation.local.json
 activation.local.*.json
