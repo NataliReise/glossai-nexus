@@ -96,26 +96,60 @@ python3 modules/nexus_01_nexus_mesomerie/packaging/build_first_spark_package.py 
 python3 modules/nexus_01_nexus_mesomerie/packaging/verify_first_spark_package.py
 ```
 
-## Further package planning
+## Build a First Spark personal gift package
 
-Before adding the next package builder, see:
+Read the planning note first:
 
 ```text
 modules/nexus_01_nexus_mesomerie/packaging/GIFT_PACKAGE_PLAN.md
 ```
 
-The planning note separates the public preview workflow from a later local-only personal gift package workflow.
+Create a local activation file if it does not exist yet:
+
+```bash
+python3 modules/nexus_01_nexus_mesomerie/first_spark/create_local_activation.py
+```
+
+Review and edit the generated local activation file:
+
+```text
+modules/nexus_01_nexus_mesomerie/first_spark/activation.local.json
+```
+
+Then build the local gift package:
+
+```bash
+python3 modules/nexus_01_nexus_mesomerie/packaging/build_first_spark_gift_package.py --gift-label first-gift --zip
+```
+
+This creates a local package such as:
+
+```text
+dist/nexus-01-first-spark-gift-first-gift/
+dist/nexus-01-first-spark-gift-first-gift.zip
+```
+
+The gift builder requires `activation.local.json`, validates that it is a JSON object, copies it into the package, and writes a recipient README plus a gift note.
+
+It does not commit, upload, send, sync, or track anything.
 
 ## Test the package manually
 
-After building the package, run:
+After building the preview package, run:
 
 ```bash
 cd dist/nexus-01-first-spark-preview
 ./START_HERE.sh
 ```
 
-Alternative start command:
+After building a gift package, use the generated folder name, for example:
+
+```bash
+cd dist/nexus-01-first-spark-gift-first-gift
+./START_HERE.sh
+```
+
+Alternative start command inside either package:
 
 ```bash
 python3 run_first_spark.py
