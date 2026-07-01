@@ -67,9 +67,9 @@ This also creates:
 dist/nexus-01-first-spark-preview.zip
 ```
 
-## Verify the package
+## Verify the preview package
 
-After building the package, run:
+After building the preview package, run:
 
 ```bash
 python3 modules/nexus_01_nexus_mesomerie/packaging/verify_first_spark_package.py
@@ -89,7 +89,7 @@ You can also verify a specific package folder:
 python3 modules/nexus_01_nexus_mesomerie/packaging/verify_first_spark_package.py path/to/package-folder
 ```
 
-Recommended build-and-check flow:
+Recommended preview build-and-check flow:
 
 ```bash
 python3 modules/nexus_01_nexus_mesomerie/packaging/build_first_spark_package.py --overwrite --zip
@@ -132,6 +132,25 @@ dist/nexus-01-first-spark-gift-first-gift.zip
 The gift builder requires `activation.local.json`, validates that it is a JSON object, copies it into the package, and writes a recipient README plus a gift note.
 
 It does not commit, upload, send, sync, or track anything.
+
+## Verify the personal gift package
+
+After building a gift package, run:
+
+```bash
+python3 modules/nexus_01_nexus_mesomerie/packaging/verify_first_spark_gift_package.py dist/nexus-01-first-spark-gift-first-gift
+```
+
+The gift verifier checks that the expected package files are present, that `START_HERE.sh` is executable, and that `activation.local.json` is present and valid JSON with an object at the top level.
+
+It rejects `.git/`, `__pycache__/`, `.pytest_cache/`, Python bytecode, local result files, local return files, and extra `*.local.json` files other than `activation.local.json`.
+
+Recommended gift build-and-check flow:
+
+```bash
+python3 modules/nexus_01_nexus_mesomerie/packaging/build_first_spark_gift_package.py --gift-label first-gift --overwrite --zip
+python3 modules/nexus_01_nexus_mesomerie/packaging/verify_first_spark_gift_package.py dist/nexus-01-first-spark-gift-first-gift
+```
 
 ## Test the package manually
 
