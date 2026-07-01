@@ -35,6 +35,13 @@ verify that the gift folder has the expected shape
 print manual next steps
 ```
 
+The complete package workflow has been locally tested as a small milestone:
+
+```text
+preview package: build, ZIP, verify
+personal gift package: build, ZIP, verify
+```
+
 Relevant files:
 
 ```text
@@ -237,6 +244,18 @@ contains no extra *.local.json files other than activation.local.json
 has a readable activation.local.json with a JSON object at the top level
 ```
 
+## Sharing checklist
+
+Before sharing a package manually, check:
+
+```text
+1. The package was built intentionally.
+2. The matching verifier passed.
+3. The package folder or ZIP was reviewed locally.
+4. No unintended local result or return files are present.
+5. The package is shared manually, not by an automated workflow.
+```
+
 ## Naming idea
 
 Default preview package:
@@ -289,7 +308,7 @@ or does it start managing the relationship?
 
 ## Current recommendation
 
-Test the personal gift builder and verifier locally before using them for a real gift.
+Use the package workflow carefully and manually for the first real gift.
 
 The gift workflow should stay small, explicit, local-only, and boring in the best possible way.
 
