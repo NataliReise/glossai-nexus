@@ -2,15 +2,30 @@
 
 This folder contains small packaging helpers for **Nexus 01 - Nexus-Mesomerie**.
 
-The current first helper builds a standalone preview package for:
+The current helpers build and verify two package types for:
 
 ```text
 Nexus 0.1 - First Spark
 ```
 
-The package is meant for manual, social-analog sharing: for example as a local folder, ZIP file, email attachment, messenger file, cloud link, or USB stick.
+The packages are meant for manual, social-analog sharing: for example as a local folder, ZIP file, email attachment, messenger file, cloud link, or USB stick.
 
-It does not upload, post, send, or track anything automatically.
+They do not upload, post, send, or track anything automatically.
+
+## Current milestone
+
+The First Spark package workflow now has a small complete shape:
+
+```text
+preview package: build, ZIP, verify
+personal gift package: build, ZIP, verify
+```
+
+The preview package is public-safe and must not contain `activation.local.json`.
+
+The personal gift package is local-only and must contain `activation.local.json`.
+
+Both workflows are intentionally manual at the sharing boundary.
 
 ## Build a First Spark preview package
 
@@ -172,6 +187,18 @@ Alternative start command inside either package:
 
 ```bash
 python3 run_first_spark.py
+```
+
+## Sharing checklist
+
+Before sharing a package manually, check:
+
+```text
+1. The package was built intentionally.
+2. The matching verifier passed.
+3. The package folder or ZIP was reviewed locally.
+4. No unintended local result or return files are present.
+5. The package is shared manually, not by an automated workflow.
 ```
 
 ## Design boundary
