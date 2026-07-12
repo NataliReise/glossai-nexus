@@ -14,18 +14,26 @@ from .token import (
     load_resonance_token,
     parse_resonance_token,
 )
+from .writer import (
+    ResonanceExpression,
+    ReturnArtifactWriteError,
+    compose_return_artifact,
+)
 
 __all__ = [
     "MatchResult",
     "MatchStatus",
+    "ResonanceExpression",
     "ResonanceToken",
     "ResonanceTokenLoadError",
     "ReturnArtifact",
     "ReturnArtifactParseError",
+    "ReturnArtifactWriteError",
     "ReturnResult",
     "ReturnResultError",
     "ReturnSlot",
     "ReturnSlotState",
+    "compose_return_artifact",
     "compose_return_result",
     "load_resonance_token",
     "load_return_slots",
