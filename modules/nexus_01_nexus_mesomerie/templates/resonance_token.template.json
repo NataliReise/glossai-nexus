@@ -1,0 +1,14 @@
+{
+  "token_version": "N01-RT-1",
+  "token_type": "resonance-activation",
+  "module_id": "N01",
+  "layer_id": "return-resonance-1",
+  "origin_trace_id": "CHANGE-ME",
+  "return_slot_id": "CHANGE-ME",
+  "package_id": "CHANGE-ME",
+  "enabled_chambers": [
+    "resonance"
+  ],
+  "public_safe_label": "CHANGE-ME",
+  "note": "This token identifies a resonance arc, not a person."
+}
