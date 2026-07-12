@@ -112,6 +112,160 @@ At first, it may show only one door.
 
 Later, it may show additional doors or traces.
 
+## Topological intuition
+
+The Nexus may take loose inspiration from intertwined ring forms, multi-opening objects, and simplified associations with the Klein quartic or a triple torus.
+
+This is a poetic and structural inspiration, not a claim that the software models such an object mathematically.
+
+The useful idea is a small controlled ambiguity:
+
+```text
+The Chambers may be rooms.
+The Chambers may be passages.
+The Atrium may be the center.
+The Atrium may be the crossing itself.
+```
+
+A player may leave a Chamber and return to the Atrium.
+
+Or the Chamber may seem to fold back into the Atrium around the player.
+
+The topology may remain suggestive.
+
+The state transitions must remain consistent.
+
+## Spatial and mechanical principles
+
+Spatial ambiguity is welcome.
+
+Mechanical discovery is part of play.
+
+Mechanical arbitrariness is not.
+
+```text
+The mechanism may be hidden.
+It must not be arbitrary.
+```
+
+The player does not need to know a Chamber's mechanism immediately.
+
+Discovering the local rules may be part of the puzzle.
+
+Once those rules become readable, the Chamber must follow them reliably.
+
+A valid puzzle question is:
+
+```text
+What rule belongs to this Chamber?
+```
+
+An invalid implementation question is:
+
+```text
+Which command happens to work this time?
+```
+
+## Chamber language and help
+
+Each Chamber may have its own mechanism, vocabulary, and help text.
+
+Examples:
+
+```text
+Spark Chamber
+  read traces
+  link fragments
+  unlock a message
+
+Resonance Chamber
+  inspect a token
+  discover return elements
+  weave a return artifact
+```
+
+The shared outer rhythm may remain recognizable:
+
+```text
+arrive
+look
+discover traces
+learn the local mechanism
+complete the Chamber
+return to the Atrium
+```
+
+But the internal grammar may differ from Chamber to Chamber.
+
+Working rule:
+
+```text
+Each Chamber speaks its own mechanical language.
+The player may have to learn it, but the Chamber must keep its grammar.
+```
+
+A Chamber's support levels may be separated:
+
+```text
+help
+  reveals the local vocabulary and available action types
+
+trace
+  offers gentle orientation toward the next useful discovery
+
+walkthrough
+  reveals the full solution path with a spoiler warning
+```
+
+Help should support discovery without making discovery unnecessary.
+
+## Atrium language and state-dependent help
+
+The Atrium has its own help text.
+
+Its help may change as the Nexus changes.
+
+At the beginning it may expose only the basic grammar:
+
+```text
+look
+enter spark
+quit
+```
+
+After completing the Spark Chamber it may add:
+
+```text
+inspect marks
+resonance-node
+```
+
+During a resonance activation it may also reveal:
+
+```text
+enter resonance
+inspect token
+```
+
+New commands should appear together with a visible or narrated change in the Atrium.
+
+Example:
+
+```text
+A second doorway has become visible.
+The help trace has changed.
+```
+
+Working rule:
+
+```text
+The Atrium teaches the current grammar of the Nexus.
+```
+
+The Atrium does not need to reveal every future possibility.
+
+It should reveal the possibilities that are currently available and meaningful.
+
 ## Current intended structure
 
 ```text
