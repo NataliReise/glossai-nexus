@@ -9,16 +9,29 @@ It owns:
 - compatibility between source and response choices
 - the Chamber flow
 - scripted interaction for deterministic tests
+- a thin composer at the Chamber boundary
 
 It does not own:
 
-- Resonance Token validation
-- Return Artifact transport identity
+- Resonance Token loading or schema validation
 - Return Slot matching
 - poetic rendering
 - local result persistence
+- Atrium state
 
-The package returns one typed `ChamberSelections` value through the existing shared bridge contract.
+The mechanical flow returns one typed `ChamberSelections` value.
+
+The boundary composer then joins that value to validated route identity by delegating to the existing shared bridge:
+
+```text
+ResonanceToken + ChamberIO
+-> ResonanceChamberFlow
+-> ChamberSelections
+-> build_resonance_return_artifact
+-> ResonanceReturnArtifact
+```
+
+The composer does not write files, render poetry, open a Return Slot, or alter Nexus state.
 
 Current V0.1 flow:
 
@@ -38,4 +51,5 @@ This first seed is intentionally deterministic and UI-independent. A terminal ad
 ```text
 Each Chamber keeps its grammar.
 The Nexus keeps the route.
+The composer keeps the seam narrow.
 ```
