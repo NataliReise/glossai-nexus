@@ -1,0 +1,18 @@
+{
+  "artifact_version": "0.1",
+  "artifact_type": "resonance-return",
+  "module_id": "N01",
+  "layer_id": "return-resonance-1",
+  "origin_trace_id": "n01-public-demo-origin-001",
+  "return_slot_id": "summer-rain-path-001",
+  "package_id": "n01-public-resonance-demo",
+  "language_library": "resonance-en-v0.1",
+  "image_id": "waiting-lantern",
+  "image_response_id": "appearing-path",
+  "scent_id": "summer-rain",
+  "scent_response_id": "possibility-of-encounter",
+  "movement_id": "falling-feather",
+  "movement_response_id": "crossing-feather",
+  "wish_word": "courage",
+  "return_word": "trust"
+}
