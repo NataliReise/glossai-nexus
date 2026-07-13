@@ -1,0 +1,51 @@
+{
+  "library_version": "resonance-en-v0.1",
+  "category": "image_responses",
+  "entries": [
+    {
+      "image_id": "waiting-lantern",
+      "responses": [
+        {"id": "appearing-path", "source_text": "a path beginning to appear", "resonance_artifact": {"lines": ["a path begins to appear."]}},
+        {"id": "being-expected", "source_text": "the feeling of being expected", "resonance_artifact": {"lines": ["the feeling of being expected appears."]}},
+        {"id": "before-arrival", "source_text": "the moment before someone arrives", "resonance_artifact": {"lines": ["the moment before someone arrives appears."]}},
+        {"id": "opening-circle-of-warmth", "source_text": "a small circle of warmth opening around it", "resonance_artifact": {"lines": ["a small circle of warmth opens around it."]}}
+      ]
+    },
+    {
+      "image_id": "open-starry-window",
+      "responses": [
+        {"id": "quiet-pull-of-distance", "source_text": "the quiet pull of distance", "resonance_artifact": {"lines": ["the quiet pull of distance appears."]}},
+        {"id": "room-beyond-walls", "source_text": "a room becoming larger than its walls", "resonance_artifact": {"lines": ["a room becomes larger than its walls."]}},
+        {"id": "another-world-near", "source_text": "the feeling that another world is near", "resonance_artifact": {"lines": ["the feeling that another world is near appears."]}},
+        {"id": "answering-distant-light", "source_text": "a distant light seeming to answer", "resonance_artifact": {"lines": ["a distant light seems to answer."]}}
+      ]
+    },
+    {
+      "image_id": "stone-in-water",
+      "responses": [
+        {"id": "wish-kept-safe", "source_text": "a wish kept safe without being hidden", "resonance_artifact": {"lines": ["a wish is kept safe without being hidden."]}},
+        {"id": "precious-waiting", "source_text": "something precious waiting to be noticed", "resonance_artifact": {"lines": ["something precious waits to be noticed."]}},
+        {"id": "colours-carried-outward", "source_text": "a ripple carrying its colours outward", "resonance_artifact": {"lines": ["a ripple carries its colours outward."]}},
+        {"id": "quiet-sign-left", "source_text": "the sense that someone has left a quiet sign", "resonance_artifact": {"lines": ["the sense that someone has left a quiet sign appears."]}}
+      ]
+    },
+    {
+      "image_id": "book-bench",
+      "responses": [
+        {"id": "room-made", "source_text": "the feeling that someone has just made room", "resonance_artifact": {"lines": ["the feeling that someone has just made room appears."]}},
+        {"id": "story-to-continue", "source_text": "a story waiting to be continued", "resonance_artifact": {"lines": ["a story waits to be continued."]}},
+        {"id": "absent-companion", "source_text": "the quiet presence of an absent companion", "resonance_artifact": {"lines": ["the quiet presence of an absent companion appears."]}},
+        {"id": "two-voices-one-page", "source_text": "the possibility of two voices meeting on the same page", "resonance_artifact": {"lines": ["appears the possibility", "of two voices meeting on the same page."]}}
+      ]
+    },
+    {
+      "image_id": "bridge-in-mist",
+      "responses": [
+        {"id": "one-more-step", "source_text": "the courage to take one more step", "resonance_artifact": {"lines": ["the courage to take one more step appears."]}},
+        {"id": "approaching-other-side", "source_text": "the sense that someone may be approaching from the other side", "resonance_artifact": {"lines": ["the sense of someone approaching from the other side appears."]}},
+        {"id": "paths-recognising", "source_text": "two distant paths beginning to recognise one another", "resonance_artifact": {"lines": ["two distant paths begin to recognise one another."]}},
+        {"id": "shared-silence", "source_text": "a silence becoming shared", "resonance_artifact": {"lines": ["a silence becomes shared."]}}
+      ]
+    }
+  ]
+}
