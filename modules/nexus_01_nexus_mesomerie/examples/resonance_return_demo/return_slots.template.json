@@ -1,0 +1,16 @@
+{
+  "document_status": "safe public demo example",
+  "slots": [
+    {
+      "origin_trace_id": "n01-public-demo-origin-001",
+      "return_slot_id": "summer-rain-path-001",
+      "module_id": "N01",
+      "package_id": "n01-public-resonance-demo",
+      "layer_id": "return-resonance-1",
+      "status": "waiting",
+      "result_file": "summer_rain_path.local.md",
+      "public_safe_label": "summer rain path",
+      "note": "All identifiers and meanings in this file are invented for the public demo."
+    }
+  ]
+}
