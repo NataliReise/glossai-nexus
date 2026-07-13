@@ -1,0 +1,70 @@
+{
+  "library_version": "resonance-en-v0.1",
+  "category": "images",
+  "entries": [
+    {
+      "id": "waiting-lantern",
+      "source_text": "a lantern waiting in the dark",
+      "resonance_artifact": {
+        "lines": ["A lantern waits in the dark."]
+      },
+      "nexus_echo": {
+        "line_1": ["Dark lantern", "Waiting lantern"],
+        "motifs": ["lantern", "light", "darkness"]
+      }
+    },
+    {
+      "id": "open-starry-window",
+      "source_text": "an open window into a starry night",
+      "resonance_artifact": {
+        "lines": ["A window opens into a starry night."]
+      },
+      "nexus_echo": {
+        "line_1": ["Starry window", "Evening window"],
+        "motifs": ["window", "night", "light", "distance"]
+      }
+    },
+    {
+      "id": "stone-in-water",
+      "source_text": "a small, artfully painted wishing stone resting beneath clear water",
+      "resonance_artifact": {
+        "lines": [
+          "A small, artfully painted wishing stone",
+          "rests beneath clear water."
+        ]
+      },
+      "nexus_echo": {
+        "line_1": ["Painted stone", "Clear water"],
+        "motifs": ["stone", "water", "colour", "wish"]
+      }
+    },
+    {
+      "id": "book-bench",
+      "source_text": "an empty bench beneath an old tree, with a book waiting for its next reader",
+      "resonance_artifact": {
+        "lines": [
+          "An empty bench waits beneath an old tree,",
+          "with a book for its next reader."
+        ]
+      },
+      "nexus_echo": {
+        "line_1": ["Empty bench", "Waiting book"],
+        "motifs": ["bench", "book", "reader", "room"]
+      }
+    },
+    {
+      "id": "bridge-in-mist",
+      "source_text": "a narrow bridge connecting two unseen shores in the mist",
+      "resonance_artifact": {
+        "lines": [
+          "A narrow bridge connects",
+          "two unseen shores in the mist."
+        ]
+      },
+      "nexus_echo": {
+        "line_1": ["Narrow bridge", "Mist bridge"],
+        "motifs": ["bridge", "mist", "shore", "crossing"]
+      }
+    }
+  ]
+}
