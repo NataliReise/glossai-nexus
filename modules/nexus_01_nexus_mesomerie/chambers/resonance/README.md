@@ -9,6 +9,7 @@ It owns:
 - compatibility between source and response choices
 - the Chamber flow
 - scripted interaction for deterministic tests
+- a human-facing terminal adapter
 - a thin composer at the Chamber boundary
 
 It does not own:
@@ -46,10 +47,13 @@ image
 -> return word
 ```
 
-This first seed is intentionally deterministic and UI-independent. A terminal adapter may be added later without moving interaction rules into the CLI.
+`TerminalChamberIO` presents only numbered player-facing labels. Internal IDs remain behind the interaction boundary. Invalid numbers and invalid word entries are retried locally without changing the Chamber flow.
+
+This first adapter is intentionally small. It makes the existing grammar playable in a terminal, but it does not yet load a token, preview an artifact, ask for final confirmation, or save a file. Those responsibilities belong to a later thin command-line entry point outside the Chamber package.
 
 ```text
 Each Chamber keeps its grammar.
 The Nexus keeps the route.
 The composer keeps the seam narrow.
+The interface keeps the machinery out of sight.
 ```
