@@ -1,0 +1,109 @@
+{
+  "library_version": "resonance-en-v0.1",
+  "form": {
+    "name": "Nachhall",
+    "word_pattern": [2, 4, 6, 4, 1]
+  },
+  "selection_policy": "known-valid-paths-first",
+  "paths": [
+    {
+      "id": "clear-meeting-01",
+      "requires": {
+        "image_id": "waiting-lantern",
+        "image_response_id": "appearing-path",
+        "scent_id": "summer-rain",
+        "scent_response_id": "possibility-of-encounter",
+        "movement_id": "falling-feather",
+        "movement_response_id": "crossing-feather"
+      },
+      "lines": [
+        "Summer rain",
+        "opens one hidden path",
+        "two feathers cross beneath waiting light",
+        "the path carries {wish_word}",
+        "{return_word}"
+      ],
+      "echo_motif": "path"
+    },
+    {
+      "id": "quiet-interior-01",
+      "requires": {
+        "image_id": "book-bench",
+        "image_response_id": "two-voices-one-page",
+        "scent_id": "books-and-cedar",
+        "scent_response_id": "open-books-beside-one-another",
+        "movement_id": "loosening-knot",
+        "movement_response_id": "gathering-without-tightening"
+      },
+      "lines": [
+        "Open books",
+        "wait beneath soft light",
+        "two voices meet while one knot loosens",
+        "the books leave room",
+        "{return_word}"
+      ],
+      "echo_motif": "books"
+    },
+    {
+      "id": "distance-return-01",
+      "requires": {
+        "image_id": "open-starry-window",
+        "image_response_id": "answering-distant-light",
+        "scent_id": "evening-salt",
+        "scent_response_id": "sense-of-return",
+        "movement_id": "returning-tide",
+        "movement_response_id": "stream-back-to-sea"
+      },
+      "lines": [
+        "Evening window",
+        "frames one distant light",
+        "tide and stream meet beneath {wish_word}",
+        "the light turns homeward",
+        "{return_word}"
+      ],
+      "echo_motif": "light"
+    },
+    {
+      "id": "playful-transformation-01",
+      "requires": {
+        "image_id": "stone-in-water",
+        "image_response_id": "colours-carried-outward",
+        "scent_id": "first-snow",
+        "scent_response_id": "edge-of-beginning",
+        "movement_id": "opening-circle",
+        "movement_response_id": "playful-waves"
+      },
+      "lines": [
+        "Painted stone",
+        "sends one ripple outward",
+        "circle opens where first snow waits",
+        "the ripple turns playful",
+        "{return_word}"
+      ],
+      "echo_motif": "ripple"
+    },
+    {
+      "id": "shared-silence-01",
+      "requires": {
+        "image_id": "bridge-in-mist",
+        "image_response_id": "shared-silence",
+        "scent_id": "warm-bread",
+        "scent_response_id": "second-place-at-table",
+        "movement_id": "crossing-light",
+        "movement_response_id": "shadow-alongside"
+      },
+      "lines": [
+        "Narrow bridge",
+        "holds one quiet crossing",
+        "light and shadow share one silence",
+        "the bridge leaves room",
+        "{return_word}"
+      ],
+      "echo_motif": "bridge"
+    }
+  ],
+  "fallback": {
+    "strategy": "no-improvisation",
+    "message": "No approved Nexus Echo path is available for this composition."
+  }
+}
