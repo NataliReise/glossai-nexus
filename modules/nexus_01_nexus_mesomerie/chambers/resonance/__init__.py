@@ -7,6 +7,7 @@ from .flow import (
     ResonanceChamberFlowError,
     ScriptedChamberIO,
 )
+from .terminal_io import TerminalChamberIO
 
 __all__ = [
     "ChoiceCatalog",
@@ -15,6 +16,7 @@ __all__ = [
     "ResonanceChamberFlow",
     "ResonanceChamberFlowError",
     "ScriptedChamberIO",
+    "TerminalChamberIO",
     "build_v0_1_catalog",
     "compose_resonance_return",
 ]
