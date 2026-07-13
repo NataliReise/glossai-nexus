@@ -1,0 +1,61 @@
+{
+  "library_version": "resonance-en-v0.1",
+  "category": "scents",
+  "entries": [
+    {
+      "id": "summer-rain",
+      "source_text": "the scent of a forest after gentle summer rain",
+      "resonance_artifact": {
+        "lines": ["The scent of a forest", "after gentle summer rain"]
+      },
+      "nexus_echo": {
+        "line_1": ["Summer rain"],
+        "motifs": ["forest", "rain", "path"]
+      }
+    },
+    {
+      "id": "warm-bread",
+      "source_text": "the scent of warm bread in a quiet, welcoming kitchen",
+      "resonance_artifact": {
+        "lines": ["The scent of warm bread", "in a quiet, welcoming kitchen,"]
+      },
+      "nexus_echo": {
+        "line_1": ["Warm bread"],
+        "motifs": ["bread", "kitchen", "table", "room"]
+      }
+    },
+    {
+      "id": "first-snow",
+      "source_text": "the scent of cold air before the first snow along a mountain path",
+      "resonance_artifact": {
+        "lines": ["The scent of cold air before the first snow", "along a mountain path"]
+      },
+      "nexus_echo": {
+        "line_1": ["First snow", "Cold air"],
+        "motifs": ["snow", "air", "mountain", "path", "beginning"]
+      }
+    },
+    {
+      "id": "books-and-cedar",
+      "source_text": "the scent of old books and cedar wood in a softly lit library",
+      "resonance_artifact": {
+        "lines": ["The scent of old books and cedar wood", "in a softly lit library,"]
+      },
+      "nexus_echo": {
+        "line_1": ["Open books", "Old books"],
+        "motifs": ["books", "cedar", "library", "light", "pages"]
+      }
+    },
+    {
+      "id": "evening-salt",
+      "source_text": "the scent of salt air along a quiet beach in the evening sun",
+      "resonance_artifact": {
+        "lines": ["The scent of salt air", "along a quiet beach in the evening sun"]
+      },
+      "nexus_echo": {
+        "line_1": ["Salt air", "Evening shore"],
+        "motifs": ["salt", "beach", "shore", "sun", "return"]
+      }
+    }
+  ]
+}
