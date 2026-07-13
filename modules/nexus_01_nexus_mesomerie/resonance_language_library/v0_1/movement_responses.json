@@ -1,0 +1,51 @@
+{
+  "library_version": "resonance-en-v0.1",
+  "category": "movement_responses",
+  "entries": [
+    {
+      "movement_id": "falling-feather",
+      "responses": [
+        {"id": "current-carrying-farther", "relation": "continue", "source_text": "a current carrying it farther", "resonance_artifact": {"lines": ["A current carries it farther."]}},
+        {"id": "crossing-feather", "relation": "meet", "source_text": "another feather crossing its path", "resonance_artifact": {"lines": ["Another feather crosses its path."]}},
+        {"id": "rising-breath", "relation": "transform", "source_text": "a rising breath lifting it once more", "resonance_artifact": {"lines": ["A rising breath lifts it once more."]}},
+        {"id": "waiting-hand", "relation": "counter", "source_text": "a still hand waiting beneath it", "resonance_artifact": {"lines": ["A still hand waits beneath it."]}}
+      ]
+    },
+    {
+      "movement_id": "opening-circle",
+      "responses": [
+        {"id": "embracing-line", "relation": "meet", "source_text": "a flowing line gently embracing the opening circle", "resonance_artifact": {"lines": ["A flowing line gently embraces the opening circle."]}},
+        {"id": "playful-waves", "relation": "continue", "source_text": "the open edges beginning to curl into two playful waves", "resonance_artifact": {"lines": ["Its edges begin to curl", "into two playful waves."]}},
+        {"id": "growing-spiral", "relation": "transform", "source_text": "the two lines unfolding and dancing into an ever-growing spiral", "resonance_artifact": {"lines": ["Its two lines unfold and dance", "into an ever-growing spiral."]}},
+        {"id": "drawing-inward", "relation": "counter", "source_text": "a curved line gently drawing inward", "resonance_artifact": {"lines": ["A curved line gently draws inward."]}}
+      ]
+    },
+    {
+      "movement_id": "returning-tide",
+      "responses": [
+        {"id": "boat-turning-shoreward", "relation": "meet", "source_text": "a small boat turning toward the shore", "resonance_artifact": {"lines": ["A small boat turns toward the shore."]}},
+        {"id": "lively-wave", "relation": "continue", "source_text": "the returning water gathering into a lively wave", "resonance_artifact": {"lines": ["The returning water gathers", "into a lively wave."]}},
+        {"id": "shifting-shells", "relation": "transform", "source_text": "a line of shells shifting with the water", "resonance_artifact": {"lines": ["A line of shells shifts with the water."]}},
+        {"id": "stream-back-to-sea", "relation": "counter", "source_text": "a narrow stream flowing back toward the sea", "resonance_artifact": {"lines": ["A narrow stream flows back toward the sea."]}}
+      ]
+    },
+    {
+      "movement_id": "loosening-knot",
+      "responses": [
+        {"id": "opening-new-space", "relation": "continue", "source_text": "two loosened lines beginning to open a new space", "resonance_artifact": {"lines": ["Two loosened lines begin", "to open a new space."]}},
+        {"id": "thread-between-strands", "relation": "meet", "source_text": "another thread slipping gently between the loosened strands", "resonance_artifact": {"lines": ["Another thread slips gently", "between the loosened strands."]}},
+        {"id": "forming-new-pattern", "relation": "transform", "source_text": "the loose strands beginning to form a new pattern", "resonance_artifact": {"lines": ["The loose strands begin", "to form a new pattern."]}},
+        {"id": "gathering-without-tightening", "relation": "counter", "source_text": "a hand gathering the threads without tightening them", "resonance_artifact": {"lines": ["A hand gathers the threads", "without tightening them."]}}
+      ]
+    },
+    {
+      "movement_id": "crossing-light",
+      "responses": [
+        {"id": "crossing-beam", "relation": "meet", "source_text": "another beam crossing it", "resonance_artifact": {"lines": ["Another beam crosses it."]}},
+        {"id": "climbing-wall", "relation": "continue", "source_text": "the light climbing slowly up the wall", "resonance_artifact": {"lines": ["The light climbs slowly up the wall."]}},
+        {"id": "shimmering-autumn-leaves", "relation": "transform", "source_text": "scattered autumn leaves beginning to shimmer in its path", "resonance_artifact": {"lines": ["Scattered autumn leaves begin to shimmer", "in its path."]}},
+        {"id": "shadow-alongside", "relation": "counter", "source_text": "a shadow moving alongside it", "resonance_artifact": {"lines": ["A shadow moves alongside it."]}}
+      ]
+    }
+  ]
+}
