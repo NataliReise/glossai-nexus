@@ -50,6 +50,42 @@ Renderer
 resonance-en-v0.1
 ```
 
+## Validation
+
+The validator lives one directory above this versioned data folder:
+
+```text
+resonance_language_library/validate_library.py
+```
+
+Run it from the Nexus 01 module root:
+
+```bash
+python3 resonance_language_library/validate_library.py
+```
+
+Run the validator tests with:
+
+```bash
+python3 resonance_language_library/tests/test_validate_library.py
+```
+
+The validator checks hard structural properties only:
+
+```text
+valid JSON
+consistent library versions
+unique IDs
+existing references
+scene compatibility references
+approved render lines
+exact Nexus Echo word pattern 2 / 4 / 6 / 4 / 1
+line 4 echo-motif reuse
+line 5 return-word slot
+```
+
+It does not evaluate poetic quality and never rewrites the library.
+
 ## Current boundary
 
 The five canonical Echo paths in `echo_paths.json` are reference paths derived from the manual test corpus. They are intentionally explicit. V0.1 should prefer known-valid paths over improvised combinations.
