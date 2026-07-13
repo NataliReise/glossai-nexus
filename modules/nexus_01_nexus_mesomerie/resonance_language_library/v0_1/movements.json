@@ -1,0 +1,36 @@
+{
+  "library_version": "resonance-en-v0.1",
+  "category": "movements",
+  "entries": [
+    {
+      "id": "opening-circle",
+      "source_text": "a circle slowly opening",
+      "resonance_artifact": {"lines": ["A circle slowly opens."]},
+      "nexus_echo": {"motifs": ["circle", "opening", "edges", "spiral", "waves"]}
+    },
+    {
+      "id": "falling-feather",
+      "source_text": "a feather turning as it falls",
+      "resonance_artifact": {"lines": ["A feather turns as it falls."]},
+      "nexus_echo": {"line_1": ["Falling feather"], "motifs": ["feather", "falling", "turning", "current"]}
+    },
+    {
+      "id": "returning-tide",
+      "source_text": "a tide beginning to return",
+      "resonance_artifact": {"lines": ["A tide begins to return."]},
+      "nexus_echo": {"motifs": ["tide", "water", "shore", "return"]}
+    },
+    {
+      "id": "loosening-knot",
+      "source_text": "a knot slowly loosening",
+      "resonance_artifact": {"lines": ["A knot slowly loosens."]},
+      "nexus_echo": {"motifs": ["knot", "threads", "loosening", "pattern", "room"]}
+    },
+    {
+      "id": "crossing-light",
+      "source_text": "a line of light moving across the floor",
+      "resonance_artifact": {"lines": ["A line of light moves across the floor."]},
+      "nexus_echo": {"motifs": ["light", "line", "floor", "crossing", "shadow"]}
+    }
+  ]
+}
