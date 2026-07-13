@@ -15,7 +15,8 @@
         "wish_word": "courage",
         "return_word": "trust"
       },
-      "expected": "A lantern waits in the dark.\n\nAround it,\na path begins to appear.\n\nThe scent of a forest\nafter gentle summer rain\ncarries the possibility of encounter.\n\nA feather turns as it falls.\nAnother feather crosses its path.\n\nCourage was left here.\nTrust answered."
+      "expected": "A lantern waits in the dark.\n\nAround it,\na path begins to appear.\n\nThe scent of a forest\nafter gentle summer rain\ncarries the possibility of encounter.\n\nA feather turns as it falls.\nAnother feather crosses its path.\n\nCourage was left here.\nTrust answered.",
+      "expected_echo": "Summer rain\nopens one hidden path\ntwo feathers cross beneath waiting light\nthe path carries courage\ntrust"
     },
     {
       "id": "quiet-interior-01",
@@ -31,7 +32,8 @@
         "wish_word": "belonging",
         "return_word": "welcome"
       },
-      "expected": "An empty bench waits beneath an old tree,\nwith a book for its next reader.\n\nAround it,\nappears the possibility\nof two voices meeting on the same page.\n\nThe scent of old books and cedar wood\nin a softly lit library,\nwith two books left open beside one another.\n\nA knot slowly loosens.\nA hand gathers the threads\nwithout tightening them.\n\nBelonging was left here.\nWelcome answered."
+      "expected": "An empty bench waits beneath an old tree,\nwith a book for its next reader.\n\nAround it,\nappears the possibility\nof two voices meeting on the same page.\n\nThe scent of old books and cedar wood\nin a softly lit library,\nwith two books left open beside one another.\n\nA knot slowly loosens.\nA hand gathers the threads\nwithout tightening them.\n\nBelonging was left here.\nWelcome answered.",
+      "expected_echo": "Open books\nwait beneath soft light\ntwo voices meet; one knot loosens\nthe books leave room\nwelcome"
     },
     {
       "id": "distance-return-01",
@@ -47,7 +49,8 @@
         "wish_word": "wonder",
         "return_word": "return"
       },
-      "expected": "A window opens into a starry night.\n\nAround it,\na distant light seems to answer.\n\nThe scent of salt air\nalong a quiet beach in the evening sun\ncarries a sense of return.\n\nA tide begins to return.\nA narrow stream flows back toward the sea.\n\nWonder was left here.\nReturn answered."
+      "expected": "A window opens into a starry night.\n\nAround it,\na distant light seems to answer.\n\nThe scent of salt air\nalong a quiet beach in the evening sun\ncarries a sense of return.\n\nA tide begins to return.\nA narrow stream flows back toward the sea.\n\nWonder was left here.\nReturn answered.",
+      "expected_echo": "Evening window\nframes one distant light\ntide and stream meet beneath wonder\nthe light turns homeward\nreturn"
     },
     {
       "id": "playful-transformation-01",
@@ -63,7 +66,8 @@
         "wish_word": "curiosity",
         "return_word": "play"
       },
-      "expected": "A small, artfully painted wishing stone\nrests beneath clear water.\n\nAround it,\na ripple carries its colours outward.\n\nThe scent of cold air before the first snow\nalong a mountain path\nwaits at the edge of something beginning.\n\nA circle slowly opens.\nIts edges begin to curl\ninto two playful waves.\n\nCuriosity was left here.\nPlay answered."
+      "expected": "A small, artfully painted wishing stone\nrests beneath clear water.\n\nAround it,\na ripple carries its colours outward.\n\nThe scent of cold air before the first snow\nalong a mountain path\nwaits at the edge of something beginning.\n\nA circle slowly opens.\nIts edges begin to curl\ninto two playful waves.\n\nCuriosity was left here.\nPlay answered.",
+      "expected_echo": "Painted stone\nsends one ripple outward\ncircle opens where first snow waits\nthe ripple turns playful\nplay"
     },
     {
       "id": "shared-silence-01",
@@ -79,7 +83,8 @@
         "wish_word": "rest",
         "return_word": "presence"
       },
-      "expected": "A narrow bridge connects\ntwo unseen shores in the mist.\n\nAround it,\na silence becomes shared.\n\nThe scent of warm bread\nin a quiet, welcoming kitchen,\nwith a second place quietly waiting at the table.\n\nA line of light moves across the floor.\nA shadow moves alongside it.\n\nRest was left here.\nPresence answered."
+      "expected": "A narrow bridge connects\ntwo unseen shores in the mist.\n\nAround it,\na silence becomes shared.\n\nThe scent of warm bread\nin a quiet, welcoming kitchen,\nwith a second place quietly waiting at the table.\n\nA line of light moves across the floor.\nA shadow moves alongside it.\n\nRest was left here.\nPresence answered.",
+      "expected_echo": "Narrow bridge\nholds one quiet crossing\nlight and shadow share one silence\nthe bridge leaves room\npresence"
     }
   ]
 }
