@@ -68,18 +68,36 @@ def _require_list(value: Any, location: str, issues: list[ValidationIssue]) -> l
     return value
 
 
+def _validate_render_lines(entry: dict[str, Any], location: str, issues: list[ValidationIssue]) -> None:
+    source_text = entry.get("source_text")
+    if not isinstance(source_text, str) or not source_text.strip():
+        issues.append(ValidationIssue(f"{location}.source_text", "must be a non-empty string"))
+
+    artifact = entry.get("resonance_artifact")
+    if artifact is None:
+        return
+    artifact_mapping = _require_mapping(artifact, f"{location}.resonance_artifact", issues)
+    lines = _require_list(artifact_mapping.get("lines"), f"{location}.resonance_artifact.lines", issues)
+    if not lines:
+        issues.append(ValidationIssue(f"{location}.resonance_artifact.lines", "must contain at least one line"))
+    for line_index, line in enumerate(lines):
+        if not isinstance(line, str) or not line.strip():
+            issues.append(ValidationIssue(f"{location}.resonance_artifact.lines[{line_index}]", "must be a non-empty string"))
+
+
 def _collect_entry_ids(document: dict[str, Any], location: str, issues: list[ValidationIssue]) -> set[str]:
     ids: set[str] = set()
     for index, entry_value in enumerate(_require_list(document.get("entries"), f"{location}.entries", issues)):
-        entry = _require_mapping(entry_value, f"{location}.entries[{index}]", issues)
+        entry_location = f"{location}.entries[{index}]"
+        entry = _require_mapping(entry_value, entry_location, issues)
         entry_id = entry.get("id")
         if not isinstance(entry_id, str) or not entry_id:
-            issues.append(ValidationIssue(f"{location}.entries[{index}].id", "must be a non-empty string"))
+            issues.append(ValidationIssue(f"{entry_location}.id", "must be a non-empty string"))
             continue
         if entry_id in ids:
-            issues.append(ValidationIssue(f"{location}.entries[{index}].id", f"duplicate id {entry_id!r}"))
+            issues.append(ValidationIssue(f"{entry_location}.id", f"duplicate id {entry_id!r}"))
         ids.add(entry_id)
-        _validate_render_lines(entry, f"{location}.entries[{index}]", issues)
+        _validate_render_lines(entry, entry_location, issues)
     return ids
 
 
@@ -94,21 +112,22 @@ def _collect_nested_response_ids(
     seen_parent_ids: set[str] = set()
 
     for index, group_value in enumerate(_require_list(document.get("entries"), f"{location}.entries", issues)):
-        group = _require_mapping(group_value, f"{location}.entries[{index}]", issues)
+        group_location = f"{location}.entries[{index}]"
+        group = _require_mapping(group_value, group_location, issues)
         parent_id = group.get(parent_key)
         if not isinstance(parent_id, str) or not parent_id:
-            issues.append(ValidationIssue(f"{location}.entries[{index}].{parent_key}", "must be a non-empty string"))
+            issues.append(ValidationIssue(f"{group_location}.{parent_key}", "must be a non-empty string"))
         else:
             if parent_id not in valid_parent_ids:
-                issues.append(ValidationIssue(f"{location}.entries[{index}].{parent_key}", f"unknown referenced id {parent_id!r}"))
+                issues.append(ValidationIssue(f"{group_location}.{parent_key}", f"unknown referenced id {parent_id!r}"))
             if parent_id in seen_parent_ids:
-                issues.append(ValidationIssue(f"{location}.entries[{index}].{parent_key}", f"duplicate response group for {parent_id!r}"))
+                issues.append(ValidationIssue(f"{group_location}.{parent_key}", f"duplicate response group for {parent_id!r}"))
             seen_parent_ids.add(parent_id)
 
-        responses = _require_list(group.get("responses"), f"{location}.entries[{index}].responses", issues)
+        responses = _require_list(group.get("responses"), f"{group_location}.responses", issues)
         local_ids: set[str] = set()
         for response_index, response_value in enumerate(responses):
-            response_location = f"{location}.entries[{index}].responses[{response_index}]"
+            response_location = f"{group_location}.responses[{response_index}]"
             response = _require_mapping(response_value, response_location, issues)
             response_id = response.get("id")
             if not isinstance(response_id, str) or not response_id:
@@ -125,21 +144,48 @@ def _collect_nested_response_ids(
     return response_ids
 
 
-def _validate_render_lines(entry: dict[str, Any], location: str, issues: list[ValidationIssue]) -> None:
-    source_text = entry.get("source_text")
-    if not isinstance(source_text, str) or not source_text.strip():
-        issues.append(ValidationIssue(f"{location}.source_text", "must be a non-empty string"))
+def _collect_scent_response_ids(
+    document: dict[str, Any],
+    valid_scent_ids: set[str],
+    issues: list[ValidationIssue],
+) -> set[str]:
+    response_ids: set[str] = set()
 
-    artifact = entry.get("resonance_artifact")
-    if artifact is None:
-        return
-    artifact_mapping = _require_mapping(artifact, f"{location}.resonance_artifact", issues)
-    lines = _require_list(artifact_mapping.get("lines"), f"{location}.resonance_artifact.lines", issues)
-    if not lines:
-        issues.append(ValidationIssue(f"{location}.resonance_artifact.lines", "must contain at least one line"))
-    for line_index, line in enumerate(lines):
-        if not isinstance(line, str) or not line.strip():
-            issues.append(ValidationIssue(f"{location}.resonance_artifact.lines[{line_index}]", "must be a non-empty string"))
+    for section_name in ("universal", "scene_compatible"):
+        entries = _require_list(document.get(section_name), f"scent_responses.json.{section_name}", issues)
+        for index, entry_value in enumerate(entries):
+            location = f"scent_responses.json.{section_name}[{index}]"
+            entry = _require_mapping(entry_value, location, issues)
+            response_id = entry.get("id")
+            if not isinstance(response_id, str) or not response_id:
+                issues.append(ValidationIssue(f"{location}.id", "must be a non-empty string"))
+                continue
+            if response_id in response_ids:
+                issues.append(ValidationIssue(f"{location}.id", f"duplicate response id {response_id!r}"))
+            response_ids.add(response_id)
+            _validate_render_lines(entry, location, issues)
+
+            if section_name == "scene_compatible":
+                compatible = _require_list(
+                    entry.get("compatible_scent_ids"),
+                    f"{location}.compatible_scent_ids",
+                    issues,
+                )
+                if not compatible:
+                    issues.append(ValidationIssue(f"{location}.compatible_scent_ids", "must contain at least one scent id"))
+                seen: set[str] = set()
+                for compatible_index, scent_id in enumerate(compatible):
+                    compatible_location = f"{location}.compatible_scent_ids[{compatible_index}]"
+                    if not isinstance(scent_id, str) or not scent_id:
+                        issues.append(ValidationIssue(compatible_location, "must be a non-empty string"))
+                    elif scent_id not in valid_scent_ids:
+                        issues.append(ValidationIssue(compatible_location, f"unknown scent id {scent_id!r}"))
+                    elif scent_id in seen:
+                        issues.append(ValidationIssue(compatible_location, f"duplicate scent id {scent_id!r}"))
+                    else:
+                        seen.add(scent_id)
+
+    return response_ids
 
 
 def _validate_versions(documents: dict[str, dict[str, Any]], issues: list[ValidationIssue]) -> None:
@@ -215,8 +261,11 @@ def _validate_echo_paths(
                     )
                 )
 
-        if isinstance(path.get("echo_motif"), str) and len(lines) >= 4:
-            motif = path["echo_motif"].casefold()
+        motif_value = path.get("echo_motif")
+        if not isinstance(motif_value, str) or not motif_value:
+            issues.append(ValidationIssue(f"{location}.echo_motif", "must be a non-empty string"))
+        elif len(lines) >= 4:
+            motif = motif_value.casefold()
             earlier = f"{lines[0]} {lines[1]}".casefold()
             echoed = lines[3].casefold()
             if motif not in earlier:
@@ -250,8 +299,8 @@ def validate_library(library_dir: Path) -> list[ValidationIssue]:
     image_response_ids = _collect_nested_response_ids(
         documents["image_responses.json"], "image_id", image_ids, "image_responses.json", issues
     )
-    scent_response_ids = _collect_nested_response_ids(
-        documents["scent_responses.json"], "scent_id", scent_ids, "scent_responses.json", issues
+    scent_response_ids = _collect_scent_response_ids(
+        documents["scent_responses.json"], scent_ids, issues
     )
     movement_response_ids = _collect_nested_response_ids(
         documents["movement_responses.json"], "movement_id", movement_ids, "movement_responses.json", issues
