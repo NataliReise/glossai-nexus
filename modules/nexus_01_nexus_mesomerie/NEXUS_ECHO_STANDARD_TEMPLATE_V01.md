@@ -101,7 +101,7 @@ Examples:
 
 ```text
 two feathers cross beneath waiting light
-two voices meet while one knot loosens
+two voices meet; one knot loosens
 tide and stream meet beneath wonder
 circle opens where first snow waits
 light and shadow share one silence
@@ -180,7 +180,7 @@ trust
 ```text
 Open books
 wait beneath soft light
-two voices meet while one knot loosens
+two voices meet; one knot loosens
 the books leave room
 welcome
 ```
