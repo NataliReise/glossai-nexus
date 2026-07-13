@@ -1,0 +1,52 @@
+{
+  "library_version": "resonance-en-v0.1",
+  "category": "scent_responses",
+  "universal": [
+    {
+      "id": "possibility-of-encounter",
+      "source_text": "carrying the possibility of encounter",
+      "resonance_artifact": {"lines": ["carries the possibility of encounter."]}
+    },
+    {
+      "id": "edge-of-beginning",
+      "source_text": "at the edge of something beginning",
+      "resonance_artifact": {"lines": ["waits at the edge of something beginning."]}
+    },
+    {
+      "id": "sense-of-return",
+      "source_text": "carrying a sense of return",
+      "resonance_artifact": {"lines": ["carries a sense of return."]}
+    },
+    {
+      "id": "inviting-stillness",
+      "source_text": "inviting stillness",
+      "resonance_artifact": {"lines": ["invites stillness."]}
+    }
+  ],
+  "scene_compatible": [
+    {
+      "id": "well-loved-path",
+      "source_text": "along a well-loved path",
+      "compatible_scent_ids": ["summer-rain", "first-snow", "evening-salt"],
+      "resonance_artifact": {"lines": ["along a well-loved path."]}
+    },
+    {
+      "id": "side-by-side-footprints",
+      "source_text": "with two trails of footprints running side by side",
+      "compatible_scent_ids": ["summer-rain", "first-snow", "evening-salt"],
+      "resonance_artifact": {"lines": ["with two trails of footprints running side by side."]}
+    },
+    {
+      "id": "second-place-at-table",
+      "source_text": "with a second place quietly waiting at the table",
+      "compatible_scent_ids": ["warm-bread"],
+      "resonance_artifact": {"lines": ["with a second place quietly waiting at the table."]}
+    },
+    {
+      "id": "open-books-beside-one-another",
+      "source_text": "with two books left open beside one another",
+      "compatible_scent_ids": ["books-and-cedar"],
+      "resonance_artifact": {"lines": ["with two books left open beside one another."]}
+    }
+  ]
+}
