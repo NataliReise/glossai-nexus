@@ -14,13 +14,14 @@ from typing import Any
 
 from resonance_language_library.render_resonance_output import (
     RenderedResonanceOutput,
+    ResonanceOutputRenderError,
     render_resonance_output,
 )
 
 from .artifact import ReturnArtifact
 from .matching import MatchResult, match_return_artifact
 from .slots import ReturnSlot
-from .token import MODULE_ID, ResonanceToken
+from .token import LAYER_ID, MODULE_ID, ResonanceToken
 
 ARTIFACT_VERSION = "0.1"
 ARTIFACT_TYPE = "resonance-return"
@@ -111,6 +112,14 @@ def build_resonance_return_artifact(
         raise ResonanceRenderBridgeError(
             "The Resonance Token does not enable the Resonance Chamber."
         )
+    if token.module_id != MODULE_ID:
+        raise ResonanceRenderBridgeError(
+            f"Unsupported module_id {token.module_id!r}; expected {MODULE_ID!r}."
+        )
+    if token.layer_id != LAYER_ID:
+        raise ResonanceRenderBridgeError(
+            f"Unsupported layer_id {token.layer_id!r}; expected {LAYER_ID!r}."
+        )
 
     return ResonanceReturnArtifact(
         artifact_version=ARTIFACT_VERSION,
@@ -156,6 +165,7 @@ def parse_resonance_return_artifact(value: Any) -> ResonanceReturnArtifact:
     _require_exact(cleaned["artifact_version"], ARTIFACT_VERSION, "artifact_version")
     _require_exact(cleaned["artifact_type"], ARTIFACT_TYPE, "artifact_type")
     _require_exact(cleaned["module_id"], MODULE_ID, "module_id")
+    _require_exact(cleaned["layer_id"], LAYER_ID, "layer_id")
     _require_exact(cleaned["language_library"], LANGUAGE_LIBRARY, "language_library")
 
     return ResonanceReturnArtifact(**cleaned)
@@ -188,8 +198,23 @@ def open_resonance_return(
         raise ResonanceRenderBridgeError(
             f"Resonance Return Artifact cannot open: {match.status.value}: {match.message}"
         )
+    if match.slot is None:
+        raise ResonanceRenderBridgeError(
+            "Resonance Return Artifact matched without a local Return Slot."
+        )
+    if artifact.module_id != match.slot.module_id:
+        raise ResonanceRenderBridgeError(
+            "Resonance Return Artifact cannot open: module_mismatch: "
+            "the artifact does not match the module for this slot."
+        )
 
-    output = render_resonance_output(artifact.to_dict(), library_dir)
+    try:
+        output = render_resonance_output(artifact.to_dict(), library_dir)
+    except ResonanceOutputRenderError as error:
+        raise ResonanceRenderBridgeError(
+            f"Resonance Return Artifact matched but could not render: {error}"
+        ) from error
+
     return OpenedResonanceReturn(artifact=artifact, match=match, output=output)
 
 
