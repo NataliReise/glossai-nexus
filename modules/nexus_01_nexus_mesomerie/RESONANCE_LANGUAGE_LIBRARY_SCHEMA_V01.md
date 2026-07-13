@@ -191,7 +191,7 @@ The renderer selects these lines. It does not derive the grammatical change itse
 ```json
 {
   "id": "voices-meet-knot-loosens",
-  "text": "two voices meet while one knot loosens",
+  "text": "two voices meet; one knot loosens",
   "line": 3,
   "word_count": 6,
   "uses_trace_ids": ["two-voices-one-page", "loosening-knot"],
