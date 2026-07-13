@@ -1,0 +1,85 @@
+{
+  "library_version": "resonance-en-v0.1",
+  "cases": [
+    {
+      "id": "clear-meeting-01",
+      "artifact": {
+        "artifact_version": "0.1",
+        "language_library": "resonance-en-v0.1",
+        "image_id": "waiting-lantern",
+        "image_response_id": "appearing-path",
+        "scent_id": "summer-rain",
+        "scent_response_id": "possibility-of-encounter",
+        "movement_id": "falling-feather",
+        "movement_response_id": "crossing-feather",
+        "wish_word": "courage",
+        "return_word": "trust"
+      },
+      "expected": "A lantern waits in the dark.\n\nAround it,\na path begins to appear.\n\nThe scent of a forest\nafter gentle summer rain\ncarries the possibility of encounter.\n\nA feather turns as it falls.\nAnother feather crosses its path.\n\nCourage was left here.\nTrust answered."
+    },
+    {
+      "id": "quiet-interior-01",
+      "artifact": {
+        "artifact_version": "0.1",
+        "language_library": "resonance-en-v0.1",
+        "image_id": "book-bench",
+        "image_response_id": "two-voices-one-page",
+        "scent_id": "books-and-cedar",
+        "scent_response_id": "open-books-beside-one-another",
+        "movement_id": "loosening-knot",
+        "movement_response_id": "gathering-without-tightening",
+        "wish_word": "belonging",
+        "return_word": "welcome"
+      },
+      "expected": "An empty bench waits beneath an old tree,\nwith a book for its next reader.\n\nAround it,\nappears the possibility\nof two voices meeting on the same page.\n\nThe scent of old books and cedar wood\nin a softly lit library,\nwith two books left open beside one another.\n\nA knot slowly loosens.\nA hand gathers the threads\nwithout tightening them.\n\nBelonging was left here.\nWelcome answered."
+    },
+    {
+      "id": "distance-return-01",
+      "artifact": {
+        "artifact_version": "0.1",
+        "language_library": "resonance-en-v0.1",
+        "image_id": "open-starry-window",
+        "image_response_id": "answering-distant-light",
+        "scent_id": "evening-salt",
+        "scent_response_id": "sense-of-return",
+        "movement_id": "returning-tide",
+        "movement_response_id": "stream-back-to-sea",
+        "wish_word": "wonder",
+        "return_word": "return"
+      },
+      "expected": "A window opens into a starry night.\n\nAround it,\na distant light seems to answer.\n\nThe scent of salt air\nalong a quiet beach in the evening sun\ncarries a sense of return.\n\nA tide begins to return.\nA narrow stream flows back toward the sea.\n\nWonder was left here.\nReturn answered."
+    },
+    {
+      "id": "playful-transformation-01",
+      "artifact": {
+        "artifact_version": "0.1",
+        "language_library": "resonance-en-v0.1",
+        "image_id": "stone-in-water",
+        "image_response_id": "colours-carried-outward",
+        "scent_id": "first-snow",
+        "scent_response_id": "edge-of-beginning",
+        "movement_id": "opening-circle",
+        "movement_response_id": "playful-waves",
+        "wish_word": "curiosity",
+        "return_word": "play"
+      },
+      "expected": "A small, artfully painted wishing stone\nrests beneath clear water.\n\nAround it,\na ripple carries its colours outward.\n\nThe scent of cold air before the first snow\nalong a mountain path\nwaits at the edge of something beginning.\n\nA circle slowly opens.\nIts edges begin to curl\ninto two playful waves.\n\nCuriosity was left here.\nPlay answered."
+    },
+    {
+      "id": "shared-silence-01",
+      "artifact": {
+        "artifact_version": "0.1",
+        "language_library": "resonance-en-v0.1",
+        "image_id": "bridge-in-mist",
+        "image_response_id": "shared-silence",
+        "scent_id": "warm-bread",
+        "scent_response_id": "second-place-at-table",
+        "movement_id": "crossing-light",
+        "movement_response_id": "shadow-alongside",
+        "wish_word": "rest",
+        "return_word": "presence"
+      },
+      "expected": "A narrow bridge connects\ntwo unseen shores in the mist.\n\nAround it,\na silence becomes shared.\n\nThe scent of warm bread\nin a quiet, welcoming kitchen,\nwith a second place quietly waiting at the table.\n\nA line of light moves across the floor.\nA shadow moves alongside it.\n\nRest was left here.\nPresence answered."
+    }
+  ]
+}
