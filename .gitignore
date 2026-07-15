@@ -18,8 +18,14 @@ modules/**/activation.local.*.json
 # Local return resonance files
 return_resonance_*.local.md
 return_result.local.md
+resonance_token.local.json
+resonance_return.local.json
+return_slots.local.json
 modules/**/return_resonance_*.local.md
 modules/**/return_result.local.md
+modules/**/resonance_token.local.json
+modules/**/resonance_return.local.json
+modules/**/return_slots.local.json
 
 # Local editor and OS files
 .vscode/
