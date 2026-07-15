@@ -40,6 +40,12 @@ from .state import (
     FIRST_SPARK_CHAMBER,
     RESONANCE_CHAMBER,
 )
+from .terminal import (
+    help_text,
+    load_nexus_activation,
+    render_atrium,
+    run_nexus_terminal,
+)
 
 __all__ = [
     "ActivationBridgeError",
@@ -63,8 +69,12 @@ __all__ = [
     "RETURN_RESONANCE_PROFILE_ID",
     "atrium_state_from_activation",
     "atrium_state_from_profile",
+    "help_text",
     "load_first_spark_terminal_runner",
+    "load_nexus_activation",
     "profile_from_activation",
     "profile_from_id",
+    "render_atrium",
     "run_first_spark_chamber",
+    "run_nexus_terminal",
 ]
