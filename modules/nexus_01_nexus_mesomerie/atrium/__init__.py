@@ -1,4 +1,4 @@
-"""Shared Nexus 01 Atrium state and activation profile models.
+"""Shared Nexus 01 Atrium state, activation, and runtime models.
 
 The Atrium is one player-facing place with several states.  The current
 First Spark ``arrival`` and ``ending`` modules may remain separate
@@ -21,6 +21,12 @@ from .profiles import (
     atrium_state_from_profile,
     profile_from_id,
 )
+from .runtime import (
+    AtriumRuntimeError,
+    ChamberRunResult,
+    ChamberRunner,
+    NexusAtriumRuntime,
+)
 from .state import (
     AtriumPhase,
     AtriumState,
@@ -35,11 +41,15 @@ __all__ = [
     "ActivationProfileError",
     "ActivationProfileSource",
     "AtriumPhase",
+    "AtriumRuntimeError",
     "AtriumState",
     "AtriumStateError",
+    "ChamberRunResult",
+    "ChamberRunner",
     "FIRST_SPARK_CHAMBER",
     "FIRST_SPARK_PROFILE",
     "FIRST_SPARK_PROFILE_ID",
+    "NexusAtriumRuntime",
     "RESONANCE_CHAMBER",
     "RETURN_RESONANCE_PROFILE",
     "RETURN_RESONANCE_PROFILE_ID",
