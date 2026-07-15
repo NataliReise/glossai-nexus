@@ -95,6 +95,16 @@ def test_help_and_unknown_command_are_handled_locally() -> None:
     assert "Unknown command" in rendered
 
 
+def test_atrium_points_to_help_without_listing_commands() -> None:
+    from atrium import NexusAtriumRuntime
+
+    runtime = NexusAtriumRuntime.from_activation(ActivationStub("first-spark"))
+    rendered = render_atrium(runtime)
+
+    assert "Type 'help' for available commands." in rendered
+    assert "Commands:" not in rendered
+
+
 def test_rendered_return_state_keeps_unfinished_resonance_visible() -> None:
     from atrium import NexusAtriumRuntime
 
@@ -114,5 +124,6 @@ if __name__ == "__main__":
     test_interrupted_first_spark_does_not_change_atrium()
     test_return_resonance_profile_shows_both_paths()
     test_help_and_unknown_command_are_handled_locally()
+    test_atrium_points_to_help_without_listing_commands()
     test_rendered_return_state_keeps_unfinished_resonance_visible()
     print("Nexus Atrium terminal launcher tests passed.")
