@@ -21,9 +21,46 @@ from same_word_policy import (
 )
 
 DEFAULT_PROXIES = (
-    WishRoleProxy("first-trace", "the first trace", 3),
-    WishRoleProxy("opening-trace", "the opening trace", 2),
+    WishRoleProxy("first-trace", "the first trace", 4),
+    WishRoleProxy("opening-trace", "the opening trace", 1),
 )
+
+SUPPORTED_RELATION_ECHOES = {
+    "relation.interval.01": (
+        "two returns hold one interval open",
+        "echo.trace.interval.l3",
+    ),
+    "relation.direction.02": (
+        "their separate currents share one direction",
+        "same-word.relation-direction.l3",
+    ),
+    "relation.shore.03": (
+        "one shore becomes visible between them",
+        "same-word.relation-shore.l3",
+    ),
+}
+
+SUPPORTED_REMAINDER_ECHOES = {
+    "remainder.passage.01": (
+        "the passage stays open",
+        "echo.trace.passage-open.l4",
+    ),
+    "remainder.water.02": (
+        "waits in the water",
+        "same-word.remainder-water.l4",
+    ),
+    "remainder.direction.03": (
+        "the shared direction visible",
+        "same-word.remainder-direction.l4",
+    ),
+}
+
+PROXY_MOVEMENT_BY_WISH_BLOCK = {
+    "wish.frame.01": "crosses",
+    "wish.distance.02": "waits",
+    "wish.rain-room.03": "enters",
+    "wish.light.04": "follows",
+}
 
 
 @dataclass(frozen=True)
@@ -34,6 +71,9 @@ class PolicyCompositionPlan:
     original_return_word: str
     wish_role_proxy_id: str | None
     wish_role_proxy_text: str | None
+    same_word_relation_id: str | None
+    same_word_remainder_id: str | None
+    same_word_echo_movement: str | None
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -70,6 +110,9 @@ def compose(
                 original_return_word=base.poetic_display_word(raw_return),
                 wish_role_proxy_id=None,
                 wish_role_proxy_text=None,
+                same_word_relation_id=None,
+                same_word_remainder_id=None,
+                same_word_echo_movement=None,
             ),
             long_form=result.long_form,
             nexus_echo=result.nexus_echo,
@@ -91,12 +134,14 @@ def compose(
 
     aggregate = base._aggregate(selected)
     _validate_same_word_plan(library, selected, long_form, proxy, shared, aggregate)
-    echo_lines, echo_ids = _same_word_echo(
+    echo_lines, echo_ids, echo_movement = _same_word_echo(
         library, selected, proxy, shared, aggregate, active_rng
     )
+    relation_id = _selected_id_for_role(selected, "relation")
+    remainder_id = _selected_id_for_role(selected, "remainder")
 
     base_plan = {
-        "plan_version": "resonance-composition-plan-prototype-v0.2.1",
+        "plan_version": "resonance-composition-plan-prototype-v0.2.2",
         "library_version": library["library_version"],
         "world_id": library["world_id"],
         "completion_mode": library["completion_mode"],
@@ -108,7 +153,7 @@ def compose(
         "leaves_states": sorted(aggregate["states"]),
         "motifs_visible": sorted(aggregate["motifs"]),
         "echo_line_ids": list(echo_ids),
-        "echo_source_trace": proxy.text,
+        "echo_source_trace": SUPPORTED_RELATION_ECHOES[relation_id][0],
         "echo_wish_line": 2,
     }
     return PolicyComposition(
@@ -119,6 +164,9 @@ def compose(
             original_return_word=shared,
             wish_role_proxy_id=proxy.proxy_id,
             wish_role_proxy_text=proxy.text,
+            same_word_relation_id=relation_id,
+            same_word_remainder_id=remainder_id,
+            same_word_echo_movement=echo_movement,
         ),
         long_form=long_form,
         nexus_echo="\n".join(echo_lines),
@@ -133,6 +181,15 @@ def _proxy_for_template(template: str, proxy: WishRoleProxy) -> str:
     return proxy.text
 
 
+def _selected_id_for_role(
+    selected: Sequence[base._SelectedBlock], role: str
+) -> str:
+    for item in selected:
+        if item.role == role:
+            return item.data["id"]
+    raise base.PrototypeCompositionError(f"Missing selected role: {role}")
+
+
 def _select_same_word_blocks(
     library: dict[str, Any],
     route: dict[str, Any],
@@ -142,10 +199,6 @@ def _select_same_word_blocks(
 ) -> tuple[base._SelectedBlock, ...]:
     active_tags = set(library["active_tags"])
     completion_mode = library["completion_mode"]
-    forced_ids = {
-        "relation": "relation.interval.01",
-        "remainder": "remainder.passage.01",
-    }
     selected: list[base._SelectedBlock] = []
     used_ids: set[str] = set()
 
@@ -157,7 +210,18 @@ def _select_same_word_blocks(
             and block["id"] not in used_ids
             and set(block.get("requires_all_tags", [])).issubset(active_tags)
             and completion_mode in block.get("completion_modes", [])
-            and (role not in forced_ids or block["id"] == forced_ids[role])
+            and (
+                role != "relation"
+                or block["id"] in SUPPORTED_RELATION_ECHOES
+            )
+            and (
+                role != "remainder"
+                or block["id"] in SUPPORTED_REMAINDER_ECHOES
+            )
+            and (
+                role != "wish_entry"
+                or block["id"] in PROXY_MOVEMENT_BY_WISH_BLOCK
+            )
         ]
         if not candidates:
             raise base.PrototypeCompositionError(
@@ -208,7 +272,7 @@ def _same_word_echo(
     shared: str,
     aggregate: dict[str, set[str]],
     rng: random.Random,
-) -> tuple[tuple[str, ...], tuple[str, ...]]:
+) -> tuple[tuple[str, ...], tuple[str, ...], str]:
     selected_ids = {item.data["id"] for item in selected}
     openings = [
         item
@@ -219,12 +283,20 @@ def _same_word_echo(
         raise base.PrototypeCompositionError(
             "Same-word Echo has no linked opening"
         )
+
+    wish_id = _selected_id_for_role(selected, "wish_entry")
+    relation_id = _selected_id_for_role(selected, "relation")
+    remainder_id = _selected_id_for_role(selected, "remainder")
+    movement = PROXY_MOVEMENT_BY_WISH_BLOCK[wish_id]
+    relation_line, relation_echo_id = SUPPORTED_RELATION_ECHOES[relation_id]
+    remainder_line, remainder_echo_id = SUPPORTED_REMAINDER_ECHOES[remainder_id]
     opening = base._weighted_choice(openings, rng)
+
     lines = (
         opening["text"],
-        f"{proxy.text} crosses",
-        "two returns hold one interval open",
-        "the passage stays open",
+        f"{proxy.text} {movement}",
+        relation_line,
+        remainder_line,
         shared,
     )
     counts = tuple(base._word_count(line) for line in lines)
@@ -242,8 +314,8 @@ def _same_word_echo(
         raise base.PrototypeCompositionError(str(error)) from error
     return lines, (
         opening["id"],
-        f"same-word.{proxy.proxy_id}.l2",
-        "echo.trace.interval.l3",
-        "echo.trace.passage-open.l4",
+        f"same-word.{proxy.proxy_id}.{movement}.l2",
+        relation_echo_id,
+        remainder_echo_id,
         "echo.return-word.l5",
-    )
+    ), movement
