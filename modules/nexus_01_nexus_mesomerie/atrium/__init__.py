@@ -27,6 +27,11 @@ from .profiles import (
     atrium_state_from_profile,
     profile_from_id,
 )
+from .resonance_adapter import (
+    ResonanceAtriumRunner,
+    ResonanceChamberRun,
+    run_resonance_chamber,
+)
 from .runtime import (
     AtriumRuntimeError,
     ChamberRunResult,
@@ -67,6 +72,8 @@ __all__ = [
     "RESONANCE_CHAMBER",
     "RETURN_RESONANCE_PROFILE",
     "RETURN_RESONANCE_PROFILE_ID",
+    "ResonanceAtriumRunner",
+    "ResonanceChamberRun",
     "atrium_state_from_activation",
     "atrium_state_from_profile",
     "help_text",
@@ -77,4 +84,5 @@ __all__ = [
     "render_atrium",
     "run_first_spark_chamber",
     "run_nexus_terminal",
+    "run_resonance_chamber",
 ]
