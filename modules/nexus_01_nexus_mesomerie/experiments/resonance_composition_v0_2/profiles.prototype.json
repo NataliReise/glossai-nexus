@@ -1,0 +1,167 @@
+{
+  "profile_version": "resonance-profile-prototype-v0.2",
+  "status": "experimental",
+  "purpose": "Three small poetic worlds for testing profile-driven local composition without reusing V0.1 visible formulations.",
+  "images": {
+    "waiting-lantern": {
+      "lineage_ids": ["waiting-lantern"],
+      "motifs": ["lantern", "light", "darkness", "waiting"],
+      "spatial_affordances": ["small-radius", "near-and-far", "edge-of-visibility", "path-beginning"],
+      "operator_affinities": ["waiting", "appearing", "guiding", "holding-light", "approaching"],
+      "tones": ["quiet", "watchful", "warm", "restrained"],
+      "avoid": ["commanding", "triumphant-arrival", "total-illumination"]
+    },
+    "open-starry-window": {
+      "lineage_ids": ["open-starry-window"],
+      "motifs": ["window", "night", "light", "stars", "distance"],
+      "spatial_affordances": ["threshold", "inside-and-outside", "framing", "open-distance", "looking-outward"],
+      "operator_affinities": ["opening", "framing", "answering", "crossing", "naming", "drawing-near"],
+      "tones": ["clear", "distant", "quiet", "expectant"],
+      "avoid": ["closure", "confinement", "certainty-about-the-beyond"]
+    },
+    "book-bench": {
+      "lineage_ids": ["book-bench"],
+      "motifs": ["book", "page", "bench", "tree", "reader", "room"],
+      "spatial_affordances": ["beside", "shared-place", "waiting-place", "open-page", "room-for-another"],
+      "operator_affinities": ["reading", "inscribing", "continuing", "placing-beside", "leaving-room", "answering"],
+      "tones": ["quiet", "patient", "welcoming", "reflective"],
+      "avoid": ["final-reading", "ownership", "sealed-story"]
+    }
+  },
+  "image_responses": {
+    "appearing-path": {
+      "lineage_ids": ["appearing-path"],
+      "motifs": ["path", "trace", "first-step"],
+      "relational_affordances": ["approach", "invitation", "possibility", "emergence"],
+      "operator_affinities": ["appearing", "opening", "leading", "making-room"],
+      "avoid": ["fixed-destination", "forced-direction"]
+    },
+    "answering-distant-light": {
+      "lineage_ids": ["answering-distant-light"],
+      "motifs": ["distant-light", "signal", "answer", "horizon"],
+      "relational_affordances": ["response-across-distance", "recognition", "orientation", "reciprocity"],
+      "operator_affinities": ["answering", "glimmering", "calling-back", "remaining-visible"],
+      "avoid": ["decoded-message", "complete-explanation"]
+    },
+    "two-voices-one-page": {
+      "lineage_ids": ["two-voices-one-page"],
+      "motifs": ["page", "two-voices", "margin", "shared-text"],
+      "relational_affordances": ["meeting", "alternation", "co-presence", "continuation"],
+      "operator_affinities": ["meeting", "writing-beside", "answering", "leaving-space"],
+      "avoid": ["one-voice-erasing-the-other", "single-authority"]
+    }
+  },
+  "scents": {
+    "summer-rain": {
+      "lineage_ids": ["summer-rain"],
+      "motifs": ["rain", "forest", "water", "path", "leaf"],
+      "atmospheric_qualities": ["softening", "awakening", "nearness", "freshness", "afterward"],
+      "temporal_qualities": ["recent-passage", "renewal", "moment-after-change"],
+      "operator_affinities": ["carrying", "touching", "passing-through", "leaving-trace", "opening-scent"],
+      "avoid": ["storm", "destruction", "cleansing-as-erasure"]
+    },
+    "books-and-cedar": {
+      "lineage_ids": ["books-and-cedar"],
+      "motifs": ["books", "cedar", "library", "pages", "soft-light"],
+      "atmospheric_qualities": ["memory", "quiet-duration", "warm-dryness", "attention", "shelter"],
+      "temporal_qualities": ["stored-time", "rediscovery", "patient-return"],
+      "operator_affinities": ["keeping", "remembering", "opening", "resting-beside", "finding-again"],
+      "avoid": ["dust-as-neglect", "sealed-past", "nostalgia-as-solution"]
+    }
+  },
+  "scent_responses": {
+    "possibility-of-encounter": {
+      "lineage_ids": ["possibility-of-encounter"],
+      "relational_affordances": ["approach", "not-yet-meeting", "shared-direction", "openness"],
+      "operator_affinities": ["carrying-toward", "making-possible", "drawing-near", "leaving-open"],
+      "avoid": ["guaranteed-meeting", "predestination"]
+    },
+    "open-books-beside-one-another": {
+      "lineage_ids": ["open-books-beside-one-another"],
+      "relational_affordances": ["parallel-presence", "mutual-openness", "shared-attention", "room-between"],
+      "operator_affinities": ["resting-beside", "opening-together", "answering-across-pages", "keeping-room"],
+      "avoid": ["merging-into-one-book", "closing", "comparison-as-ranking"]
+    }
+  },
+  "movements": {
+    "falling-feather": {
+      "lineage_ids": ["falling-feather"],
+      "motifs": ["feather", "air", "turning", "falling", "current"],
+      "movement_qualities": ["lightness", "drift", "rotation", "unfixed-course", "descent"],
+      "operator_affinities": ["turning", "crossing", "drifting", "being-carried", "meeting-in-motion"],
+      "avoid": ["impact", "capture", "straight-line-certainty"]
+    },
+    "returning-tide": {
+      "lineage_ids": ["returning-tide"],
+      "motifs": ["tide", "water", "shore", "current", "return"],
+      "movement_qualities": ["cyclical-return", "gathering", "approach", "reversal", "homeward-motion"],
+      "operator_affinities": ["returning", "carrying-back", "meeting", "drawing-in", "echoing"],
+      "avoid": ["replacement", "erasure-of-origin", "final-arrival"]
+    },
+    "loosening-knot": {
+      "lineage_ids": ["loosening-knot"],
+      "motifs": ["knot", "thread", "strand", "pattern", "space"],
+      "movement_qualities": ["release", "opening", "slackening", "rearrangement", "continued-contact"],
+      "operator_affinities": ["loosening", "making-room", "gathering-gently", "reforming", "passing-between"],
+      "avoid": ["cutting", "tearing", "tightening", "forced-resolution"]
+    }
+  },
+  "movement_responses": {
+    "crossing-feather": {
+      "lineage_ids": ["crossing-feather"],
+      "relation": "meet",
+      "completion_mode": "crossing-encounter",
+      "relational_affordances": ["intersection", "brief-meeting", "mutual-deflection", "shared-air"],
+      "favoured_operators": ["crossing", "meeting", "turning-beside", "recognising-in-motion"],
+      "avoid": ["absorption", "replacement", "solution"]
+    },
+    "stream-back-to-sea": {
+      "lineage_ids": ["stream-back-to-sea"],
+      "relation": "counter",
+      "completion_mode": "converging-return",
+      "relational_affordances": ["two-directions-returning", "convergence", "recognition-through-motion", "shared-destination-without-erasure"],
+      "favoured_operators": ["returning", "converging", "carrying-homeward", "answering-as-current"],
+      "avoid": ["one-word-becoming-the-other", "single-source-claim", "final-solution"]
+    },
+    "gathering-without-tightening": {
+      "lineage_ids": ["gathering-without-tightening"],
+      "relation": "counter",
+      "completion_mode": "released-connection",
+      "relational_affordances": ["connection-without-restraint", "holding-with-room", "gentle-gathering", "continued-separateness"],
+      "favoured_operators": ["gathering", "resting-beside", "holding-open", "leaving-space", "repatterning"],
+      "avoid": ["tightening", "binding", "fusion", "repair-as-return-to-old-form"]
+    }
+  },
+  "prototype_cases": [
+    {
+      "id": "canonical-origin-world",
+      "image_id": "waiting-lantern",
+      "image_response_id": "appearing-path",
+      "scent_id": "summer-rain",
+      "scent_response_id": "possibility-of-encounter",
+      "movement_id": "falling-feather",
+      "movement_response_id": "crossing-feather",
+      "completion_mode": "crossing-encounter"
+    },
+    {
+      "id": "mixed-threshold-return-world",
+      "image_id": "open-starry-window",
+      "image_response_id": "answering-distant-light",
+      "scent_id": "summer-rain",
+      "scent_response_id": "possibility-of-encounter",
+      "movement_id": "returning-tide",
+      "movement_response_id": "stream-back-to-sea",
+      "completion_mode": "converging-return"
+    },
+    {
+      "id": "interior-release-world",
+      "image_id": "book-bench",
+      "image_response_id": "two-voices-one-page",
+      "scent_id": "books-and-cedar",
+      "scent_response_id": "open-books-beside-one-another",
+      "movement_id": "loosening-knot",
+      "movement_response_id": "gathering-without-tightening",
+      "completion_mode": "released-connection"
+    }
+  ]
+}
