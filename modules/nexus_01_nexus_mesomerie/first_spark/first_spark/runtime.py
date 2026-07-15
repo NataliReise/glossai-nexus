@@ -59,8 +59,13 @@ def read_command() -> str | None:
         return None
 
 
-def run_terminal() -> None:
-    """Run the modular First Spark terminal."""
+def run_terminal() -> GameState:
+    """Run the modular First Spark terminal and return its final local state.
+
+    Returning the state does not change the standalone terminal experience.  It
+    only allows an outer Nexus runtime to observe whether First Spark reached
+    its own completion condition.
+    """
     state = GameState()
     print()
     print(arrival.boot_text())
@@ -75,3 +80,5 @@ def run_terminal() -> None:
 
         response = dispatch_command(command, state)
         print_response(response)
+
+    return state
