@@ -1,4 +1,4 @@
-"""Tests for the first player-facing Nexus 01 terminal launcher."""
+"""Tests for the player-facing Nexus 01 terminal launcher."""
 
 from __future__ import annotations
 
@@ -16,7 +16,7 @@ from atrium import (
     FIRST_SPARK_CHAMBER,
     RESONANCE_CHAMBER,
 )
-from atrium.terminal import render_atrium, run_nexus_terminal
+from atrium.terminal import help_text, render_atrium, run_nexus_terminal
 
 
 @dataclass(frozen=True)
@@ -66,7 +66,7 @@ def test_interrupted_first_spark_does_not_change_atrium() -> None:
     assert not runtime.state.is_completed(FIRST_SPARK_CHAMBER)
 
 
-def test_return_resonance_profile_shows_both_paths() -> None:
+def test_return_resonance_profile_shows_both_connected_paths() -> None:
     output: list[str] = []
 
     runtime = run_nexus_terminal(
@@ -78,21 +78,66 @@ def test_return_resonance_profile_shows_both_paths() -> None:
 
     assert runtime.state.visible_paths == (FIRST_SPARK_CHAMBER, RESONANCE_CHAMBER)
     rendered = "\n".join(output)
-    assert "resonance: open, terminal passage not connected yet" in rendered
+    assert "resonance: open" in rendered
+    assert "terminal passage not connected" not in rendered
 
 
-def test_help_and_unknown_command_are_handled_locally() -> None:
+def test_resonance_command_completes_and_returns_to_atrium() -> None:
+    calls: list[str] = []
+
+    def run_resonance() -> ChamberRunResult:
+        calls.append(RESONANCE_CHAMBER)
+        return ChamberRunResult(completed=True)
+
+    runtime = run_nexus_terminal(
+        activation_loader=lambda: ActivationStub("return-resonance"),
+        resonance_runner=run_resonance,
+        input_reader=scripted_input(["resonance", "quit"]),
+        output_writer=lambda _: None,
+    )
+
+    assert calls == [RESONANCE_CHAMBER]
+    assert runtime.state.phase is AtriumPhase.RETURN
+    assert runtime.state.is_completed(RESONANCE_CHAMBER)
+
+
+def test_unavailable_resonance_does_not_call_runner() -> None:
+    calls: list[str] = []
+
+    def run_resonance() -> ChamberRunResult:
+        calls.append(RESONANCE_CHAMBER)
+        return ChamberRunResult(completed=True)
+
     output: list[str] = []
-
-    run_nexus_terminal(
+    runtime = run_nexus_terminal(
         activation_loader=lambda: ActivationStub("first-spark"),
-        input_reader=scripted_input(["help", "something", "quit"]),
+        resonance_runner=run_resonance,
+        input_reader=scripted_input(["resonance", "quit"]),
         output_writer=output.append,
     )
 
-    rendered = "\n".join(output)
-    assert "enter the First Spark Chamber" in rendered
-    assert "Unknown command" in rendered
+    assert calls == []
+    assert not runtime.state.is_completed(RESONANCE_CHAMBER)
+    assert "not opened by this activation" in "\n".join(output)
+
+
+def test_help_is_state_dependent_and_unknown_command_is_local() -> None:
+    from atrium import NexusAtriumRuntime
+
+    first_spark_runtime = NexusAtriumRuntime.from_activation(ActivationStub("first-spark"))
+    resonance_runtime = NexusAtriumRuntime.from_activation(ActivationStub("return-resonance"))
+
+    assert "enter the First Spark Chamber" in help_text(first_spark_runtime)
+    assert "enter the Resonance Chamber" not in help_text(first_spark_runtime)
+    assert "enter the Resonance Chamber" in help_text(resonance_runtime)
+
+    output: list[str] = []
+    run_nexus_terminal(
+        activation_loader=lambda: ActivationStub("first-spark"),
+        input_reader=scripted_input(["something", "quit"]),
+        output_writer=output.append,
+    )
+    assert "Unknown command" in "\n".join(output)
 
 
 def test_atrium_points_to_help_without_listing_commands() -> None:
@@ -116,14 +161,16 @@ def test_rendered_return_state_keeps_unfinished_resonance_visible() -> None:
 
     rendered = render_atrium(runtime)
     assert "first-spark: completed" in rendered
-    assert "resonance: open, terminal passage not connected yet" in rendered
+    assert "resonance: open" in rendered
 
 
 if __name__ == "__main__":
     test_first_spark_path_completes_and_returns_to_atrium()
     test_interrupted_first_spark_does_not_change_atrium()
-    test_return_resonance_profile_shows_both_paths()
-    test_help_and_unknown_command_are_handled_locally()
+    test_return_resonance_profile_shows_both_connected_paths()
+    test_resonance_command_completes_and_returns_to_atrium()
+    test_unavailable_resonance_does_not_call_runner()
+    test_help_is_state_dependent_and_unknown_command_is_local()
     test_atrium_points_to_help_without_listing_commands()
     test_rendered_return_state_keeps_unfinished_resonance_visible()
     print("Nexus Atrium terminal launcher tests passed.")
