@@ -1,4 +1,5 @@
 {
+  "profile_id": "first-spark",
   "recipient_alias": "recipient_name",
   "activation_purpose": "gift",
   "private_message": "This is a public demo placeholder. Real private messages belong to activation.local.json."
