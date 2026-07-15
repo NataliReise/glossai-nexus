@@ -5,6 +5,12 @@ First Spark ``arrival`` and ``ending`` modules may remain separate
 implementations while both are interpreted through these small models.
 """
 
+from .activation_bridge import (
+    ActivationBridgeError,
+    ActivationProfileSource,
+    atrium_state_from_activation,
+    profile_from_activation,
+)
 from .profiles import (
     ActivationProfile,
     ActivationProfileError,
@@ -24,8 +30,10 @@ from .state import (
 )
 
 __all__ = [
+    "ActivationBridgeError",
     "ActivationProfile",
     "ActivationProfileError",
+    "ActivationProfileSource",
     "AtriumPhase",
     "AtriumState",
     "AtriumStateError",
@@ -35,6 +43,8 @@ __all__ = [
     "RESONANCE_CHAMBER",
     "RETURN_RESONANCE_PROFILE",
     "RETURN_RESONANCE_PROFILE_ID",
+    "atrium_state_from_activation",
     "atrium_state_from_profile",
+    "profile_from_activation",
     "profile_from_id",
 ]
