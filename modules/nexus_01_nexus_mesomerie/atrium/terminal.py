@@ -68,7 +68,7 @@ def render_atrium(runtime: NexusAtriumRuntime) -> str:
         lines.append(f"- {chamber_id}: {marker}")
 
     lines.append("")
-    lines.append("Commands: look, help, first-spark, quit")
+    lines.append("Type 'help' for available commands.")
     return "\n".join(lines)
 
 
