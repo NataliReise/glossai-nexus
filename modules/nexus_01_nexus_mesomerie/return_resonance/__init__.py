@@ -9,6 +9,11 @@ from .artifact_store import (
     ResonanceArtifactStoreError,
     write_resonance_return_artifact,
 )
+from .local_opening import (
+    LocalResonanceOpening,
+    LocalResonanceOpeningError,
+    open_local_resonance_return,
+)
 from .slots import ReturnSlot, ReturnSlotState, load_return_slots
 from .matching import MatchResult, MatchStatus, match_return_artifact
 from .result import ReturnResult, ReturnResultError, compose_return_result, open_return_result
@@ -25,6 +30,8 @@ from .writer import (
 )
 
 __all__ = [
+    "LocalResonanceOpening",
+    "LocalResonanceOpeningError",
     "MatchResult",
     "MatchStatus",
     "ResonanceArtifactStoreError",
@@ -43,6 +50,7 @@ __all__ = [
     "load_resonance_token",
     "load_return_slots",
     "match_return_artifact",
+    "open_local_resonance_return",
     "open_return_result",
     "parse_resonance_token",
     "parse_return_artifact",
