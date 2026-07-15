@@ -11,6 +11,8 @@ MODULE_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(MODULE_ROOT))
 
 from atrium.resonance_terminal import ResonanceTerminalController
+from return_resonance.artifact_store import ResonanceArtifactStoreError
+from return_resonance.resonance_render_bridge import ResonanceReturnArtifact
 from return_resonance.token import (
     LAYER_ID,
     MODULE_ID,
@@ -47,20 +49,23 @@ def token() -> ResonanceToken:
     )
 
 
-def test_complete_terminal_visit_retains_composition_in_memory() -> None:
-    terminal = FakeTerminal(
-        [
-            "token.json",
-            "1",
-            "1",
-            "1",
-            "1",
-            "1",
-            "1",
-            "courage",
-            "trust",
-        ]
-    )
+def complete_answers(*tail: str) -> list[str]:
+    return [
+        "token.json",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "courage",
+        "trust",
+        *tail,
+    ]
+
+
+def test_complete_terminal_visit_can_remain_in_memory() -> None:
+    terminal = FakeTerminal(complete_answers("no"))
     loaded_paths: list[Path] = []
 
     def load(path: str | Path) -> ResonanceToken:
@@ -78,7 +83,90 @@ def test_complete_terminal_visit_retains_composition_in_memory() -> None:
     assert loaded_paths == [Path("token.json")]
     assert controller.last_run is not None
     assert controller.last_run.composition.artifact.return_word == "trust"
-    assert "remains local in memory" in "\n".join(terminal.output)
+    assert controller.last_saved_path is None
+    rendered = "\n".join(terminal.output)
+    assert "remains local in memory" in rendered
+    assert "was not saved" in rendered
+
+
+def test_confirmed_save_uses_explicit_destination() -> None:
+    terminal = FakeTerminal(complete_answers("yes", "~/return-artifact.json"))
+    writes: list[tuple[ResonanceReturnArtifact, Path]] = []
+
+    def write(artifact: ResonanceReturnArtifact, path: str | Path) -> Path:
+        resolved = Path(path)
+        writes.append((artifact, resolved))
+        return resolved
+
+    controller = ResonanceTerminalController(
+        input_reader=terminal.input,
+        output_writer=terminal.write,
+        token_loader=lambda _: token(),
+        artifact_writer=write,
+    )
+    result = controller()
+
+    assert result.completed
+    assert controller.last_run is not None
+    assert len(writes) == 1
+    written_artifact, written_path = writes[0]
+    assert written_artifact is controller.last_run.composition.artifact
+    assert written_path == Path("~/return-artifact.json").expanduser()
+    assert controller.last_saved_path == written_path
+    assert "saved locally" in "\n".join(terminal.output)
+
+
+def test_blank_save_destination_keeps_completed_artifact_in_memory() -> None:
+    terminal = FakeTerminal(complete_answers("yes", ""))
+    controller = ResonanceTerminalController(
+        input_reader=terminal.input,
+        output_writer=terminal.write,
+        token_loader=lambda _: token(),
+        artifact_writer=lambda artifact, path: Path(path),
+    )
+
+    result = controller()
+
+    assert result.completed
+    assert controller.last_run is not None
+    assert controller.last_saved_path is None
+    assert "No destination selected" in "\n".join(terminal.output)
+
+
+def test_store_error_keeps_completed_artifact_in_memory() -> None:
+    terminal = FakeTerminal(complete_answers("yes", "existing.json"))
+
+    def reject(_: ResonanceReturnArtifact, __: str | Path) -> Path:
+        raise ResonanceArtifactStoreError("Refusing to overwrite existing file.")
+
+    controller = ResonanceTerminalController(
+        input_reader=terminal.input,
+        output_writer=terminal.write,
+        token_loader=lambda _: token(),
+        artifact_writer=reject,
+    )
+    result = controller()
+
+    assert result.completed
+    assert controller.last_run is not None
+    assert controller.last_saved_path is None
+    rendered = "\n".join(terminal.output)
+    assert "Refusing to overwrite" in rendered
+    assert "remains in memory" in rendered
+
+
+def test_save_confirmation_retries_until_yes_or_no() -> None:
+    terminal = FakeTerminal(complete_answers("perhaps", "no"))
+    controller = ResonanceTerminalController(
+        input_reader=terminal.input,
+        output_writer=terminal.write,
+        token_loader=lambda _: token(),
+    )
+
+    result = controller()
+
+    assert result.completed
+    assert terminal.output.count("Please answer yes or no.") == 1
 
 
 def test_blank_token_path_returns_unfinished() -> None:
@@ -93,6 +181,7 @@ def test_blank_token_path_returns_unfinished() -> None:
 
     assert not result.completed
     assert controller.last_run is None
+    assert controller.last_saved_path is None
     assert "No Resonance Token selected" in "\n".join(terminal.output)
 
 
@@ -111,13 +200,18 @@ def test_invalid_token_returns_unfinished_without_composition() -> None:
 
     assert not result.completed
     assert controller.last_run is None
+    assert controller.last_saved_path is None
     rendered = "\n".join(terminal.output)
     assert "The token is not valid." in rendered
     assert "remains unfinished" in rendered
 
 
 if __name__ == "__main__":
-    test_complete_terminal_visit_retains_composition_in_memory()
+    test_complete_terminal_visit_can_remain_in_memory()
+    test_confirmed_save_uses_explicit_destination()
+    test_blank_save_destination_keeps_completed_artifact_in_memory()
+    test_store_error_keeps_completed_artifact_in_memory()
+    test_save_confirmation_retries_until_yes_or_no()
     test_blank_token_path_returns_unfinished()
     test_invalid_token_returns_unfinished_without_composition()
     print("Nexus Resonance terminal controller tests passed.")
