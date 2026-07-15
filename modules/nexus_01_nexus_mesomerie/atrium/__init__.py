@@ -1,8 +1,8 @@
 """Shared Nexus 01 Atrium state, activation, runtime, and Chamber adapters.
 
-The Atrium is one player-facing place with several states.  The current
-First Spark ``arrival`` and ``ending`` modules may remain separate
-implementations while both are interpreted through these small models.
+The Atrium is one player-facing place with several states. The current First
+Spark ``arrival`` and ``ending`` modules may remain separate implementations
+while both are interpreted through these small models.
 """
 
 from .activation_bridge import (
@@ -32,6 +32,7 @@ from .resonance_adapter import (
     ResonanceChamberRun,
     run_resonance_chamber,
 )
+from .resonance_terminal import ResonanceTerminalController
 from .runtime import (
     AtriumRuntimeError,
     ChamberRunResult,
@@ -74,6 +75,7 @@ __all__ = [
     "RETURN_RESONANCE_PROFILE_ID",
     "ResonanceAtriumRunner",
     "ResonanceChamberRun",
+    "ResonanceTerminalController",
     "atrium_state_from_activation",
     "atrium_state_from_profile",
     "help_text",
