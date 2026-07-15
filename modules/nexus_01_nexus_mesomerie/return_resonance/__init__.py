@@ -5,6 +5,10 @@ First Spark core.
 """
 
 from .artifact import ReturnArtifact, ReturnArtifactParseError, parse_return_artifact
+from .artifact_store import (
+    ResonanceArtifactStoreError,
+    write_resonance_return_artifact,
+)
 from .slots import ReturnSlot, ReturnSlotState, load_return_slots
 from .matching import MatchResult, MatchStatus, match_return_artifact
 from .result import ReturnResult, ReturnResultError, compose_return_result, open_return_result
@@ -23,6 +27,7 @@ from .writer import (
 __all__ = [
     "MatchResult",
     "MatchStatus",
+    "ResonanceArtifactStoreError",
     "ResonanceExpression",
     "ResonanceToken",
     "ResonanceTokenLoadError",
@@ -41,4 +46,5 @@ __all__ = [
     "open_return_result",
     "parse_resonance_token",
     "parse_return_artifact",
+    "write_resonance_return_artifact",
 ]
