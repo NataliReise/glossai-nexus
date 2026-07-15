@@ -125,6 +125,14 @@ def compose(
     )
 
 
+def _proxy_for_template(template: str, proxy: WishRoleProxy) -> str:
+    """Capitalise the proxy only when the slot begins the visible line."""
+    stripped = template.lstrip()
+    if stripped.startswith("{wish_word}"):
+        return proxy.text[:1].upper() + proxy.text[1:]
+    return proxy.text
+
+
 def _select_same_word_blocks(
     library: dict[str, Any],
     route: dict[str, Any],
@@ -156,7 +164,11 @@ def _select_same_word_blocks(
                 f"Same-word route has no compatible block for {role!r}"
             )
         block = base._weighted_choice(candidates, rng)
-        visible_wish = proxy.text.capitalize() if role == "wish_entry" else shared
+        visible_wish = (
+            _proxy_for_template(block["text"], proxy)
+            if role == "wish_entry"
+            else shared
+        )
         rendered = base._render_template(block["text"], visible_wish, shared)
         selected.append(base._SelectedBlock(role, block, rendered))
         used_ids.add(block["id"])
