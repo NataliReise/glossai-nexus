@@ -4,7 +4,7 @@
     "name": "Nachhall",
     "word_pattern": [2, 4, 6, 4, 1]
   },
-  "selection_policy": "exact-path-first-then-approved-components",
+  "selection_policy": "known-valid-paths-first",
   "paths": [
     {
       "id": "clear-meeting-01",
@@ -102,146 +102,8 @@
       "echo_motif": "bridge"
     }
   ],
-  "components": {
-    "image": [
-      {
-        "id": "image-waiting-lantern",
-        "requires": {
-          "image_id": "waiting-lantern",
-          "image_response_id": "appearing-path"
-        },
-        "line_1": "Waiting lantern",
-        "line_4": "the lantern carries {wish_word}",
-        "echo_motif": "lantern"
-      },
-      {
-        "id": "image-book-bench",
-        "requires": {
-          "image_id": "book-bench",
-          "image_response_id": "two-voices-one-page"
-        },
-        "line_1": "Open books",
-        "line_4": "the books shelter {wish_word}",
-        "echo_motif": "books"
-      },
-      {
-        "id": "image-starry-window",
-        "requires": {
-          "image_id": "open-starry-window",
-          "image_response_id": "answering-distant-light"
-        },
-        "line_1": "Evening window",
-        "line_4": "the window gathers {wish_word}",
-        "echo_motif": "window"
-      },
-      {
-        "id": "image-painted-stone",
-        "requires": {
-          "image_id": "stone-in-water",
-          "image_response_id": "colours-carried-outward"
-        },
-        "line_1": "Painted stone",
-        "line_4": "the stone releases {wish_word}",
-        "echo_motif": "stone"
-      },
-      {
-        "id": "image-mist-bridge",
-        "requires": {
-          "image_id": "bridge-in-mist",
-          "image_response_id": "shared-silence"
-        },
-        "line_1": "Narrow bridge",
-        "line_4": "the bridge bears {wish_word}",
-        "echo_motif": "bridge"
-      }
-    ],
-    "scent": [
-      {
-        "id": "scent-summer-rain",
-        "requires": {
-          "scent_id": "summer-rain",
-          "scent_response_id": "possibility-of-encounter"
-        },
-        "line_2": "summer rain opens pathways"
-      },
-      {
-        "id": "scent-books-cedar",
-        "requires": {
-          "scent_id": "books-and-cedar",
-          "scent_response_id": "open-books-beside-one-another"
-        },
-        "line_2": "cedar keeps pages breathing"
-      },
-      {
-        "id": "scent-evening-salt",
-        "requires": {
-          "scent_id": "evening-salt",
-          "scent_response_id": "sense-of-return"
-        },
-        "line_2": "salt air carries distance"
-      },
-      {
-        "id": "scent-first-snow",
-        "requires": {
-          "scent_id": "first-snow",
-          "scent_response_id": "edge-of-beginning"
-        },
-        "line_2": "first snow waits nearby"
-      },
-      {
-        "id": "scent-warm-bread",
-        "requires": {
-          "scent_id": "warm-bread",
-          "scent_response_id": "second-place-at-table"
-        },
-        "line_2": "warm bread gathers welcome"
-      }
-    ],
-    "movement": [
-      {
-        "id": "movement-crossing-feathers",
-        "requires": {
-          "movement_id": "falling-feather",
-          "movement_response_id": "crossing-feather"
-        },
-        "line_3": "two feathers cross beneath waiting light"
-      },
-      {
-        "id": "movement-loosening-knot",
-        "requires": {
-          "movement_id": "loosening-knot",
-          "movement_response_id": "gathering-without-tightening"
-        },
-        "line_3": "one knot loosens as threads gather"
-      },
-      {
-        "id": "movement-returning-tide",
-        "requires": {
-          "movement_id": "returning-tide",
-          "movement_response_id": "stream-back-to-sea"
-        },
-        "line_3": "tide and stream meet beneath stars"
-      },
-      {
-        "id": "movement-opening-circle",
-        "requires": {
-          "movement_id": "opening-circle",
-          "movement_response_id": "playful-waves"
-        },
-        "line_3": "one circle opens into playful waves"
-      },
-      {
-        "id": "movement-crossing-light",
-        "requires": {
-          "movement_id": "crossing-light",
-          "movement_response_id": "shadow-alongside"
-        },
-        "line_3": "light and shadow share one silence"
-      }
-    ]
-  },
   "fallback": {
     "strategy": "no-improvisation",
-    "message": "No approved Nexus Echo path or component composition is available for this composition."
+    "message": "No approved Nexus Echo path is available for this composition."
   }
 }
