@@ -2,11 +2,38 @@
 
 Nexus 01 - Nexus-Mesomerie is the first module line in the **glossai-nexus** project.
 
-Its first small playable slice is:
+Its first stable playable slice is:
 
 **[Nexus 0.1 - First Spark](first_spark/)**
 
 First Spark is a local terminal prototype. It can be played as a neutral public demo or combined with a private activation package to become a personal gift.
+
+## Read the current direction first
+
+The primary source of truth for current Nexus 01 development is:
+
+- [Nexus 01 Current Direction](CURRENT_DIRECTION.md)
+
+The current resonance decision is:
+
+```text
+The complete visible resonance result
+is one compact Nachhall poem
+
+2 / 4 / 6 / 4 / 1
+```
+
+The Nachhall is no longer planned as a secondary Echo derived from a mandatory long-form poem. It is the complete poetic resonance form itself.
+
+For the status of older V0.1, V0.2, milestone, and experiment documents, use:
+
+- [Resonance Documentation Status](RESONANCE_DOCUMENTATION_STATUS_01.md)
+
+For the controlled migration plan, use:
+
+- [Resonance Transition Inventory](RESONANCE_TRANSITION_INVENTORY_01.md)
+- [Resonance Dependency Audit](RESONANCE_DEPENDENCY_AUDIT_01.md)
+- [Intentional Archive Policy](archive/README.md)
 
 ## Core idea
 
@@ -14,210 +41,207 @@ Nexus 01 is intended as a retro-terminal escape module for a single player or a 
 
 The Nexus itself is the object of play.
 
-Players should explore, read, configure, and activate an open software artifact. By learning how this Nexus works, they discover what a Nexus is: a local-first, readable, configurable structure whose connections grow through human interaction and carried traces.
+Players explore, read, configure, and activate an open software artifact. By learning how this Nexus works, they discover what a Nexus is: a local-first, readable, configurable structure whose connections grow through human interaction and carried traces.
 
 ## Intended feeling
 
 Nexus 01 should feel like:
 
-- a small retro terminal game,
-- a software escape module,
-- a readable open-source artifact,
-- a cooperative puzzle space,
+- a small retro terminal game;
+- a software escape module;
+- a readable open-source artifact;
+- a cooperative puzzle space;
 - a first encounter with the idea of a Nexus.
 
 It should be playable at the surface and readable in the depth.
 
-## Current status
+## Current project layers
 
-Nexus 01 is still an early module line, but its first playable slice exists.
+### 1. First Spark — stable small seed
 
-Current work focuses on:
-
-- keeping **Nexus 0.1 - First Spark** small, stable, playable, and public-safe,
-- clarifying activation and gift package boundaries,
-- explaining resonance nodes and public-safe traces,
-- exploring **Return Resonance Slots** as a small local-first return MVP,
-- connecting the repository, wiki, and discussions,
-- preserving a local-first and data-minimal approach,
-- preparing future module ideas without overloading the first slice.
-
-The current return direction is:
+Status:
 
 ```text
-Generated Return Resonance MVP
--> optional narrative decryption
--> optional real encryption later
+current playable and giftable layer
 ```
 
-Technical short formula:
+Entry points:
+
+- [First Spark README](first_spark/README.md)
+- [First Spark 0.1 Review](first_spark/FIRST_SPARK_0_1_REVIEW.md)
+- [What Next](first_spark/WHAT_NEXT.md)
+- [Packaging README](packaging/README.md)
+- [Gift Package Plan](packaging/GIFT_PACKAGE_PLAN.md)
+
+Start from the repository root:
+
+```bash
+python3 modules/nexus_01_nexus_mesomerie/first_spark/run_first_spark.py
+```
+
+### 2. Human Resonance Chamber — retained
+
+The current direction preserves:
+
+- image choice and answer;
+- scent choice and answer;
+- movement choice and continuation;
+- wish word;
+- return word;
+- stable public-safe IDs;
+- Chamber-owned compatibility.
+
+The people create the resonance. The local poetic layer gives it a small form.
+
+### 3. Return Slots and local memory — retained
+
+The durable technical formula remains:
 
 ```text
 Slot -> Artifact -> Local Result
 ```
 
-This means the first return layer may match a return artifact to a local return slot and generate a stable local result file. It should not promise real cryptographic decryption unless a later crypto layer explicitly implements it.
+The current direction preserves:
 
-Current orientation:
+- local Return Slots;
+- route and package identity;
+- waiting/opened state;
+- local-only matching;
+- generate-once and revisit-often;
+- no overwrite;
+- public/private separation.
 
-```text
-Return Resonance Slots are the implemented path.
-Return Unlock remains a legacy/future optional path.
-```
-
-For a short orientation to the current Nexus 01 vocabulary, see:
-
-- [Nexus 01 Terms](NEXUS_01_TERMS.md)
-
-For the current Return Resonance implementation guide, see:
-
-- [Return Resonance README](return_resonance/README.md)
-
-For the local Return Resonance workspace guide, see:
+Operational references:
 
 - [Return Resonance Local Workspace](RETURN_RESONANCE_LOCAL_WORKSPACE.md)
-
-For the boundary between private activations and public-safe return slots, see:
-
 - [Return Slot from Private Activation](RETURN_SLOT_FROM_PRIVATE_ACTIVATION.md)
+- [Return Slot Template](templates/return_slot.template.json)
+- [Make Return Slot CLI](make_return_slot.py)
 
-For the copy-before-use return slot template, see:
+### 4. Compact Nachhall V0.3 — active experiment
 
-- [Return slot template](templates/return_slot.template.json)
-
-For the first explicit local return slot generator, see:
-
-- [Make return slot CLI](make_return_slot.py)
-
-For a practical generated-slot walkthrough, see:
-
-- [Return Slot Generator Walkthrough](RETURN_SLOT_GENERATOR_WALKTHROUGH.md)
-
-For the generated-slot milestone, see:
-
-- [Return Resonance Generated Slot Milestone](RETURN_RESONANCE_GENERATED_SLOT_MILESTONE.md)
-
-For the return slot template review, see:
-
-- [Return Slot Template Review](RETURN_SLOT_TEMPLATE_REVIEW.md)
-
-For the return slot generator review, see:
-
-- [Return Slot Generator Review](RETURN_SLOT_GENERATOR_REVIEW.md)
-
-For the return slot generator integration review, see:
-
-- [Return Slot Generator Integration Review](RETURN_SLOT_GENERATOR_INTEGRATION_REVIEW.md)
-
-For the Return Resonance 0.1 milestone review, see:
-
-- [Return Resonance 0.1 Review](RETURN_RESONANCE_0_1_REVIEW.md)
-
-For the current MVP boundary specification, see:
-
-- [Return Resonance MVP](RETURN_RESONANCE_MVP.md)
-
-For safe public demo examples of the return slot, return artifact, generated result shape, a non-matching return artifact, and a return artifact for the generated-slot test, see:
-
-- [Return slot demo](examples/return_slot.demo.json)
-- [Return artifact demo](examples/return_artifact.demo.txt)
-- [Unknown slot return artifact demo](examples/return_artifact.unknown_slot.demo.txt)
-- [Quiet garden return artifact demo](examples/return_artifact.quiet_garden.demo.txt)
-- [Return resonance result demo](examples/return_resonance_result.demo.md)
-
-For the current bridge note between the older return unlock design and the newer slot-based direction, see:
-
-- [Return Unlock Current Direction](RETURN_UNLOCK_CURRENT_DIRECTION.md)
-
-The older Return Unlock documents should be read through that bridge note:
+Status:
 
 ```text
-Return Unlock Layer Map = legacy/future architecture map
-Return Unlock Design = legacy/future design draft
+active experiment
+not yet production
 ```
 
-## Start First Spark
+Experiment entry:
 
-The first playable slice of Nexus 01 is:
+- [Nachhall Composition V0.3](experiments/nachhall_composition_v0_3/README.md)
 
-- [Nexus 0.1 - First Spark](first_spark/)
+The experiment tests:
 
-For current start options, see:
+- exact `2 / 4 / 6 / 4 / 1` structure;
+- several small micro-routes;
+- curated phrase variants;
+- controlled metaphorical openness;
+- one or more sensory anchors;
+- wish word exactly once in line 2, 3, or 4;
+- return word exactly once in line 5;
+- Same-Word behaviour;
+- enough variation without a large grammar engine.
 
-- [First Spark README](first_spark/README.md)
+## Older runnable resonance paths
 
-First Spark currently supports two intended start paths:
+Two older return paths remain in the repository temporarily because they are still connected to tests, commands, and historical fixtures.
 
-1. from the cloned repository,
-2. from a standalone First Spark package.
+### Earlier human-readable Return Resonance MVP
 
-If you are new to Git, Python, or terminal-based projects, start with:
+```text
+run_return_resonance.py
+run_return_resonance_demo.py
+return_resonance/artifact.py
+return_resonance/result.py
+```
 
-- [Getting started on Linux](../../docs/GETTING_STARTED_LINUX.md)
+This path remains useful for matching and persistence history. Its generated poetry is not the current Nachhall design.
 
-For a short player-facing guide after completion, see:
+### V0.1 deterministic rich rendering
 
-- [What next after First Spark](first_spark/WHAT_NEXT.md)
+```text
+open_resonance_return.py
+resonance_language_library/
+```
 
-For the First Spark 0.1 review, see:
+This path still renders a fixed long-form Resonance Artifact and an exact approved compact Echo. It is a legacy runnable implementation and the source of the original Nachhall form, not the future universal production model.
 
-- [First Spark 0.1 Review](first_spark/FIRST_SPARK_0_1_REVIEW.md)
+Do not infer current architecture from either path without reading the documentation status index.
 
-## Nexus 01 planning documents
+## Local commands
 
-- [Nexus Module Map](NEXUS_MODULE_MAP.md)
-- [Nexus 01 Terms](NEXUS_01_TERMS.md)
-- [First Spark Scope](FIRST_SPARK_SCOPE.md)
-- [MVP Specification](MVP_NEXUS_01.md)
-- [Nexus Modularity Rules](NEXUS_MODULARITY_RULES.md)
-- [Return Resonance MVP](RETURN_RESONANCE_MVP.md)
-- [Return Resonance Local Workspace](RETURN_RESONANCE_LOCAL_WORKSPACE.md)
-- [Return Slot from Private Activation](RETURN_SLOT_FROM_PRIVATE_ACTIVATION.md)
-- [Return Slot Template Review](RETURN_SLOT_TEMPLATE_REVIEW.md)
-- [Return Slot Generator Review](RETURN_SLOT_GENERATOR_REVIEW.md)
-- [Return Slot Generator Integration Review](RETURN_SLOT_GENERATOR_INTEGRATION_REVIEW.md)
-- [Return Slot Generator Walkthrough](RETURN_SLOT_GENERATOR_WALKTHROUGH.md)
-- [Return Resonance Generated Slot Milestone](RETURN_RESONANCE_GENERATED_SLOT_MILESTONE.md)
-- [Return Resonance 0.1 Review](RETURN_RESONANCE_0_1_REVIEW.md)
-- [Return Unlock Current Direction](RETURN_UNLOCK_CURRENT_DIRECTION.md)
-- [Return Unlock Layer Map](RETURN_UNLOCK_LAYER_MAP.md) - legacy/future architecture map
-- [Return Unlock Design](RETURN_UNLOCK_DESIGN.md) - legacy/future design draft
-- [Return Artifact MVP](RETURN_ARTIFACT_MVP.md)
-- [Return Resonance Slots](RETURN_RESONANCE_SLOTS.md)
-- [Nexus Activity System](NEXUS_ACTIVITY_SYSTEM.md)
+### First Spark
 
-## Templates
+```bash
+python3 modules/nexus_01_nexus_mesomerie/first_spark/run_first_spark.py
+```
 
-- [Return slot template](templates/return_slot.template.json)
+### Create a local Return Slot
 
-## Local CLIs
+```bash
+python3 modules/nexus_01_nexus_mesomerie/make_return_slot.py \
+  --origin-trace-id n01-local-origin-a4m9 \
+  --return-slot-id quiet-garden-01 \
+  --package-id local-package-garden-01 \
+  --result-file return_resonance_quiet_garden.local.md \
+  --public-safe-label "quiet garden" \
+  --output ~/Dokumente/glossai-local/nexus-01-return-workspace/slots/return_slots.local.json
+```
 
-- [Make return slot CLI](make_return_slot.py)
-- [Run return resonance CLI](run_return_resonance.py)
+### Earlier MVP return demonstration
 
-## General project documents
+```bash
+python3 modules/nexus_01_nexus_mesomerie/run_return_resonance_demo.py
+```
 
-See also:
+This remains a historical/local infrastructure demonstration, not the V0.3 poetic target.
+
+## Privacy and packaging
+
+Nexus 01 remains local-first and data-minimal.
+
+The public repository must not contain:
+
+- real `activation.local.json` files;
+- private gift messages;
+- real return artifacts;
+- private local result files;
+- key material;
+- generated gift packages or ZIP archives.
+
+The current First Spark builders copy only the explicit First Spark package set. They do not package V0.1, V0.2, the archive, or the V0.3 experiment.
+
+A future complete Nexus 01 gift package will need a separate explicit production inclusion list for the compact Nachhall path.
+
+## Documentation navigation
+
+Use this order:
+
+```text
+CURRENT_DIRECTION.md
+-> RESONANCE_DOCUMENTATION_STATUS_01.md
+-> RESONANCE_TRANSITION_INVENTORY_01.md
+-> RESONANCE_DEPENDENCY_AUDIT_01.md
+-> active implementation or experiment documentation
+-> historical documents only when needed
+```
+
+General project documents:
 
 - [Project README](../../README.md)
-- [Design notes](../../DESIGN_NOTES.md)
+- [Design Notes](../../DESIGN_NOTES.md)
 - [Code of Resonance](../../CODE_OF_RESONANCE.md)
 - [Playing a Nexus](../../docs/PLAYING_A_NEXUS.md)
-- [Speaking code](../../docs/SPEAKING_CODE.md)
+- [Speaking Code](../../docs/SPEAKING_CODE.md)
 - [Resonance Arc](../../docs/RESONANCE_ARC.md)
-- [Discussions Guide](../../docs/DISCUSSIONS_GUIDE.md)
-- [Getting started on Linux](../../docs/GETTING_STARTED_LINUX.md)
+- [Getting Started on Linux](../../docs/GETTING_STARTED_LINUX.md)
 
-## Public orientation
-
-Project wiki:
+## Compact formula
 
 ```text
-https://github.com/NataliReise/glossai-nexus/wiki
-```
-
-Project discussions:
-
-```text
-https://github.com/NataliReise/glossai-nexus/discussions
+First Spark opens
+A human trace returns
+The Nexus gives it one small form
+The form remains open enough to echo
 ```
