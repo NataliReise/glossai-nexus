@@ -20,4 +20,123 @@
     "source_motifs": [
       "window",
       "stars",
-      "distance
+      "distance",
+      "rain",
+      "water",
+      "tide",
+      "shore",
+      "light",
+      "threshold"
+    ],
+    "source_operations": [
+      "opening",
+      "answering",
+      "returning",
+      "crossing",
+      "listening",
+      "remembering",
+      "remaining"
+    ]
+  },
+  "line_1_variants": [
+    {"id": "line1.rain-window.01", "text": "Rain window", "weight": 3},
+    {"id": "line1.tidal-glass.02", "text": "Tidal glass", "weight": 2},
+    {"id": "line1.star-threshold.03", "text": "Star threshold", "weight": 2},
+    {"id": "line1.evening-current.04", "text": "Evening current", "weight": 2},
+    {"id": "line1.listening-shore.05", "text": "Listening shore", "weight": 1}
+  ],
+  "routes": [
+    {
+      "id": "route.moving-wish.01",
+      "wish_line": 3,
+      "weight": 3,
+      "line_2_variants": [
+        {"id": "a2.summer-rain.01", "text": "summer rain enters softly", "weight": 3},
+        {"id": "a2.wet-glass.02", "text": "wet glass holds starlight", "weight": 2},
+        {"id": "a2.threshold-evening.03", "text": "one threshold gathers evening", "weight": 2},
+        {"id": "a2.water-listens.04", "text": "distant water listens inward", "weight": 1},
+        {"id": "a2.rain-glass.05", "text": "rain gathers along glass", "weight": 2}
+      ],
+      "line_3_variants": [
+        {"id": "a3.returning-water.01", "text": "{wish_word} follows the returning water home", "weight": 3},
+        {"id": "a3.currents-remember.02", "text": "{wish_word} crosses where two currents remember", "weight": 2},
+        {"id": "a3.turning-distance.03", "text": "{wish_word} waits beneath the turning distance", "weight": 2},
+        {"id": "a3.rain-window.04", "text": "Rain carries {wish_word} beyond the window", "weight": 2},
+        {"id": "a3.tides-glass.05", "text": "Two tides lead {wish_word} through glass", "weight": 2},
+        {"id": "a3.shore-withholds.06", "text": "{wish_word} enters what the shore withholds", "weight": 1}
+      ],
+      "line_4_variants": [
+        {"id": "a4.light-answers.01", "text": "one light answers softly", "weight": 3},
+        {"id": "a4.tide-listening.02", "text": "the tide keeps listening", "weight": 2},
+        {"id": "a4.distance-home.03", "text": "distance turns toward home", "weight": 2},
+        {"id": "a4.glass-passage.04", "text": "wet glass remembers passage", "weight": 2},
+        {"id": "a4.waters-silence.05", "text": "two waters share silence", "weight": 1}
+      ]
+    },
+    {
+      "id": "route.early-wish.02",
+      "wish_line": 2,
+      "weight": 2,
+      "line_2_variants": [
+        {"id": "b2.opens-distance.01", "text": "{wish_word} opens the distance", "weight": 3},
+        {"id": "b2.wet-starlight.02", "text": "{wish_word} enters wet starlight", "weight": 2},
+        {"id": "b2.window-listens.03", "text": "{wish_word} makes the window listen", "weight": 2},
+        {"id": "b2.tide-remembers.04", "text": "{wish_word} lets the tide remember", "weight": 1},
+        {"id": "b2.shore-awake.05", "text": "{wish_word} keeps one shore awake", "weight": 2}
+      ],
+      "line_3_variants": [
+        {"id": "b3.currents-glass.01", "text": "two currents meet beneath rainlit glass", "weight": 3},
+        {"id": "b3.water-distance.02", "text": "returning water carries distance toward evening", "weight": 2},
+        {"id": "b3.rain-path.03", "text": "rain finds a path through starlight", "weight": 2},
+        {"id": "b3.tide-window.04", "text": "the tide folds night around one window", "weight": 2},
+        {"id": "b3.shore-answer.05", "text": "one shore answers from beyond the threshold", "weight": 1},
+        {"id": "b3.light-water.06", "text": "distant light travels inside the water", "weight": 2}
+      ],
+      "line_4_variants": [
+        {"id": "b4.passage-breathes.01", "text": "the passage still breathes", "weight": 3},
+        {"id": "b4.window-open.02", "text": "one window remains open", "weight": 2},
+        {"id": "b4.water-keeps.03", "text": "water keeps the answer", "weight": 2},
+        {"id": "b4.starlight-waits.04", "text": "starlight waits between shores", "weight": 1},
+        {"id": "b4.rain-homeward.05", "text": "rain turns quietly homeward", "weight": 2}
+      ]
+    },
+    {
+      "id": "route.late-wish.03",
+      "wish_line": 4,
+      "weight": 2,
+      "line_2_variants": [
+        {"id": "c2.rain-threshold.01", "text": "rain softens the threshold", "weight": 3},
+        {"id": "c2.starlight-water.02", "text": "starlight enters the water", "weight": 2},
+        {"id": "c2.evening-glass.03", "text": "evening gathers behind glass", "weight": 2},
+        {"id": "c2.shore-listens.04", "text": "one shore listens inward", "weight": 1},
+        {"id": "c2.tide-window.05", "text": "the tide nears window", "weight": 1}
+      ],
+      "line_3_variants": [
+        {"id": "c3.currents-distance.01", "text": "two currents hold their distance open", "weight": 3},
+        {"id": "c3.water-remembers.02", "text": "returning water remembers another quiet shore", "weight": 2},
+        {"id": "c3.light-rain.03", "text": "one light crosses the summer rain", "weight": 2},
+        {"id": "c3.window-tides.04", "text": "the window gathers two returning tides", "weight": 2},
+        {"id": "c3.distance-answer.05", "text": "distance answers without closing the passage", "weight": 1},
+        {"id": "c3.stars-listen.06", "text": "the stars listen beneath moving water", "weight": 1}
+      ],
+      "line_4_variants": [
+        {"id": "c4.wish-visible.01", "text": "light keeps {wish_word} visible", "weight": 2},
+        {"id": "c4.wish-water.02", "text": "water carries {wish_word} homeward", "weight": 3},
+        {"id": "c4.wish-between.03", "text": "one shore keeps {wish_word}", "weight": 2},
+        {"id": "c4.wish-rain.04", "text": "rain remembers {wish_word} softly", "weight": 2},
+        {"id": "c4.wish-window.05", "text": "the window answers {wish_word}", "weight": 1}
+      ]
+    }
+  ],
+  "selection_policy": {
+    "method": "weighted-independent-with-route",
+    "seedable": true,
+    "same_word_policy": "slot_identity_not_surface_uniqueness",
+    "compatibility_notes": [
+      "Reject any rendered poem that violates the exact word pattern",
+      "Reject any route that places the wish word outside its declared line",
+      "Reject punctuation in visible lines",
+      "Prefer sensory and abstract lines in alternation when later collision rules are added"
+    ]
+  }
+}
