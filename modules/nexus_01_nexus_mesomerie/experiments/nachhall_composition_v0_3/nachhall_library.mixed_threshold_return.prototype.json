@@ -1,0 +1,23 @@
+{
+  "library_version": "nachhall-composition-prototype-v0.3",
+  "status": "active-experiment",
+  "production_use": false,
+  "form": {
+    "name": "Nachhall",
+    "word_pattern": [2, 4, 6, 4, 1],
+    "punctuation": "none",
+    "wish_slot_lines": [2, 3, 4],
+    "return_slot_line": 5
+  },
+  "world": {
+    "id": "mixed-threshold-return-01",
+    "image_id": "open-starry-window",
+    "image_response_id": "answering-distant-light",
+    "scent_id": "summer-rain",
+    "scent_response_id": "possibility-of-encounter",
+    "movement_id": "returning-tide",
+    "movement_response_id": "stream-back-to-sea",
+    "source_motifs": [
+      "window",
+      "stars",
+      "distance
