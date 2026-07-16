@@ -1,0 +1,126 @@
+# Nexus 01 Current Direction
+
+Status: current implementation direction
+
+Decision date: 2026-07-17
+
+This document is the primary source of truth for the current development direction of Nexus 01.
+
+When an older design, status, audit, or experiment document conflicts with this file, this file takes precedence until a newer current-direction document explicitly replaces it.
+
+## Current resonance decision
+
+The complete visible resonance result of Nexus 01 will be a compact **Nachhall** poem.
+
+```text
+2 words
+4 words
+6 words
+4 words
+1 word
+```
+
+The compact poem is not a secondary Echo derived from a mandatory long-form poem. It is the complete poetic resonance form itself.
+
+```text
+human Chamber choices
++ wish word
++ return word
++ curated poetic profiles
++ small micro-routes
++ curated phrase variants
++ local first-opening selection
+= one persistent Nachhall
+```
+
+## Current poetic principles
+
+- The poem may remain partially enigmatic.
+- Metaphorical openness is desirable when the poem retains an internal movement and at least one concrete or sensory anchor.
+- The selected image, scent, and movement shape the poetic field without needing to be named literally.
+- The wish word appears exactly once in line 2, 3, or 4.
+- The return word appears exactly once as line 5.
+- The composer performs no semantic analysis of either free word.
+- Variation comes from curated micro-routes and reviewed phrase families rather than unrestricted grammar generation.
+- Strong fixed lines may remain available as rare curated forms.
+- The result is generated once at the first successful local opening and then reopened unchanged.
+
+## Current technical principles
+
+The following existing Nexus responsibilities remain valuable:
+
+- First Spark and the human activation movement;
+- the Resonance Chamber choices and responses;
+- stable transport and route identity;
+- Return Slot matching;
+- local-only opening;
+- create-once and revisit-often persistence;
+- no-overwrite behaviour;
+- explicit validation and calm failure;
+- public and private data separation;
+- strict five-line and word-count validation.
+
+The current redesign is therefore a replacement of the visible poetic production layer, not a rejection of the entire Nexus structure.
+
+## Superseded production directions
+
+### V0.1 exact complete paths
+
+The deterministic V0.1 Nachhall paths remain valuable historical references and poetic source material. They are no longer intended to be the universal production model because every supported Chamber combination would require an exact prewritten path.
+
+### V0.2 long-form block composer
+
+The V0.2 long-form experiment remains valuable design evidence. It demonstrated local weighted composition, linked Echo derivation, inspectable plans, signature risks, and anti-formula concerns.
+
+It is no longer the intended production target. Nexus 01 will not require a long-form Resonance Artifact before producing its final Nachhall.
+
+## Active experiment
+
+The new compact-composition experiment lives in:
+
+```text
+experiments/nachhall_composition_v0_3/
+```
+
+Its status is experimental until its poetic and structural acceptance criteria are met. The existing production path must not silently switch before that review.
+
+## Repository status language
+
+Relevant files and directories should be classified as one of:
+
+```text
+CURRENT
+ACTIVE_EXPERIMENT
+RETAIN
+REUSE_OR_EXTRACT
+SUPERSEDED
+ARCHIVE_AFTER_DEPENDENCY_REVIEW
+REMOVE_FROM_HEAD_LATER
+UNDECIDED
+```
+
+`SUPERSEDED` does not mean worthless. It means that the file must not be read as current implementation guidance.
+
+## Transition rule
+
+No historical runtime code, test, or data directory should be moved merely for tidiness before imports, fixtures, documentation links, and test commands have been reviewed.
+
+The safe order is:
+
+```text
+document current direction
+-> classify the repository
+-> build and test the new compact experiment in parallel
+-> confirm the replacement path
+-> update active imports and documentation
+-> archive superseded systems in one controlled migration
+-> run active tests and archive-reference checks
+```
+
+## Compact project formula
+
+```text
+The people create the resonance
+The Nexus gives it one small form
+The form remains open enough to echo
+```
