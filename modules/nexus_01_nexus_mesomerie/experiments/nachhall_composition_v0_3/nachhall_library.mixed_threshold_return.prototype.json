@@ -80,16 +80,16 @@
       "line_2_variants": [
         {"id": "b2.opens-distance.01", "text": "{wish_word} opens the distance", "weight": 3},
         {"id": "b2.wet-starlight.02", "text": "{wish_word} enters wet starlight", "weight": 2},
-        {"id": "b2.window-listens.03", "text": "{wish_word} makes the window listen", "weight": 2},
-        {"id": "b2.tide-remembers.04", "text": "{wish_word} lets the tide remember", "weight": 1},
-        {"id": "b2.shore-awake.05", "text": "{wish_word} keeps one shore awake", "weight": 2}
+        {"id": "b2.window-listens.03", "text": "{wish_word} makes window listen", "weight": 2},
+        {"id": "b2.tide-remembers.04", "text": "{wish_word} lets tide remember", "weight": 1},
+        {"id": "b2.shore-awake.05", "text": "{wish_word} keeps shore awake", "weight": 2}
       ],
       "line_3_variants": [
         {"id": "b3.currents-glass.01", "text": "two currents meet beneath rainlit glass", "weight": 3},
         {"id": "b3.water-distance.02", "text": "returning water carries distance toward evening", "weight": 2},
         {"id": "b3.rain-path.03", "text": "rain finds a path through starlight", "weight": 2},
-        {"id": "b3.tide-window.04", "text": "the tide folds night around one window", "weight": 2},
-        {"id": "b3.shore-answer.05", "text": "one shore answers from beyond the threshold", "weight": 1},
+        {"id": "b3.tide-window.04", "text": "tide folds night around one window", "weight": 2},
+        {"id": "b3.shore-answer.05", "text": "one shore answers beyond the threshold", "weight": 1},
         {"id": "b3.light-water.06", "text": "distant light travels inside the water", "weight": 2}
       ],
       "line_4_variants": [
