@@ -1,60 +1,75 @@
 # Return Resonance
 
-Return Resonance is the first small return layer for Nexus 01.
+Status: legacy runnable MVP and retained local infrastructure
 
-It belongs to the Nexus 01 extension layer, not to the First Spark core.
+Current direction: `../CURRENT_DIRECTION.md`
 
-Core formula:
+Documentation status: `../RESONANCE_DOCUMENTATION_STATUS_01.md`
 
-```text
-A waiting slot.
-A returned artifact.
-One local answer.
-```
+Return Resonance is the first small return layer for Nexus 01. It belongs to the Nexus 01 extension layer, not to the First Spark core.
 
-Technical short formula:
+Its durable technical idea remains current:
 
 ```text
+A waiting slot
+A returned artifact
+One local answer
+
 Slot -> Artifact -> Local Result
 ```
 
-For Nexus 01 terminology and the current Return Resonance / Return Unlock distinction, see:
+Its original generated poetry is not the current compact Nachhall design.
+
+## What remains valuable
+
+This layer established:
+
+- a human-readable return artifact;
+- local Return Slot loading;
+- explicit route and package matching;
+- safe non-match behaviour;
+- local result creation;
+- generate-once and revisit-often;
+- no automatic publication;
+- the boundary that First Spark does not depend on Return Resonance.
+
+These responsibilities remain part of the future Nexus even though the poetic result layer is being replaced.
+
+## Legacy poetic boundary
+
+The earlier MVP uses:
 
 ```text
-../NEXUS_01_TERMS.md
+return_resonance/artifact.py
+return_resonance/result.py
+run_return_resonance.py
+run_return_resonance_demo.py
 ```
 
-## What this layer does
+`result.py` creates an earlier five-line local resonance from legacy fields such as carrier image, return image, movement, tone, and return word.
 
-The first Return Resonance MVP can:
+Do not use that output as guidance for the V0.3 compact Nachhall composer.
 
-1. parse a human-readable return artifact,
-2. load a local return slot file,
-3. match the artifact against the waiting slot,
-4. create a local result file on first opening,
-5. reuse the same local result file on later runs.
-
-This implements the rule:
+The new current direction is:
 
 ```text
-Generate once.
-Revisit often.
+Chamber selections
++ wish word
++ return word
++ curated compact variants
+= one persistent 2 / 4 / 6 / 4 / 1 Nachhall
 ```
 
 ## Boundary to First Spark
 
 First Spark remains complete on its own.
 
-Return Resonance may refer to First Spark as the first playable origin of Nexus 01, but First Spark must not depend on Return Resonance.
-
-Boundary rule:
-
 ```text
-Return Resonance may know about First Spark.
-First Spark must not depend on Return Resonance.
+Return Resonance may know about First Spark
+First Spark must not depend on Return Resonance
 ```
 
-## Files in this package
+## Main earlier-MVP files
 
 ```text
 return_resonance/
@@ -67,19 +82,11 @@ return_resonance/
     └── test_return_resonance_mvp.py
 ```
 
-Current responsibilities:
+The package has grown beyond this original set. The complete current dependency map is recorded in:
 
-```text
-artifact.py  -> parse structured return artifact text
-slots.py     -> load local return slots from JSON
-matching.py  -> match artifact and slot IDs safely
-result.py    -> create or reuse local Markdown result files
-tests/       -> protect the MVP behavior and First Spark boundary
-```
+- `../RESONANCE_DEPENDENCY_AUDIT_01.md`
 
-## Demo files
-
-The public demo uses safe example files from:
+## Public demo files
 
 ```text
 ../examples/return_slot.demo.json
@@ -89,11 +96,9 @@ The public demo uses safe example files from:
 ../examples/return_resonance_result.demo.md
 ```
 
-These files contain fictional demo data only.
+These are fictional public-safe fixtures.
 
-They show the shape of the return flow, the non-match boundary, and a generated-slot end-to-end path without exposing real private activation data, gift text, return artifacts, key material, or private relationship context.
-
-## Run the demo
+## Run the earlier public demo
 
 From the repository root:
 
@@ -101,29 +106,32 @@ From the repository root:
 python3 modules/nexus_01_nexus_mesomerie/run_return_resonance_demo.py
 ```
 
-On the first run, the demo creates:
+The demo creates or reuses:
 
 ```text
 modules/nexus_01_nexus_mesomerie/return_resonance_lantern_river.local.md
 ```
 
-On later runs, the same file is reused.
+This command demonstrates the earlier MVP. It is not the future V0.3 poetic path.
 
-Expected behavior:
+## Run with explicit local paths
 
-```text
-Local result created: return_resonance_lantern_river.local.md
+```bash
+python3 modules/nexus_01_nexus_mesomerie/run_return_resonance.py \
+  --artifact path/to/return_artifact.txt \
+  --slots path/to/return_slots.json \
+  --output-dir path/to/local-memory
 ```
 
-Then:
+Exit codes:
 
 ```text
-Local result reused: return_resonance_lantern_river.local.md
+0 -> matched and opened or reused a local result
+1 -> artifact did not match a waiting or opened slot
+2 -> file parsing slot-loading or result-opening error
 ```
 
-## Make a local return slot
-
-For explicit local slot creation, use:
+## Create a local Return Slot
 
 ```bash
 python3 modules/nexus_01_nexus_mesomerie/make_return_slot.py \
@@ -135,231 +143,93 @@ python3 modules/nexus_01_nexus_mesomerie/make_return_slot.py \
   --output ~/Dokumente/glossai-local/nexus-01-return-workspace/slots/return_slots.local.json
 ```
 
-This generator uses explicit values only.
+The slot generator remains useful and is not deprecated by the poetic redesign.
 
-It does not read private activation packages, read First Spark internals, publish anything online, or claim encryption.
+It:
 
-If the output file already exists, it refuses to overwrite it unless `--overwrite` is provided.
+- uses explicit values only;
+- does not inspect First Spark internals;
+- does not publish;
+- does not claim encryption;
+- refuses to overwrite unless explicitly allowed.
 
-For the generator review, see:
+## Non-match boundary
 
-```text
-../RETURN_SLOT_GENERATOR_REVIEW.md
-```
-
-## Generated-slot end-to-end path
-
-The quiet-garden demo proves this path:
-
-```text
-explicit safe values
--> generated local slot
--> matching return artifact
--> local result file
-```
-
-Short form:
-
-```text
-Slot -> Artifact -> Local Result
-```
-
-It uses:
-
-```text
-../examples/return_artifact.quiet_garden.demo.txt
-```
-
-This path is covered by the test:
-
-```text
-test_generated_slot_can_open_matching_return_artifact
-```
-
-For the integration review, see:
-
-```text
-../RETURN_SLOT_GENERATOR_INTEGRATION_REVIEW.md
-```
-
-For a practical walkthrough, see:
-
-```text
-../RETURN_SLOT_GENERATOR_WALKTHROUGH.md
-```
-
-For the generated-slot milestone, see:
-
-```text
-../RETURN_RESONANCE_GENERATED_SLOT_MILESTONE.md
-```
-
-## Run with explicit local paths
-
-For local experiments beyond the fixed public demo, use:
-
-```bash
-python3 modules/nexus_01_nexus_mesomerie/run_return_resonance.py \
-  --artifact path/to/return_artifact.txt \
-  --slots path/to/return_slots.json \
-  --output-dir path/to/local-memory
-```
-
-This command uses the same Return Resonance layer as the demo, but it does not assume the demo paths.
-
-It still stays local:
-
-```text
-no network access
-no public posting
-no First Spark dependency
-no real encryption
-no identity verification
-```
-
-Exit codes:
-
-```text
-0 -> matched and opened or reused a local result
-1 -> artifact did not match a waiting or opened slot
-2 -> file, parsing, slot-loading, or result-opening error
-```
-
-## Run the non-match demo
-
-The unknown-slot demo artifact intentionally does not match the public demo slot.
-
-Run:
-
-```bash
-python3 modules/nexus_01_nexus_mesomerie/run_return_resonance.py \
-  --artifact modules/nexus_01_nexus_mesomerie/examples/return_artifact.unknown_slot.demo.txt \
-  --slots modules/nexus_01_nexus_mesomerie/examples/return_slot.demo.json \
-  --output-dir /tmp/glossai-return-non-match
-```
-
-Expected behavior:
-
-```text
-Match status: unknown_slot
-No local result was opened because the artifact did not match a slot.
-```
-
-This demonstrates the protection boundary:
-
-```text
 The Nexus does not open every return.
-It opens only what belongs to a waiting or already opened slot.
-```
-
-For a recommended private local folder layout, see:
 
 ```text
-../RETURN_RESONANCE_LOCAL_WORKSPACE.md
+It opens only what belongs
+to a waiting or already opened slot
 ```
 
-For the boundary between private activations and public-safe return slots, see:
+The unknown-slot public fixture demonstrates this boundary.
+
+## Current migration classification
+
+### Retain
 
 ```text
-../RETURN_SLOT_FROM_PRIVATE_ACTIVATION.md
+slots.py
+matching.py
+local-only operation
+route identity
+generate-once and revisit-often
 ```
 
-For a copy-before-use return slot template, see:
+### Split or modify
 
 ```text
-../templates/return_slot.template.json
+__init__.py
+local_opening.py
+resonance_render_bridge.py
+persistent opening orchestration
 ```
 
-## Local files and Git
-
-Generated local result files should stay local.
-
-They are ignored by Git through patterns such as:
+### Archive after dependency review
 
 ```text
-return_resonance_*.local.md
-return_result.local.md
+artifact.py as the earlier text-artifact parser
+result.py as the earlier poetic result generator
+run_return_resonance.py
+run_return_resonance_demo.py
+focused legacy fixtures and tests
 ```
 
-This protects the public/private boundary.
+No file should move until replacement tests and command documentation exist.
 
-## Run the tests
+## Related documents
 
-From the repository root:
+Current:
 
-```bash
-python3 modules/nexus_01_nexus_mesomerie/return_resonance/tests/test_return_resonance_mvp.py
-```
+- `../CURRENT_DIRECTION.md`
+- `../RESONANCE_DOCUMENTATION_STATUS_01.md`
+- `../RESONANCE_TRANSITION_INVENTORY_01.md`
+- `../RESONANCE_DEPENDENCY_AUDIT_01.md`
+- `../RETURN_RESONANCE_LOCAL_WORKSPACE.md`
 
-To verify that First Spark still works independently:
+Historical milestones:
 
-```bash
-python3 modules/nexus_01_nexus_mesomerie/first_spark/tests/test_first_spark_flow.py
-```
-
-Both should pass.
+- `../RETURN_RESONANCE_MVP.md`
+- `../RETURN_RESONANCE_0_1_REVIEW.md`
+- `../RETURN_RESONANCE_GENERATED_SLOT_MILESTONE.md`
+- `../RETURN_SLOT_GENERATOR_REVIEW.md`
+- `../RETURN_SLOT_GENERATOR_INTEGRATION_REVIEW.md`
+- `../RETURN_SLOT_GENERATOR_WALKTHROUGH.md`
 
 ## Privacy boundary
 
-Public repository files may contain:
+This remains a local return layer.
+
+Do not commit or publish:
+
+- real return artifacts;
+- real local slot files;
+- local result files;
+- private activation data;
+- private gift messages;
+- key material.
 
 ```text
-source code
-documentation
-safe examples
-safe templates
-demo slots
-demo artifacts
-demo result files
-public-safe terminology
-```
-
-Public repository files must not contain:
-
-```text
-real private activation data
-real gift messages
-real private packages
-real return artifacts
-real return keys
-real key material
-real encrypted private layers
-private relationship context
-```
-
-## Current non-goals
-
-This MVP does not implement:
-
-```text
-real encryption
-automatic online behavior
-GitHub API integration
-automatic public posting
-full package generation
-account or identity system
-contact matching
-AI-generated live responses
-complex activity graph
-```
-
-## Working formulas
-
-```text
-Slot -> Artifact -> Local Result
-```
-
-```text
-The Nexus decrypts meaning, not necessarily ciphertext.
-```
-
-```text
-Return slots wait.
-Return artifacts answer.
-The Nexus remembers what returned.
-```
-
-```text
-The spark remains small.
-The Nexus learns to answer.
+The public repository may show the shape of a return
+It must not expose the private return itself
 ```
