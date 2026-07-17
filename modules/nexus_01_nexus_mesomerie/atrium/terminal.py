@@ -12,7 +12,12 @@ import sys
 from typing import Protocol
 
 from .activation_bridge import ActivationProfileSource
+from .classified_resonance import (
+    ClassifiedResonanceController,
+    resonance_door_label,
+)
 from .first_spark_adapter import run_first_spark_chamber
+from .resonance_mode import ResonanceMode
 from .resonance_terminal import ResonanceTerminalController
 from .runtime import ChamberRunner, NexusAtriumRuntime
 from .state import AtriumPhase, FIRST_SPARK_CHAMBER, RESONANCE_CHAMBER
@@ -62,7 +67,13 @@ def render_atrium(runtime: NexusAtriumRuntime) -> str:
     lines.append("Visible paths:")
     for chamber_id in state.visible_paths:
         marker = "completed" if state.is_completed(chamber_id) else "open"
-        lines.append(f"- {chamber_id}: {marker}")
+        if chamber_id == RESONANCE_CHAMBER and runtime.resonance_mode is not None:
+            if runtime.resonance_mode is ResonanceMode.BLOCKED_ANSWER_RECOVERY:
+                marker = "blocked — recovery guidance available"
+            label = resonance_door_label(runtime.resonance_mode)
+            lines.append(f"- {chamber_id} — {label}: {marker}")
+        else:
+            lines.append(f"- {chamber_id}: {marker}")
 
     lines.append("")
     lines.append("Type 'help' for available commands.")
@@ -75,7 +86,12 @@ def help_text(runtime: NexusAtriumRuntime | None = None) -> str:
         "first-spark  enter the First Spark Chamber",
     ]
     if runtime is not None and runtime.state.is_enabled(RESONANCE_CHAMBER):
-        lines.append("resonance     enter the Resonance Chamber")
+        if runtime.resonance_mode is None:
+            lines.append("resonance     enter the Resonance Chamber")
+        else:
+            lines.append(
+                "resonance     " + resonance_door_label(runtime.resonance_mode)
+            )
     lines.append("quit         leave Nexus 01")
     return "\n".join(lines)
 
@@ -86,15 +102,24 @@ def run_nexus_terminal(
     resonance_runner: ChamberRunner | None = None,
     input_reader: InputReader = input,
     output_writer: OutputWriter = print,
+    resonance_mode: ResonanceMode | None = None,
+    classified_resonance_runner: ChamberRunner | None = None,
 ) -> NexusAtriumRuntime:
     """Run Nexus 01 and return its final Atrium runtime."""
 
     activation = activation_loader()
-    runtime = NexusAtriumRuntime.from_activation(activation)
-    active_resonance_runner = resonance_runner or ResonanceTerminalController(
-        input_reader=input_reader,
-        output_writer=output_writer,
-    )
+    if resonance_mode is None:
+        runtime = NexusAtriumRuntime.from_activation(activation)
+        active_resonance_runner = resonance_runner or ResonanceTerminalController(
+            input_reader=input_reader,
+            output_writer=output_writer,
+        )
+    else:
+        runtime = NexusAtriumRuntime.from_resonance_mode(resonance_mode)
+        active_resonance_runner = (
+            classified_resonance_runner
+            or ClassifiedResonanceController(resonance_mode, output_writer)
+        )
     output_writer(render_atrium(runtime))
 
     while True:

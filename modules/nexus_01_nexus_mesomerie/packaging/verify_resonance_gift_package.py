@@ -41,13 +41,16 @@ TOKEN_PATH = Path("resonance_token.local.json")
 PUBLIC_RUNTIME_FILES = frozenset(
     {
         Path("run_nexus.py"),
+        Path("recipient_activation.py"),
         *(Path("atrium") / name for name in (
-            "__init__.py", "activation_bridge.py", "first_spark_adapter.py",
-            "profiles.py", "resonance_adapter.py", "resonance_terminal.py",
-            "runtime.py", "state.py", "terminal.py",
+            "__init__.py", "activation_bridge.py", "classified_resonance.py",
+            "first_spark_adapter.py", "profiles.py", "resonance_adapter.py",
+            "resonance_mode.py", "resonance_terminal.py", "runtime.py",
+            "state.py", "terminal.py",
         )),
         *(Path("chambers/resonance") / name for name in (
-            "__init__.py", "choices.py", "composer.py", "flow.py", "terminal_io.py",
+            "__init__.py", "choices.py", "compose.py", "composer.py", "flow.py",
+            "terminal_io.py",
         )),
         Path("first_spark/run_first_spark.py"),
         Path("first_spark/activation.example.json"),
@@ -154,6 +157,17 @@ def verify_package(package_dir: Path) -> VerificationResult:
         stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH
     ):
         result.add_error("START_HERE.sh is not executable")
+    if start_script.is_file():
+        try:
+            start_text = start_script.read_text(encoding="utf-8")
+        except (OSError, UnicodeError) as error:
+            result.add_error(f"START_HERE.sh is not readable UTF-8 text: {error}")
+        else:
+            if "run_nexus.py --legacy-preactivated" not in start_text:
+                result.add_error(
+                    "Legacy Resonance gift launcher must request the explicit "
+                    "--legacy-preactivated compatibility path"
+                )
 
     activation = None
     try:

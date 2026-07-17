@@ -12,7 +12,14 @@ from collections.abc import Callable
 from dataclasses import dataclass
 
 from .activation_bridge import ActivationProfileSource, atrium_state_from_activation
-from .state import AtriumState, AtriumStateError, KNOWN_CHAMBERS
+from .resonance_mode import ResonanceMode
+from .state import (
+    AtriumState,
+    AtriumStateError,
+    FIRST_SPARK_CHAMBER,
+    KNOWN_CHAMBERS,
+    RESONANCE_CHAMBER,
+)
 
 
 class AtriumRuntimeError(ValueError):
@@ -34,6 +41,7 @@ class NexusAtriumRuntime:
     """Own the current Atrium state while delegating all Chamber mechanics."""
 
     state: AtriumState
+    resonance_mode: ResonanceMode | None = None
 
     @classmethod
     def from_activation(
@@ -43,6 +51,19 @@ class NexusAtriumRuntime:
         """Create one runtime from the validated activation boundary value."""
 
         return cls(state=atrium_state_from_activation(activation))
+
+    @classmethod
+    def from_resonance_mode(cls, mode: ResonanceMode) -> "NexusAtriumRuntime":
+        """Create a corrected runtime with one mode-aware Resonance door."""
+
+        if not isinstance(mode, ResonanceMode):
+            raise AtriumRuntimeError("Corrected Atrium runtime requires ResonanceMode.")
+        return cls(
+            state=AtriumState.activated(
+                frozenset({FIRST_SPARK_CHAMBER, RESONANCE_CHAMBER})
+            ),
+            resonance_mode=mode,
+        )
 
     def enter_chamber(
         self,

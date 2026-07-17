@@ -72,12 +72,14 @@ RESONANCE_START_SCRIPT = """#!/usr/bin/env bash
 set -euo pipefail
 
 cd "$(dirname "$0")"
-PYTHONDONTWRITEBYTECODE=1 python3 run_nexus.py
+PYTHONDONTWRITEBYTECODE=1 python3 run_nexus.py --legacy-preactivated
 """
 
 RESONANCE_README = """# Nexus 01 - Resonance Gift
 
-This is a local Nexus 01 gift with First Spark and the Resonance Chamber.
+This is an explicitly legacy pre-activated Nexus 01 Resonance gift. It preserves
+the earlier one-person compatibility flow and is not the corrected recipient-
+choice invitation model.
 
 ## Start
 
@@ -89,7 +91,7 @@ Open a terminal in this folder and run:
 
 You need Python 3 and a Linux terminal. No external Python packages are required.
 
-The Atrium offers `first-spark` and `resonance`. When the Resonance Chamber asks
+The legacy Atrium offers `first-spark` and `resonance`. When the Resonance Chamber asks
 for a token path, enter:
 
 ```text
@@ -98,6 +100,9 @@ resonance_token.local.json
 
 If you save the Return Artifact, choose a local destination you can find again.
 The giver's private matching Return Slot is not contained in this gift.
+
+`START_HERE.sh` deliberately uses `--legacy-preactivated`. Do not remove that
+flag or reinterpret the bundled Token V1 as a corrected Token V2 invitation.
 """
 
 RESONANCE_GIFT_NOTE = """# Resonance Gift Boundary

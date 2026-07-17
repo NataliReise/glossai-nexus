@@ -176,7 +176,7 @@ Do not infer current architecture from either path without reading the documenta
 The corrected activation boundary requires the recipient to choose explicitly:
 
 ```bash
-python3 modules/nexus_01_nexus_mesomerie/recipient_activation.py \
+python3 modules/nexus_01_nexus_mesomerie/run_nexus.py \
   --recipient-alias recipient_name \
   --activation-purpose gift \
   --private-message "A Nexus 01 gift is waiting for you."
@@ -188,8 +188,9 @@ chosen by the recipient, requires a strict Resonance Token V2, and retains a
 byte-identical package-relative selected copy plus a small digest-bound context.
 Moving the Nexus folder therefore does not break the selected reference.
 
-This controller does not enter the Atrium or either Chamber mode. The intended
-later runtime interpretation is:
+The activation controller remains separate from Atrium presentation. The
+`run_nexus.py` start boundary invokes it only when needed, classifies the
+completed state, and opens the Atrium with this runtime interpretation:
 
 ```text
 first-spark                                      -> COMPOSE
@@ -199,7 +200,9 @@ return-resonance + missing/invalid context      -> BLOCKED_ANSWER_RECOVERY
 
 Existing pre-activated Resonance packages remain a legacy-compatible path.
 Their activation is not silently migrated, and no nearby Token is discovered
-to repair missing selected context.
+to repair missing selected context. Their generated launcher calls the explicit
+`run_nexus.py --legacy-preactivated` compatibility path; corrected starts never
+reach the legacy one-person Chamber controller.
 
 ### First Spark
 

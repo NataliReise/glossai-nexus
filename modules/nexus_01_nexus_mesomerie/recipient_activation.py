@@ -41,6 +41,11 @@ from return_resonance.token import (  # noqa: E402
     ResonanceTokenLoadError,
     parse_resonance_token,
 )
+from atrium.resonance_mode import ResonanceMode  # noqa: E402
+
+
+# Compatibility name retained for callers of the first controller boundary.
+ResonanceRuntimeInterpretation = ResonanceMode
 
 
 ACTIVATION_FILENAME = "activation.local.json"
@@ -73,12 +78,6 @@ class ActivationChoiceResult(StrEnum):
     FIRST_SPARK = "first-spark"
     RETURN_RESONANCE = "return-resonance"
     CANCELLED = "cancelled"
-
-
-class ResonanceRuntimeInterpretation(StrEnum):
-    COMPOSE = "COMPOSE"
-    ANSWER = "ANSWER"
-    BLOCKED_ANSWER_RECOVERY = "BLOCKED_ANSWER_RECOVERY"
 
 
 @dataclass(frozen=True)
@@ -157,7 +156,7 @@ def activate_with_resonance_token(
 
 def classify_runtime_interpretation(
     *, nexus_root: Path
-) -> ResonanceRuntimeInterpretation:
+) -> ResonanceMode:
     """Classify completed activation state without changing any local file."""
 
     paths = paths_for_nexus(nexus_root)
@@ -169,7 +168,7 @@ def classify_runtime_interpretation(
         raise RecipientActivationError(str(error)) from error
 
     if activation.profile_id == FIRST_SPARK_PROFILE_ID:
-        return ResonanceRuntimeInterpretation.COMPOSE
+        return ResonanceMode.COMPOSE
     if activation.profile_id != RETURN_RESONANCE_PROFILE_ID:
         raise RecipientActivationError(
             f"Unsupported completed activation profile: {activation.profile_id!r}."
@@ -178,8 +177,8 @@ def classify_runtime_interpretation(
     try:
         _load_and_validate_selected_context(paths)
     except (OSError, UnicodeError, ValueError, ResonanceTokenLoadError):
-        return ResonanceRuntimeInterpretation.BLOCKED_ANSWER_RECOVERY
-    return ResonanceRuntimeInterpretation.ANSWER
+        return ResonanceMode.BLOCKED_ANSWER_RECOVERY
+    return ResonanceMode.ANSWER
 
 
 def run_recipient_activation(

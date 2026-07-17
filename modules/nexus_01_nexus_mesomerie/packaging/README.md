@@ -78,6 +78,15 @@ python3 modules/nexus_01_nexus_mesomerie/packaging/prepare_nexus_gift.py \
   --zip
 ```
 
+Its generated `START_HERE.sh` deliberately invokes:
+
+```text
+python3 run_nexus.py --legacy-preactivated
+```
+
+The corrected default `run_nexus.py` path requires the recipient activation
+controller and never interprets the bundled legacy V1 Token as a V2 invitation.
+
 The legacy command prints the travelling outputs separately from the retained private
 workspace:
 
