@@ -1,0 +1,316 @@
+{
+  "library_version": "resonance-composition-profiles-v0.4",
+  "status": "isolated-experiment",
+  "production_use": false,
+  "form": {"word_pattern": [2, 4, 6, 4, 1], "max_visible_words": 25},
+  "routes": [
+    {
+      "id": "route.central-current.01", "weight": 3, "wish_line": 3,
+      "lines": [
+        "{image.seed}",
+        "{scent.atmosphere} {image_response.response}",
+        "{wish_word} {movement.motion} {movement_response.answer}",
+        "{scent_response.relation}"
+      ]
+    },
+    {
+      "id": "route.early-opening.02", "weight": 2, "wish_line": 2,
+      "lines": [
+        "{image.seed}",
+        "{wish_word} {image_response.wish_action}",
+        "{scent.atmosphere} {movement.motion} {movement_response.bridge}",
+        "{scent_response.relation}"
+      ]
+    },
+    {
+      "id": "route.late-remainder.03", "weight": 2, "wish_line": 4,
+      "lines": [
+        "{image.seed}",
+        "{scent.atmosphere} {image_response.response}",
+        "{movement.motion} {movement_response.expansion}",
+        "{scent_response.wish_relation} {wish_word}"
+      ]
+    }
+  ],
+  "supported_worlds": [
+    {
+      "id": "clear-meeting",
+      "image_id": "waiting-lantern", "image_response_id": "appearing-path",
+      "scent_id": "summer-rain", "scent_response_id": "possibility-of-encounter",
+      "movement_id": "falling-feather", "movement_response_id": "crossing-feather"
+    },
+    {
+      "id": "quiet-interior",
+      "image_id": "book-bench", "image_response_id": "two-voices-one-page",
+      "scent_id": "books-and-cedar", "scent_response_id": "open-books-beside-one-another",
+      "movement_id": "loosening-knot", "movement_response_id": "gathering-without-tightening"
+    },
+    {
+      "id": "distance-return",
+      "image_id": "open-starry-window", "image_response_id": "answering-distant-light",
+      "scent_id": "evening-salt", "scent_response_id": "sense-of-return",
+      "movement_id": "returning-tide", "movement_response_id": "stream-back-to-sea"
+    },
+    {
+      "id": "playful-transformation",
+      "image_id": "stone-in-water", "image_response_id": "colours-carried-outward",
+      "scent_id": "first-snow", "scent_response_id": "edge-of-beginning",
+      "movement_id": "opening-circle", "movement_response_id": "playful-waves"
+    },
+    {
+      "id": "shared-silence",
+      "image_id": "bridge-in-mist", "image_response_id": "shared-silence",
+      "scent_id": "warm-bread", "scent_response_id": "second-place-at-table",
+      "movement_id": "crossing-light", "movement_response_id": "shadow-alongside"
+    }
+  ],
+  "profiles": {
+    "image": [
+      {"id": "image.waiting-lantern", "source_id": "waiting-lantern", "roles": {"seed": [
+        {"id": "lantern.seed.dark", "text": "Waiting lantern", "weight": 3, "content_verb": null, "visible_nouns": ["lantern"]},
+        {"id": "lantern.seed.ember", "text": "Patient ember", "weight": 2, "content_verb": null, "visible_nouns": ["ember"]},
+        {"id": "lantern.seed.night", "text": "Lantern night", "weight": 1, "content_verb": null, "visible_nouns": ["lantern", "night"]}
+      ]}},
+      {"id": "image.book-bench", "source_id": "book-bench", "roles": {"seed": [
+        {"id": "book.seed.bench", "text": "Open volume", "weight": 3, "content_verb": null, "visible_nouns": ["volume"]},
+        {"id": "book.seed.page", "text": "Waiting page", "weight": 2, "content_verb": null, "visible_nouns": ["page"]},
+        {"id": "book.seed.tree", "text": "Quiet bench", "weight": 2, "content_verb": null, "visible_nouns": ["bench"]}
+      ]}},
+      {"id": "image.open-starry-window", "source_id": "open-starry-window", "roles": {"seed": [
+        {"id": "window.seed.stars", "text": "Star window", "weight": 3, "content_verb": null, "visible_nouns": ["star", "window"]},
+        {"id": "window.seed.night", "text": "Night casement", "weight": 2, "content_verb": null, "visible_nouns": ["night", "casement"]},
+        {"id": "window.seed.sky", "text": "Sky threshold", "weight": 2, "content_verb": null, "visible_nouns": ["sky", "threshold"]}
+      ]}},
+      {"id": "image.stone-in-water", "source_id": "stone-in-water", "roles": {"seed": [
+        {"id": "stone.seed.paint", "text": "Painted stone", "weight": 3, "content_verb": null, "visible_nouns": ["stone"]},
+        {"id": "stone.seed.water", "text": "Water colour", "weight": 2, "content_verb": null, "visible_nouns": ["water", "colour"]},
+        {"id": "stone.seed.river", "text": "River pigment", "weight": 2, "content_verb": null, "visible_nouns": ["river", "pigment"]}
+      ]}},
+      {"id": "image.bridge-in-mist", "source_id": "bridge-in-mist", "roles": {"seed": [
+        {"id": "bridge.seed.mist", "text": "Mist bridge", "weight": 3, "content_verb": null, "visible_nouns": ["mist", "bridge"]},
+        {"id": "bridge.seed.shores", "text": "Hidden shores", "weight": 2, "content_verb": null, "visible_nouns": ["shores"]},
+        {"id": "bridge.seed.span", "text": "Narrow span", "weight": 2, "content_verb": null, "visible_nouns": ["span"]}
+      ]}}
+    ],
+    "image_response": [
+      {"id": "image-response.appearing-path", "source_id": "appearing-path", "roles": {
+        "response": [
+          {"id": "path.response.forms", "text": "path forms", "weight": 3, "content_verb": "form", "visible_nouns": ["path"]},
+          {"id": "path.response.nears", "text": "way nears", "weight": 2, "content_verb": "near", "visible_nouns": ["way"]}
+        ],
+        "wish_action": [
+          {"id": "path.wish.finds", "text": "finds one pathway", "weight": 3, "content_verb": "find", "visible_nouns": ["pathway"]},
+          {"id": "path.wish.enters", "text": "enters waiting dark", "weight": 2, "content_verb": "enter", "visible_nouns": ["dark"]}
+        ]
+      }},
+      {"id": "image-response.two-voices", "source_id": "two-voices-one-page", "roles": {
+        "response": [
+          {"id": "voices.response.meet", "text": "voices meet", "weight": 3, "content_verb": "meet", "visible_nouns": ["voices"]},
+          {"id": "voices.response.answer", "text": "page answers", "weight": 2, "content_verb": "answer", "visible_nouns": ["page"]}
+        ],
+        "wish_action": [
+          {"id": "voices.wish.joins", "text": "joins two voices", "weight": 3, "content_verb": "join", "visible_nouns": ["voices"]},
+          {"id": "voices.wish.turns", "text": "turns another page", "weight": 2, "content_verb": "turn", "visible_nouns": ["page"]}
+        ]
+      }},
+      {"id": "image-response.distant-light", "source_id": "answering-distant-light", "roles": {
+        "response": [
+          {"id": "light.response.answers", "text": "light answers", "weight": 3, "content_verb": "answer", "visible_nouns": ["light"]},
+          {"id": "light.response.signals", "text": "star signals", "weight": 2, "content_verb": "signal", "visible_nouns": ["star"]}
+        ],
+        "wish_action": [
+          {"id": "light.wish.opens", "text": "opens the distance", "weight": 3, "content_verb": "open", "visible_nouns": ["distance"]},
+          {"id": "light.wish.follows", "text": "follows distant fire", "weight": 2, "content_verb": "follow", "visible_nouns": ["fire"]}
+        ]
+      }},
+      {"id": "image-response.colours", "source_id": "colours-carried-outward", "roles": {
+        "response": [
+          {"id": "colours.response.travel", "text": "colours travel", "weight": 3, "content_verb": "travel", "visible_nouns": ["colours"]},
+          {"id": "colours.response.spread", "text": "rings spread", "weight": 2, "content_verb": "spread", "visible_nouns": ["rings"]}
+        ],
+        "wish_action": [
+          {"id": "colours.wish.sends", "text": "sends colour outward", "weight": 3, "content_verb": "send", "visible_nouns": ["colour"]},
+          {"id": "colours.wish.stirs", "text": "stirs painted water", "weight": 2, "content_verb": "stir", "visible_nouns": ["water"]}
+        ]
+      }},
+      {"id": "image-response.shared-silence", "source_id": "shared-silence", "roles": {
+        "response": [
+          {"id": "silence.response.deepens", "text": "silence deepens", "weight": 3, "content_verb": "deepen", "visible_nouns": ["silence"]},
+          {"id": "silence.response.connects", "text": "stillness joins", "weight": 2, "content_verb": "join", "visible_nouns": ["stillness"]}
+        ],
+        "wish_action": [
+          {"id": "silence.wish.crosses", "text": "crosses shared quiet", "weight": 3, "content_verb": "cross", "visible_nouns": ["quiet"]},
+          {"id": "silence.wish.holds", "text": "holds both shores", "weight": 2, "content_verb": "hold", "visible_nouns": ["shores"]}
+        ]
+      }}
+    ],
+    "scent": [
+      {"id": "scent.summer-rain", "source_id": "summer-rain", "roles": {"atmosphere": [
+        {"id": "rain.atmosphere.forest", "text": "Rainlit forest", "weight": 3, "content_verb": null, "visible_nouns": ["forest"]},
+        {"id": "rain.atmosphere.leaves", "text": "Summer leaves", "weight": 2, "content_verb": null, "visible_nouns": ["leaves"]}
+      ]}},
+      {"id": "scent.books-cedar", "source_id": "books-and-cedar", "roles": {"atmosphere": [
+        {"id": "cedar.atmosphere.room", "text": "Cedar room", "weight": 3, "content_verb": null, "visible_nouns": ["cedar", "room"]},
+        {"id": "cedar.atmosphere.paper", "text": "Old paper", "weight": 2, "content_verb": null, "visible_nouns": ["paper"]}
+      ]}},
+      {"id": "scent.evening-salt", "source_id": "evening-salt", "roles": {"atmosphere": [
+        {"id": "salt.atmosphere.air", "text": "Salt air", "weight": 3, "content_verb": null, "visible_nouns": ["salt", "air"]},
+        {"id": "salt.atmosphere.evening", "text": "Briny evening", "weight": 2, "content_verb": null, "visible_nouns": ["evening"]}
+      ]}},
+      {"id": "scent.first-snow", "source_id": "first-snow", "roles": {"atmosphere": [
+        {"id": "snow.atmosphere.air", "text": "Cold air", "weight": 3, "content_verb": null, "visible_nouns": ["air"]},
+        {"id": "snow.atmosphere.morning", "text": "Snowbound morning", "weight": 2, "content_verb": null, "visible_nouns": ["morning"]}
+      ]}},
+      {"id": "scent.warm-bread", "source_id": "warm-bread", "roles": {"atmosphere": [
+        {"id": "bread.atmosphere.kitchen", "text": "Warm kitchen", "weight": 3, "content_verb": null, "visible_nouns": ["kitchen"]},
+        {"id": "bread.atmosphere.loaf", "text": "Quiet loaf", "weight": 2, "content_verb": null, "visible_nouns": ["loaf"]}
+      ]}}
+    ],
+    "scent_response": [
+      {"id": "scent-response.encounter", "source_id": "possibility-of-encounter", "roles": {
+        "relation": [
+          {"id": "encounter.relation.room", "text": "leaves room for meeting", "weight": 3, "content_verb": "leave", "visible_nouns": ["room", "meeting"]},
+          {"id": "encounter.relation.nearness", "text": "keeps nearness still possible", "weight": 2, "content_verb": "keep", "visible_nouns": ["nearness"]}
+        ],
+        "wish_relation": [
+          {"id": "encounter.wish.awaits", "text": "one meeting awaits", "weight": 3, "content_verb": "await", "visible_nouns": ["meeting"]},
+          {"id": "encounter.wish.nears", "text": "possible nearness follows", "weight": 2, "content_verb": "follow", "visible_nouns": ["nearness"]}
+        ]
+      }},
+      {"id": "scent-response.open-books", "source_id": "open-books-beside-one-another", "roles": {
+        "relation": [
+          {"id": "books.relation.beside", "text": "two stories rest beside", "weight": 3, "content_verb": "rest", "visible_nouns": ["stories"]},
+          {"id": "books.relation.margin", "text": "shared margins remain open", "weight": 2, "content_verb": "remain", "visible_nouns": ["margins"]}
+        ],
+        "wish_relation": [
+          {"id": "books.wish.margin", "text": "one margin keeps", "weight": 3, "content_verb": "keep", "visible_nouns": ["margin"]},
+          {"id": "books.wish.pages", "text": "open pages shelter", "weight": 2, "content_verb": "shelter", "visible_nouns": ["pages"]}
+        ]
+      }},
+      {"id": "scent-response.return", "source_id": "sense-of-return", "roles": {
+        "relation": [
+          {"id": "return.relation.homeward", "text": "draws one current homeward", "weight": 3, "content_verb": "draw", "visible_nouns": ["current"]},
+          {"id": "return.relation.shore", "text": "keeps the shore near", "weight": 2, "content_verb": "keep", "visible_nouns": ["shore"]}
+        ],
+        "wish_relation": [
+          {"id": "return.wish.current", "text": "one current carries", "weight": 3, "content_verb": "carry", "visible_nouns": ["current"]},
+          {"id": "return.wish.shore", "text": "the shore remembers", "weight": 2, "content_verb": "remember", "visible_nouns": ["shore"]}
+        ]
+      }},
+      {"id": "scent-response.beginning", "source_id": "edge-of-beginning", "roles": {
+        "relation": [
+          {"id": "beginning.relation.edge", "text": "holds the beginning near", "weight": 3, "content_verb": "hold", "visible_nouns": ["beginning"]},
+          {"id": "beginning.relation.morning", "text": "lets new morning gather", "weight": 2, "content_verb": "gather", "visible_nouns": ["morning"]}
+        ],
+        "wish_relation": [
+          {"id": "beginning.wish.edge", "text": "the edge receives", "weight": 3, "content_verb": "receive", "visible_nouns": ["edge"]},
+          {"id": "beginning.wish.morning", "text": "new morning carries", "weight": 2, "content_verb": "carry", "visible_nouns": ["morning"]}
+        ]
+      }},
+      {"id": "scent-response.table", "source_id": "second-place-at-table", "roles": {
+        "relation": [
+          {"id": "table.relation.place", "text": "keeps one place waiting", "weight": 3, "content_verb": "keep", "visible_nouns": ["place"]},
+          {"id": "table.relation.table", "text": "leaves the table open", "weight": 2, "content_verb": "leave", "visible_nouns": ["table"]}
+        ],
+        "wish_relation": [
+          {"id": "table.wish.place", "text": "one place welcomes", "weight": 3, "content_verb": "welcome", "visible_nouns": ["place"]},
+          {"id": "table.wish.table", "text": "the table shelters", "weight": 2, "content_verb": "shelter", "visible_nouns": ["table"]}
+        ]
+      }}
+    ],
+    "movement": [
+      {"id": "movement.feather", "source_id": "falling-feather", "roles": {"motion": [
+        {"id": "feather.motion.turns", "text": "turns downward", "weight": 3, "content_verb": "turn", "visible_nouns": []},
+        {"id": "feather.motion.drifts", "text": "drifts lightly", "weight": 2, "content_verb": "drift", "visible_nouns": []}
+      ]}},
+      {"id": "movement.knot", "source_id": "loosening-knot", "roles": {"motion": [
+        {"id": "knot.motion.loosens", "text": "loosens slowly", "weight": 3, "content_verb": "loosen", "visible_nouns": []},
+        {"id": "knot.motion.releases", "text": "releases tension", "weight": 2, "content_verb": "release", "visible_nouns": ["tension"]}
+      ]}},
+      {"id": "movement.tide", "source_id": "returning-tide", "roles": {"motion": [
+        {"id": "tide.motion.turns", "text": "turns homeward", "weight": 3, "content_verb": "turn", "visible_nouns": []},
+        {"id": "tide.motion.rises", "text": "rises again", "weight": 2, "content_verb": "rise", "visible_nouns": []}
+      ]}},
+      {"id": "movement.circle", "source_id": "opening-circle", "roles": {"motion": [
+        {"id": "circle.motion.opens", "text": "opens slowly", "weight": 3, "content_verb": "open", "visible_nouns": []},
+        {"id": "circle.motion.widens", "text": "widens outward", "weight": 2, "content_verb": "widen", "visible_nouns": []}
+      ]}},
+      {"id": "movement.light", "source_id": "crossing-light", "roles": {"motion": [
+        {"id": "floorlight.motion.crosses", "text": "crosses floorward", "weight": 3, "content_verb": "cross", "visible_nouns": []},
+        {"id": "floorlight.motion.travels", "text": "travels quietly", "weight": 2, "content_verb": "travel", "visible_nouns": []}
+      ]}}
+    ],
+    "movement_response": [
+      {"id": "movement-response.feather", "source_id": "crossing-feather", "roles": {
+        "answer": [
+          {"id": "feather.answer.another", "text": "another feather crosses", "weight": 3, "content_verb": "cross", "visible_nouns": ["feather"]},
+          {"id": "feather.answer.air", "text": "shared air responds", "weight": 2, "content_verb": "respond", "visible_nouns": ["air"]}
+        ],
+        "bridge": [
+          {"id": "feather.bridge.paths", "text": "paths cross", "weight": 3, "content_verb": "cross", "visible_nouns": ["paths"]},
+          {"id": "feather.bridge.air", "text": "air answers", "weight": 2, "content_verb": "answer", "visible_nouns": ["air"]}
+        ],
+        "expansion": [
+          {"id": "feather.expansion.crossing", "text": "another feather crosses nearby", "weight": 3, "content_verb": "cross", "visible_nouns": ["feather"]},
+          {"id": "feather.expansion.air", "text": "shared air answers softly", "weight": 2, "content_verb": "answer", "visible_nouns": ["air"]}
+        ]
+      }},
+      {"id": "movement-response.threads", "source_id": "gathering-without-tightening", "roles": {
+        "answer": [
+          {"id": "threads.answer.gather", "text": "loose threads gather", "weight": 3, "content_verb": "gather", "visible_nouns": ["threads"]},
+          {"id": "threads.answer.hold", "text": "soft fibres hold", "weight": 2, "content_verb": "hold", "visible_nouns": ["fibres"]}
+        ],
+        "bridge": [
+          {"id": "threads.bridge.gather", "text": "threads gather", "weight": 3, "content_verb": "gather", "visible_nouns": ["threads"]},
+          {"id": "threads.bridge.rest", "text": "fibres rest", "weight": 2, "content_verb": "rest", "visible_nouns": ["fibres"]}
+        ],
+        "expansion": [
+          {"id": "threads.expansion.gather", "text": "loose threads gather gently", "weight": 3, "content_verb": "gather", "visible_nouns": ["threads"]},
+          {"id": "threads.expansion.tightening", "text": "drawing fibres together gently", "weight": 2, "content_verb": "draw", "visible_nouns": ["fibres"]}
+        ]
+      }},
+      {"id": "movement-response.sea", "source_id": "stream-back-to-sea", "roles": {
+        "answer": [
+          {"id": "sea.answer.stream", "text": "one stream follows", "weight": 3, "content_verb": "follow", "visible_nouns": ["stream"]},
+          {"id": "sea.answer.water", "text": "narrow water converges", "weight": 2, "content_verb": "converge", "visible_nouns": ["water"]}
+        ],
+        "bridge": [
+          {"id": "sea.bridge.stream", "text": "stream flows", "weight": 3, "content_verb": "flow", "visible_nouns": ["stream"]},
+          {"id": "sea.bridge.waters", "text": "waters converge", "weight": 2, "content_verb": "converge", "visible_nouns": ["waters"]}
+        ],
+        "expansion": [
+          {"id": "sea.expansion.stream", "text": "one stream seeks seaward", "weight": 3, "content_verb": "seek", "visible_nouns": ["stream"]},
+          {"id": "sea.expansion.waters", "text": "narrow waters join again", "weight": 2, "content_verb": "join", "visible_nouns": ["waters"]}
+        ]
+      }},
+      {"id": "movement-response.waves", "source_id": "playful-waves", "roles": {
+        "answer": [
+          {"id": "waves.answer.edges", "text": "bright edges curl", "weight": 3, "content_verb": "curl", "visible_nouns": ["edges"]},
+          {"id": "waves.answer.waves", "text": "two waves answer", "weight": 2, "content_verb": "answer", "visible_nouns": ["waves"]}
+        ],
+        "bridge": [
+          {"id": "waves.bridge.edges", "text": "edges curl", "weight": 3, "content_verb": "curl", "visible_nouns": ["edges"]},
+          {"id": "waves.bridge.waves", "text": "waves play", "weight": 2, "content_verb": "play", "visible_nouns": ["waves"]}
+        ],
+        "expansion": [
+          {"id": "waves.expansion.edges", "text": "bright edges curl playfully", "weight": 3, "content_verb": "curl", "visible_nouns": ["edges"]},
+          {"id": "waves.expansion.waves", "text": "two waves answer outward", "weight": 2, "content_verb": "answer", "visible_nouns": ["waves"]}
+        ]
+      }},
+      {"id": "movement-response.shadow", "source_id": "shadow-alongside", "roles": {
+        "answer": [
+          {"id": "shadow.answer.moves", "text": "one shadow follows", "weight": 3, "content_verb": "follow", "visible_nouns": ["shadow"]},
+          {"id": "shadow.answer.companion", "text": "darkness travels alongside", "weight": 2, "content_verb": "travel", "visible_nouns": ["darkness"]}
+        ],
+        "bridge": [
+          {"id": "shadow.bridge.follows", "text": "shadow follows", "weight": 3, "content_verb": "follow", "visible_nouns": ["shadow"]},
+          {"id": "shadow.bridge.moves", "text": "darkness moves", "weight": 2, "content_verb": "move", "visible_nouns": ["darkness"]}
+        ],
+        "expansion": [
+          {"id": "shadow.expansion.follows", "text": "one shadow follows alongside", "weight": 3, "content_verb": "follow", "visible_nouns": ["shadow"]},
+          {"id": "shadow.expansion.moves", "text": "quiet darkness moves beside", "weight": 2, "content_verb": "move", "visible_nouns": ["darkness"]}
+        ]
+      }}
+    ]
+  }
+}
