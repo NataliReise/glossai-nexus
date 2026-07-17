@@ -30,8 +30,7 @@ The first Nexus grew from that question.
 It was not made to hold people together.
 It was made to leave room between them.
 
-Each chamber offered a different way of entering that space:
-through curiosity, memory, play, reflection, or response.
+Its chambers opened different forms of play, encounter, discovery, communication, and response.
 
 Nothing moved unless someone chose to carry it.
 Nothing opened unless someone chose to enter.
@@ -84,27 +83,81 @@ when one person sends a spark
 and another person answers,
 resonance begins.
 
-## Why there are chambers
+## Chambers and constellations
 
-The chambers are not merely features.
+A Nexus is not formed by a single chamber.
 
-Each chamber explores a different part of the larger Nexus question.
+Its chambers create different forms of play, encounter, communication, discovery, and response.
+
+Some ask for an answer.
+Some hide a path.
+Some can only be understood by moving through them.
+Others change through what visitors carry into them.
+
+A chamber does not need to begin with a stated question.
+It may begin with a trace, a rule, a puzzle, an encounter, a locked passage, or an unfinished path.
+Its meaning may emerge only through entering, exploring, and finding a way through.
+
+Each Nexus gathers its chambers in a particular constellation.
+This combination gives it its own character.
+
+A chamber may return in another Nexus,
+surrounded by different rooms and opening different paths.
+
+New chambers may emerge.
+Existing chambers may be changed, recombined, or encountered anew.
+
+No chamber contains the whole of Nexus.
+Its meaning changes beside other rooms,
+in the hands of other visitors,
+and along paths that did not exist before.
+
+## What leaves a chamber
+
+What is found in a chamber does not always remain there.
+
+Some traces remain with the visitor.
+Some are left behind.
+Some are carried onward.
+
+Nothing must travel.
+But when something is freely carried,
+another person may choose to meet it.
+
+A visitor may place a trace into another person's hands,
+leave it where someone else may discover it,
+or carry it toward a chamber that has not yet opened.
+
+The second person does not merely receive what was found.
+They may answer it,
+alter its direction,
+carry it farther,
+or return something that did not exist before.
+
+In this way, the chambers become passages between visitors.
+
+One visitor finds a trace.
+Another gives it an answer.
+Between them, a new path appears.
+
+## First Spark and Resonance
+
+The chambers are not required to follow one design formula, but particular chambers may still carry particular questions.
 
 ### First Spark Chamber
-
-> How does something begin?
-
-Or, more specifically:
 
 > What begins when someone chooses to enter?
 
 The First Spark Chamber is concerned with first contact, curiosity, discovery, and the small act that makes a dormant possibility present.
 
+A spark may remain with the person who found it.
+It may also be carried beyond the chamber and offered to someone else.
+
 ### Resonance Chamber
 
 > How can something be answered without being fixed in meaning?
 
-The Resonance Chamber is concerned with an unfinished contribution, a voluntary response, and the space that forms between them.
+The Resonance Chamber is concerned with an open contribution, a voluntary response, and the space that forms between them.
 
 One person may shape a sensory message from an image, a scent, a movement, and one word.
 Another person may answer each element in their own way.
@@ -113,17 +166,51 @@ The resonance emerges between them.
 
 ### Possible future chambers
 
-Future chambers may explore questions such as:
+Future chambers may grow from questions, but they may also grow from new forms of play, cooperation, secrecy, memory, movement, or exchange.
 
-> How can something be remembered without being possessed?
+They may explore possibilities such as:
 
-> How can something change without losing every trace of what it was?
+> remembering without possessing
 
-> How can something be carried without carrying too much?
+> changing without erasing every earlier trace
 
-> How can something remain private while still allowing encounter?
+> carrying something without carrying too much
 
-These are possibilities, not commitments to specific modules.
+> remaining private while still allowing encounter
+
+These are directions, not commitments to specific modules or a requirement that every chamber explain itself through a question.
+
+## Nexus as a growing resonance
+
+Nexus does not grow toward one final form.
+
+It grows through resonance:
+
+- between chambers
+- between modules
+- between visitors
+- between what is found and what is answered
+- between old paths and paths that have not yet appeared
+
+Each new Nexus may gather familiar chambers differently.
+It may add a room, reopen an old passage, or reveal that two traces belong near one another.
+
+Each module may contribute something to the inner history without completing it.
+A new path does not need to replace an earlier one.
+Several paths may remain visible beside one another.
+
+Somewhere beneath the chambers, their changes leave traces.
+
+They branch.
+They cross.
+They return.
+They remain beside paths that were not taken.
+
+When new chambers appear, their stories do not erase the old ones.
+They join them.
+
+The inner story does not name the technical place where these histories are preserved and brought together.
+It knows only that the paths of Nexus can remember one another.
 
 ## Carriers, traces, and choice
 
@@ -139,6 +226,7 @@ The inner story therefore keeps several acts distinct:
 - noticing
 - choosing
 - entering
+- playing
 - answering
 - carrying onward
 - returning
@@ -168,6 +256,9 @@ The archive may offer three depths of orientation:
 A visitor should never need to read the archive in order to complete a chamber path.
 Curiosity opens the archive; obligation does not.
 
+The archive may preserve how chambers, paths, and constellations have changed.
+It does not need to claim that one arrangement is the final or authoritative form of Nexus.
+
 ## The role of the visitor
 
 A visitor is not merely a user operating a tool.
@@ -178,14 +269,20 @@ Within the inner story, a visitor is someone who may:
 - discover instead of merely receive instructions
 - ask for clarity without breaking the atmosphere
 - choose a guided path or explore freely
+- solve, combine, test, or reinterpret what a chamber presents
 - revise choices before completing them
+- keep a trace private
 - carry a trace deliberately
+- offer something found to another person
 - answer without being told what the answer should mean
 - leave without being punished for leaving
 
 The visitor gives the chamber its momentary form.
 
 The chamber provides structure, but not ownership of the encounter.
+
+Visitors also give Nexus its wider movement.
+What they carry from one chamber may become the beginning of another person's path.
 
 ## The role of the voice
 
@@ -216,14 +313,18 @@ It should leave room.
 
 A resonance is not a decoded secret and not a message with one final meaning.
 
-It is a relation formed from two independent contributions.
+It is a relation formed from independent contributions.
 
-The first person leaves something incomplete enough to be met.
-The second person answers without being required to mirror, solve, or obey it.
+One person may find, shape, solve, or leave something that another person can meet.
+The next person may answer without being required to mirror, decode, or obey it.
 
-The resulting text may bring both contributions into relation, but it does not erase their difference.
+The resulting encounter may bring both contributions into relation, but it does not erase their difference.
 
-Resonance begins where neither contribution possesses the whole.
+Resonance begins where no single contribution possesses the whole.
+
+The project itself may be understood in the same way.
+No module, chamber, visitor, or path contains all of Nexus.
+Its larger form emerges through what is carried, changed, answered, and joined.
 
 ## Practical principles inside the story
 
@@ -232,10 +333,14 @@ The inner story should preserve these principles consistently:
 - Nothing travels automatically.
 - Nothing opens merely because it is present.
 - Nothing private is carried by accident.
+- Not everything found must be shared.
+- What is carried may be answered without being obeyed.
 - A person may explore or ask for guidance.
 - A person may revise unfinished choices.
 - A person may leave.
 - An answer remains an answer, not an obligation.
+- Chambers may be reflective, communicative, playful, puzzling, or cooperative.
+- No single chamber design is mandatory.
 - The archive is optional.
 - Clarity and atmosphere support one another.
 - Connection remains meaningful only while it remains free.
@@ -249,13 +354,24 @@ The following text may serve as a future archive entry or opening fragment:
 > How might connection travel without becoming control?
 >
 > It became a collection of small, local places.
-> Each could be opened, explored, carried, and passed on.
+> Their chambers opened different forms of play,
+> discovery, communication, and response.
 >
-> They did not send by themselves.
-> They did not decide what a connection should become.
+> Each Nexus gathered them differently.
+> New chambers appeared beside familiar ones.
+> Paths branched, crossed, and sometimes met again.
 >
-> They waited for a person to enter,
-> and left enough room for another person to answer.
+> Nothing moved by itself.
+> A visitor chose what to enter,
+> what to keep,
+> and what to carry onward.
+>
+> What one person found,
+> another might meet and answer.
+>
+> In this way, Nexus continued to grow:
+> not toward one final form,
+> but through resonance.
 
 ## Short poetic self-description
 
@@ -263,8 +379,11 @@ The following text may serve as a future archive entry or opening fragment:
 >
 > It is a small place carried between them.
 >
-> It waits.
-> It opens.
+> Its chambers gather in changing constellations.
+> Some hide a path.
+> Some wait for an answer.
+> Some reveal themselves only through play.
+>
 > It remembers only what it is asked to keep.
 >
 > And sometimes,
@@ -282,5 +401,7 @@ The inner story should remain capable of growth. Current open questions include:
 - Can chambers remember prior visits without weakening local privacy principles?
 - How should future chambers differ in atmosphere while still feeling part of one Nexus family?
 - Which words belong to practical explanation, and which should remain mythic terms?
+- How might the inner story name the place where branching paths and histories meet, without referring directly to Git?
+- Which chambers may travel between modules unchanged, and which should transform through every new constellation?
 
 These questions are part of the story's development rather than gaps that must be closed immediately.
