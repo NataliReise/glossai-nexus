@@ -132,6 +132,92 @@ This example is illustrative only. No manifest format has been selected.
 
 A chamber contract should make composition possible without forcing all chambers to share the same internal implementation.
 
+## Complete chamber ownership
+
+A chamber should own the complete experience and process that gives it meaning, even when it uses shared line infrastructure internally.
+
+For the Resonance Chamber, this means that the chamber boundary should include the complete resonance journey rather than only the visible conversation step. Its responsibility may include:
+
+- composing the originating resonance
+- image, scent, and movement choices
+- wish and return words
+- Resonance Token creation
+- route and artifact identities
+- travelling invitations
+- private Return Workspaces
+- answer and return flows
+- Return Artifacts
+- local matching and persistence
+- Nachhall generation and reopening
+- cancellation, privacy, and publication rules
+
+Shared services may still provide storage, activation, packaging, identity, or state support. The semantic ownership of the resonance process remains with the Resonance Chamber.
+
+> The Resonance Chamber owns the complete resonance journey, even when parts of that journey use shared line infrastructure.
+
+## Docking model and the Atrium
+
+A useful architectural image is a modular station whose complete chambers dock through compatible thresholds.
+
+Each chamber keeps its own interior, purpose, and implementation. It does not need to dissolve into one large central system in order to belong to a Nexus. What must remain compatible are the thresholds: the contracts through which chambers are discovered, entered, left, and connected.
+
+This resembles a station assembled from complete docked modules:
+
+- a chamber is a complete functional module
+- a threshold is a compatible docking interface
+- a constellation is the current arrangement of docked chambers
+- an Atrium is a possible hub or connecting module
+- line infrastructure supports the station without owning every chamber's meaning
+
+> A Nexus grows by docking complete chambers, not by dissolving them into one system.
+
+### Atrium metadata
+
+A future Atrium may discover available chambers automatically and read only the metadata that those chambers explicitly expose for navigation.
+
+A chamber might publish a public navigation surface such as:
+
+```yaml
+atrium:
+  visible: true
+  label: Enter Resonance
+  description: Begin or answer a carried resonance.
+  order: 20
+  public_status: waiting
+```
+
+The exact format remains undecided.
+
+The Atrium may use such metadata to determine:
+
+- which chambers are docked
+- which thresholds are visible
+- which paths are currently available
+- which public-safe status may be shown
+- how a chamber names or describes its entrance
+- how the current constellation should be presented
+
+The Atrium must not inspect private chamber state merely because it can launch the chamber. A Resonance Chamber may reveal that a return is waiting without exposing a wish word, return word, private message, or artifact content.
+
+> The Atrium does not define the chambers. It listens for the doors they choose to reveal.
+
+### Atrium as role rather than fixed interface
+
+The Atrium need not always be one terminal screen or one permanent central room.
+
+Its deeper role may be to make several possible paths perceptible. Different implementations could render the same public chamber metadata as:
+
+- a retro-terminal hub
+- a graphical map
+- an accessible text menu
+- an audio environment
+- a spatial installation
+- a physical connecting object
+
+Some constellations may have no Atrium. Others may contain several connecting hubs. The Atrium should therefore remain a possible docking and orientation form, not the universal owner of Nexus.
+
+> Each chamber keeps its own interior. Nexus begins where their thresholds meet.
+
 ## Construction guides
 
 Each mature module line may eventually provide a construction guide describing:
@@ -209,6 +295,7 @@ Before the current milestone, the project should not introduce a broad refactor 
 - generalized line runtimes
 - module generation
 - cross-language chamber contracts
+- automatic Atrium discovery
 
 The current playable and tested flow should remain stable.
 
@@ -219,10 +306,11 @@ After the current milestone, a careful exploration may proceed in this order:
 1. map the existing Nexus 01 architecture
 2. distinguish Mesomerie line infrastructure from First Spark-specific behaviour
 3. define the smallest useful chamber contract
-4. package one existing chamber against that contract
-5. build a second, deliberately different module constellation
-6. revise the contract from both examples
-7. only then prototype a Module Builder
+4. define a minimal public Atrium metadata surface
+5. package one existing chamber against that contract
+6. build a second, deliberately different module constellation
+7. revise the contract from both examples
+8. only then prototype a Module Builder
 
 ## Guiding principle
 
