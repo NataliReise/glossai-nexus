@@ -76,7 +76,7 @@ def main(argv: list[str] | None = None) -> int:
     print(f"Local result {action}:", result.path)
     print("Slot state:", "opened now" if result.slot_state_changed else "already opened")
     print()
-    print("Open the Markdown file above to inspect the Resonance Artifact and Nexus Echo.")
+    print("Open the Markdown file above to inspect the compact Resonance result.")
     return 0
 
 

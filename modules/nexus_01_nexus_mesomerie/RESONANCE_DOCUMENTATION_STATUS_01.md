@@ -27,7 +27,7 @@ CURRENT_DIRECTION.md
 
 - `CURRENT_DIRECTION.md`
 
-Defines the compact Nachhall as the complete future resonance form:
+Defines the compact Nachhall as the complete production resonance form:
 
 ```text
 2 / 4 / 6 / 4 / 1
@@ -43,13 +43,20 @@ It supersedes the mandatory V0.2 long-form production direction.
 
 These files define classification, dependency boundaries, migration order, and archive rules.
 
-## Active experiment
+## Production compact path and experimental lineage
+
+The active production files are:
+
+- `return_resonance/compact_generator.py`
+- `open_resonance_return.py`
+
+They enforce the five-line `2 / 4 / 6 / 4 / 1` visible contract and persistent
+generate-once opening.
 
 - `experiments/nachhall_composition_v0_3/README.md`
 
-This is the only current poetic composition experiment.
-
-It is not yet the production path.
+This experiment remains poetic review lineage. It is not the production entry
+point.
 
 ---
 
@@ -241,14 +248,17 @@ make_return_slot.py
 
 This family remains runnable history and local infrastructure. Its poetic output is not the V0.3 target.
 
-## V0.1 rich rendering command family
+## Production compact opening and retained V0.1 rendering
 
 ```text
 open_resonance_return.py
+return_resonance/compact_generator.py
 resonance_language_library/render_resonance_output.py
 ```
 
-This family remains temporarily runnable until the compact production path replaces it.
+`open_resonance_return.py` and `compact_generator.py` form the current persistent
+compact production path. The language-library renderer remains runnable legacy
+lineage and is not invoked for the production visible result.
 
 ## V0.2 experimental command family
 
@@ -259,9 +269,14 @@ experiments/resonance_composition_v0_2/prototype_composer_policy.py
 
 Experimental history only.
 
-## V0.3 command family
+## Canonical production test command
 
-Not implemented yet.
+```text
+python3 modules/nexus_01_nexus_mesomerie/run_all_tests.py
+```
+
+It covers the production and integration suite, including module-level test
+functions, while excluding historical experiment tests.
 
 ---
 

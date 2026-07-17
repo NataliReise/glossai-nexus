@@ -2,35 +2,60 @@
 """Open one matched Resonance Return Artifact into a stable local result.
 
 The command loads the shared JSON artifact and local slot document, verifies the
-route through the existing matcher, renders both approved poetic outputs, writes
-the result once, and marks the matching slot as opened. Nothing is published.
+route through the existing matcher, preserves an existing result or generates one
+compact production result, writes it once, and marks the matching slot as opened.
+Nothing is transported or published.
 """
 
 from __future__ import annotations
 
 import argparse
 from dataclasses import dataclass
+import hashlib
 import json
+import os
 from pathlib import Path
+import re
 import sys
-from typing import Any
+import tempfile
+from typing import TYPE_CHECKING, Any, Protocol
+import unicodedata
 
 NEXUS_01_ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(NEXUS_01_ROOT))
 
-from resonance_language_library.render_resonance_output import default_library_dir
-from return_resonance.matching import MatchStatus
+from return_resonance.matching import MatchResult, match_return_artifact
 from return_resonance.resonance_render_bridge import (
-    OpenedResonanceReturn,
+    ResonanceReturnArtifact,
     ResonanceRenderBridgeError,
     load_resonance_return_artifact,
-    open_resonance_return,
 )
-from return_resonance.slots import ReturnSlotLoadError, load_return_slots
+from return_resonance.slots import (
+    ReturnSlot,
+    ReturnSlotLoadError,
+    ReturnSlotState,
+    load_return_slots,
+)
+
+if TYPE_CHECKING:
+    from return_resonance.compact_generator import CompactGenerationResult
 
 
 class LocalResonanceOpenError(ValueError):
     """Raised when a matched return cannot be opened safely on disk."""
+
+
+class CompactGenerator(Protocol):
+    def __call__(
+        self,
+        artifact: ResonanceReturnArtifact,
+        *,
+        seed: str,
+    ) -> CompactGenerationResult: ...
+
+
+class SlotStateUpdater(Protocol):
+    def __call__(self, path: Path, origin_trace_id: str, return_slot_id: str) -> bool: ...
 
 
 @dataclass(frozen=True)
@@ -39,7 +64,20 @@ class LocalResonanceResult:
     content: str
     created: bool
     slot_state_changed: bool
-    opened: OpenedResonanceReturn
+    artifact: ResonanceReturnArtifact
+    match: MatchResult
+    generation: CompactGenerationResult | None
+
+
+_SAFE_RESULT_FILENAME = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,119}")
+_WINDOWS_RESERVED_STEMS = {
+    "CON", "PRN", "AUX", "NUL",
+    *(f"COM{number}" for number in range(1, 10)),
+    *(f"LPT{number}" for number in range(1, 10)),
+}
+_TRACE_START = "<!-- nexus-01-result-trace-start -->"
+_TRACE_END = "<!-- nexus-01-result-trace-end -->"
+_SEED_DERIVATION_ID = "nexus-01-compact-opening-seed-v1"
 
 
 def open_resonance_return_files(
@@ -47,82 +85,136 @@ def open_resonance_return_files(
     slots_path: str | Path,
     output_dir: str | Path,
     library_dir: str | Path | None = None,
+    *,
+    generator: CompactGenerator | None = None,
+    slot_state_updater: SlotStateUpdater | None = None,
 ) -> LocalResonanceResult:
     """Open a shared artifact locally with generate-once, revisit-often behavior."""
 
     artifact_file = Path(artifact_path)
     slot_file = Path(slots_path)
     result_dir = Path(output_dir)
-    library = Path(library_dir) if library_dir is not None else default_library_dir()
+    # Accepted for CLI/API compatibility. The production compact path has no
+    # external library directory and never invokes the legacy renderer.
+    _ = library_dir
+    active_slot_updater = (
+        slot_state_updater if slot_state_updater is not None else _mark_slot_opened
+    )
 
     artifact = load_resonance_return_artifact(artifact_file)
     slots = load_return_slots(slot_file)
-    opened = open_resonance_return(artifact, slots, library)
-
-    if opened.match.slot is None:
+    match = _match_artifact(artifact, slots)
+    slot = match.slot
+    if slot is None:
         raise LocalResonanceOpenError("Matched Resonance Return has no slot data.")
+    result_name = _validate_result_target(slot, slots)
+    result_path = _result_path_beneath(result_dir, result_name)
 
-    result_path = result_dir / opened.match.slot.result_file
     if result_path.exists():
-        try:
-            content = result_path.read_text(encoding="utf-8")
-        except OSError as error:
-            raise LocalResonanceOpenError(
-                f"Could not read existing local result: {result_path}"
-            ) from error
-        state_changed = _mark_slot_opened(slot_file, artifact.origin_trace_id, artifact.return_slot_id)
+        content = _read_existing_result(result_path)
+        if slot.status is ReturnSlotState.WAITING:
+            _require_result_identity(content, artifact, slot)
+            state_changed = _update_slot_after_result(
+                active_slot_updater, slot_file, artifact
+            )
+        else:
+            state_changed = False
         return LocalResonanceResult(
             path=result_path,
             content=content,
             created=False,
             slot_state_changed=state_changed,
-            opened=opened,
+            artifact=artifact,
+            match=match,
+            generation=None,
         )
 
-    if opened.match.status == MatchStatus.MATCH_OPENED:
+    if slot.status is ReturnSlotState.OPENED:
         raise LocalResonanceOpenError(
-            "The matching slot is marked as opened, but its local result file is missing."
+            "The matching slot is marked as opened, but its local result file is missing. "
+            "Restore the saved result or deliberately repair the slot state; it will not be regenerated."
         )
 
-    content = _compose_local_result(opened)
+    seed, seed_trace = _derive_seed(artifact, slot)
+    if generator is None:
+        try:
+            from return_resonance.compact_generator import generate_compact_resonance
+        except ImportError as error:
+            raise LocalResonanceOpenError(
+                "Compact generator is unavailable for this first opening."
+            ) from error
+        active_generator = generate_compact_resonance
+    else:
+        active_generator = generator
+    try:
+        generation = active_generator(artifact, seed=seed)
+    except ValueError as error:
+        raise LocalResonanceOpenError(f"Compact generation failed: {error}") from error
+    content = _compose_local_result(artifact, slot, generation, seed, seed_trace)
     _write_new_file(result_path, content)
-    state_changed = _mark_slot_opened(slot_file, artifact.origin_trace_id, artifact.return_slot_id)
+    state_changed = _update_slot_after_result(
+        active_slot_updater, slot_file, artifact
+    )
 
     return LocalResonanceResult(
         path=result_path,
         content=content,
         created=True,
         slot_state_changed=state_changed,
-        opened=opened,
+        artifact=artifact,
+        match=match,
+        generation=generation,
     )
 
 
-def _compose_local_result(opened: OpenedResonanceReturn) -> str:
-    slot = opened.match.slot
-    if slot is None:
-        raise LocalResonanceOpenError("Cannot compose a local result without slot data.")
-
+def _compose_local_result(
+    artifact: ResonanceReturnArtifact,
+    slot: ReturnSlot,
+    generation: CompactGenerationResult,
+    seed: str,
+    seed_trace: dict[str, str],
+) -> str:
+    artifact_identity = _structural_identity(artifact)
+    slot_identity = _structural_identity(slot)
+    trace = {
+        "trace_format": "nexus-01-compact-result-trace-v1",
+        "generator_id": generation.generator_id,
+        "generator_version": generation.generator_version,
+        "deterministic_seed": seed,
+        "seed_derivation": {
+            "derivation_id": _SEED_DERIVATION_ID,
+            "algorithm": "SHA-256",
+            "inputs": seed_trace,
+        },
+        "composition_plan": generation.composition_plan,
+        "artifact_identity": artifact_identity,
+        "slot_identity": slot_identity,
+        "result_file": slot.result_file,
+    }
     return "\n".join(
         [
-            f"# Resonance Return: {slot.return_slot_id}",
+            "# Resonance Return",
             "",
-            "Status: opened",
-            f"Module: {slot.module_id}",
-            f"Layer: {slot.layer_id}",
-            f"Origin trace: {slot.origin_trace_id}",
-            f"Language library: {opened.artifact.language_library}",
+            "## Compact Resonance",
+            "",
+            "```text",
+            generation.text,
+            "```",
+            "",
+            _TRACE_START,
+            "<details>",
+            "<summary>Technical trace</summary>",
+            "",
+            "```json",
+            json.dumps(trace, indent=2, ensure_ascii=False, sort_keys=True),
+            "```",
+            "",
+            "</details>",
+            _TRACE_END,
             "",
             "---",
             "",
-            opened.output.text,
-            "",
-            "---",
-            "",
-            "## Privacy reminder",
-            "",
-            "This is a local Resonance Return result.",
-            "",
-            "Do not publish it unless it has been reviewed carefully and intentionally made public-safe.",
+            "This result remains local unless you deliberately transfer it.",
             "",
         ]
     )
@@ -130,22 +222,172 @@ def _compose_local_result(opened: OpenedResonanceReturn) -> str:
 
 def _write_new_file(path: Path, content: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    if path.exists():
-        raise LocalResonanceOpenError(f"Refusing to overwrite existing local result: {path}")
-
-    temporary = path.with_name(path.name + ".tmp")
+    temporary_path: Path | None = None
     try:
-        temporary.write_text(content, encoding="utf-8")
-        if path.exists():
-            raise LocalResonanceOpenError(
-                f"Refusing to overwrite existing local result: {path}"
-            )
-        temporary.replace(path)
+        descriptor, temporary_name = tempfile.mkstemp(
+            prefix=f".{path.name}.", suffix=".tmp", dir=path.parent
+        )
+        temporary_path = Path(temporary_name)
+        with os.fdopen(descriptor, "w", encoding="utf-8", newline="") as handle:
+            handle.write(content)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.link(temporary_path, path)
+    except FileExistsError as error:
+        raise LocalResonanceOpenError(
+            f"Refusing to overwrite existing local result: {path}. Reopen to inspect it safely."
+        ) from error
     except OSError as error:
         raise LocalResonanceOpenError(f"Could not write local result: {path}") from error
     finally:
-        if temporary.exists():
-            temporary.unlink()
+        if temporary_path is not None and temporary_path.exists():
+            temporary_path.unlink()
+
+
+def _match_artifact(
+    artifact: ResonanceReturnArtifact,
+    slots: list[ReturnSlot],
+) -> MatchResult:
+    match = match_return_artifact(artifact.to_matching_artifact(), slots)
+    if not match.is_match:
+        raise LocalResonanceOpenError(
+            f"Resonance Return Artifact cannot open: {match.status.value}: {match.message}"
+        )
+    if match.slot is None:
+        raise LocalResonanceOpenError("Matched Resonance Return has no slot data.")
+    if artifact.module_id != match.slot.module_id:
+        raise LocalResonanceOpenError(
+            "Resonance Return Artifact cannot open: module_mismatch: "
+            "the artifact does not match the module for this slot."
+        )
+    return match
+
+
+def _validate_result_target(slot: ReturnSlot, slots: list[ReturnSlot]) -> str:
+    value = slot.result_file
+    candidate = Path(value)
+    stem = candidate.name.split(".", 1)[0].upper()
+    if (
+        not value
+        or candidate.is_absolute()
+        or candidate.name != value
+        or "/" in value
+        or "\\" in value
+        or ".." in value
+        or _SAFE_RESULT_FILENAME.fullmatch(value) is None
+        or value.endswith((".", " "))
+        or stem in _WINDOWS_RESERVED_STEMS
+    ):
+        raise LocalResonanceOpenError(
+            "Return Slot result_file must be one unambiguous ASCII filename without paths, "
+            "traversal, reserved names, or unsafe characters."
+        )
+
+    normalized_target = _normalized_filename(value)
+    collisions = [
+        candidate_slot
+        for candidate_slot in slots
+        if _normalized_filename(candidate_slot.result_file) == normalized_target
+    ]
+    if len(collisions) != 1:
+        raise LocalResonanceOpenError(
+            f"Multiple Return Slots target the same result filename: {value!r}. "
+            "Choose a unique filename before opening."
+        )
+    return value
+
+
+def _result_path_beneath(output_dir: Path, result_name: str) -> Path:
+    result_path = output_dir / result_name
+    if result_path.is_symlink():
+        raise LocalResonanceOpenError("Refusing a symbolic-link result target.")
+    if result_path.resolve(strict=False).parent != output_dir.resolve(strict=False):
+        raise LocalResonanceOpenError("Return result must remain beneath the selected output directory.")
+    return result_path
+
+
+def _read_existing_result(path: Path) -> str:
+    if path.is_symlink() or not path.is_file():
+        raise LocalResonanceOpenError("Existing result target is not a safe regular file.")
+    try:
+        return path.read_text(encoding="utf-8")
+    except (OSError, UnicodeError) as error:
+        raise LocalResonanceOpenError(
+            "Existing local result could not be read as exact UTF-8 content."
+        ) from error
+
+
+def _update_slot_after_result(
+    updater: SlotStateUpdater,
+    slot_file: Path,
+    artifact: ResonanceReturnArtifact,
+) -> bool:
+    try:
+        return bool(updater(slot_file, artifact.origin_trace_id, artifact.return_slot_id))
+    except Exception as error:
+        raise LocalResonanceOpenError(
+            "The local result was preserved successfully, but the Return Slot could not be "
+            "marked opened. Do not delete or overwrite the result; retry this opening to "
+            "repair the waiting slot without regeneration."
+        ) from error
+
+
+def _derive_seed(
+    artifact: ResonanceReturnArtifact,
+    slot: ReturnSlot,
+) -> tuple[str, dict[str, str]]:
+    inputs = _structural_identity(artifact)
+    if inputs != _structural_identity(slot):
+        raise LocalResonanceOpenError("Artifact and Return Slot structural identities disagree.")
+    payload = json.dumps(
+        {"derivation_id": _SEED_DERIVATION_ID, "inputs": inputs},
+        ensure_ascii=True,
+        separators=(",", ":"),
+        sort_keys=True,
+    ).encode("utf-8")
+    digest = hashlib.sha256(payload).hexdigest()
+    return f"n01-open-v1-{digest}", inputs
+
+
+def _structural_identity(value: ResonanceReturnArtifact | ReturnSlot) -> dict[str, str]:
+    return {
+        "module_id": value.module_id,
+        "layer_id": value.layer_id,
+        "origin_trace_id": value.origin_trace_id,
+        "return_slot_id": value.return_slot_id,
+        "package_id": value.package_id,
+    }
+
+
+def _require_result_identity(
+    content: str,
+    artifact: ResonanceReturnArtifact,
+    slot: ReturnSlot,
+) -> None:
+    try:
+        marked = content.split(_TRACE_START, 1)[1].split(_TRACE_END, 1)[0]
+        json_text = marked.split("```json", 1)[1].split("```", 1)[0]
+        trace = json.loads(json_text)
+    except (IndexError, json.JSONDecodeError) as error:
+        raise LocalResonanceOpenError(
+            "A result exists for a waiting slot, but its structural trace cannot be verified. "
+            "It was preserved and not reused or overwritten."
+        ) from error
+    if not isinstance(trace, dict):
+        raise LocalResonanceOpenError(
+            "A result exists for a waiting slot, but its structural trace is not an object. "
+            "It was preserved and not reused or overwritten."
+        )
+    expected = _structural_identity(artifact)
+    if trace.get("artifact_identity") != expected or trace.get("slot_identity") != _structural_identity(slot):
+        raise LocalResonanceOpenError(
+            "An existing result belongs to different structural identifiers. "
+            "It was preserved and not reused or overwritten."
+        )
+
+
+def _normalized_filename(value: str) -> str:
+    return unicodedata.normalize("NFC", value).casefold()
 
 
 def _mark_slot_opened(path: Path, origin_trace_id: str, return_slot_id: str) -> bool:
@@ -218,7 +460,12 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--artifact", required=True, type=Path)
     parser.add_argument("--slots", required=True, type=Path)
     parser.add_argument("--output-dir", required=True, type=Path)
-    parser.add_argument("--library-dir", type=Path, default=None)
+    parser.add_argument(
+        "--library-dir",
+        type=Path,
+        default=None,
+        help="Accepted for legacy CLI compatibility; ignored by the compact production generator.",
+    )
     return parser.parse_args(argv)
 
 

@@ -25,7 +25,7 @@ FirstSparkTerminalRunner = Callable[[], FirstSparkStateSource]
 
 
 def load_first_spark_terminal_runner() -> FirstSparkTerminalRunner:
-    """Load the standalone First Spark runner without coupling package imports.
+    """Load the integrated First Spark runner without coupling package imports.
 
     The historical First Spark seed keeps its import root inside the
     ``first_spark`` directory.  The adapter adds that root only when the Chamber
@@ -37,9 +37,9 @@ def load_first_spark_terminal_runner() -> FirstSparkTerminalRunner:
     if package_root_text not in sys.path:
         sys.path.insert(0, package_root_text)
 
-    from first_spark.runtime import run_terminal
+    from first_spark.runtime import run_integrated_terminal
 
-    return run_terminal
+    return run_integrated_terminal
 
 
 def run_first_spark_chamber(

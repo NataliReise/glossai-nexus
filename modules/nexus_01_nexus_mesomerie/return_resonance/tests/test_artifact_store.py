@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+from unittest.mock import patch
 from pathlib import Path
 import sys
 import tempfile
@@ -74,6 +75,21 @@ def test_store_does_not_create_parent_directories(tmp_path: Path) -> None:
         raise AssertionError("Artifact store created an undeclared parent directory.")
 
     assert not destination.exists()
+
+
+def test_store_publish_failure_leaves_no_partial_destination(tmp_path: Path) -> None:
+    destination = tmp_path / "return-artifact.json"
+
+    with patch("return_resonance.artifact_store.os.link", side_effect=OSError("failed")):
+        try:
+            write_resonance_return_artifact(artifact(), destination)
+        except ResonanceArtifactStoreError:
+            pass
+        else:
+            raise AssertionError("Artifact publication unexpectedly succeeded.")
+
+    assert not destination.exists()
+    assert list(tmp_path.iterdir()) == []
 
 
 if __name__ == "__main__":

@@ -10,7 +10,11 @@ import sys
 MODULE_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(MODULE_ROOT))
 
-from atrium import ChamberRunResult, run_first_spark_chamber
+from atrium import (
+    ChamberRunResult,
+    load_first_spark_terminal_runner,
+    run_first_spark_chamber,
+)
 
 
 @dataclass(frozen=True)
@@ -58,11 +62,18 @@ def test_runner_must_return_observable_first_spark_state() -> None:
         raise AssertionError("Expected TypeError for a runner without message_unlocked.")
 
 
+def test_default_adapter_loads_integrated_first_spark_entry() -> None:
+    runner = load_first_spark_terminal_runner()
+
+    assert runner.__name__ == "run_integrated_terminal"
+
+
 def main() -> None:
     test_completed_first_spark_becomes_completed_chamber_result()
     test_interrupted_first_spark_remains_incomplete()
     test_adapter_uses_only_message_unlocked_as_completion_signal()
     test_runner_must_return_observable_first_spark_state()
+    test_default_adapter_loads_integrated_first_spark_entry()
     print("Nexus First Spark adapter tests passed.")
 
 

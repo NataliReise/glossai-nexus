@@ -12,6 +12,10 @@ InputFunction = Callable[[str], str]
 OutputFunction = Callable[[str], None]
 
 
+class ChamberInteractionCancelled(RuntimeError):
+    """Raised only when an interaction explicitly enables cancellation."""
+
+
 STEP_TITLES = {
     "image": "Choose an image",
     "image_response": "Choose what answers the image",
@@ -31,6 +35,7 @@ class TerminalChamberIO:
     catalog: ChoiceCatalog
     input_fn: InputFunction = input
     output_fn: OutputFunction = print
+    allow_cancel: bool = False
 
     def choose(self, step: str, option_ids: tuple[str, ...]) -> str:
         if not option_ids:
@@ -45,6 +50,8 @@ class TerminalChamberIO:
 
         while True:
             raw_value = self.input_fn("Enter a number: ").strip()
+            if self.allow_cancel and raw_value.casefold() == "/cancel":
+                raise ChamberInteractionCancelled("Chamber interaction cancelled.")
             try:
                 index = int(raw_value)
             except ValueError:
@@ -63,6 +70,8 @@ class TerminalChamberIO:
 
         while True:
             value = self.input_fn("Enter exactly one word: ").strip()
+            if self.allow_cancel and value.casefold() == "/cancel":
+                raise ChamberInteractionCancelled("Chamber interaction cancelled.")
             if value and len(value.split()) == 1:
                 return value
             self.output_fn("Please enter exactly one non-empty word.")

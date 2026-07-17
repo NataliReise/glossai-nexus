@@ -11,6 +11,10 @@ from .activation_bridge import (
     atrium_state_from_activation,
     profile_from_activation,
 )
+from .classified_resonance import (
+    ClassifiedResonanceController,
+    resonance_door_label,
+)
 from .first_spark_adapter import (
     FirstSparkStateSource,
     FirstSparkTerminalRunner,
@@ -33,6 +37,7 @@ from .resonance_adapter import (
     run_resonance_chamber,
 )
 from .resonance_terminal import ResonanceTerminalController
+from .resonance_mode import ResonanceMode
 from .runtime import (
     AtriumRuntimeError,
     ChamberRunResult,
@@ -63,6 +68,7 @@ __all__ = [
     "AtriumState",
     "AtriumStateError",
     "ChamberRunResult",
+    "ClassifiedResonanceController",
     "ChamberRunner",
     "FIRST_SPARK_CHAMBER",
     "FIRST_SPARK_PROFILE",
@@ -76,6 +82,7 @@ __all__ = [
     "ResonanceAtriumRunner",
     "ResonanceChamberRun",
     "ResonanceTerminalController",
+    "ResonanceMode",
     "atrium_state_from_activation",
     "atrium_state_from_profile",
     "help_text",
@@ -83,6 +90,7 @@ __all__ = [
     "load_nexus_activation",
     "profile_from_activation",
     "profile_from_id",
+    "resonance_door_label",
     "render_atrium",
     "run_first_spark_chamber",
     "run_nexus_terminal",
