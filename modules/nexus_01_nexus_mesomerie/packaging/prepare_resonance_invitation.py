@@ -37,6 +37,7 @@ def prepare_resonance_invitation(
     *,
     invitation_root: Path,
     private_root: Path,
+    forbidden_root: Path,
     result_file: str | None = None,
 ) -> InvitationPreparationResult:
     """Retain the established packaging exception and fault-injection surface."""
@@ -46,6 +47,7 @@ def prepare_resonance_invitation(
             token,
             invitation_root=invitation_root,
             private_root=private_root,
+            forbidden_root=forbidden_root,
             result_file=result_file,
             _workspace_builder=build_return_workspace,
             _publisher=_publish,
@@ -61,6 +63,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--token", type=Path, required=True)
     parser.add_argument("--invitation-root", type=Path, required=True)
     parser.add_argument("--private-root", type=Path, required=True)
+    parser.add_argument(
+        "--carrier-root",
+        type=Path,
+        required=True,
+        help="Travelling Nexus carrier directory that both outputs must remain outside.",
+    )
     parser.add_argument("--result-file")
     args = parser.parse_args(argv)
     try:
@@ -69,6 +77,7 @@ def main(argv: list[str] | None = None) -> int:
             token,
             invitation_root=args.invitation_root,
             private_root=args.private_root,
+            forbidden_root=args.carrier_root,
             result_file=args.result_file,
         )
     except (

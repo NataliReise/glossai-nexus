@@ -118,20 +118,25 @@ Operational references:
 - [Return Slot Template](templates/return_slot.template.json)
 - [Make Return Slot CLI](make_return_slot.py)
 
-### 4. Compact Nachhall V0.3 — active experiment
+### 4. Compact Nachhall — production result
 
 Status:
 
 ```text
-active experiment
-not yet production
+production compact generator
+generated once and reopened unchanged
 ```
 
-Experiment entry:
+Production entries:
+
+- `return_resonance/compact_generator.py`
+- `return_resonance/open_resonance_return.py`
+
+The V0.3 experiment remains review lineage:
 
 - [Nachhall Composition V0.3](experiments/nachhall_composition_v0_3/README.md)
 
-The experiment tests:
+The production result enforces:
 
 - exact `2 / 4 / 6 / 4 / 1` structure;
 - several small micro-routes;
@@ -158,14 +163,18 @@ return_resonance/result.py
 
 This path remains useful for matching and persistence history. Its generated poetry is not the current Nachhall design.
 
-### V0.1 deterministic rich rendering
+### Persistent compact opening and retained V0.1 renderer
 
 ```text
 open_resonance_return.py
 resonance_language_library/
 ```
 
-This path still renders a fixed long-form Resonance Artifact and an exact approved compact Echo. It is a legacy runnable implementation and the source of the original Nachhall form, not the future universal production model.
+`open_resonance_return.py` is the current persistent opening boundary. It
+validates and matches a returned Artifact, creates the compact production
+result once, and reuses its exact saved content thereafter. The separate V0.1
+language-library renderer remains runnable lineage; it is not invoked by this
+production opening path.
 
 Do not infer current architecture from either path without reading the documentation status index.
 
@@ -179,8 +188,12 @@ The corrected activation boundary requires the recipient to choose explicitly:
 python3 modules/nexus_01_nexus_mesomerie/run_nexus.py \
   --recipient-alias recipient_name \
   --activation-purpose gift \
-  --private-message "A Nexus 01 gift is waiting for you."
+  --private-message "PRIVATE_MESSAGE"
 ```
+
+A private message supplied directly on a command line may appear in shell
+history or process listings. Prefer a non-sensitive placeholder for testing and
+use an appropriately private local invocation for real gift text.
 
 Normal activation writes only the existing `first-spark` activation. It never
 searches for or reads incidental Token files. Token activation accepts one path
@@ -197,6 +210,10 @@ first-spark                                      -> COMPOSE
 return-resonance + valid selected Token context -> ANSWER
 return-resonance + missing/invalid context      -> BLOCKED_ANSWER_RECOVERY
 ```
+
+In V1.1, First Spark completion and the post-completion Resonance reveal are
+session-local Atrium progress. Restarting does not claim that this Chamber
+progress was persisted.
 
 Existing pre-activated Resonance packages remain a legacy-compatible path.
 Their activation is not silently migrated, and no nearby Token is discovered
@@ -228,7 +245,8 @@ python3 modules/nexus_01_nexus_mesomerie/make_return_slot.py \
 python3 modules/nexus_01_nexus_mesomerie/run_return_resonance_demo.py
 ```
 
-This remains a historical/local infrastructure demonstration, not the V0.3 poetic target.
+This remains a historical/local infrastructure demonstration, not the
+production compact opening path.
 
 ## Privacy and packaging
 
@@ -260,7 +278,21 @@ Token may be attached at `invitation/resonance_token.v2.json`; it remains an
 inert, manually selected invitation and may also travel separately. Private
 Return Workspace data never enters the carrier.
 
-A future complete Nexus 01 gift package will need a separate explicit production inclusion list for the compact Nachhall path.
+The carrier's explicit runtime allowlist includes the production compact
+generator and the opening dependencies needed when a new private Return
+Workspace is created. The carrier itself still contains no private workspace
+instance, Return Slot, Artifact, or generated result.
+
+## Run the complete Nexus 01 test suite
+
+From the repository root, run the canonical standard-library suite:
+
+```bash
+python3 modules/nexus_01_nexus_mesomerie/run_all_tests.py
+```
+
+It includes `unittest` cases, module-level production test functions, and the
+public Return Resonance demo check. Historical experiment tests are excluded.
 
 ## Documentation navigation
 

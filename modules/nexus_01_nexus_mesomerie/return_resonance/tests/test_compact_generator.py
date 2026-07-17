@@ -18,6 +18,7 @@ if str(NEXUS_ROOT) not in sys.path:
 from chambers.resonance.choices import build_v0_1_catalog  # noqa: E402
 import return_resonance.compact_generator as generator_module  # noqa: E402
 from return_resonance.compact_generator import (  # noqa: E402
+    EXPECTED_WORD_COUNTS,
     GENERATOR_ID,
     GENERATOR_VERSION,
     CompactGenerationError,
@@ -96,6 +97,10 @@ def artifact_for(
     )
 
 
+def word_counts(text: str) -> tuple[int, ...]:
+    return tuple(len(line.split()) for line in text.splitlines())
+
+
 class CompactGeneratorTests(unittest.TestCase):
     def test_every_independent_pair_in_each_domain_is_supported(self) -> None:
         images, scents, movements = independent_paths()
@@ -109,7 +114,7 @@ class CompactGeneratorTests(unittest.TestCase):
                 result = generate_compact_resonance(
                     artifact_for(*selected), seed=f"domain-{domain}-{path}"
                 )
-                self.assertEqual(len(result.text.splitlines()), 5)
+                self.assertEqual(word_counts(result.text), EXPECTED_WORD_COUNTS)
 
     def test_all_15625_complete_answer_combinations_are_supported(self) -> None:
         images, scents, movements = independent_paths()
@@ -122,8 +127,7 @@ class CompactGeneratorTests(unittest.TestCase):
                 seed="complete-answer-coverage",
             )
             lines = result.text.splitlines()
-            self.assertEqual(len(lines), 5)
-            self.assertTrue(all(line.strip() for line in lines))
+            self.assertEqual(word_counts(result.text), EXPECTED_WORD_COUNTS)
             count += 1
         self.assertEqual(count, 15_625)
 
@@ -138,6 +142,7 @@ class CompactGeneratorTests(unittest.TestCase):
                 result = generate_compact_resonance(artifact, seed=f"combination-{index:03d}")
                 lines = result.text.splitlines()
                 self.assertEqual(len(lines), 5)
+                self.assertEqual(word_counts(result.text), EXPECTED_WORD_COUNTS)
                 self.assertEqual(lines[-1], artifact.return_word)
                 self.assertIn(artifact.wish_word, result.text)
                 self.assertEqual(
@@ -192,15 +197,15 @@ class CompactGeneratorTests(unittest.TestCase):
             with self.subTest(artifact=artifact), self.assertRaises(CompactGenerationError):
                 generate_compact_resonance(artifact)
 
-    def test_legacy_pair_wording_remains_exact(self) -> None:
+    def test_legacy_pairs_remain_supported_under_compact_contract(self) -> None:
         result = generate_compact_resonance(artifact_for(), seed=None)
         self.assertEqual(
             result.text.splitlines(),
             [
-                "A waiting lantern reveals the beginning of a path.",
-                "Summer rain carries the possibility of encounter.",
-                "May kinship find room here.",
-                "One turning feather meets another across its falling path.",
+                "Lantern-waiting path-appears.",
+                "Summer rain, encounter opens.",
+                "May kinship keep this passage open.",
+                "Falling feather, feathers cross.",
                 "homeward",
             ],
         )
@@ -221,8 +226,9 @@ class CompactGeneratorTests(unittest.TestCase):
         }
         self.assertGreaterEqual(len(results), 2)
         for text in results:
-            self.assertIn("waiting lantern", text.casefold())
-            self.assertIn("silence becomes shared", text.casefold())
+            self.assertIn("lantern-waiting", text.casefold())
+            self.assertIn("silence-shares", text.casefold())
+            self.assertEqual(word_counts(text), EXPECTED_WORD_COUNTS)
             self.assertEqual(text.splitlines()[-1], artifact.return_word)
 
     def test_route_metadata_is_not_visible(self) -> None:
@@ -272,13 +278,29 @@ class CompactGeneratorTests(unittest.TestCase):
         generator_module.MICRO_PATTERNS = (
             MicroPattern(
                 "broken-duplicate",
-                "{image_line}\n{image_line}\nMay {wish_word} remain.\n"
+                "{image_line}\n{image_line}\nMay {wish_word} keep this passage open.\n"
                 "{movement_line}\n{return_word}",
                 2,
             ),
         )
         try:
             with self.assertRaisesRegex(CompactGenerationError, "duplicate adjacent"):
+                generate_compact_resonance(artifact_for())
+        finally:
+            generator_module.MICRO_PATTERNS = original
+
+    def test_malformed_word_count_is_rejected(self) -> None:
+        original = generator_module.MICRO_PATTERNS
+        generator_module.MICRO_PATTERNS = (
+            MicroPattern(
+                "broken-word-count",
+                "{image_line}\n{scent_line}\nMay {wish_word} remain open.\n"
+                "{movement_line}\n{return_word}",
+                2,
+            ),
+        )
+        try:
+            with self.assertRaisesRegex(CompactGenerationError, "2 / 4 / 6 / 4 / 1"):
                 generate_compact_resonance(artifact_for())
         finally:
             generator_module.MICRO_PATTERNS = original
@@ -300,7 +322,7 @@ class CompactGeneratorTests(unittest.TestCase):
         self.assertEqual(corpus.count('"rendered_text":'), 125)
 
     def test_multiline_free_word_is_rejected(self) -> None:
-        with self.assertRaisesRegex(CompactGenerationError, "one visible line"):
+        with self.assertRaisesRegex(CompactGenerationError, "exactly one word"):
             generate_compact_resonance(artifact_for(wish_word="two\nlines"))
 
 

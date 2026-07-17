@@ -11,6 +11,7 @@ from dataclasses import asdict, dataclass
 import json
 from pathlib import Path
 from typing import Any
+import unicodedata
 
 from resonance_language_library.render_resonance_output import (
     RenderedResonanceOutput,
@@ -21,7 +22,13 @@ from resonance_language_library.render_resonance_output import (
 from .artifact import ReturnArtifact
 from .matching import MatchResult, match_return_artifact
 from .slots import ReturnSlot
-from .token import LAYER_ID, MODULE_ID, ResonanceToken
+from .token import (
+    LAYER_ID,
+    MODULE_ID,
+    ResonanceToken,
+    ResonanceTokenLoadError,
+    validate_originating_wish_word,
+)
 
 ARTIFACT_VERSION = "0.1"
 ARTIFACT_TYPE = "resonance-return"
@@ -167,6 +174,8 @@ def parse_resonance_return_artifact(value: Any) -> ResonanceReturnArtifact:
     _require_exact(cleaned["module_id"], MODULE_ID, "module_id")
     _require_exact(cleaned["layer_id"], LAYER_ID, "layer_id")
     _require_exact(cleaned["language_library"], LANGUAGE_LIBRARY, "language_library")
+    cleaned["wish_word"] = _require_free_word(cleaned["wish_word"], "wish_word")
+    cleaned["return_word"] = _require_free_word(cleaned["return_word"], "return_word")
 
     return ResonanceReturnArtifact(**cleaned)
 
@@ -223,3 +232,19 @@ def _require_exact(actual: str, expected: str, field_name: str) -> None:
         raise ResonanceRenderBridgeError(
             f"Unsupported {field_name} {actual!r}; expected {expected!r}."
         )
+
+
+def _require_free_word(value: str, field_name: str) -> str:
+    """Apply the established Token/answer word contract to untrusted artifacts."""
+
+    try:
+        cleaned = validate_originating_wish_word(value)
+    except ResonanceTokenLoadError as error:
+        raise ResonanceRenderBridgeError(
+            str(error).replace("wish_word", field_name)
+        ) from error
+    if any(unicodedata.category(character) == "Cc" for character in cleaned):
+        raise ResonanceRenderBridgeError(
+            f"Resonance Return Artifact field {field_name!r} contains a control character."
+        )
+    return cleaned

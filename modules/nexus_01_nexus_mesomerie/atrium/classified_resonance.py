@@ -140,17 +140,18 @@ class ClassifiedResonanceController:
 
         invitation_root = Path(invitation_root_text).expanduser()
         private_root = Path(private_root_text).expanduser()
-        if self.nexus_root is not None:
-            nexus_root = self.nexus_root.expanduser().resolve()
-            if any(
-                destination.resolve().is_relative_to(nexus_root)
-                for destination in (invitation_root, private_root)
-            ):
-                self.output_writer(
-                    "Publication destinations must remain outside the travelling "
-                    "Nexus carrier. No output was created."
-                )
-                return ChamberRunResult(completed=False)
+        nexus_root = (
+            self.nexus_root or Path(__file__).resolve().parents[1]
+        ).expanduser().resolve()
+        if any(
+            destination.resolve().is_relative_to(nexus_root)
+            for destination in (invitation_root, private_root)
+        ):
+            self.output_writer(
+                "Publication destinations must remain outside the travelling "
+                "Nexus carrier. No output was created."
+            )
+            return ChamberRunResult(completed=False)
 
         route_factory = self.route_factory or generate_route_identity
         invitation_preparer = (
@@ -170,6 +171,7 @@ class ClassifiedResonanceController:
                 token,
                 invitation_root=invitation_root,
                 private_root=private_root,
+                forbidden_root=nexus_root,
             )
         except (InvitationPublicationError, ResonanceComposeError, OSError) as error:
             self.output_writer(f"Resonance invitation publication failed: {error}")

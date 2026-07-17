@@ -145,7 +145,7 @@ def test_first_open_creates_result_and_marks_slot_opened() -> None:
         assert result.content == result.path.read_text(encoding="utf-8")
         assert "# Resonance Return" in result.content
         assert "## Compact Resonance" in result.content
-        assert "Summer rain carries the possibility of encounter." in result.content
+        assert "Summer rain, encounter opens." in result.content
         assert "courage" in result.content
         assert "\ntrust\n```" in result.content
         assert "Resonance Artifact" not in result.content
@@ -328,10 +328,10 @@ def test_formerly_unsupported_answer_pairing_opens_and_saved_markdown_is_stable(
         )
         assert first.created is True
         assert first.generation is not None
-        assert "waiting lantern" in first.generation.text.casefold()
-        assert "silence becomes shared" in first.generation.text.casefold()
-        assert "sense of return" in first.generation.text.casefold()
-        assert "playful waves" in first.generation.text.casefold()
+        assert "lantern-waiting" in first.generation.text.casefold()
+        assert "silence-shares" in first.generation.text.casefold()
+        assert "return gathers" in first.generation.text.casefold()
+        assert "waves play" in first.generation.text.casefold()
 
         edited = first.path.read_bytes() + "\nHandwritten note: bewahren\n".encode(
             "utf-8"
@@ -492,6 +492,33 @@ def test_legacy_renderer_is_not_invoked() -> None:
         legacy_output.render_resonance_output = original_renderer
 
 
+def test_invalid_manual_free_words_publish_nothing_and_preserve_slot() -> None:
+    invalid_values = ("two words", "x" * 81, "x\x00y", "CHANGE-ME")
+    for field_name in ("wish_word", "return_word"):
+        for invalid in invalid_values:
+            with tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                artifact = _artifact_dict()
+                artifact[field_name] = invalid
+                artifact_path, slots_path, output_dir = _write_inputs(
+                    root, artifact_data=artifact
+                )
+                slot_before = slots_path.read_bytes()
+
+                try:
+                    open_resonance_return_files(artifact_path, slots_path, output_dir)
+                except Exception as error:
+                    assert field_name in str(error)
+                else:
+                    raise AssertionError(
+                        f"Invalid manual {field_name} was accepted: {invalid!r}"
+                    )
+
+                assert not output_dir.exists()
+                assert slots_path.read_bytes() == slot_before
+                assert _slot_status(slots_path) == "waiting"
+
+
 if __name__ == "__main__":
     test_first_open_creates_result_and_marks_slot_opened()
     test_second_open_reuses_result_without_overwriting()
@@ -506,4 +533,5 @@ if __name__ == "__main__":
     test_two_slots_cannot_share_case_insensitive_result_target()
     test_atomic_publication_never_overwrites_racing_result()
     test_legacy_renderer_is_not_invoked()
+    test_invalid_manual_free_words_publish_nothing_and_preserve_slot()
     print("Local Resonance Return opening tests passed.")

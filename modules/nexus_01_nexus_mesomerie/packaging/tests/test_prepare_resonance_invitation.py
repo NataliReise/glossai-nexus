@@ -54,6 +54,8 @@ class InvitationPreparationTests(unittest.TestCase):
     def setUp(self) -> None:
         self.temporary = tempfile.TemporaryDirectory()
         self.root = Path(self.temporary.name)
+        self.carrier_root = self.root / "carrier"
+        self.carrier_root.mkdir()
         self.invitation_root = self.root / "travelling"
         self.private_root = self.root / "private-retained"
 
@@ -65,6 +67,7 @@ class InvitationPreparationTests(unittest.TestCase):
             token_v2(),
             invitation_root=self.invitation_root,
             private_root=self.private_root,
+            forbidden_root=self.carrier_root,
         )
 
     def test_creation_preserves_route_and_strict_separation(self) -> None:
@@ -94,6 +97,36 @@ class InvitationPreparationTests(unittest.TestCase):
         with self.assertRaises(PreparationError):
             self.prepare()
         self.assertEqual(marker.read_text(encoding="utf-8"), "preserve")
+
+    def test_invitation_root_inside_carrier_is_rejected_without_output(self) -> None:
+        invitation_root = self.carrier_root / "travelling"
+        with self.assertRaisesRegex(PreparationError, "outside the travelling Nexus"):
+            prepare_resonance_invitation(
+                token_v2(),
+                invitation_root=invitation_root,
+                private_root=self.private_root,
+                forbidden_root=self.carrier_root,
+            )
+        self.assertEqual(list(self.carrier_root.iterdir()), [])
+        self.assertFalse(self.private_root.exists())
+
+    def test_private_root_inside_carrier_is_rejected_without_output(self) -> None:
+        private_root = self.carrier_root / "private-retained"
+        with self.assertRaisesRegex(PreparationError, "outside the travelling Nexus"):
+            prepare_resonance_invitation(
+                token_v2(),
+                invitation_root=self.invitation_root,
+                private_root=private_root,
+                forbidden_root=self.carrier_root,
+            )
+        self.assertFalse(self.invitation_root.exists())
+        self.assertEqual(list(self.carrier_root.iterdir()), [])
+
+    def test_both_roots_outside_carrier_are_published(self) -> None:
+        result = self.prepare()
+        self.assertTrue(result.invitation_path.is_dir())
+        self.assertTrue(result.private_workspace_path.is_dir())
+        self.assertEqual(list(self.carrier_root.iterdir()), [])
 
     def test_staging_failure_publishes_neither_output(self) -> None:
         with patch(
@@ -147,6 +180,7 @@ class InvitationPreparationTests(unittest.TestCase):
                 legacy,
                 invitation_root=self.invitation_root,
                 private_root=self.private_root,
+                forbidden_root=self.carrier_root,
             )
 
     def test_verifiers_reject_tampering(self) -> None:

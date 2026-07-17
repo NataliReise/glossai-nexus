@@ -212,6 +212,7 @@ def prepare_resonance_invitation(
     *,
     invitation_root: Path,
     private_root: Path,
+    forbidden_root: Path,
     result_file: str | None = None,
     _workspace_builder=None,
     _publisher=None,
@@ -223,6 +224,15 @@ def prepare_resonance_invitation(
     validated_token = _validated_token_v2(token)
     invitation_root = invitation_root.expanduser().resolve()
     private_root = private_root.expanduser().resolve()
+    forbidden_root = forbidden_root.expanduser().resolve()
+    if any(
+        destination.is_relative_to(forbidden_root)
+        for destination in (invitation_root, private_root)
+    ):
+        raise InvitationPublicationError(
+            "Publication destinations must remain outside the travelling "
+            "Nexus carrier."
+        )
     final_invitation = invitation_root / invitation_name(
         validated_token.return_slot_id
     )

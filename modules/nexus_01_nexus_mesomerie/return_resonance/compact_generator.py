@@ -13,10 +13,12 @@ import unicodedata
 from typing import TypeAlias
 
 from .resonance_render_bridge import ResonanceReturnArtifact
+from .token import ResonanceTokenLoadError, validate_originating_wish_word
 
 
 GENERATOR_ID = "nexus-01-compact-resonance"
-GENERATOR_VERSION = "1.1.0"
+GENERATOR_VERSION = "1.2.0"
+EXPECTED_WORD_COUNTS = (2, 4, 6, 4, 1)
 
 Seed: TypeAlias = int | str | None
 JsonScalar: TypeAlias = str | int | bool | None
@@ -66,69 +68,69 @@ class CompactGenerationResult:
 LEGACY_IMAGE_PAIRS: dict[tuple[str, str], PhraseProfile] = {
     ("waiting-lantern", "appearing-path"): PhraseProfile(
         "image.waiting-lantern.appearing-path.v1",
-        "A waiting lantern reveals the beginning of a path.",
+        "Lantern-waiting path-appears.",
     ),
     ("book-bench", "two-voices-one-page"): PhraseProfile(
         "image.book-bench.two-voices-one-page.v1",
-        "An open book on the empty bench holds two voices on one page.",
+        "Book-bench voices-converge.",
     ),
     ("open-starry-window", "answering-distant-light"): PhraseProfile(
         "image.open-starry-window.answering-distant-light.v1",
-        "Through the starry window, a distant light answers.",
+        "Star-window light-answers.",
     ),
     ("stone-in-water", "colours-carried-outward"): PhraseProfile(
         "image.stone-in-water.colours-carried-outward.v1",
-        "Beneath clear water, a painted stone sends its colours outward.",
+        "Water-stone colours-travel.",
     ),
     ("bridge-in-mist", "shared-silence"): PhraseProfile(
         "image.bridge-in-mist.shared-silence.v1",
-        "On the narrow misted bridge, silence becomes shared.",
+        "Mist-bridge silence-shares.",
     ),
 }
 
 LEGACY_SCENT_PAIRS: dict[tuple[str, str], PhraseProfile] = {
     ("summer-rain", "possibility-of-encounter"): PhraseProfile(
         "scent.summer-rain.possibility-of-encounter.v1",
-        "Summer rain carries the possibility of encounter.",
+        "Summer rain, encounter opens.",
     ),
     ("books-and-cedar", "open-books-beside-one-another"): PhraseProfile(
         "scent.books-and-cedar.open-books-beside-one-another.v1",
-        "Books and cedar keep two open pages beside one another.",
+        "Cedar pages, books gather.",
     ),
     ("evening-salt", "sense-of-return"): PhraseProfile(
         "scent.evening-salt.sense-of-return.v1",
-        "Evening salt air carries a sense of return.",
+        "Evening salt, return gathers.",
     ),
     ("first-snow", "edge-of-beginning"): PhraseProfile(
         "scent.first-snow.edge-of-beginning.v1",
-        "Air before first snow holds the edge of a beginning.",
+        "First snow, beginnings approach.",
     ),
     ("warm-bread", "second-place-at-table"): PhraseProfile(
         "scent.warm-bread.second-place-at-table.v1",
-        "Warm bread keeps a second place at the quiet table.",
+        "Warm bread, place waits.",
     ),
 }
 
 LEGACY_MOVEMENT_PAIRS: dict[tuple[str, str], PhraseProfile] = {
     ("falling-feather", "crossing-feather"): PhraseProfile(
         "movement.falling-feather.crossing-feather.v1",
-        "One turning feather meets another across its falling path.",
+        "Falling feather, feathers cross.",
     ),
     ("loosening-knot", "gathering-without-tightening"): PhraseProfile(
         "movement.loosening-knot.gathering-without-tightening.v1",
-        "The loosening knot gathers its threads without tightening.",
+        "Loosening knot, threads gather.",
     ),
     ("returning-tide", "stream-back-to-sea"): PhraseProfile(
         "movement.returning-tide.stream-back-to-sea.v1",
-        "The returning tide draws a stream back toward the sea.",
+        "Returning tide, streams return.",
     ),
     ("opening-circle", "playful-waves"): PhraseProfile(
         "movement.opening-circle.playful-waves.v1",
-        "The opening circle lets its edges curl into playful waves.",
+        "Opening circle, waves play.",
     ),
     ("crossing-light", "shadow-alongside"): PhraseProfile(
         "movement.crossing-light.shadow-alongside.v1",
-        "Crossing light finds a shadow moving alongside.",
+        "Crossing light, shadow follows.",
     ),
 }
 
@@ -137,46 +139,46 @@ IMAGE_DOMAIN = DomainProfiles(
     source_profiles={
         "waiting-lantern": FragmentProfile(
             "image.source.waiting-lantern.v1",
-            "A waiting lantern holds its place in the dark",
+            "Lantern-waiting",
         ),
         "book-bench": FragmentProfile(
             "image.source.book-bench.v1",
-            "An open book waits on an empty bench",
+            "Book-bench",
         ),
         "open-starry-window": FragmentProfile(
             "image.source.open-starry-window.v1",
-            "A window stands open to the stars",
+            "Star-window",
         ),
         "stone-in-water": FragmentProfile(
             "image.source.stone-in-water.v1",
-            "A painted stone rests beneath clear water",
+            "Water-stone",
         ),
         "bridge-in-mist": FragmentProfile(
             "image.source.bridge-in-mist.v1",
-            "A narrow bridge crosses the mist",
+            "Mist-bridge",
         ),
     },
     response_profiles={
         "appearing-path": FragmentProfile(
-            "image.response.appearing-path.v1", "a path begins to appear"
+            "image.response.appearing-path.v1", "path-appears"
         ),
         "two-voices-one-page": FragmentProfile(
             "image.response.two-voices-one-page.v1",
-            "two voices meet on one page",
+            "voices-converge",
         ),
         "answering-distant-light": FragmentProfile(
             "image.response.answering-distant-light.v1",
-            "a distant light shines back",
+            "light-answers",
         ),
         "colours-carried-outward": FragmentProfile(
             "image.response.colours-carried-outward.v1",
-            "colours travel outward",
+            "colours-travel",
         ),
         "shared-silence": FragmentProfile(
-            "image.response.shared-silence.v1", "silence becomes shared"
+            "image.response.shared-silence.v1", "silence-shares"
         ),
     },
-    line_template="{source}; in answer, {response}.",
+    line_template="{source} {response}.",
     legacy_pairs=LEGACY_IMAGE_PAIRS,
 )
 
@@ -185,47 +187,47 @@ SCENT_DOMAIN = DomainProfiles(
     source_profiles={
         "summer-rain": FragmentProfile(
             "scent.source.summer-rain.v1",
-            "The scent of summer rain settles through the forest",
+            "Summer rain",
         ),
         "books-and-cedar": FragmentProfile(
             "scent.source.books-and-cedar.v1",
-            "The scent of books and cedar lingers among open pages",
+            "Cedar pages",
         ),
         "evening-salt": FragmentProfile(
             "scent.source.evening-salt.v1",
-            "The scent of evening salt gathers along the shore",
+            "Evening salt",
         ),
         "first-snow": FragmentProfile(
             "scent.source.first-snow.v1",
-            "The air before first snow carries a clear scent",
+            "First snow",
         ),
         "warm-bread": FragmentProfile(
             "scent.source.warm-bread.v1",
-            "The scent of warm bread fills the quiet kitchen",
+            "Warm bread",
         ),
     },
     response_profiles={
         "possibility-of-encounter": FragmentProfile(
             "scent.response.possibility-of-encounter.v1",
-            "the possibility of encounter opens",
+            "encounter opens",
         ),
         "open-books-beside-one-another": FragmentProfile(
             "scent.response.open-books-beside-one-another.v1",
-            "two open books rest beside one another",
+            "books gather",
         ),
         "sense-of-return": FragmentProfile(
-            "scent.response.sense-of-return.v1", "a sense of return gathers"
+            "scent.response.sense-of-return.v1", "return gathers"
         ),
         "edge-of-beginning": FragmentProfile(
             "scent.response.edge-of-beginning.v1",
-            "the edge of a beginning draws near",
+            "beginnings approach",
         ),
         "second-place-at-table": FragmentProfile(
             "scent.response.second-place-at-table.v1",
-            "a second place waits at the table",
+            "place waits",
         ),
     },
-    line_template="{source}; from it, {response}.",
+    line_template="{source}, {response}.",
     legacy_pairs=LEGACY_SCENT_PAIRS,
 )
 
@@ -233,66 +235,66 @@ MOVEMENT_DOMAIN = DomainProfiles(
     domain_id="movement",
     source_profiles={
         "falling-feather": FragmentProfile(
-            "movement.source.falling-feather.v1", "A feather turns as it falls"
+            "movement.source.falling-feather.v1", "Falling feather"
         ),
         "loosening-knot": FragmentProfile(
-            "movement.source.loosening-knot.v1", "A knot slowly loosens"
+            "movement.source.loosening-knot.v1", "Loosening knot"
         ),
         "returning-tide": FragmentProfile(
-            "movement.source.returning-tide.v1", "The tide begins to return"
+            "movement.source.returning-tide.v1", "Returning tide"
         ),
         "opening-circle": FragmentProfile(
-            "movement.source.opening-circle.v1", "A circle slowly opens"
+            "movement.source.opening-circle.v1", "Opening circle"
         ),
         "crossing-light": FragmentProfile(
             "movement.source.crossing-light.v1",
-            "A line of light travels across the floor",
+            "Crossing light",
         ),
     },
     response_profiles={
         "crossing-feather": FragmentProfile(
             "movement.response.crossing-feather.v1",
-            "another feather crosses the air",
+            "feathers cross",
         ),
         "gathering-without-tightening": FragmentProfile(
             "movement.response.gathering-without-tightening.v1",
-            "threads gather without tightening",
+            "threads gather",
         ),
         "stream-back-to-sea": FragmentProfile(
             "movement.response.stream-back-to-sea.v1",
-            "a stream flows back to the sea",
+            "streams return",
         ),
         "playful-waves": FragmentProfile(
             "movement.response.playful-waves.v1",
-            "edges curl into playful waves",
+            "waves play",
         ),
         "shadow-alongside": FragmentProfile(
             "movement.response.shadow-alongside.v1",
-            "a shadow moves alongside",
+            "shadow follows",
         ),
     },
-    line_template="{source}; in reply, {response}.",
+    line_template="{source}, {response}.",
     legacy_pairs=LEGACY_MOVEMENT_PAIRS,
 )
 
 MICRO_PATTERNS: tuple[MicroPattern, ...] = (
     MicroPattern(
         "sensory-wish-movement.v1",
-        "{image_line}\n{scent_line}\nMay {wish_word} find room here.\n"
+        "{image_line}\n{scent_line}\nMay {wish_word} keep this passage open.\n"
         "{movement_line}\n{return_word}",
         2,
     ),
     MicroPattern(
         "wish-led-passage.v1",
-        "For {wish_word}, the way stays open.\n{image_line}\n{movement_line}\n"
-        "{scent_line}\n{return_word}",
-        0,
+        "{image_line}\n{scent_line}\nLet {wish_word} cross this threshold gently.\n"
+        "{movement_line}\n{return_word}",
+        2,
     ),
     MicroPattern(
         "image-carried-wish.v1",
-        "{image_line}\nLet {wish_word} be carried with care.\n{scent_line}\n"
+        "{image_line}\n{scent_line}\nCarry {wish_word} through the opening between.\n"
         "{movement_line}\n{return_word}",
-        1,
+        2,
     ),
 )
 
@@ -377,6 +379,7 @@ def generate_compact_resonance(
             "separated-wish-role-and-final-return" if same_word else "not-required"
         ),
         "line_count": len(lines),
+        "word_counts": list(EXPECTED_WORD_COUNTS),
         "rendered_text": text,
     }
     return CompactGenerationResult(
@@ -430,11 +433,12 @@ def _compose_domain_profile(
 
 
 def _require_single_line_word(value: str, field_name: str) -> str:
-    if not isinstance(value, str) or not value.strip():
-        raise CompactGenerationError(f"{field_name} must be non-empty text")
-    cleaned = value.strip()
-    if any(character in cleaned for character in ("\n", "\r")):
-        raise CompactGenerationError(f"{field_name} must remain on one visible line")
+    try:
+        cleaned = validate_originating_wish_word(value)
+    except ResonanceTokenLoadError as error:
+        raise CompactGenerationError(
+            str(error).replace("wish_word", field_name)
+        ) from error
     if any(unicodedata.category(character) == "Cc" for character in cleaned):
         raise CompactGenerationError(f"{field_name} must not contain control characters")
     return cleaned
@@ -470,6 +474,11 @@ def _validate_rendered_text(
     for previous, current in zip(normalized_lines, normalized_lines[1:]):
         if previous == current:
             raise CompactGenerationError("Rendered text contains duplicate adjacent phrases")
+    word_counts = tuple(len(line.split()) for line in lines)
+    if word_counts != EXPECTED_WORD_COUNTS:
+        raise CompactGenerationError(
+            "Compact generator must render exactly 2 / 4 / 6 / 4 / 1 words"
+        )
     return lines
 
 

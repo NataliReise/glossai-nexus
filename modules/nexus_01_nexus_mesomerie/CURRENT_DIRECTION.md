@@ -10,7 +10,8 @@ When an older design, status, audit, or experiment document conflicts with this 
 
 ## Current resonance decision
 
-The complete visible resonance result of Nexus 01 will be a compact **Nachhall** poem.
+The complete visible production resonance result of Nexus 01 is a compact
+**Nachhall** poem.
 
 ```text
 2 words
@@ -19,6 +20,9 @@ The complete visible resonance result of Nexus 01 will be a compact **Nachhall**
 4 words
 1 word
 ```
+
+Words are whitespace-separated units. Attached punctuation does not add a
+word, and a hyphenated form without whitespace is one word.
 
 The compact poem is not a secondary Echo derived from a mandatory long-form poem. It is the complete poetic resonance form itself.
 
@@ -74,15 +78,23 @@ The V0.2 long-form experiment remains valuable design evidence. It demonstrated 
 
 It is no longer the intended production target. Nexus 01 will not require a long-form Resonance Artifact before producing its final Nachhall.
 
-## Active experiment
+## Production implementation and experimental lineage
 
-The new compact-composition experiment lives in:
+The production implementation lives in:
+
+```text
+return_resonance/compact_generator.py
+open_resonance_return.py
+```
+
+The earlier compact-composition experiment remains as design and review
+lineage in:
 
 ```text
 experiments/nachhall_composition_v0_3/
 ```
 
-Its status is experimental until its poetic and structural acceptance criteria are met. The existing production path must not silently switch before that review.
+It is not the active production path.
 
 ## Repository status language
 
@@ -105,14 +117,15 @@ UNDECIDED
 
 No historical runtime code, test, or data directory should be moved merely for tidiness before imports, fixtures, documentation links, and test commands have been reviewed.
 
-The safe order is:
+The completed replacement followed this safe order:
 
 ```text
 document current direction
 -> classify the repository
--> build and test the new compact experiment in parallel
+-> build and test the compact experiment in parallel
 -> confirm the replacement path
 -> update active imports and documentation
+-> enforce the accepted production contract
 -> archive superseded systems in one controlled migration
 -> run active tests and archive-reference checks
 ```

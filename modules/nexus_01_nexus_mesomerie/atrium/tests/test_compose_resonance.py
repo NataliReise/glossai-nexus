@@ -192,7 +192,7 @@ class ComposeAtriumTests(unittest.TestCase):
             (self.private_root / workspace_name(ROUTE.return_slot_id)).exists()
         )
 
-    def test_private_outputs_cannot_be_published_inside_carrier(self) -> None:
+    def test_invitation_output_cannot_be_published_inside_carrier(self) -> None:
         carrier = self.root / "carrier"
         carrier.mkdir()
         answers = (
@@ -209,6 +209,24 @@ class ComposeAtriumTests(unittest.TestCase):
         self.assertIn("outside the travelling Nexus carrier", transcript)
         self.assertEqual(list(carrier.iterdir()), [])
         self.assertFalse(self.private_root.exists())
+
+    def test_private_output_cannot_be_published_inside_carrier(self) -> None:
+        carrier = self.root / "carrier"
+        carrier.mkdir()
+        answers = (
+            "1",
+            "1",
+            "1",
+            "trust",
+            "yes",
+            str(self.travelling_root),
+            str(carrier / "private"),
+        )
+        result, _, transcript = self.run_compose(answers, nexus_root=carrier)
+        self.assertFalse(result.completed)
+        self.assertIn("outside the travelling Nexus carrier", transcript)
+        self.assertEqual(list(carrier.iterdir()), [])
+        self.assertFalse(self.travelling_root.exists())
 
     def test_corrected_compose_route_never_reaches_legacy_controller(self) -> None:
         values = iter(("first-spark", "resonance", "/cancel", "quit"))

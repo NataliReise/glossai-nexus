@@ -29,7 +29,7 @@ def main() -> None:
         assert first.slot_state_changed is True
         assert first.path.exists()
         assert "## Compact Resonance" in first.content
-        assert "Summer rain carries the possibility of encounter." in first.content
+        assert "Summer rain, encounter opens." in first.content
         assert "\ntrust\n```" in first.content
         assert '"generator_id": "nexus-01-compact-resonance"' in first.content
         assert "Resonance Artifact" not in first.content

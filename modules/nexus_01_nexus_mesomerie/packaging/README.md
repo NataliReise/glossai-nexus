@@ -56,7 +56,7 @@ python3 modules/nexus_01_nexus_mesomerie/packaging/prepare_nexus_gift.py \
   first-spark \
   --gift-label first-gift \
   --recipient-alias recipient_name \
-  --private-message "A local gift is waiting." \
+  --private-message "PRIVATE_MESSAGE" \
   --zip
 ```
 
@@ -79,8 +79,13 @@ workspace with:
 python3 modules/nexus_01_nexus_mesomerie/packaging/prepare_resonance_invitation.py \
   --token path/to/resonance_token.v2.json \
   --invitation-root path/to/travelling-output \
-  --private-root path/to/private-output
+  --private-root path/to/private-output \
+  --carrier-root path/to/travelling-nexus-carrier
 ```
+
+Both publication roots must remain outside the travelling carrier root. The
+command rejects either the invitation or the private Return Workspace beneath
+that boundary before staging or publication.
 
 The travelling invitation contains only `README.md` and
 `resonance_token.local.json`. It contains no activation, runtime, Return Slot,
@@ -109,7 +114,7 @@ python3 modules/nexus_01_nexus_mesomerie/packaging/prepare_nexus_gift.py \
   resonance \
   --gift-label resonance-gift \
   --recipient-alias recipient_name \
-  --private-message "A local gift is waiting." \
+  --private-message "PRIVATE_MESSAGE" \
   --public-safe-label "resonance path" \
   --zip
 ```
@@ -149,6 +154,21 @@ random values and are not derived from the recipient alias or private message.
 
 Preparation refuses existing destinations. It stages and validates all outputs
 before publishing them; there is deliberately no overwrite option.
+
+Private messages passed directly as command-line arguments may be visible in
+shell history or process listings. Keep documentation and test commands on
+placeholders, and use an appropriately private local invocation for real text.
+
+## Run all Nexus 01 production and integration tests
+
+From the repository root:
+
+```bash
+python3 modules/nexus_01_nexus_mesomerie/run_all_tests.py
+```
+
+This standard-library runner includes module-level test functions that ordinary
+`unittest` discovery does not collect, and excludes historical experiments.
 
 Keep the Return Workspace private. After the recipient deliberately transfers
 the Return Artifact back, copy its JSON file into the workspace's `incoming/`
