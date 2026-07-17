@@ -2,6 +2,80 @@
 
 This folder contains small packaging helpers for **Nexus 01 - Nexus-Mesomerie**.
 
+The preferred private gift boundary is now the two-mode preparation command:
+
+```bash
+python3 modules/nexus_01_nexus_mesomerie/packaging/prepare_nexus_gift.py --help
+```
+
+It prepares files locally only. It never uploads, sends, syncs, or tracks a gift.
+
+## Prepare a normal First Spark gift
+
+Create a validated `first-spark` activation and delegate to the unchanged
+standalone First Spark gift builder:
+
+```bash
+python3 modules/nexus_01_nexus_mesomerie/packaging/prepare_nexus_gift.py \
+  first-spark \
+  --gift-label first-gift \
+  --recipient-alias recipient_name \
+  --private-message "A local gift is waiting." \
+  --zip
+```
+
+To accept an existing activation instead, add:
+
+```text
+--activation path/to/activation.local.json
+```
+
+The preparation command validates it through the actual First Spark runtime
+parser and requires `profile_id` to be `first-spark` before building.
+
+## Prepare a Resonance gift and private Return Slot
+
+```bash
+python3 modules/nexus_01_nexus_mesomerie/packaging/prepare_nexus_gift.py \
+  resonance \
+  --gift-label resonance-gift \
+  --recipient-alias recipient_name \
+  --private-message "A local gift is waiting." \
+  --public-safe-label "resonance path" \
+  --zip
+```
+
+The command prints two separate locations:
+
+```text
+Travelling gift: .../nexus-01-resonance-gift-resonance-gift/
+Retained private Return Slot: .../return_slots.local.json
+```
+
+The travelling gift contains `first_spark/activation.local.json` and
+`resonance_token.local.json`. The Return Slot never enters the gift folder or
+ZIP. When the existing Resonance Chamber requests the token path, the recipient
+enters:
+
+```text
+resonance_token.local.json
+```
+
+The generated token and slot are checked for identical `module_id`, `layer_id`,
+`origin_trace_id`, `return_slot_id`, and `package_id`. Structural IDs are opaque
+random values and are not derived from the recipient alias or private message.
+
+Preparation refuses existing destinations. It stages and validates all outputs
+before publishing them; there is deliberately no overwrite option.
+
+Verify a published Resonance gift and its retained slot independently:
+
+```bash
+python3 modules/nexus_01_nexus_mesomerie/packaging/verify_resonance_gift_package.py \
+  path/to/nexus-01-resonance-gift-resonance-gift \
+  --private-slot path/to/return_slots.local.json
+```
+
 The current helpers build and verify two package types for:
 
 ```text
