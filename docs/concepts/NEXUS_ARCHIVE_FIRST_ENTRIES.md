@@ -10,9 +10,18 @@ It does not define a complete archive implementation or final wording. It tests 
 2. clear orientation
 3. optional deeper trace
 
-The entries are written for the internal Nexus world. They do not explain Git, GitHub, repositories, manifests, builders, or the outer fictional frame.
+The entries are written for the internal Nexus world. They do not explain Git, GitHub, repositories, manifests, builders, module lines, or the outer fictional frame.
 
 The archive remains optional. A visitor should be able to read only the short orientation and return to the current chamber path without penalty.
+
+The present sequence follows a simple inner movement:
+
+> A Nexus makes a place.
+> A gift opens a path.
+> Resonance travels.
+> A small light may remain.
+
+The entries draw from the mythic foundation in [Nexus Inner Story](NEXUS_INNER_STORY.md) while remaining shorter, more focused, and directly usable as archive material.
 
 ---
 
@@ -20,109 +29,128 @@ The archive remains optional. A visitor should be able to read only the short or
 
 ## Poetic indication
 
-> A Nexus begins where one path becomes more than one.
+> A Nexus is not a net that holds people together.
+>
+> It is a small place carried between them.
 
 ## Clear orientation
 
-A Nexus is a place made from chambers, thresholds, and possible paths.
+A Nexus is a local place of chambers, thresholds, and possible paths.
 
-Its chambers may invite play, discovery, response, memory, or exchange. They do not need to share one shape, one voice, or one way of being entered.
+It may be opened, explored, carried, answered, or left alone. Its chambers may invite play, discovery, memory, exchange, or response.
 
-A Nexus does not exist to keep people connected at all times. It makes meaningful connection possible without making it compulsory.
+A Nexus does not connect people by force. It creates a place in which connection may arise voluntarily.
 
-Nothing has to travel. Nothing has to be answered. A path may remain unopened and still belong to the Nexus.
+Nothing travels by itself. Nothing opens merely because it is present. A visitor may enter, continue, carry something onward, or walk away.
 
 ## Deeper trace
 
-The earliest paths of Nexus were small.
+Nexus began with a question:
 
-A visitor could enter one chamber, notice one sign, carry one trace, or leave without taking anything at all. The place did not demand completion before it allowed meaning.
+> How might connection travel without becoming control?
 
-Over time, more chambers appeared. Some returned in other arrangements. Some opened only after another path had been followed. Some remained visible but silent.
+And with a wish:
 
-No single chamber became the whole Nexus.
+> To create a form of connection that could remain free.
 
-The Nexus grew instead through relation: thresholds meeting thresholds, paths crossing without erasing one another, and visitors deciding for themselves what should continue.
+The first Nexus was not made to hold people together. It was made to leave room between them.
 
-> Connection may be offered.
-> It must not become a command.
+Its chambers opened different forms of encounter. Some hid a path. Some waited for an answer. Some could only be understood through play. None of them contained the whole.
+
+A Nexus offers structure without claiming the encounter. It may remember only what it is asked to keep.
+
+> Here is a place.
+>
+> You may enter it.
+> You may carry it.
+> You may leave something within it.
+> You may pass it on.
+> You may also walk away.
+
+Connection may be offered.
+It must not become a command.
 
 ---
 
-# Chambers and Constellations
+# Resonance as a Gift
 
 ## Poetic indication
 
-> Each chamber keeps its own interior.
-> Nexus begins where their thresholds meet.
+> Resonance begins when something is offered
+> without deciding what must return.
 
 ## Clear orientation
 
-A chamber is a complete place of experience within a Nexus.
+In the Resonance Chamber, a person may shape a gift from several small elements: an image, a scent, a movement, and a word.
 
-It may contain its own rules, atmosphere, choices, questions, artifacts, or forms of return. What belongs to a chamber should not be scattered carelessly across the rest of the Nexus.
+The gift is not a demand for agreement, imitation, or explanation. It is an opening.
 
-A constellation is the way several chambers are arranged together.
+Another person may choose whether to receive it. They may answer each element in their own way. Their response does not need to mirror the first contribution or reveal one final meaning.
 
-The same chamber may appear in different constellations. Its interior may remain recognisable while its meaning changes through the paths beside it, the thresholds that lead to it, or the chambers that answer it.
-
-An Atrium may make a constellation visible, but it does not define the chambers. It listens for the doors they choose to reveal.
+The gift becomes resonance only through freedom on both sides.
 
 ## Deeper trace
 
-Some chambers return.
+A gift of resonance is prepared with care, but it is not completed by the person who prepares it.
 
-They may stand beside unfamiliar rooms. They may open earlier, later, or not at all. A chamber once reached through play may later be reached through memory. A chamber once entered alone may later receive a carried trace from another visitor.
+Its first form belongs to one visitor. Its possible answer belongs to another. The space between them belongs to neither alone.
 
-This does not make the chamber incomplete.
+To offer such a gift is to release control over what it should become.
 
-A constellation changes relation, not ownership.
+The sender may choose the elements, shape the invitation, and decide whether to carry it onward. But they cannot decide whether another person will enter, what they will notice, or how they will answer.
 
-The Resonance Chamber, for example, keeps the whole resonance journey within its own interior: beginning, carrying, answering, returning, and remembering. Other parts of Nexus may show that its door is open or that a public-safe sign remains, but they do not take possession of what happened inside.
+The receiver does not inherit an obligation. Arrival is not consent. Presence is not selection. An invitation may remain unopened without becoming a failure.
 
-> A Nexus grows by docking complete chambers,
-> not by dissolving them into one system.
+When an answer does return, it does not erase the first gift. It joins it.
+
+> Resonance begins where no single contribution
+> possesses the whole.
+
+The gift remains meaningful because it remains free.
 
 ---
 
-# What Leaves a Chamber?
+# A Carried Resonance
 
 ## Poetic indication
 
-> A door may open without surrendering the room behind it.
+> What leaves the chamber is not a command.
+>
+> It is a path another person may choose to meet.
 
 ## Clear orientation
 
-A chamber may reveal a small public surface to the surrounding constellation.
+A carried resonance is a message prepared in the Resonance Chamber and deliberately passed from one visitor toward another.
 
-It may reveal that:
+It does not travel automatically. It must be carried by choice.
 
-- its threshold is visible
-- a path is available
-- a return is waiting
-- a public-safe trace exists
-- a visitor may enter, revisit, or continue
+The receiving person may open it, answer it, leave it unopened, or stop at any point. The chamber preserves the distinction between receiving, noticing, choosing, entering, answering, returning, and leaving.
 
-It does not need to reveal private choices, messages, gifts, answers, or meanings.
-
-The chamber decides what may cross its threshold. The Atrium and the Archive may only use what has been deliberately released for them.
+The carried resonance may contain a shaped invitation, but it does not contain the meaning of the answer in advance.
 
 ## Deeper trace
 
-Not every trace is meant to travel.
+Some traces remain inside a chamber.
+Some remain only with the visitor who found them.
+Some are carried onward.
 
-Some remain inside a chamber. Some remain only with one visitor. Some become artifacts that may be carried by hand. Some are transformed into a smaller sign that can safely be seen elsewhere.
+A carried resonance crosses a threshold without surrendering the chamber behind it.
 
-The Archive may remember that a door opened without possessing what happened inside.
+What travels is not the whole interior of the first visitor. It is a carefully shaped surface: enough to invite encounter, not enough to possess or expose the person who offered it.
 
-The Atrium may show that a return is waiting without reading the return.
+Another visitor may meet the image differently, remember another scent, imagine another movement, or choose another word. They may answer without decoding, obeying, or correcting what came before.
 
-A Resonance Node may show that something continued without containing the gift, the answer, or the relation that gave it meaning.
+Between the gift and the answer, a new relation appears.
 
-This boundary is not a failure of connection. It is what allows connection to remain voluntary.
+The return does not reveal a hidden correct meaning. It shows that two independent contributions have entered the same path without becoming the same thing.
 
-> A threshold is not a leak.
-> It is a choice about what may pass.
+> One visitor shapes a trace.
+> Another gives it an answer.
+> Between them, a path appears
+> that neither could have made alone.
+
+What is carried may be answered.
+It must not be obeyed.
 
 ---
 
@@ -138,22 +166,29 @@ A Resonance Node is a voluntary public-safe sign that a path continued.
 
 It may show that something was found, opened, completed, answered, or carried onward.
 
-It does not contain the private gift, the carried message, the answer, or the meaning shared between visitors.
+It does not contain the private gift, the carried resonance, the answer, or the meaning shared between visitors.
 
 Leaving a node is optional. A visitor may continue without creating one.
 
 ## Deeper trace
 
+Not every trace that leaves a chamber remains entirely unseen.
+
+Sometimes, a visitor chooses to leave a small sign: not the story itself, but the fact that somewhere a path was opened.
+
+A Resonance Node does not explain who stood at the threshold, what they hoped for, what they carried, or what returned. It does not turn a private passage into a public record.
+
 Alone, each light says very little.
 
-It does not explain who stood at the threshold, what they hoped for, or what returned. It does not turn a private passage into a public record.
+Together, the lights may begin to show a wider pattern: places where chambers have opened, sparks have been noticed, answers have found their way back, and something has chosen to continue.
 
-Together, such lights may begin to show a wider pattern: places where chambers have opened, paths have crossed, and something has chosen to continue.
-
-The pattern belongs to Nexus only in a limited sense. It is not ownership of the stories behind the lights.
+The pattern does not own the stories behind it.
 
 > The node remembers continuation.
 > It does not claim the meaning of what continued.
+
+The Archive may preserve that a light appeared.
+It does not need to possess what happened inside the chamber.
 
 ---
 
@@ -161,20 +196,20 @@ The pattern belongs to Nexus only in a limited sense. It is not ownership of the
 
 These entries deliberately test several balances:
 
+- mythic language without becoming vague
 - clarity without becoming an external technical manual
-- atmosphere without hiding the practical meaning
-- continuity between the inner story and future interfaces
-- chamber ownership without isolation
+- continuity with `NEXUS_INNER_STORY.md`
+- voluntary connection without sentimental pressure
+- resonance as relation rather than decoded meaning
 - public memory without private exposure
 - optional depth without mandatory lore reading
 
-A later revision should test the wording with readers who know little or nothing about glossai-nexus.
+`Nexus-Mesomerie` is intentionally not included as an archive entry here. It belongs primarily to the technical and conceptual project documentation as the name of a module line. The inner archive may someday echo a family of recurring paths, but it should not reproduce the project's architectural taxonomy.
 
-Possible next entries include:
+Possible later entries include:
 
-- Nexus-Mesomerie
-- First Spark Chamber
-- Resonance Chamber
-- Carried Traces and Choice
-- The Archive Itself
+- The Resonance Chamber
+- First Spark
+- What the Archive Keeps
+- Carriers, Traces, and Choice
 - The Journey Remains Open
