@@ -33,7 +33,7 @@ To accept an existing activation instead, add:
 The preparation command validates it through the actual First Spark runtime
 parser and requires `profile_id` to be `first-spark` before building.
 
-## Prepare a Resonance gift and private Return Slot
+## Prepare a Resonance gift and private Return Workspace
 
 ```bash
 python3 modules/nexus_01_nexus_mesomerie/packaging/prepare_nexus_gift.py \
@@ -45,15 +45,19 @@ python3 modules/nexus_01_nexus_mesomerie/packaging/prepare_nexus_gift.py \
   --zip
 ```
 
-The command prints two separate locations:
+The command prints the travelling outputs separately from the retained private
+workspace:
 
 ```text
 Travelling gift: .../nexus-01-resonance-gift-resonance-gift/
-Retained private Return Slot: .../return_slots.local.json
+Travelling ZIP: .../nexus-01-resonance-gift-resonance-gift.zip
+Private Return Workspace: .../n01-return-workspace-<opaque-id>/
 ```
 
 The travelling gift contains `first_spark/activation.local.json` and
-`resonance_token.local.json`. The Return Slot never enters the gift folder or
+`resonance_token.local.json`. The private workspace contains the matching Return
+Slot, the persistent compact opening runtime, an empty `incoming/` directory,
+and an empty `results/` directory. The workspace never enters the gift folder or
 ZIP. When the existing Resonance Chamber requests the token path, the recipient
 enters:
 
@@ -68,12 +72,41 @@ random values and are not derived from the recipient alias or private message.
 Preparation refuses existing destinations. It stages and validates all outputs
 before publishing them; there is deliberately no overwrite option.
 
+Keep the Return Workspace private. After the recipient deliberately transfers
+the Return Artifact back, copy its JSON file into the workspace's `incoming/`
+directory and run:
+
+```bash
+./OPEN_RETURN.sh
+```
+
+The launcher requires Python 3.11 or newer. It uses only workspace-relative
+runtime, slot, and results paths. It automatically opens the sole JSON file in
+`incoming/`; if more than one is present, it refuses ambiguity and asks for one
+explicit path:
+
+```bash
+./OPEN_RETURN.sh incoming/returned-artifact.json
+```
+
+The saved result is created once in `results/`. Reopening returns the saved
+content unchanged, including later manual edits. The launcher never sends,
+moves, renames, or deletes the returned Artifact.
+
 Verify a published Resonance gift and its retained slot independently:
 
 ```bash
 python3 modules/nexus_01_nexus_mesomerie/packaging/verify_resonance_gift_package.py \
   path/to/nexus-01-resonance-gift-resonance-gift \
-  --private-slot path/to/return_slots.local.json
+  --private-slot path/to/n01-return-workspace-opaque/private/return_slots.local.json
+```
+
+Verify the private workspace independently:
+
+```bash
+python3 modules/nexus_01_nexus_mesomerie/packaging/verify_return_workspace.py \
+  path/to/n01-return-workspace-opaque \
+  --gift path/to/nexus-01-resonance-gift-resonance-gift
 ```
 
 The current helpers build and verify two package types for:

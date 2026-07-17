@@ -5,6 +5,8 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
+import zipfile
 
 
 NEXUS_ROOT = Path(__file__).resolve().parents[2]
@@ -29,6 +31,7 @@ from return_resonance.slots import load_return_slots  # noqa: E402
 from return_resonance.token import load_resonance_token  # noqa: E402
 from verify_first_spark_gift_package import verify_package as verify_first_spark  # noqa: E402
 from verify_resonance_gift_package import verify_preparation  # noqa: E402
+from verify_return_workspace import verify_workspace  # noqa: E402
 
 
 FIXED_ROUTE = RouteIdentity(
@@ -124,9 +127,21 @@ class PrepareNexusGiftTests(unittest.TestCase):
         self.assertTrue(token.enables_resonance)
         self.assertFalse((result.gift_path / "return_slots.local.json").exists())
         self.assertFalse((result.gift_path / "return_slot.local.json").exists())
+        self.assertTrue(result.private_workspace_path and result.private_workspace_path.is_dir())
+        self.assertTrue(result.private_slot_path.is_relative_to(result.private_workspace_path))
+        self.assertFalse((result.private_workspace_path / "activation.local.json").exists())
+        self.assertFalse((result.private_workspace_path / "resonance_token.local.json").exists())
         self.assertFalse(any("tests" in path.parts for path in result.gift_path.rglob("*")))
         self.assertTrue(verify_preparation(result.gift_path, result.private_slot_path).passed)
+        self.assertTrue(
+            verify_workspace(result.private_workspace_path, FIXED_ROUTE.__dict__).passed
+        )
         self.assertTrue(result.zip_path and result.zip_path.is_file())
+        with zipfile.ZipFile(result.zip_path) as archive:
+            names = archive.namelist()
+        self.assertFalse(any("return_slots" in name for name in names))
+        self.assertFalse(any("OPEN_RETURN" in name for name in names))
+        self.assertFalse(any("return-workspace" in name for name in names))
 
     def test_generated_token_supplies_later_artifact_route(self) -> None:
         result = self._prepare_resonance()
@@ -166,6 +181,53 @@ class PrepareNexusGiftTests(unittest.TestCase):
         with self.assertRaises(PreparationError):
             self._prepare_resonance()
         self.assertEqual(marker.read_text(encoding="utf-8"), "keep")
+
+    def test_existing_workspace_is_never_overwritten(self) -> None:
+        workspace = self.private / "n01-return-workspace-0123456789abcdef"
+        workspace.mkdir(parents=True)
+        marker = workspace / "keep.txt"
+        marker.write_text("private", encoding="utf-8")
+
+        with self.assertRaises(PreparationError):
+            self._prepare_resonance()
+
+        self.assertFalse((self.dist / "nexus-01-resonance-gift-resonant").exists())
+        self.assertEqual(marker.read_text(encoding="utf-8"), "private")
+
+    def test_workspace_cannot_be_nested_inside_travelling_gift(self) -> None:
+        nested_private_root = (
+            self.dist / "nexus-01-resonance-gift-resonant" / "private-workspaces"
+        )
+
+        with self.assertRaisesRegex(PreparationError, "must be separate paths"):
+            prepare_resonance(
+                gift_label="resonant",
+                dist_root=self.dist,
+                private_root=nested_private_root,
+                recipient_alias="recipient",
+                activation_purpose="gift",
+                private_message="local",
+                public_safe_label="quiet route",
+                result_file=None,
+                zip_package=True,
+                route=FIXED_ROUTE,
+            )
+
+        self.assertFalse((self.dist / "nexus-01-resonance-gift-resonant").exists())
+
+    def test_workspace_failure_publishes_neither_output(self) -> None:
+        with patch(
+            "prepare_nexus_gift.build_return_workspace",
+            side_effect=RuntimeError("injected workspace construction failure"),
+        ):
+            with self.assertRaisesRegex(RuntimeError, "injected workspace"):
+                self._prepare_resonance(zip_package=True)
+
+        gift = self.dist / "nexus-01-resonance-gift-resonant"
+        workspace = self.private / "n01-return-workspace-0123456789abcdef"
+        self.assertFalse(gift.exists())
+        self.assertFalse(gift.with_suffix(".zip").exists())
+        self.assertFalse(workspace.exists())
 
     def _prepare_resonance(
         self,

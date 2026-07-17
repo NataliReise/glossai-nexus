@@ -21,7 +21,7 @@ NEXUS_ROOT = SCRIPT_PATH.parents[1]
 REPO_ROOT = SCRIPT_PATH.parents[3]
 FIRST_SPARK_ROOT = NEXUS_ROOT / "first_spark"
 DEFAULT_DIST_ROOT = REPO_ROOT / "dist"
-DEFAULT_PRIVATE_ROOT = DEFAULT_DIST_ROOT / "nexus-01-private-return-slots"
+DEFAULT_PRIVATE_ROOT = DEFAULT_DIST_ROOT / "nexus-01-return-workspaces"
 for import_root in (SCRIPT_PATH.parent, NEXUS_ROOT, FIRST_SPARK_ROOT):
     if str(import_root) not in sys.path:
         sys.path.insert(0, str(import_root))
@@ -38,7 +38,12 @@ from first_spark.activation import (  # noqa: E402
     activation_from_mapping,
     load_activation,
 )
-from make_return_slot import build_slot_document, write_slot_document  # noqa: E402
+from make_return_slot import build_slot_document  # noqa: E402
+from return_workspace import (  # noqa: E402
+    SLOT_PATH as WORKSPACE_SLOT_PATH,
+    build_return_workspace,
+    workspace_name,
+)
 from return_resonance.slots import load_return_slots  # noqa: E402
 from return_resonance.token import (  # noqa: E402
     LAYER_ID,
@@ -56,6 +61,7 @@ from verify_resonance_gift_package import (  # noqa: E402
     is_safe_result_filename,
     verify_preparation,
 )
+from verify_return_workspace import verify_workspace  # noqa: E402
 
 
 RESONANCE_PACKAGE_PREFIX = "nexus-01-resonance-gift"
@@ -123,6 +129,7 @@ class PreparationResult:
     zip_path: Path | None = None
     private_slot_path: Path | None = None
     route: RouteIdentity | None = None
+    private_workspace_path: Path | None = None
 
 
 def generate_route_identity() -> RouteIdentity:
@@ -305,9 +312,15 @@ def prepare_resonance(
 
     final_package = dist_root / package_name
     final_zip = (dist_root / package_name).with_suffix(".zip") if zip_package else None
-    final_slot_dir = private_root / route.return_slot_id
-    final_slot = final_slot_dir / "return_slots.local.json"
-    _require_absent(final_package, final_zip, final_slot_dir)
+    final_workspace = private_root / workspace_name(route.return_slot_id)
+    final_slot = final_workspace / WORKSPACE_SLOT_PATH
+    if final_workspace.is_relative_to(final_package) or final_package.is_relative_to(
+        final_workspace
+    ):
+        raise PreparationError(
+            "The private Return Workspace and travelling gift must be separate paths."
+        )
+    _require_absent(final_package, final_zip, final_workspace)
 
     activation = activation_mapping(
         RETURN_RESONANCE_PROFILE_ID, recipient_alias, activation_purpose, private_message
@@ -338,20 +351,32 @@ def prepare_resonance(
     dist_root.parent.mkdir(parents=True, exist_ok=True)
     private_root.parent.mkdir(parents=True, exist_ok=True)
     gift_stage_root = Path(tempfile.mkdtemp(prefix=".nexus-resonance-stage-", dir=dist_root.parent))
-    slot_stage_root = Path(tempfile.mkdtemp(prefix=".nexus-slot-stage-", dir=private_root.parent))
+    workspace_stage_root = Path(
+        tempfile.mkdtemp(prefix=".nexus-return-workspace-stage-", dir=private_root.parent)
+    )
     published: list[Path] = []
     try:
         staged_package = gift_stage_root / package_name
-        staged_slot_dir = slot_stage_root / route.return_slot_id
-        staged_slot = staged_slot_dir / "return_slots.local.json"
+        staged_workspace = workspace_stage_root / workspace_name(route.return_slot_id)
+        staged_slot = staged_workspace / WORKSPACE_SLOT_PATH
         build_staged_resonance_package(staged_package, activation, token)
-        write_slot_document(slot_document, staged_slot, overwrite=False)
+        build_return_workspace(staged_workspace, slot_document)
 
         verification = verify_preparation(staged_package, staged_slot)
         if not verification.passed:
             raise PreparationError(
                 "Staged Resonance preparation failed verification: "
                 + "; ".join(verification.errors)
+            )
+        workspace_verification = verify_workspace(
+            staged_workspace,
+            asdict(route),
+            gift_dir=staged_package,
+        )
+        if not workspace_verification.passed:
+            raise PreparationError(
+                "Staged private Return Workspace failed verification: "
+                + "; ".join(workspace_verification.errors)
             )
         loaded_slot = load_return_slots(staged_slot)[0]
         for field_name in (
@@ -374,18 +399,25 @@ def prepare_resonance(
 
         _publish(staged_package, final_package)
         published.append(final_package)
-        _publish(staged_slot_dir, final_slot_dir)
-        published.append(final_slot_dir)
+        _publish(staged_workspace, final_workspace)
+        published.append(final_workspace)
         if staged_zip is not None and final_zip is not None:
             _publish(staged_zip, final_zip)
             published.append(final_zip)
-        return PreparationResult("resonance", final_package, final_zip, final_slot, route)
+        return PreparationResult(
+            mode="resonance",
+            gift_path=final_package,
+            zip_path=final_zip,
+            private_slot_path=final_slot,
+            route=route,
+            private_workspace_path=final_workspace,
+        )
     except Exception:
         _rollback_publication(*published)
         raise
     finally:
         shutil.rmtree(gift_stage_root, ignore_errors=True)
-        shutil.rmtree(slot_stage_root, ignore_errors=True)
+        shutil.rmtree(workspace_stage_root, ignore_errors=True)
 
 
 def _validate_route(route: RouteIdentity) -> None:
@@ -508,8 +540,8 @@ def main(argv: list[str] | None = None) -> int:
     print(f"Travelling gift: {result.gift_path}")
     if result.zip_path:
         print(f"Travelling ZIP: {result.zip_path}")
-    if result.private_slot_path:
-        print(f"Retained private Return Slot: {result.private_slot_path}")
+    if result.private_workspace_path:
+        print(f"Private Return Workspace: {result.private_workspace_path}")
     if result.route:
         print("Structural route:")
         for field_name, value in asdict(result.route).items():
