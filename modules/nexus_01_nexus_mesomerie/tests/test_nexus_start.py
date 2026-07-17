@@ -58,7 +58,9 @@ class NexusStartTests(unittest.TestCase):
 
         def atrium_runner(**kwargs):
             captured.update(kwargs)
-            return NexusAtriumRuntime.from_resonance_mode(kwargs["resonance_mode"])
+            return NexusAtriumRuntime.from_activation(
+                kwargs["activation_loader"](), kwargs["resonance_mode"]
+            )
 
         result = run_corrected_nexus(
             nexus_root=self.nexus,
@@ -103,7 +105,9 @@ class NexusStartTests(unittest.TestCase):
 
         def atrium_runner(**kwargs):
             captured.update(kwargs)
-            return NexusAtriumRuntime.from_resonance_mode(kwargs["resonance_mode"])
+            return NexusAtriumRuntime.from_activation(
+                kwargs["activation_loader"](), kwargs["resonance_mode"]
+            )
 
         run_corrected_nexus(
             nexus_root=self.nexus,
@@ -127,7 +131,9 @@ class NexusStartTests(unittest.TestCase):
 
         def atrium_runner(**kwargs):
             captured.update(kwargs)
-            return NexusAtriumRuntime.from_resonance_mode(kwargs["resonance_mode"])
+            return NexusAtriumRuntime.from_activation(
+                kwargs["activation_loader"](), kwargs["resonance_mode"]
+            )
 
         run_corrected_nexus(
             nexus_root=self.nexus,
@@ -157,8 +163,8 @@ class NexusStartTests(unittest.TestCase):
 
                 def atrium_runner(**kwargs):
                     captured.update(kwargs)
-                    return NexusAtriumRuntime.from_resonance_mode(
-                        kwargs["resonance_mode"]
+                    return NexusAtriumRuntime.from_activation(
+                        kwargs["activation_loader"](), kwargs["resonance_mode"]
                     )
 
                 run_corrected_nexus(

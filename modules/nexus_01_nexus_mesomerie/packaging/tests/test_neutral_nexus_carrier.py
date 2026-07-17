@@ -43,6 +43,15 @@ ROUTE = {
     "package_id": "n01-package-carrier-test",
 }
 
+FIRST_SPARK_COMPLETION_COMMANDS = (
+    "first-spark",
+    "read welcome.log",
+    "read spark.note",
+    "link spark",
+    "unlock",
+    "quit",
+)
+
 
 class NeutralNexusCarrierTests(unittest.TestCase):
     def setUp(self) -> None:
@@ -159,10 +168,13 @@ class NeutralNexusCarrierTests(unittest.TestCase):
                     if with_token
                     else None
                 )
-                run = self.start(result.carrier_path, "1\nquit\n")
+                answers = "\n".join(("1", *FIRST_SPARK_COMPLETION_COMMANDS, "quit", ""))
+                run = self.start(result.carrier_path, answers)
                 self.assertEqual(run.returncode, 0, run.stderr)
                 self.assertIn("begin/send a resonance", run.stdout)
                 self.assertNotIn("answer the carried resonance", run.stdout)
+                self.assertNotIn("Activation detected.", run.stdout)
+                self.assertNotIn("First Spark online.", run.stdout)
                 self.assertTrue(
                     (result.carrier_path / "first_spark/activation.local.json").is_file()
                 )
@@ -190,6 +202,7 @@ class NeutralNexusCarrierTests(unittest.TestCase):
         answers = "\n".join(
             (
                 "1",
+                *FIRST_SPARK_COMPLETION_COMMANDS,
                 "resonance",
                 "5",
                 "4",
@@ -281,7 +294,8 @@ class NeutralNexusCarrierTests(unittest.TestCase):
         (result.carrier_path / SIDECAR_PATH).unlink()
         restart = self.start(result.carrier_path, "quit\n")
         self.assertEqual(restart.returncode, 0, restart.stderr)
-        self.assertIn("begin/send a resonance", restart.stdout)
+        self.assertIn("first-spark: open", restart.stdout)
+        self.assertNotIn("resonance", restart.stdout.lower())
         self.assertNotIn("Choose how to activate", restart.stdout)
 
     def test_carrier_remains_movable_before_and_after_activation(self) -> None:

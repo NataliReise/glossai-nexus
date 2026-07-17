@@ -15,6 +15,7 @@ from atrium import (
     ChamberRunResult,
     FIRST_SPARK_CHAMBER,
     RESONANCE_CHAMBER,
+    ResonanceMode,
 )
 from atrium.terminal import help_text, render_atrium, run_nexus_terminal
 
@@ -22,6 +23,7 @@ from atrium.terminal import help_text, render_atrium, run_nexus_terminal
 @dataclass(frozen=True)
 class ActivationStub:
     profile_id: str
+    activation_purpose: str = "gift"
 
 
 def scripted_input(commands: list[str]):
@@ -51,7 +53,35 @@ def test_first_spark_path_completes_and_returns_to_atrium() -> None:
     assert calls == [FIRST_SPARK_CHAMBER]
     assert runtime.state.phase is AtriumPhase.RETURN
     assert runtime.state.is_completed(FIRST_SPARK_CHAMBER)
+    assert runtime.state.is_enabled(RESONANCE_CHAMBER)
     assert "You return to the Atrium" in "\n".join(output)
+
+
+def test_gift_progression_hides_then_reveals_mode_aware_resonance() -> None:
+    output: list[str] = []
+    resonance_calls: list[str] = []
+
+    runtime = run_nexus_terminal(
+        activation_loader=lambda: ActivationStub("first-spark"),
+        first_spark_runner=lambda: ChamberRunResult(completed=True),
+        classified_resonance_runner=lambda: (
+            resonance_calls.append(RESONANCE_CHAMBER)
+            or ChamberRunResult(completed=False)
+        ),
+        resonance_mode=ResonanceMode.COMPOSE,
+        input_reader=scripted_input(
+            ["look", "resonance", "first-spark", "look", "resonance", "quit"]
+        ),
+        output_writer=output.append,
+    )
+
+    first_render = output[0]
+    assert "first-spark: open" in first_render
+    assert "resonance" not in first_render.lower()
+    assert "not opened by this activation" in "\n".join(output)
+    assert runtime.state.is_completed(FIRST_SPARK_CHAMBER)
+    assert "resonance — begin/send a resonance: open" in "\n".join(output)
+    assert resonance_calls == [RESONANCE_CHAMBER]
 
 
 def test_interrupted_first_spark_does_not_change_atrium() -> None:
@@ -166,6 +196,7 @@ def test_rendered_return_state_keeps_unfinished_resonance_visible() -> None:
 
 if __name__ == "__main__":
     test_first_spark_path_completes_and_returns_to_atrium()
+    test_gift_progression_hides_then_reveals_mode_aware_resonance()
     test_interrupted_first_spark_does_not_change_atrium()
     test_return_resonance_profile_shows_both_connected_paths()
     test_resonance_command_completes_and_returns_to_atrium()

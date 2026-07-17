@@ -42,27 +42,28 @@ class NexusAtriumRuntime:
 
     state: AtriumState
     resonance_mode: ResonanceMode | None = None
+    reveal_resonance_after_first_spark: bool = False
 
     @classmethod
     def from_activation(
         cls,
         activation: ActivationProfileSource | None,
+        resonance_mode: ResonanceMode | None = None,
     ) -> "NexusAtriumRuntime":
-        """Create one runtime from the validated activation boundary value."""
+        """Create one runtime from activation paths and optional Resonance mode."""
 
-        return cls(state=atrium_state_from_activation(activation))
-
-    @classmethod
-    def from_resonance_mode(cls, mode: ResonanceMode) -> "NexusAtriumRuntime":
-        """Create a corrected runtime with one mode-aware Resonance door."""
-
-        if not isinstance(mode, ResonanceMode):
+        if resonance_mode is not None and not isinstance(resonance_mode, ResonanceMode):
             raise AtriumRuntimeError("Corrected Atrium runtime requires ResonanceMode.")
+
+        reveal_resonance = bool(
+            activation is not None
+            and activation.profile_id == "first-spark"
+            and getattr(activation, "activation_purpose", None) == "gift"
+        )
         return cls(
-            state=AtriumState.activated(
-                frozenset({FIRST_SPARK_CHAMBER, RESONANCE_CHAMBER})
-            ),
-            resonance_mode=mode,
+            state=atrium_state_from_activation(activation),
+            resonance_mode=resonance_mode,
+            reveal_resonance_after_first_spark=reveal_resonance,
         )
 
     def enter_chamber(
@@ -92,7 +93,19 @@ class NexusAtriumRuntime:
 
         if result.completed:
             try:
-                self.state = self.state.after_completion(chamber_id)
+                returned_state = self.state.after_completion(chamber_id)
+                if (
+                    chamber_id == FIRST_SPARK_CHAMBER
+                    and self.reveal_resonance_after_first_spark
+                ):
+                    returned_state = AtriumState(
+                        phase=returned_state.phase,
+                        enabled_chambers=(
+                            returned_state.enabled_chambers | {RESONANCE_CHAMBER}
+                        ),
+                        completed_chambers=returned_state.completed_chambers,
+                    )
+                self.state = returned_state
             except AtriumStateError as error:
                 raise AtriumRuntimeError(
                     f"Chamber {chamber_id!r} could not return to the Atrium."

@@ -108,14 +108,16 @@ def run_nexus_terminal(
     """Run Nexus 01 and return its final Atrium runtime."""
 
     activation = activation_loader()
+    runtime = NexusAtriumRuntime.from_activation(
+        activation,
+        resonance_mode=resonance_mode,
+    )
     if resonance_mode is None:
-        runtime = NexusAtriumRuntime.from_activation(activation)
         active_resonance_runner = resonance_runner or ResonanceTerminalController(
             input_reader=input_reader,
             output_writer=output_writer,
         )
     else:
-        runtime = NexusAtriumRuntime.from_resonance_mode(resonance_mode)
         active_resonance_runner = (
             classified_resonance_runner
             or ClassifiedResonanceController(

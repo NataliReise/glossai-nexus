@@ -132,11 +132,15 @@ class AnswerTerminalTests(unittest.TestCase):
     def test_corrected_answer_route_cannot_reach_legacy_controller(self) -> None:
         values = iter(("resonance", "1", "1", "1", "trust", "no", "quit"))
 
+        class ReturnActivation:
+            profile_id = "return-resonance"
+            activation_purpose = "gift"
+
         def forbidden_legacy():
             raise AssertionError("legacy one-person controller was reached")
 
         runtime = run_nexus_terminal(
-            activation_loader=lambda: object(),
+            activation_loader=ReturnActivation,
             resonance_runner=forbidden_legacy,
             resonance_mode=ResonanceMode.ANSWER,
             classified_resonance_runner=ClassifiedResonanceController(

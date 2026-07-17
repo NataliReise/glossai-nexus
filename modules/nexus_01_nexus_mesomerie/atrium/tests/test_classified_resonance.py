@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from atrium import (
+    ChamberRunResult,
     ClassifiedResonanceController,
     ResonanceMode,
     run_nexus_terminal,
@@ -13,21 +14,24 @@ from atrium import (
 @dataclass(frozen=True)
 class ActivationStub:
     profile_id: str = "first-spark"
+    activation_purpose: str = "gift"
 
 
 def run_mode(mode: ResonanceMode) -> tuple[object, str]:
-    commands = iter(
-        ("resonance", "/cancel", "quit")
-        if mode is ResonanceMode.COMPOSE
-        else ("resonance", "quit")
-    )
+    if mode is ResonanceMode.COMPOSE:
+        activation = ActivationStub("first-spark")
+        commands = iter(("first-spark", "resonance", "/cancel", "quit"))
+    else:
+        activation = ActivationStub("return-resonance")
+        commands = iter(("resonance", "quit"))
     output: list[str] = []
 
     def forbidden_legacy():
         raise AssertionError("corrected mode reached legacy one-person flow")
 
     runtime = run_nexus_terminal(
-        activation_loader=ActivationStub,
+        activation_loader=lambda: activation,
+        first_spark_runner=lambda: ChamberRunResult(completed=True),
         resonance_runner=forbidden_legacy,
         resonance_mode=mode,
         input_reader=lambda _prompt: next(commands),
@@ -70,7 +74,7 @@ def test_corrected_entry_uses_injected_classified_adapter_only() -> None:
         raise AssertionError("legacy controller was reachable")
 
     run_nexus_terminal(
-        activation_loader=ActivationStub,
+        activation_loader=lambda: ActivationStub("return-resonance"),
         resonance_runner=legacy,
         resonance_mode=ResonanceMode.ANSWER,
         classified_resonance_runner=classified,

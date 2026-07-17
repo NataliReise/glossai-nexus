@@ -6,6 +6,7 @@ import unittest
 
 from atrium.classified_resonance import ClassifiedResonanceController
 from atrium.resonance_mode import ResonanceMode
+from atrium.runtime import ChamberRunResult
 from atrium.terminal import run_nexus_terminal
 import resonance_invitation_runtime as publication_module
 from resonance_invitation_runtime import (
@@ -210,13 +211,18 @@ class ComposeAtriumTests(unittest.TestCase):
         self.assertFalse(self.private_root.exists())
 
     def test_corrected_compose_route_never_reaches_legacy_controller(self) -> None:
-        values = iter(("resonance", "/cancel", "quit"))
+        values = iter(("first-spark", "resonance", "/cancel", "quit"))
+
+        class GiftActivation:
+            profile_id = "first-spark"
+            activation_purpose = "gift"
 
         def forbidden_legacy():
             raise AssertionError("legacy one-person controller was reached")
 
         runtime = run_nexus_terminal(
-            activation_loader=lambda: object(),
+            activation_loader=GiftActivation,
+            first_spark_runner=lambda: ChamberRunResult(completed=True),
             resonance_runner=forbidden_legacy,
             resonance_mode=ResonanceMode.COMPOSE,
             classified_resonance_runner=ClassifiedResonanceController(
