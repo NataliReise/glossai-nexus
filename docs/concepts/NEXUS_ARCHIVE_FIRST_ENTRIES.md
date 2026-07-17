@@ -18,10 +18,33 @@ The present sequence follows a simple inner movement:
 
 > A Nexus makes a place.
 > A gift opens a path.
-> Resonance travels.
+> First Spark invites curiosity.
+> Resonance may travel.
 > A small light may remain.
 
 The entries draw from the mythic foundation in [Nexus Inner Story](NEXUS_INNER_STORY.md) while remaining shorter, more focused, and directly usable as archive material.
+
+## Spoiler boundary
+
+Archive entries may reveal the nature of a chamber.
+They must not reveal the path a visitor is meant to discover.
+
+For puzzle chambers, the archive may describe:
+
+- the chamber's role and atmosphere
+- that exploration or puzzling may be involved
+- the visitor's freedom to enter, pause, ask for orientation, or leave
+- the ethical meaning of the chamber within Nexus
+
+It must not disclose:
+
+- the solution
+- the sequence of discoveries
+- hidden mechanics
+- decisive clues
+- the meaning of specific signs before the visitor encounters them
+
+A gift activation may be explained without revealing its private message, personal surprise, or later resonance content.
 
 ---
 
@@ -69,6 +92,91 @@ A Nexus offers structure without claiming the encounter. It may remember only wh
 
 Connection may be offered.
 It must not become a command.
+
+---
+
+# Gift Activation
+
+## Poetic indication
+
+> A gift opens a place.
+> It does not choose the path that must follow.
+
+## Clear orientation
+
+A gift activation prepares a Nexus for one person.
+
+It may carry a name, a private message, or another small sign that the place was opened with care. These personal elements remain within the private activation layer and are not part of the public archive.
+
+Receiving a Nexus as a gift creates no duty to answer the person who gave it.
+
+The recipient may explore it, keep it, leave it unopened, return to it later, or eventually carry the Nexus toward someone else.
+
+A later resonance begins only through a new choice. It may return toward the giver, continue toward another person, or never begin at all.
+
+## Deeper trace
+
+A gift activation does not place a debt inside the Nexus.
+
+The giver may prepare the place, choose whom it is for, and leave a private greeting at its threshold. But the path beyond that threshold belongs to the person who receives it.
+
+To receive is not yet to enter.
+To enter is not to promise an answer.
+To discover something is not to owe its return.
+
+The Nexus may rest with its recipient for as long as they choose.
+
+And if, one day, they carry it onward, the next path does not belong to the first giver. It begins again between the person who carries and the person who may freely receive.
+
+> No answer is owed to the hand that opened the place.
+>
+> Resonance begins again wherever someone freely chooses to carry something onward.
+
+A gift remains a gift only while the future stays open.
+
+---
+
+# First Spark Chamber
+
+## Poetic indication
+
+> The First Spark Chamber does not begin by explaining itself.
+>
+> It waits for curiosity to make the first move.
+
+## Clear orientation
+
+First Spark is a small puzzle chamber.
+
+It may contain signs, rules, traces, and a path that becomes visible through exploration. The visitor may look closely, test possibilities, ask for orientation, pause, or leave.
+
+The archive describes the chamber's nature, but it does not reveal the path in advance.
+
+First Spark is concerned with first contact: the moment when a dormant possibility becomes present because someone chooses to notice and enter.
+
+Completing the chamber is not a promise to continue beyond it. A spark may remain with the visitor, rest inside the Nexus, or later be carried onward by choice.
+
+## Deeper trace
+
+Before a path is entered, it may appear to be only a collection of small things.
+
+A sign without an answer.
+A rule without a reason.
+A trace whose direction is not yet visible.
+
+First Spark leaves space for the visitor to discover how these things belong together.
+
+The chamber does not treat curiosity as obedience. It offers a structure in which attention, play, and interpretation may awaken something that was waiting but not demanding to be found.
+
+The archive will not name the decisive clue, the order of discovery, or the form of the solution. Those belong to the encounter itself.
+
+It may say only this:
+
+> A spark is not proof that a journey must continue.
+>
+> It is the moment a possible path becomes visible.
+
+What happens after that moment remains a choice.
 
 ---
 
@@ -200,6 +308,8 @@ These entries deliberately test several balances:
 - clarity without becoming an external technical manual
 - continuity with `NEXUS_INNER_STORY.md`
 - voluntary connection without sentimental pressure
+- gift activation without implied return duty
+- chamber orientation without puzzle spoilers
 - resonance as relation rather than decoded meaning
 - public memory without private exposure
 - optional depth without mandatory lore reading
@@ -209,7 +319,6 @@ These entries deliberately test several balances:
 Possible later entries include:
 
 - The Resonance Chamber
-- First Spark
 - What the Archive Keeps
 - Carriers, Traces, and Choice
 - The Journey Remains Open
