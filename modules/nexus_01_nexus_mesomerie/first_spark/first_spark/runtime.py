@@ -66,9 +66,28 @@ def run_terminal() -> GameState:
     only allows an outer Nexus runtime to observe whether First Spark reached
     its own completion condition.
     """
-    state = GameState()
+    return _run_terminal(GameState(), arrival.boot_text())
+
+
+def run_integrated_terminal() -> GameState:
+    """Run First Spark from the Atrium, beginning inside its Chamber.
+
+    The Atrium already owns Nexus arrival and activation presentation.  This
+    entry therefore skips the standalone arrival module, while sharing the
+    same command dispatch, Chamber mechanics, and completion state.
+    """
+
+    return _run_terminal(
+        GameState(current_module="spark_chamber"),
+        spark_chamber.LOOK_TEXT.strip(),
+    )
+
+
+def _run_terminal(state: GameState, opening_text: str) -> GameState:
+    """Run the shared First Spark command loop from one explicit entry state."""
+
     print()
-    print(arrival.boot_text())
+    print(opening_text)
     print()
 
     while not state.should_quit:

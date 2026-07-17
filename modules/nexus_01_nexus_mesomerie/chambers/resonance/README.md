@@ -20,7 +20,21 @@ It does not own:
 - local result persistence
 - Atrium state
 
-The mechanical flow returns one typed `ChamberSelections` value.
+The existing V1 mechanical flow returns one typed `ChamberSelections` value.
+
+The compose/initiate core is now separately available as a pure boundary:
+
+```text
+source image + source scent + source movement + wish word
+-> OriginatingResonanceContribution (frozen and validated)
+-> build_resonance_token_v2(contribution, externally supplied route)
+-> inert Resonance Token V2
+```
+
+It never asks for response choices or a return word. The contribution layer has
+no file, activation, slot, packaging, or Return Artifact access. Interactive
+composition reuses `TerminalChamberIO`; Token construction remains a separate
+pure call so callers can validate or cancel before any preparation boundary.
 
 The boundary composer then joins that value to validated route identity by delegating to the existing shared bridge:
 
@@ -34,7 +48,7 @@ ResonanceToken + ChamberIO
 
 The composer does not write files, render poetry, open a Return Slot, or alter Nexus state.
 
-Current V0.1 flow:
+Legacy-compatible V0.1 one-person flow:
 
 ```text
 image

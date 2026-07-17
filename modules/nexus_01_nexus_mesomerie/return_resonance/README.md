@@ -1,6 +1,6 @@
 # Return Resonance
 
-Status: legacy runnable MVP and retained local infrastructure
+Status: production compact opening and retained legacy local infrastructure
 
 Current direction: `../CURRENT_DIRECTION.md`
 
@@ -18,7 +18,7 @@ One local answer
 Slot -> Artifact -> Local Result
 ```
 
-Its original generated poetry is not the current compact Nachhall design.
+Its original `result.py` poetry is not the current compact Nachhall design.
 
 ## What remains valuable
 
@@ -33,7 +33,18 @@ This layer established:
 - no automatic publication;
 - the boundary that First Spark does not depend on Return Resonance.
 
-These responsibilities remain part of the future Nexus even though the poetic result layer is being replaced.
+These responsibilities remain current. The visible production layer is now the
+compact generator described below.
+
+## Production compact opening
+
+`compact_generator.py` creates exactly five visible lines with word counts
+`2 / 4 / 6 / 4 / 1`. Words are whitespace-separated; attached punctuation does
+not add words, and hyphenated forms without whitespace count as one.
+
+`open_resonance_return.py` validates and matches the manually returned Artifact,
+creates that compact result once, and reuses the exact saved content on later
+openings. It does not invoke the legacy renderer.
 
 ## Legacy poetic boundary
 
@@ -48,7 +59,7 @@ run_return_resonance_demo.py
 
 `result.py` creates an earlier five-line local resonance from legacy fields such as carrier image, return image, movement, tone, and return word.
 
-Do not use that output as guidance for the V0.3 compact Nachhall composer.
+Do not use that output as guidance for the production compact generator.
 
 The new current direction is:
 
@@ -112,7 +123,8 @@ The demo creates or reuses:
 modules/nexus_01_nexus_mesomerie/return_resonance_lantern_river.local.md
 ```
 
-This command demonstrates the earlier MVP. It is not the future V0.3 poetic path.
+This command demonstrates the earlier MVP. It is not the production compact
+opening path.
 
 ## Run with explicit local paths
 

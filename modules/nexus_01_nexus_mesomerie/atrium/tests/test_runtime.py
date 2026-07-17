@@ -23,6 +23,7 @@ from atrium import (
 @dataclass(frozen=True)
 class ActivationStub:
     profile_id: str
+    activation_purpose: str = "gift"
 
 
 def test_first_spark_activation_opens_only_first_spark() -> None:
@@ -43,6 +44,20 @@ def test_first_spark_activation_opens_only_first_spark() -> None:
     assert calls == ["first-spark"]
     assert runtime.state.phase is AtriumPhase.RETURN
     assert runtime.state.is_completed(FIRST_SPARK_CHAMBER)
+    assert runtime.state.is_enabled(RESONANCE_CHAMBER)
+
+
+def test_non_gift_first_spark_completion_does_not_add_resonance() -> None:
+    runtime = NexusAtriumRuntime.from_activation(
+        ActivationStub("first-spark", activation_purpose="development")
+    )
+
+    runtime.enter_chamber(
+        FIRST_SPARK_CHAMBER,
+        lambda: ChamberRunResult(completed=True),
+    )
+
+    assert not runtime.state.is_enabled(RESONANCE_CHAMBER)
 
 
 def test_unfinished_visit_leaves_atrium_unchanged() -> None:
@@ -136,6 +151,7 @@ def test_missing_activation_creates_sealed_runtime() -> None:
 
 if __name__ == "__main__":
     test_first_spark_activation_opens_only_first_spark()
+    test_non_gift_first_spark_completion_does_not_add_resonance()
     test_unfinished_visit_leaves_atrium_unchanged()
     test_return_resonance_activation_exposes_both_paths()
     test_disabled_and_unknown_paths_are_rejected_before_runner_call()

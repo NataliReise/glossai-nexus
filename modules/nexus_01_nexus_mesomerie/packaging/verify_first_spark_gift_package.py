@@ -10,16 +10,23 @@ from __future__ import annotations
 
 import argparse
 import fnmatch
-import json
-from json import JSONDecodeError
 import stat
 import sys
 from pathlib import Path
-from typing import Any
 
 
 SCRIPT_PATH = Path(__file__).resolve()
+NEXUS_ROOT = SCRIPT_PATH.parents[1]
 REPO_ROOT = SCRIPT_PATH.parents[3]
+FIRST_SPARK_ROOT = NEXUS_ROOT / "first_spark"
+if str(FIRST_SPARK_ROOT) not in sys.path:
+    sys.path.insert(0, str(FIRST_SPARK_ROOT))
+
+from first_spark.activation import (  # noqa: E402
+    ActivationFileError,
+    FIRST_SPARK_PROFILE_ID,
+    load_activation,
+)
 DEFAULT_PACKAGE_NAME = "nexus-01-first-spark-gift-personal-gift"
 DEFAULT_PACKAGE_DIR = REPO_ROOT / "dist" / DEFAULT_PACKAGE_NAME
 LOCAL_ACTIVATION_NAME = "activation.local.json"
@@ -125,25 +132,22 @@ def verify_start_script(package_dir: Path, result: VerificationResult) -> None:
 
 
 def verify_local_activation(package_dir: Path, result: VerificationResult) -> None:
-    """Check that activation.local.json is valid JSON with an object at top level."""
+    """Validate the packaged activation through the real runtime parser."""
     activation_path = package_dir / LOCAL_ACTIVATION_NAME
     if not activation_path.exists() or not activation_path.is_file():
         return
 
     try:
-        data: Any = json.loads(activation_path.read_text(encoding="utf-8"))
-    except JSONDecodeError as error:
-        result.add_error(
-            "activation.local.json is not valid JSON: "
-            f"line {error.lineno}, column {error.colno}: {error.msg}"
-        )
-        return
-    except OSError as error:
-        result.add_error(f"activation.local.json could not be read: {error}")
+        activation = load_activation(activation_path)
+    except ActivationFileError as error:
+        result.add_error(f"activation.local.json failed runtime validation: {error}")
         return
 
-    if not isinstance(data, dict):
-        result.add_error("activation.local.json must contain a JSON object at the top level")
+    if activation.profile_id != FIRST_SPARK_PROFILE_ID:
+        result.add_error(
+            "activation.local.json must use the 'first-spark' profile in a "
+            "First Spark gift package"
+        )
 
 
 def verify_package(package_dir: Path) -> VerificationResult:

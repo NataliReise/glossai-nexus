@@ -222,6 +222,25 @@ def test_missing_and_unknown_fields_are_rejected() -> None:
     )
 
 
+def test_untrusted_artifact_free_words_are_strictly_validated() -> None:
+    valid = build_resonance_return_artifact(_token(), _selections()).to_dict()
+    for field_name in ("wish_word", "return_word"):
+        for invalid in ("two words", "x" * 81, "x\x00y", "x\x80y", "CHANGE-ME"):
+            candidate = dict(valid)
+            candidate[field_name] = invalid
+            _assert_bridge_error(
+                lambda candidate=candidate: parse_resonance_return_artifact(candidate),
+                field_name,
+            )
+
+    unicode_words = dict(valid)
+    unicode_words["wish_word"] = "Nähe"
+    unicode_words["return_word"] = "帰還"
+    parsed = parse_resonance_return_artifact(unicode_words)
+    assert parsed.wish_word == "Nähe"
+    assert parsed.return_word == "帰還"
+
+
 if __name__ == "__main__":
     test_complete_bridge_roundtrip_and_opening()
     test_serialized_contract_is_lossless()
@@ -232,4 +251,5 @@ if __name__ == "__main__":
     test_unknown_and_incompatible_selection_ids_are_rejected_after_matching()
     test_artifact_without_approved_echo_path_is_rejected()
     test_missing_and_unknown_fields_are_rejected()
+    test_untrusted_artifact_free_words_are_strictly_validated()
     print("Resonance render bridge integration tests passed.")
