@@ -429,18 +429,45 @@ The following text may serve as a future archive entry or opening fragment:
 > and another person answers,
 > resonance begins.
 
-## Open questions
+## The journey remains open
 
-The inner story should remain capable of growth. Current open questions include:
+Nexus is not moving toward one predetermined form.
 
-- Does each module contain its own archive, or does a shared Nexus Archive appear through multiple modules?
-- Which records are stable documentation, and which are discoverable fragments?
-- How much personality should the chamber voice have?
-- Can chambers remember prior visits without weakening local privacy principles?
-- How should future chambers differ in atmosphere while still feeling part of one Nexus family?
-- Which words belong to practical explanation, and which should remain mythic terms?
-- How might the inner story name the place where branching paths and histories meet, without referring directly to Git?
-- Which chambers may travel between modules unchanged, and which should transform through every new constellation?
-- How might Resonance Nodes appear differently across future modules while remaining recognizable as public-safe signs?
+The chambers known so far are only the first places
+that have opened along the way.
 
-These questions are part of the story's development rather than gaps that must be closed immediately.
+One Nexus may take the form of a quiet terminal chamber,
+a retro puzzle, or an escape path made from words and traces.
+
+Another may speak through images,
+sound, movement, shared objects,
+a physical installation,
+or a form of play that has not yet been imagined.
+
+Its language may change.
+Its tools may change.
+Even the code beneath it may be written in another tongue.
+
+A new Nexus does not need to resemble the first one
+in order to belong to the same journey.
+
+What connects them is not one interface,
+one mechanism,
+or one technical form.
+
+It is the space they leave for voluntary encounter,
+for discovery,
+for something to be carried,
+and for another person to answer.
+
+Many paths may grow from here.
+
+Some may return to familiar chambers.
+Some may combine them in new constellations.
+Some may open places that no earlier Nexus could have contained.
+
+The inner story remains unfinished
+so that each new module may add a trace,
+change the direction of the journey,
+or reveal that Nexus can become something
+no one had yet thought to seek.
