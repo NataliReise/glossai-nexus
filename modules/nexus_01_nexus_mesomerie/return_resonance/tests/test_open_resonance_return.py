@@ -309,6 +309,45 @@ def test_all_125_chamber_combinations_cross_opening_boundary() -> None:
             assert result.generation.text in result.content
 
 
+def test_formerly_unsupported_answer_pairing_opens_and_saved_markdown_is_stable() -> None:
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        artifact = _artifact_dict(
+            ("waiting-lantern", "shared-silence"),
+            ("summer-rain", "sense-of-return"),
+            ("falling-feather", "playful-waves"),
+            wish_word="Nähe",
+            return_word="Rückkehr",
+        )
+        artifact_path, slots_path, output_dir = _write_inputs(
+            root, artifact_data=artifact
+        )
+
+        first = open_resonance_return_files(
+            artifact_path, slots_path, output_dir
+        )
+        assert first.created is True
+        assert first.generation is not None
+        assert "waiting lantern" in first.generation.text.casefold()
+        assert "silence becomes shared" in first.generation.text.casefold()
+        assert "sense of return" in first.generation.text.casefold()
+        assert "playful waves" in first.generation.text.casefold()
+
+        edited = first.path.read_bytes() + "\nHandwritten note: bewahren\n".encode(
+            "utf-8"
+        )
+        first.path.write_bytes(edited)
+        reopened = open_resonance_return_files(
+            artifact_path,
+            slots_path,
+            output_dir,
+            generator=_fail_generator,
+        )
+        assert reopened.created is False
+        assert reopened.content.encode("utf-8") == edited
+        assert reopened.path.read_bytes() == edited
+
+
 def test_opening_is_deterministic_for_same_structural_identity() -> None:
     contents: list[bytes] = []
     seeds: list[object] = []
@@ -460,6 +499,7 @@ if __name__ == "__main__":
     test_mismatched_package_creates_nothing_and_changes_no_state()
     test_waiting_result_repairs_state_without_regeneration_after_update_failure()
     test_all_125_chamber_combinations_cross_opening_boundary()
+    test_formerly_unsupported_answer_pairing_opens_and_saved_markdown_is_stable()
     test_opening_is_deterministic_for_same_structural_identity()
     test_unicode_and_identical_words_remain_visible_and_separated()
     test_unsafe_and_ambiguous_result_filenames_are_rejected()

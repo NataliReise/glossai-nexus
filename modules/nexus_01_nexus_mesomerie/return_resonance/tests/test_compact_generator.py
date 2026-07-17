@@ -49,6 +49,21 @@ def valid_paths() -> tuple[list[tuple[str, str]], list[tuple[str, str]], list[tu
     return images, scents, movements
 
 
+def independent_paths(
+) -> tuple[list[tuple[str, str]], list[tuple[str, str]], list[tuple[str, str]]]:
+    catalog = build_v0_1_catalog()
+    return (
+        list(product(catalog.option_ids("images"), catalog.option_ids("image_responses"))),
+        list(product(catalog.option_ids("scents"), catalog.option_ids("scent_responses"))),
+        list(
+            product(
+                catalog.option_ids("movements"),
+                catalog.option_ids("movement_responses"),
+            )
+        ),
+    )
+
+
 def artifact_for(
     image_path: tuple[str, str] | None = None,
     scent_path: tuple[str, str] | None = None,
@@ -82,6 +97,36 @@ def artifact_for(
 
 
 class CompactGeneratorTests(unittest.TestCase):
+    def test_every_independent_pair_in_each_domain_is_supported(self) -> None:
+        images, scents, movements = independent_paths()
+        self.assertEqual((len(images), len(scents), len(movements)), (25, 25, 25))
+        defaults = valid_paths()
+
+        for domain, paths in enumerate((images, scents, movements)):
+            for path in paths:
+                selected = [default[0] for default in defaults]
+                selected[domain] = path
+                result = generate_compact_resonance(
+                    artifact_for(*selected), seed=f"domain-{domain}-{path}"
+                )
+                self.assertEqual(len(result.text.splitlines()), 5)
+
+    def test_all_15625_complete_answer_combinations_are_supported(self) -> None:
+        images, scents, movements = independent_paths()
+        count = 0
+        for image_path, scent_path, movement_path in product(
+            images, scents, movements
+        ):
+            result = generate_compact_resonance(
+                artifact_for(image_path, scent_path, movement_path),
+                seed="complete-answer-coverage",
+            )
+            lines = result.text.splitlines()
+            self.assertEqual(len(lines), 5)
+            self.assertTrue(all(line.strip() for line in lines))
+            count += 1
+        self.assertEqual(count, 15_625)
+
     def test_all_125_current_chamber_combinations(self) -> None:
         images, scents, movements = valid_paths()
         combinations = list(product(images, scents, movements))
@@ -134,18 +179,77 @@ class CompactGeneratorTests(unittest.TestCase):
             "separated-wish-role-and-final-return",
         )
 
-    def test_unsupported_and_incompatible_ids_are_rejected(self) -> None:
+    def test_unknown_source_and_response_ids_are_rejected_independently(self) -> None:
         cases = (
             replace(artifact_for(), image_id="unknown-image"),
-            replace(artifact_for(), image_response_id="shared-silence"),
+            replace(artifact_for(), image_response_id="unknown-image-response"),
             replace(artifact_for(), scent_id="unknown-scent"),
-            replace(artifact_for(), scent_response_id="sense-of-return"),
+            replace(artifact_for(), scent_response_id="unknown-scent-response"),
             replace(artifact_for(), movement_id="unknown-movement"),
-            replace(artifact_for(), movement_response_id="playful-waves"),
+            replace(artifact_for(), movement_response_id="unknown-movement-response"),
         )
         for artifact in cases:
             with self.subTest(artifact=artifact), self.assertRaises(CompactGenerationError):
                 generate_compact_resonance(artifact)
+
+    def test_legacy_pair_wording_remains_exact(self) -> None:
+        result = generate_compact_resonance(artifact_for(), seed=None)
+        self.assertEqual(
+            result.text.splitlines(),
+            [
+                "A waiting lantern reveals the beginning of a path.",
+                "Summer rain carries the possibility of encounter.",
+                "May kinship find room here.",
+                "One turning feather meets another across its falling path.",
+                "homeward",
+            ],
+        )
+        self.assertEqual(
+            result.composition_plan["profile_component_ids"]["image"]["strategy"],
+            "legacy-pair-override",
+        )
+
+    def test_seed_variation_preserves_content_and_changes_structure(self) -> None:
+        artifact = artifact_for(
+            ("waiting-lantern", "shared-silence"),
+            ("warm-bread", "sense-of-return"),
+            ("opening-circle", "shadow-alongside"),
+        )
+        results = {
+            generate_compact_resonance(artifact, seed=f"variation-{index}").text
+            for index in range(20)
+        }
+        self.assertGreaterEqual(len(results), 2)
+        for text in results:
+            self.assertIn("waiting lantern", text.casefold())
+            self.assertIn("silence becomes shared", text.casefold())
+            self.assertEqual(text.splitlines()[-1], artifact.return_word)
+
+    def test_route_metadata_is_not_visible(self) -> None:
+        artifact = artifact_for(
+            ("book-bench", "shared-silence"),
+            ("first-snow", "sense-of-return"),
+            ("crossing-light", "playful-waves"),
+        )
+        text = generate_compact_resonance(artifact, seed="no-route-leak").text
+        for value in (
+            artifact.origin_trace_id,
+            artifact.return_slot_id,
+            artifact.package_id,
+            artifact.module_id,
+            artifact.layer_id,
+        ):
+            self.assertNotIn(value, text)
+
+        for choice_id in (
+            artifact.image_id,
+            artifact.image_response_id,
+            artifact.scent_id,
+            artifact.scent_response_id,
+            artifact.movement_id,
+            artifact.movement_response_id,
+        ):
+            self.assertNotIn(choice_id, text)
 
     def test_unresolved_placeholder_is_rejected(self) -> None:
         original = generator_module.MICRO_PATTERNS
