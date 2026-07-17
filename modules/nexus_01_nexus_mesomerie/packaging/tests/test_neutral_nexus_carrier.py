@@ -20,6 +20,8 @@ from chambers.resonance import (  # noqa: E402
     OriginatingResonanceContribution,
     build_resonance_token_v2,
 )
+from return_resonance.slots import load_return_slots  # noqa: E402
+from return_resonance.token import load_resonance_token  # noqa: E402
 from prepare_neutral_nexus_carrier import (  # noqa: E402
     NeutralCarrierError,
     carrier_name,
@@ -180,6 +182,64 @@ class NeutralNexusCarrierTests(unittest.TestCase):
                             / "first_spark/resonance_token.local.json"
                         ).exists()
                     )
+
+    def test_standalone_carrier_compose_publishes_invitation_and_workspace(self) -> None:
+        result = self.build()
+        travelling = self.root / "composed-travelling"
+        retained = self.root / "composed-private"
+        answers = "\n".join(
+            (
+                "1",
+                "resonance",
+                "5",
+                "4",
+                "3",
+                "Nähe",
+                "yes",
+                str(travelling),
+                str(retained),
+                "quit",
+                "",
+            )
+        )
+        run = self.start(result.carrier_path, answers)
+        self.assertEqual(run.returncode, 0, run.stderr)
+        self.assertIn("Travelling Resonance invitation", run.stdout)
+        self.assertIn("Private Return Workspace", run.stdout)
+        invitations = [path for path in travelling.iterdir() if path.is_dir()]
+        workspaces = [path for path in retained.iterdir() if path.is_dir()]
+        self.assertEqual(len(invitations), 1)
+        self.assertEqual(len(workspaces), 1)
+        token = load_resonance_token(
+            invitations[0] / "resonance_token.local.json"
+        )
+        slot = load_return_slots(
+            workspaces[0] / "private/return_slots.local.json"
+        )[0]
+        for field_name in (
+            "module_id",
+            "layer_id",
+            "origin_trace_id",
+            "return_slot_id",
+            "package_id",
+        ):
+            self.assertEqual(getattr(token, field_name), getattr(slot, field_name))
+        self.assertTrue((workspaces[0] / "runtime/open_resonance_return.py").is_file())
+        self.assertTrue(
+            (workspaces[0] / "runtime/return_resonance/compact_generator.py").is_file()
+        )
+        self.assertFalse(
+            any(
+                path.name == "return_slots.local.json"
+                for path in result.carrier_path.rglob("*")
+            )
+        )
+        self.assertFalse(
+            any(
+                path.name == "return_artifact.local.json"
+                for path in result.carrier_path.rglob("*")
+            )
+        )
 
     def test_explicit_sidecar_selection_is_answer_and_restarts_without_prompt(self) -> None:
         result = self.build(with_token=True)

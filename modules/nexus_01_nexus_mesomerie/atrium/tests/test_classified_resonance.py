@@ -16,7 +16,11 @@ class ActivationStub:
 
 
 def run_mode(mode: ResonanceMode) -> tuple[object, str]:
-    commands = iter(("resonance", "quit"))
+    commands = iter(
+        ("resonance", "/cancel", "quit")
+        if mode is ResonanceMode.COMPOSE
+        else ("resonance", "quit")
+    )
     output: list[str] = []
 
     def forbidden_legacy():
@@ -36,7 +40,7 @@ def test_compose_shows_one_canonical_door_with_compose_wording() -> None:
     runtime, transcript = run_mode(ResonanceMode.COMPOSE)
     assert runtime.state.visible_paths.count("resonance") == 1
     assert "resonance — begin/send a resonance" in transcript
-    assert "No invitation or Return Artifact was created" in transcript
+    assert "Compose cancelled" in transcript
 
 
 def test_answer_shows_same_door_without_reaching_legacy_flow() -> None:
@@ -79,6 +83,10 @@ def test_corrected_entry_uses_injected_classified_adapter_only() -> None:
 def test_corrected_mode_entries_create_no_return_artifact(tmp_path: Path) -> None:
     before = set(tmp_path.rglob("*"))
     for mode in ResonanceMode:
-        result = ClassifiedResonanceController(mode, lambda _message: None)()
+        result = ClassifiedResonanceController(
+            mode,
+            lambda _message: None,
+            input_reader=lambda _prompt: "/cancel",
+        )()
         assert not result.completed
     assert set(tmp_path.rglob("*")) == before

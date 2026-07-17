@@ -118,7 +118,11 @@ def run_nexus_terminal(
         runtime = NexusAtriumRuntime.from_resonance_mode(resonance_mode)
         active_resonance_runner = (
             classified_resonance_runner
-            or ClassifiedResonanceController(resonance_mode, output_writer)
+            or ClassifiedResonanceController(
+                resonance_mode,
+                output_writer=output_writer,
+                input_reader=input_reader,
+            )
         )
     output_writer(render_atrium(runtime))
 

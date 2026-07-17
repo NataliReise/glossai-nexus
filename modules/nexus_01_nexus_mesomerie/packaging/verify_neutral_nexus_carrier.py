@@ -54,6 +54,8 @@ NEUTRAL_RUNTIME_FILES = frozenset(
     {
         Path("run_nexus.py"),
         Path("recipient_activation.py"),
+        Path("resonance_invitation_runtime.py"),
+        Path("open_resonance_return.py"),
         *(Path("atrium") / name for name in (
             "__init__.py", "activation_bridge.py", "classified_resonance.py",
             "first_spark_adapter.py", "profiles.py", "resonance_adapter.py",
@@ -74,7 +76,8 @@ NEUTRAL_RUNTIME_FILES = frozenset(
             "__init__.py", "arrival.py", "ending.py", "spark_chamber.py",
         )),
         *(Path("return_resonance") / name for name in (
-            "__init__.py", "artifact.py", "artifact_store.py", "local_opening.py",
+            "__init__.py", "artifact.py", "artifact_store.py",
+            "compact_generator.py", "local_opening.py",
             "matching.py", "resonance_render_bridge.py", "result.py", "slots.py",
             "token.py", "writer.py",
         )),
