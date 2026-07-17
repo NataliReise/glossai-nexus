@@ -17,13 +17,6 @@ from examples.resonance_return_demo.run_demo import (
     run_demo,
 )
 
-EXPECTED_ECHO = """Summer rain
-opens one hidden path
-two feathers cross beneath waiting light
-the path carries courage
-trust"""
-
-
 def main() -> None:
     artifact_before = ARTIFACT_FILE.read_text(encoding="utf-8")
     slots_before = SLOT_TEMPLATE.read_text(encoding="utf-8")
@@ -35,9 +28,12 @@ def main() -> None:
         assert first.created is True
         assert first.slot_state_changed is True
         assert first.path.exists()
-        assert "Resonance Artifact" in first.content
-        assert "Nexus Echo" in first.content
-        assert EXPECTED_ECHO in first.content
+        assert "## Compact Resonance" in first.content
+        assert "Summer rain carries the possibility of encounter." in first.content
+        assert "\ntrust\n```" in first.content
+        assert '"generator_id": "nexus-01-compact-resonance"' in first.content
+        assert "Resonance Artifact" not in first.content
+        assert "Nexus Echo" not in first.content
 
         mutable_slots = json.loads(
             (workspace / "return_slots.json").read_text(encoding="utf-8")
@@ -56,7 +52,7 @@ def main() -> None:
         assert reset.created is True
         assert reset.slot_state_changed is True
         assert "Local demo note." not in reset.content
-        assert EXPECTED_ECHO in reset.content
+        assert reset.content == result_before
 
     assert ARTIFACT_FILE.read_text(encoding="utf-8") == artifact_before
     assert SLOT_TEMPLATE.read_text(encoding="utf-8") == slots_before
