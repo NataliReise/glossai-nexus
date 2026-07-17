@@ -33,7 +33,40 @@ To accept an existing activation instead, add:
 The preparation command validates it through the actual First Spark runtime
 parser and requires `profile_id` to be `first-spark` before building.
 
-## Prepare a Resonance gift and private Return Workspace
+## Prepare a corrected Resonance invitation and private Return Workspace
+
+The corrected compose/initiate boundary produces an inert Resonance Token V2.
+Given a saved Token V2, prepare its travelling invitation and matching retained
+workspace with:
+
+```bash
+python3 modules/nexus_01_nexus_mesomerie/packaging/prepare_resonance_invitation.py \
+  --token path/to/resonance_token.v2.json \
+  --invitation-root path/to/travelling-output \
+  --private-root path/to/private-output
+```
+
+The travelling invitation contains only `README.md` and
+`resonance_token.local.json`. It contains no activation, runtime, Return Slot,
+or Return Artifact. Token presence does not activate a Nexus; the recipient
+will choose later whether to use it. The matching private Return Workspace is
+built by the existing allowlisted workspace builder and contains the Return
+Slot but no Token.
+
+Both outputs are staged and validated before publication, refuse overwrite,
+and are rolled back together if publication cannot complete. Verify the
+travelling invitation independently with:
+
+```bash
+python3 modules/nexus_01_nexus_mesomerie/packaging/verify_resonance_invitation.py \
+  path/to/n01-resonance-invitation-opaque
+```
+
+## Legacy-compatible pre-activated Resonance gift
+
+The following established command remains temporarily available for the V1
+one-person flow. It creates a `return-resonance` activation and must not be
+described as the corrected invitation flow:
 
 ```bash
 python3 modules/nexus_01_nexus_mesomerie/packaging/prepare_nexus_gift.py \
@@ -45,7 +78,7 @@ python3 modules/nexus_01_nexus_mesomerie/packaging/prepare_nexus_gift.py \
   --zip
 ```
 
-The command prints the travelling outputs separately from the retained private
+The legacy command prints the travelling outputs separately from the retained private
 workspace:
 
 ```text

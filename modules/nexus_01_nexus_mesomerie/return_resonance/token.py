@@ -185,6 +185,14 @@ def parse_resonance_token(data: Any) -> ResonanceToken:
     )
 
 
+def validate_originating_wish_word(value: Any) -> str:
+    """Validate one originating wish word using the Token V2 contract."""
+
+    cleaned = _require_word(value, "wish_word")
+    _reject_template_sentinel(cleaned, "wish_word")
+    return cleaned
+
+
 def _parse_v1(data: dict[str, Any]) -> ResonanceToken:
     """Read the existing structural Token as an explicit legacy value."""
 
@@ -227,7 +235,7 @@ def _parse_v2(data: dict[str, Any]) -> ResonanceToken:
     movement_id = _require_source_id(
         data["movement_id"], "movement_id", MOVEMENT_IDS
     )
-    wish_word = _require_word(data["wish_word"], "wish_word")
+    wish_word = validate_originating_wish_word(data["wish_word"])
     public_safe_label = _optional_text(
         data.get("public_safe_label", ""), "public_safe_label", maximum=80
     )
