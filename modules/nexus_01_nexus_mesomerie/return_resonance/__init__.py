@@ -18,6 +18,9 @@ from .slots import ReturnSlot, ReturnSlotState, load_return_slots
 from .matching import MatchResult, MatchStatus, match_return_artifact
 from .result import ReturnResult, ReturnResultError, compose_return_result, open_return_result
 from .token import (
+    LANGUAGE_LIBRARY,
+    TOKEN_VERSION_V1,
+    TOKEN_VERSION_V2,
     ResonanceToken,
     ResonanceTokenLoadError,
     load_resonance_token,
@@ -32,6 +35,7 @@ from .writer import (
 __all__ = [
     "LocalResonanceOpening",
     "LocalResonanceOpeningError",
+    "LANGUAGE_LIBRARY",
     "MatchResult",
     "MatchStatus",
     "ResonanceArtifactStoreError",
@@ -45,6 +49,8 @@ __all__ = [
     "ReturnResultError",
     "ReturnSlot",
     "ReturnSlotState",
+    "TOKEN_VERSION_V1",
+    "TOKEN_VERSION_V2",
     "compose_return_artifact",
     "compose_return_result",
     "load_resonance_token",

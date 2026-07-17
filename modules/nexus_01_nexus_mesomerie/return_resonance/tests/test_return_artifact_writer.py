@@ -26,6 +26,11 @@ DEMO_SLOT_PATH = NEXUS_01_ROOT / "examples" / "return_slot.demo.json"
 
 def make_demo_token(tmp_path: Path):
     data = json.loads(TEMPLATE_PATH.read_text(encoding="utf-8"))
+    data["token_version"] = "N01-RT-1"
+    for field_name in (
+        "language_library", "image_id", "scent_id", "movement_id", "wish_word"
+    ):
+        data.pop(field_name, None)
     data.update(
         {
             "origin_trace_id": "n01-demo-origin-7kq2",
