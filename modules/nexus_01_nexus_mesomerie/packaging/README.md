@@ -2,7 +2,43 @@
 
 This folder contains small packaging helpers for **Nexus 01 - Nexus-Mesomerie**.
 
-The preferred private gift boundary is now the two-mode preparation command:
+## Prepare a Neutral Nexus Carrier
+
+The canonical corrected travelling product is the **Neutral Nexus Carrier**: an
+activation-ready Nexus with no completed activation and no preselected mode.
+
+```bash
+python3 modules/nexus_01_nexus_mesomerie/packaging/prepare_neutral_nexus_carrier.py \
+  --output-dir dist \
+  --carrier-label sunday-gift \
+  --zip
+```
+
+Optionally attach one strictly validated Token V2 as an inert sidecar:
+
+```text
+--token path/to/resonance_token.v2.json
+```
+
+The unchanged bytes are stored at
+`invitation/resonance_token.v2.json`. Presence alone has no effect. Normal
+activation leaves it unused; Token activation requires the recipient to choose
+that path deliberately. The Token may instead travel separately.
+
+Verify the directory and ZIP independently:
+
+```bash
+python3 modules/nexus_01_nexus_mesomerie/packaging/verify_neutral_nexus_carrier.py \
+  dist/nexus-01-neutral-carrier-sunday-gift
+
+python3 modules/nexus_01_nexus_mesomerie/packaging/verify_neutral_nexus_carrier.py \
+  --zip dist/nexus-01-neutral-carrier-sunday-gift.zip
+```
+
+The carrier contains neither a Return Slot nor a private Return Workspace. All
+transport remains manual.
+
+The earlier First Spark and explicitly legacy Resonance gift boundary remains:
 
 ```bash
 python3 modules/nexus_01_nexus_mesomerie/packaging/prepare_nexus_gift.py --help

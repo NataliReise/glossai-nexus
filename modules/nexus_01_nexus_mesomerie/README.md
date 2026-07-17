@@ -245,6 +245,21 @@ The public repository must not contain:
 
 The current First Spark builders copy only the explicit First Spark package set. They do not package V0.1, V0.2, the archive, or the V0.3 experiment.
 
+The corrected travelling runtime is the **Neutral Nexus Carrier**:
+
+```bash
+python3 modules/nexus_01_nexus_mesomerie/packaging/prepare_neutral_nexus_carrier.py \
+  --output-dir dist \
+  --carrier-label nexus-gift \
+  --zip
+```
+
+It contains no completed activation. On first start the recipient chooses
+normal activation, deliberate Token V2 activation, or cancellation. An optional
+Token may be attached at `invitation/resonance_token.v2.json`; it remains an
+inert, manually selected invitation and may also travel separately. Private
+Return Workspace data never enters the carrier.
+
 A future complete Nexus 01 gift package will need a separate explicit production inclusion list for the compact Nachhall path.
 
 ## Documentation navigation
