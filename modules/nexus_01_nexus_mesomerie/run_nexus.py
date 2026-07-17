@@ -8,6 +8,7 @@ from collections.abc import Callable
 from pathlib import Path
 
 from atrium.runtime import NexusAtriumRuntime
+from atrium.classified_resonance import ClassifiedResonanceController
 from atrium.terminal import run_nexus_terminal
 from recipient_activation import (
     ActivationChoiceResult,
@@ -65,6 +66,12 @@ def run_corrected_nexus(
         input_reader=input_reader,
         output_writer=output_writer,
         resonance_mode=mode,
+        classified_resonance_runner=ClassifiedResonanceController(
+            mode=mode,
+            output_writer=output_writer,
+            input_reader=input_reader,
+            nexus_root=nexus_root,
+        ),
     )
 
 

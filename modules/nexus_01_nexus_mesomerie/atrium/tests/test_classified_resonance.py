@@ -43,8 +43,7 @@ def test_answer_shows_same_door_without_reaching_legacy_flow() -> None:
     runtime, transcript = run_mode(ResonanceMode.ANSWER)
     assert runtime.state.visible_paths.count("resonance") == 1
     assert "resonance — answer the carried resonance" in transcript
-    assert "answer form is not implemented yet" in transcript
-    assert "response choices" in transcript
+    assert "no authoritative Nexus activation context was supplied" in transcript
 
 
 def test_blocked_shows_recovery_door_without_compose_or_legacy_flow() -> None:
@@ -74,7 +73,7 @@ def test_corrected_entry_uses_injected_classified_adapter_only() -> None:
         input_reader=lambda _prompt: next(commands),
         output_writer=lambda _message: None,
     )
-    assert any("answer form is not implemented" in message for message in calls)
+    assert any("no authoritative Nexus activation context" in message for message in calls)
 
 
 def test_corrected_mode_entries_create_no_return_artifact(tmp_path: Path) -> None:

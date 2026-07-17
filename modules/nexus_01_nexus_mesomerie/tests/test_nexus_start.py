@@ -80,6 +80,8 @@ class NexusStartTests(unittest.TestCase):
         self.assertIsNotNone(runtime)
         self.assertEqual(captured["resonance_mode"], ResonanceMode.ANSWER)
         self.assertEqual(runtime.resonance_mode, ResonanceMode.ANSWER)
+        classified = captured["classified_resonance_runner"]
+        self.assertEqual(classified.nexus_root, self.nexus)
 
     def test_first_launch_cancellation_writes_nothing_and_skips_atrium(self) -> None:
         atrium_runner = Mock(side_effect=AssertionError("Atrium must not open"))
