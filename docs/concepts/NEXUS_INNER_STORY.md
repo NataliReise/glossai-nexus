@@ -234,6 +234,42 @@ The inner story therefore keeps several acts distinct:
 
 This distinction is central to the ethics and atmosphere of Nexus.
 
+## Resonance Nodes
+
+Not every trace that leaves a chamber remains entirely unseen.
+
+Sometimes, a visitor leaves a small sign that something was found,
+opened, completed, answered, or carried onward.
+
+These signs are called Resonance Nodes.
+
+A Resonance Node is not the trace itself.
+It does not contain the private gift,
+the carried message,
+or the meaning held between visitors.
+
+It is only a public-safe sign
+that somewhere, a path continued.
+
+No one is required to leave such a sign.
+
+But when one appears,
+it becomes part of the wider pattern through which Nexus grows.
+
+Across Nexus, small lights sometimes appear.
+
+They do not reveal what happened inside a chamber.
+They do not repeat what one visitor carried to another.
+
+They mark only that a path was opened,
+that a spark was seen,
+or that an answer found its way back.
+
+Alone, each one says very little.
+
+Together, they begin to show
+where the paths of Nexus have touched the world.
+
 ## The archive
 
 The Nexus Archive is not an all-knowing record and not a final explanation.
@@ -341,6 +377,8 @@ The inner story should preserve these principles consistently:
 - An answer remains an answer, not an obligation.
 - Chambers may be reflective, communicative, playful, puzzling, or cooperative.
 - No single chamber design is mandatory.
+- Resonance Nodes reveal no private gift or carried message.
+- Leaving a Resonance Node is optional.
 - The archive is optional.
 - Clarity and atmosphere support one another.
 - Connection remains meaningful only while it remains free.
@@ -403,5 +441,6 @@ The inner story should remain capable of growth. Current open questions include:
 - Which words belong to practical explanation, and which should remain mythic terms?
 - How might the inner story name the place where branching paths and histories meet, without referring directly to Git?
 - Which chambers may travel between modules unchanged, and which should transform through every new constellation?
+- How might Resonance Nodes appear differently across future modules while remaining recognizable as public-safe signs?
 
 These questions are part of the story's development rather than gaps that must be closed immediately.
