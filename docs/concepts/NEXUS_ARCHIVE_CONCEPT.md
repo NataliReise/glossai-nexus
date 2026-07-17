@@ -286,6 +286,17 @@ The shared identity of the archive comes from its knowledge boundaries and princ
 > What it preserves belongs to the same growing memory,
 > but no single place contains it all.
 
+
+## Spoiler boundary
+
+Archive entries may reveal the nature of a chamber.
+
+They must not reveal the path a visitor is meant to discover.
+
+The archive may offer orientation, context, and public-safe traces without
+pre-solving a chamber, exposing its sequence, or replacing the visitor's own
+encounter with it.
+
 ## Chamber ownership and archive-safe views
 
 A complete chamber owns its full journey.
