@@ -171,6 +171,36 @@ Do not infer current architecture from either path without reading the documenta
 
 ## Local commands
 
+### Recipient-controlled activation
+
+The corrected activation boundary requires the recipient to choose explicitly:
+
+```bash
+python3 modules/nexus_01_nexus_mesomerie/recipient_activation.py \
+  --recipient-alias recipient_name \
+  --activation-purpose gift \
+  --private-message "A Nexus 01 gift is waiting for you."
+```
+
+Normal activation writes only the existing `first-spark` activation. It never
+searches for or reads incidental Token files. Token activation accepts one path
+chosen by the recipient, requires a strict Resonance Token V2, and retains a
+byte-identical package-relative selected copy plus a small digest-bound context.
+Moving the Nexus folder therefore does not break the selected reference.
+
+This controller does not enter the Atrium or either Chamber mode. The intended
+later runtime interpretation is:
+
+```text
+first-spark                                      -> COMPOSE
+return-resonance + valid selected Token context -> ANSWER
+return-resonance + missing/invalid context      -> BLOCKED_ANSWER_RECOVERY
+```
+
+Existing pre-activated Resonance packages remain a legacy-compatible path.
+Their activation is not silently migrated, and no nearby Token is discovered
+to repair missing selected context.
+
 ### First Spark
 
 ```bash
