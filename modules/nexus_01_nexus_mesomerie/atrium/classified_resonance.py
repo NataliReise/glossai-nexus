@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -19,6 +19,7 @@ from chambers.resonance import (
     collect_answering_resonance,
     compose_originating_resonance,
 )
+from chambers.resonance.terminal_io import ResonanceGuidanceSession
 from return_resonance.artifact_store import (
     ResonanceArtifactStoreError,
     write_resonance_return_artifact,
@@ -49,10 +50,41 @@ RouteFactory = Callable[[], "RouteIdentity"]
 
 
 DOOR_LABELS = {
-    ResonanceMode.COMPOSE: "begin/send a resonance",
+    ResonanceMode.COMPOSE: "shape a resonance invitation",
     ResonanceMode.ANSWER: "answer the carried resonance",
     ResonanceMode.BLOCKED_ANSWER_RECOVERY: "the carried invitation needs attention",
 }
+
+
+COMPOSE_THRESHOLD = (
+    "Shape a Resonance invitation one choice at a time: an image, a scent, "
+    "a movement, and one wish word.\n"
+    "No private explanation is requested, and private reasons are not stored.\n"
+    "This Chamber creates local material only. Nothing is sent, uploaded, "
+    "synchronized, or published automatically. "
+    "Local outputs are created only after your explicit confirmation.\n"
+    "Use /cancel at any interactive prompt to end the current Resonance cycle "
+    "safely without creating a new output. At yes/no prompts, you may also "
+    "answer no. At a destination prompt, blank input also cancels creation. "
+    "Full-cycle cancellation returns safely to the Atrium. You may leave "
+    "without creating anything."
+)
+
+
+ANSWER_THRESHOLD = (
+    "A carried Resonance contribution is present. You may answer it in your "
+    "own way, one response at a time: three responses and one return word.\n"
+    "No private explanation is requested, and private reasons are not stored.\n"
+    "This Chamber creates local material only. Nothing is returned, sent, "
+    "uploaded, synchronized, or published automatically. A Return Artifact is "
+    "written only after your explicit "
+    "confirmation and a valid local destination.\n"
+    "Use /cancel at any interactive prompt to end the current Resonance cycle "
+    "safely without creating a new output. At yes/no prompts, you may also "
+    "answer no. At a destination prompt, blank input also cancels creation. "
+    "Full-cycle cancellation returns safely to the Atrium. You may leave "
+    "without creating anything."
+)
 
 
 def resonance_door_label(mode: ResonanceMode) -> str:
@@ -61,7 +93,7 @@ def resonance_door_label(mode: ResonanceMode) -> str:
     return DOOR_LABELS[mode]
 
 
-@dataclass(frozen=True)
+@dataclass
 class ClassifiedResonanceController:
     """Keep corrected modes away from the legacy one-person controller."""
 
@@ -72,16 +104,34 @@ class ClassifiedResonanceController:
     artifact_writer: ArtifactWriter = write_resonance_return_artifact
     invitation_preparer: InvitationPreparer | None = None
     route_factory: RouteFactory | None = None
+    _completed_cycle: bool = field(default=False, init=False, repr=False)
 
     def __call__(self) -> ChamberRunResult:
+        if self._completed_cycle and self.mode in {
+            ResonanceMode.COMPOSE,
+            ResonanceMode.ANSWER,
+        }:
+            return self._run_post_run()
+
         if self.mode is ResonanceMode.COMPOSE:
-            return self._run_compose()
+            result = self._run_compose()
         elif self.mode is ResonanceMode.ANSWER:
-            return self._run_answer()
+            result = self._run_answer()
         else:
             self.output_writer(
-                "Resonance Chamber — the carried invitation needs attention"
+                "Resonance Chamber — carried resonance unavailable"
             )
+            self.output_writer(
+                "The selected carried trace could not safely be opened."
+            )
+            self.output_writer(
+                "No Chamber interaction began. Nothing was written."
+            )
+            self.output_writer(
+                "You can return safely and choose another explicit activation path."
+            )
+            self.output_writer("")
+            self.output_writer("Technical detail")
             self.output_writer(
                 "This activation expects its original selected Token V2 context, "
                 "but that package-relative context is missing, invalid, altered, "
@@ -93,7 +143,101 @@ class ClassifiedResonanceController:
                 "will not be selected automatically."
             )
             self.output_writer("Compose and legacy Resonance flows remain unavailable.")
-        return ChamberRunResult(completed=False)
+            return ChamberRunResult(completed=False)
+
+        if result.completed:
+            self._completed_cycle = True
+        return result
+
+    def _run_post_run(self) -> ChamberRunResult:
+        self._display_post_run()
+        while True:
+            try:
+                command = self.input_reader("resonance> ").strip().casefold()
+            except KeyboardInterrupt:
+                self.output_writer("")
+                self.output_writer(
+                    "Leaving the Resonance Chamber. Returning safely to the Atrium."
+                )
+                return ChamberRunResult(completed=False)
+
+            if not command:
+                continue
+            if command == "/look":
+                self._display_post_run()
+                continue
+            if command in {"/help", "help"}:
+                self._display_post_run_help()
+                continue
+            if command == "/trace":
+                self._display_post_run_trace()
+                continue
+            if command == "/quit":
+                self.output_writer(
+                    "Leaving the Resonance Chamber. Returning safely to the Atrium."
+                )
+                return ChamberRunResult(completed=False)
+            if command == "/compose" and self.mode is ResonanceMode.COMPOSE:
+                return self._run_compose()
+
+            self.output_writer("Unknown Resonance command.")
+            self.output_writer("Use /help to see the commands available here.")
+
+    def _display_post_run(self) -> None:
+        if self.mode is ResonanceMode.COMPOSE:
+            self.output_writer("Resonance Chamber — completed cycle")
+            self.output_writer("")
+            self.output_writer("One originating cycle is complete.")
+            self.output_writer(
+                "The Chamber remains available, but no new cycle has begun."
+            )
+            self.output_writer("")
+            self.output_writer(
+                "Use /compose to shape another independent invitation."
+            )
+            self.output_writer(
+                "Use /look, /trace, or /help to remain with the Chamber."
+            )
+            self.output_writer("Use /quit to return to the Atrium.")
+            return
+
+        self.output_writer("Resonance Chamber — completed answer")
+        self.output_writer("")
+        self.output_writer("This answer cycle is complete.")
+        self.output_writer("No second answer has begun from the selected Token.")
+        self.output_writer("")
+        self.output_writer(
+            "Use /look, /trace, or /help to remain with the Chamber."
+        )
+        self.output_writer("Use /quit to return to the Atrium.")
+        self.output_writer("")
+        self.output_writer(
+            "To answer another invitation, leave Nexus 01 and deliberately "
+            "activate or open it with another Token."
+        )
+
+    def _display_post_run_help(self) -> None:
+        self.output_writer("Resonance Chamber commands")
+        self.output_writer("  /look — perceive the completed Chamber state")
+        self.output_writer("  /help — show the commands available here")
+        self.output_writer("  /trace — receive a gentle next trace")
+        if self.mode is ResonanceMode.COMPOSE:
+            self.output_writer(
+                "  /compose — begin another independent originating cycle"
+            )
+        self.output_writer("  /quit — return to the Atrium")
+
+    def _display_post_run_trace(self) -> None:
+        if self.mode is ResonanceMode.COMPOSE:
+            self.output_writer(
+                "  The completed invitation rests where you placed it. Another "
+                "originating trace begins only if you choose /compose."
+            )
+            return
+        self.output_writer(
+            "  This answer remains with its selected Token. Another answer begins "
+            "only from another deliberately selected Token context."
+        )
 
     def _run_compose(self) -> ChamberRunResult:
         from resonance_invitation_runtime import (
@@ -102,40 +246,61 @@ class ClassifiedResonanceController:
             prepare_resonance_invitation,
         )
 
-        self.output_writer("Resonance Chamber — begin/send a resonance")
+        self.output_writer("Resonance Chamber — shape a resonance invitation")
+        self.output_writer(COMPOSE_THRESHOLD)
         catalog = build_v0_1_catalog()
+        guidance = ResonanceGuidanceSession(
+            "compose",
+            self.output_writer,
+            allow_cancel=True,
+            input_fn=self.input_reader,
+        )
         io = TerminalChamberIO(
             catalog,
             input_fn=self.input_reader,
             output_fn=self.output_writer,
             allow_cancel=True,
+            information_handler=guidance.handle,
+            before_prompt=guidance.before_prompt,
         )
         try:
             contribution = compose_originating_resonance(io, catalog)
         except ChamberInteractionCancelled:
-            self.output_writer("Compose cancelled. No invitation or workspace was created.")
+            _display_compose_cancelled(self.output_writer)
             return ChamberRunResult(completed=False)
         except ResonanceComposeError as error:
-            self.output_writer(f"The originating contribution is not valid: {error}")
-            self.output_writer("No invitation or workspace was created.")
+            _display_compose_failure(
+                self.output_writer,
+                f"The originating contribution is not valid: {error}",
+            )
             return ChamberRunResult(completed=False)
 
+        self.output_writer("")
+        self.output_writer("Resonance invitation shaped")
+        self.output_writer(
+            "The Chamber has gathered your originating contribution. "
+            "No local output exists yet."
+        )
+        self.output_writer(
+            "Creation still requires your explicit confirmation. The travelling "
+            "invitation and private Return Workspace will remain separate."
+        )
         _display_compose_summary(contribution, catalog, self.output_writer)
         if not _confirm_compose_publication(self.input_reader, self.output_writer):
-            self.output_writer("Compose cancelled. No invitation or workspace was created.")
+            _display_compose_cancelled(self.output_writer)
             return ChamberRunResult(completed=False)
 
         invitation_root_text = self.input_reader(
             "Parent directory for the travelling invitation (blank to cancel): "
         ).strip()
-        if not invitation_root_text:
-            self.output_writer("Compose cancelled. No invitation or workspace was created.")
+        if not invitation_root_text or invitation_root_text.casefold() == "/cancel":
+            _display_compose_cancelled(self.output_writer)
             return ChamberRunResult(completed=False)
         private_root_text = self.input_reader(
             "Parent directory for the private Return Workspace (blank to cancel): "
         ).strip()
-        if not private_root_text:
-            self.output_writer("Compose cancelled. No invitation or workspace was created.")
+        if not private_root_text or private_root_text.casefold() == "/cancel":
+            _display_compose_cancelled(self.output_writer)
             return ChamberRunResult(completed=False)
 
         invitation_root = Path(invitation_root_text).expanduser()
@@ -147,9 +312,10 @@ class ClassifiedResonanceController:
             destination.resolve().is_relative_to(nexus_root)
             for destination in (invitation_root, private_root)
         ):
-            self.output_writer(
+            _display_compose_failure(
+                self.output_writer,
                 "Publication destinations must remain outside the travelling "
-                "Nexus carrier. No output was created."
+                "Nexus carrier.",
             )
             return ChamberRunResult(completed=False)
 
@@ -174,75 +340,124 @@ class ClassifiedResonanceController:
                 forbidden_root=nexus_root,
             )
         except (InvitationPublicationError, ResonanceComposeError, OSError) as error:
-            self.output_writer(f"Resonance invitation publication failed: {error}")
-            self.output_writer(
-                "No partial invitation or private workspace was kept."
+            _display_compose_failure(
+                self.output_writer,
+                f"Resonance invitation publication failed: {error}",
             )
             return ChamberRunResult(completed=False)
 
+        self.output_writer("")
+        self.output_writer("Local creation complete")
+        self.output_writer(
+            "The travelling invitation and private Return Workspace were created "
+            "as two separate local outputs."
+        )
+        self.output_writer("They remain local.")
+        self.output_writer("")
+        self.output_writer("Local paths")
         self.output_writer(
             f"Travelling Resonance invitation: {publication.invitation_path}"
         )
         self.output_writer(
             f"Private Return Workspace: {publication.private_workspace_path}"
         )
+        self.output_writer("")
+        self.output_writer("Public / private boundary")
         self.output_writer(
-            "Transfer the invitation manually if you choose. Keep the private "
-            "Return Workspace with the originating person."
+            "The travelling invitation may be carried. Keep the private Return "
+            "Workspace with the originating person."
+        )
+        self.output_writer("")
+        self.output_writer("Optional manual carrying")
+        self.output_writer(
+            "If you choose to carry this invitation, transfer it manually. "
+            "Nothing requires you to carry, forward, publish, or share it."
         )
         self.output_writer(
-            "Nexus 01 does not send or synchronize files automatically. The "
+            "Nexus 01 does not send, upload, synchronize, or publish files. The "
             "invitation does not choose the recipient's activation mode."
+        )
+        self.output_writer("")
+        self.output_writer("Resonance cycle complete")
+        self.output_writer(
+            "The travelling invitation and private Return Workspace were created "
+            "and remain separate local outputs."
+        )
+        self.output_writer("This cycle will not begin again automatically.")
+        self.output_writer(
+            "Return through /resonance whenever you wish to revisit the Chamber."
+        )
+        self.output_writer(
+            "There, /compose can begin another independent invitation."
         )
         return ChamberRunResult(completed=True)
 
     def _run_answer(self) -> ChamberRunResult:
         self.output_writer("Resonance Chamber — answer the carried resonance")
         if self.nexus_root is None:
-            self.output_writer(
+            _display_answer_open_failure(
+                self.output_writer,
                 "ANSWER cannot begin because no authoritative Nexus activation "
-                "context was supplied."
+                "context was supplied.",
             )
             return ChamberRunResult(completed=False)
 
         try:
             token = _load_authoritative_selected_token(self.nexus_root)
         except (ResonanceAnswerError, ResonanceTokenLoadError) as error:
-            self.output_writer(f"ANSWER cannot begin: {error}")
-            self.output_writer(
-                "Restore the deliberately selected Token V2 context; no nearby "
-                "Token will be substituted."
+            _display_answer_open_failure(
+                self.output_writer,
+                f"ANSWER cannot begin: {error}",
             )
             return ChamberRunResult(completed=False)
 
+        self.output_writer(ANSWER_THRESHOLD)
         catalog = build_v0_1_catalog()
         _display_originating_contribution(token, catalog, self.output_writer)
+        guidance = ResonanceGuidanceSession(
+            "answer",
+            self.output_writer,
+            allow_cancel=True,
+            input_fn=self.input_reader,
+        )
         io = TerminalChamberIO(
             catalog,
             input_fn=self.input_reader,
             output_fn=self.output_writer,
             allow_cancel=True,
+            information_handler=guidance.handle,
+            before_prompt=guidance.before_prompt,
         )
         try:
             contribution = collect_answering_resonance(io, catalog)
         except ChamberInteractionCancelled:
-            self.output_writer("Answer cancelled. No Return Artifact was created.")
+            _display_answer_cancelled(self.output_writer)
             return ChamberRunResult(completed=False)
         except ResonanceAnswerError as error:
-            self.output_writer(f"The answer is not valid: {error}")
-            self.output_writer("No Return Artifact was created.")
+            _display_answer_creation_failure(
+                self.output_writer,
+                f"The answer is not valid: {error}",
+            )
             return ChamberRunResult(completed=False)
 
+        self.output_writer("")
+        self.output_writer("Answer shaped")
+        self.output_writer(
+            "The Chamber has gathered your answer. No Return Artifact exists yet."
+        )
+        self.output_writer(
+            "Creation requires your explicit confirmation and a valid local destination."
+        )
         _display_answer_confirmation(contribution, catalog, self.output_writer)
         if not _confirm_publication(self.input_reader, self.output_writer):
-            self.output_writer("Answer cancelled. No Return Artifact was created.")
+            _display_answer_cancelled(self.output_writer)
             return ChamberRunResult(completed=False)
 
         destination_text = self.input_reader(
             "Local path for the Return Artifact (blank to cancel): "
         ).strip()
-        if not destination_text:
-            self.output_writer("Answer cancelled. No Return Artifact was created.")
+        if not destination_text or destination_text.casefold() == "/cancel":
+            _display_answer_cancelled(self.output_writer)
             return ChamberRunResult(completed=False)
 
         artifact = build_answer_resonance_return_artifact(token, contribution)
@@ -251,16 +466,86 @@ class ClassifiedResonanceController:
                 artifact, Path(destination_text).expanduser()
             )
         except ResonanceArtifactStoreError as error:
-            self.output_writer(str(error))
-            self.output_writer("No existing Artifact was changed or replaced.")
+            _display_answer_creation_failure(self.output_writer, str(error))
             return ChamberRunResult(completed=False)
 
-        self.output_writer(f"Return Artifact created locally: {published}")
+        self.output_writer("")
+        self.output_writer("Local creation complete")
+        self.output_writer("The Return Artifact was created and remains local.")
+        self.output_writer("")
+        self.output_writer("Local path")
+        self.output_writer(f"Return Artifact: {published}")
+        self.output_writer("")
+        self.output_writer("Optional manual return")
         self.output_writer(
-            "Return this JSON file manually to the originating person. "
-            "Nexus 01 does not send or synchronize it."
+            "If you choose to return this Artifact, transfer the JSON file manually. "
+            "Nothing requires you to return, publish, or share it."
+        )
+        self.output_writer(
+            "Nexus 01 does not send, upload, synchronize, or publish it."
+        )
+        self.output_writer("")
+        self.output_writer("Resonance cycle complete")
+        self.output_writer("The Return Artifact was created and remains local.")
+        self.output_writer("This answer cycle will not begin again automatically.")
+        self.output_writer(
+            "Another answer requires another deliberately selected Token context."
         )
         return ChamberRunResult(completed=True)
+
+
+def _display_compose_cancelled(output_writer: OutputWriter) -> None:
+    output_writer("")
+    output_writer("Local creation cancelled")
+    output_writer("Nothing was written. No invitation or workspace was created.")
+    output_writer("The Resonance invitation remains unfinished.")
+    output_writer("Returning safely to the Atrium.")
+
+
+def _display_compose_failure(output_writer: OutputWriter, detail: str) -> None:
+    output_writer("")
+    output_writer("The local invitation and private workspace were not created.")
+    output_writer(
+        "Nothing from this attempt was kept. Existing material was not replaced."
+    )
+    output_writer("The Resonance invitation remains unfinished.")
+    output_writer("Returning safely to the Atrium.")
+    output_writer("")
+    output_writer(f"Technical detail: {detail}")
+    output_writer("No partial invitation or private workspace was kept.")
+
+
+def _display_answer_open_failure(output_writer: OutputWriter, detail: str) -> None:
+    output_writer("The selected carried trace could not safely be opened.")
+    output_writer("No Chamber interaction began. Nothing was written.")
+    output_writer(
+        "Return safely to the Atrium, then restore the deliberately selected "
+        "Token V2 context or choose another explicit activation path."
+    )
+    output_writer("No nearby Token was discovered or substituted.")
+    output_writer("")
+    output_writer(f"Technical detail: {detail}")
+
+
+def _display_answer_cancelled(output_writer: OutputWriter) -> None:
+    output_writer("")
+    output_writer("Local creation cancelled")
+    output_writer("Nothing was written. No Return Artifact was created.")
+    output_writer("The answer route remains unfinished.")
+    output_writer("Returning safely to the Atrium.")
+
+
+def _display_answer_creation_failure(
+    output_writer: OutputWriter,
+    detail: str,
+) -> None:
+    output_writer("")
+    output_writer("The local Return Artifact was not created.")
+    output_writer("Nothing was written. Existing material was not replaced.")
+    output_writer("The answer route remains unfinished.")
+    output_writer("Returning safely to the Atrium.")
+    output_writer("")
+    output_writer(f"Technical detail: {detail}")
 
 
 def _load_authoritative_selected_token(nexus_root: Path) -> ResonanceToken:
@@ -291,7 +576,7 @@ def _load_authoritative_selected_token(nexus_root: Path) -> ResonanceToken:
 
 def _display_originating_contribution(token, catalog, output_writer) -> None:
     output_writer("")
-    output_writer("Carried originating contribution")
+    output_writer("Carried Resonance contribution")
     if token.public_safe_label:
         output_writer(f"From: {token.public_safe_label}")
     output_writer(f"Image: {_choice_label(catalog, 'images', token.image_id)}")
@@ -309,7 +594,7 @@ def _display_answer_confirmation(contribution, catalog, output_writer) -> None:
         for option in getattr(catalog, kind)
     }
     output_writer("")
-    output_writer("Your answer")
+    output_writer("Review your answer")
     output_writer(f"Image response: {lookup[contribution.image_response_id]}")
     output_writer(f"Scent response: {lookup[contribution.scent_response_id]}")
     output_writer(f"Movement response: {lookup[contribution.movement_response_id]}")
@@ -318,7 +603,7 @@ def _display_answer_confirmation(contribution, catalog, output_writer) -> None:
 
 def _display_compose_summary(contribution, catalog, output_writer) -> None:
     output_writer("")
-    output_writer("Your originating resonance")
+    output_writer("Your originating resonance — review")
     output_writer(
         f"Image: {_choice_label(catalog, 'images', contribution.image_id)}"
     )
@@ -348,7 +633,7 @@ def _confirm_compose_publication(
         ).strip().casefold()
         if answer in {"yes", "y"}:
             return True
-        if answer in {"no", "n", "cancel", "q"}:
+        if answer in {"no", "n", "cancel", "q", "/cancel"}:
             return False
         output_writer("Please answer yes or no.")
 
@@ -362,6 +647,6 @@ def _confirm_publication(input_reader: InputReader, output_writer: OutputWriter)
         )
         if answer in {"yes", "y"}:
             return True
-        if answer in {"no", "n", "cancel", "q"}:
+        if answer in {"no", "n", "cancel", "q", "/cancel"}:
             return False
         output_writer("Please answer yes or no.")

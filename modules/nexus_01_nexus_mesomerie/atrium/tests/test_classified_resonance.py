@@ -20,10 +20,10 @@ class ActivationStub:
 def run_mode(mode: ResonanceMode) -> tuple[object, str]:
     if mode is ResonanceMode.COMPOSE:
         activation = ActivationStub("first-spark")
-        commands = iter(("first-spark", "resonance", "/cancel", "quit"))
+        commands = iter(("/first-spark", "/resonance", "/cancel", "/quit"))
     else:
         activation = ActivationStub("return-resonance")
-        commands = iter(("resonance", "quit"))
+        commands = iter(("/resonance", "/quit"))
     output: list[str] = []
 
     def forbidden_legacy():
@@ -43,15 +43,23 @@ def run_mode(mode: ResonanceMode) -> tuple[object, str]:
 def test_compose_shows_one_canonical_door_with_compose_wording() -> None:
     runtime, transcript = run_mode(ResonanceMode.COMPOSE)
     assert runtime.state.visible_paths.count("resonance") == 1
-    assert "resonance — begin/send a resonance" in transcript
-    assert "Compose cancelled" in transcript
+    assert "resonance — shape a resonance invitation" in transcript
+    assert "begin/send" not in transcript
+    assert "Nothing is sent, uploaded, synchronized, or published automatically" in transcript
+    assert "one choice at a time" in transcript
+    assert "Use /cancel" in transcript
+    assert "No invitation or workspace was created" in transcript
 
 
 def test_answer_shows_same_door_without_reaching_legacy_flow() -> None:
     runtime, transcript = run_mode(ResonanceMode.ANSWER)
     assert runtime.state.visible_paths.count("resonance") == 1
     assert "resonance — answer the carried resonance" in transcript
-    assert "no authoritative Nexus activation context was supplied" in transcript
+    plain = transcript.index("selected carried trace could not safely be opened")
+    diagnostic = transcript.index("no authoritative Nexus activation context was supplied")
+    assert plain < diagnostic
+    assert "Nothing was written" in transcript
+    assert "No nearby Token was discovered or substituted" in transcript
 
 
 def test_blocked_shows_recovery_door_without_compose_or_legacy_flow() -> None:
@@ -59,12 +67,16 @@ def test_blocked_shows_recovery_door_without_compose_or_legacy_flow() -> None:
     assert runtime.state.visible_paths.count("resonance") == 1
     assert "resonance — the carried invitation needs attention" in transcript
     assert "blocked — recovery guidance available" in transcript
+    plain = transcript.index("selected carried trace could not safely be opened")
+    diagnostic = transcript.index("original selected Token V2 context")
+    assert plain < diagnostic
+    assert "No Chamber interaction began. Nothing was written." in transcript
     assert "Nearby Tokens will not be selected automatically" in transcript
     assert "Compose and legacy Resonance flows remain unavailable" in transcript
 
 
 def test_corrected_entry_uses_injected_classified_adapter_only() -> None:
-    commands = iter(("resonance", "quit"))
+    commands = iter(("/resonance", "/quit"))
     calls: list[str] = []
     classified = ClassifiedResonanceController(
         ResonanceMode.ANSWER, lambda message: calls.append(message)
@@ -94,3 +106,21 @@ def test_corrected_mode_entries_create_no_return_artifact(tmp_path: Path) -> Non
         )()
         assert not result.completed
     assert set(tmp_path.rglob("*")) == before
+
+
+def test_blocked_recovery_remains_one_shot_on_repeated_visits() -> None:
+    output: list[str] = []
+    prompts: list[str] = []
+    controller = ClassifiedResonanceController(
+        ResonanceMode.BLOCKED_ANSWER_RECOVERY,
+        output_writer=output.append,
+        input_reader=lambda prompt: prompts.append(prompt) or "/quit",
+    )
+
+    assert not controller().completed
+    assert not controller().completed
+    transcript = "\n".join(output)
+    assert transcript.count("Resonance Chamber — carried resonance unavailable") == 2
+    assert transcript.count("No Chamber interaction began. Nothing was written.") == 2
+    assert "completed cycle" not in transcript
+    assert prompts == []

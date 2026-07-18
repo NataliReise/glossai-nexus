@@ -10,11 +10,11 @@ from first_spark.state import GameState
 
 
 HELP_TEXT = """Available commands:
-  help                 Show this help text.
-  look                 Enter the First Spark chamber.
-  trace                Reveal a gentle next trace.
-  walkthrough          Show the full solution path with a spoiler warning.
-  quit                 Exit First Spark and return to your terminal.
+  /help                 Show this help text.
+  /look                 Enter the First Spark chamber.
+  /trace                Reveal a gentle next trace.
+  /walkthrough          Show the full solution path with a spoiler warning.
+  /quit                 Leave First Spark.
 """
 
 
@@ -30,7 +30,7 @@ Recipient: {RECIPIENT_ALIAS}
 Private message: locked.
 
 First Spark online.
-Type 'help' for available commands.
+Use /help for available commands.
 """.strip()
 
 
@@ -51,4 +51,4 @@ def handle_command(command: str, state: GameState) -> ModuleResponse:
     if command == "quit":
         return ModuleResponse("First Spark closed.", should_quit=True)
 
-    return ModuleResponse(unknown_command_text(command))
+    return ModuleResponse(unknown_command_text())

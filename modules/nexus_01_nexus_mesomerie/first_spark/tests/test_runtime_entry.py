@@ -20,7 +20,7 @@ def rendered_prints(mock_print) -> str:
 
 
 def test_standalone_entry_keeps_banner_activation_and_arrival_step() -> None:
-    with patch("builtins.input", side_effect=("look", "quit")) as mock_input:
+    with patch("builtins.input", side_effect=("/look", "/quit")) as mock_input:
         with patch("builtins.print") as mock_print:
             state = run_terminal()
 
@@ -35,7 +35,7 @@ def test_standalone_entry_keeps_banner_activation_and_arrival_step() -> None:
 
 
 def test_integrated_entry_begins_directly_in_chamber_interior() -> None:
-    with patch("builtins.input", side_effect=("quit",)) as mock_input:
+    with patch("builtins.input", side_effect=("/quit",)) as mock_input:
         with patch("builtins.print") as mock_print:
             state = run_integrated_terminal()
 
@@ -54,11 +54,11 @@ def test_integrated_entry_begins_directly_in_chamber_interior() -> None:
 
 def test_integrated_entry_preserves_message_unlocked_completion_signal() -> None:
     commands = (
-        "read welcome.log",
-        "read spark.note",
-        "link spark",
-        "unlock",
-        "quit",
+        "  /Read Welcome.Log  ",
+        "/Read Spark.Note",
+        "/LINK SPARK",
+        "/UNLOCK",
+        "/QUIT",
     )
     with patch("builtins.input", side_effect=commands):
         with patch("builtins.print"):
@@ -67,8 +67,45 @@ def test_integrated_entry_preserves_message_unlocked_completion_signal() -> None
     assert state.message_unlocked is True
 
 
+def test_terminal_normalizes_case_and_surrounding_whitespace() -> None:
+    with patch("builtins.input", side_effect=("  /LOOK  ", "  /QUIT  ")):
+        with patch("builtins.print") as mock_print:
+            state = run_terminal()
+
+    transcript = rendered_prints(mock_print)
+    assert "Entering the First Spark chamber." in transcript
+    assert "First Spark closed." in transcript
+    assert state.current_module == "spark_chamber"
+    assert state.should_quit is True
+
+
+def test_blank_input_is_ignored() -> None:
+    with patch("builtins.input", side_effect=("   ", "/quit")) as mock_input:
+        with patch("builtins.print"):
+            state = run_terminal()
+
+    assert mock_input.call_count == 2
+    assert state.current_module == "arrival"
+    assert state.should_quit is True
+
+
+def test_ctrl_c_returns_without_mutating_completion() -> None:
+    with patch("builtins.input", side_effect=KeyboardInterrupt):
+        with patch("builtins.print") as mock_print:
+            state = run_integrated_terminal()
+
+    transcript = rendered_prints(mock_print)
+    assert "First Spark interrupted." in transcript
+    assert state.current_module == "spark_chamber"
+    assert state.message_unlocked is False
+    assert state.should_quit is False
+
+
 if __name__ == "__main__":
     test_standalone_entry_keeps_banner_activation_and_arrival_step()
     test_integrated_entry_begins_directly_in_chamber_interior()
     test_integrated_entry_preserves_message_unlocked_completion_signal()
+    test_terminal_normalizes_case_and_surrounding_whitespace()
+    test_blank_input_is_ignored()
+    test_ctrl_c_returns_without_mutating_completion()
     print("First Spark runtime entry tests passed.")

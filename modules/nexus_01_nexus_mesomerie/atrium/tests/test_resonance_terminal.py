@@ -85,8 +85,15 @@ def test_complete_terminal_visit_can_remain_in_memory() -> None:
     assert controller.last_run.composition.artifact.return_word == "trust"
     assert controller.last_saved_path is None
     rendered = "\n".join(terminal.output)
+    assert "legacy combined path" in rendered
+    assert "source and response choices, one at a time" in rendered
+    assert "Optional local saving is separate from completion" in rendered
+    assert "legacy choice prompts do not support /cancel" in rendered
     assert "remains local in memory" in rendered
     assert "was not saved" in rendered
+    assert "Nothing was written" in rendered
+    assert "composition remains complete in memory" in rendered
+    assert rendered.index("Chamber close") < rendered.rindex("Optional local saving")
 
 
 def test_confirmed_save_uses_explicit_destination() -> None:
@@ -113,7 +120,10 @@ def test_confirmed_save_uses_explicit_destination() -> None:
     assert written_artifact is controller.last_run.composition.artifact
     assert written_path == Path("~/return-artifact.json").expanduser()
     assert controller.last_saved_path == written_path
-    assert "saved locally" in "\n".join(terminal.output)
+    rendered = "\n".join(terminal.output)
+    assert "saved locally" in rendered
+    assert "If you choose to return it" in rendered
+    assert "does not send, upload, synchronize, or publish" in rendered
 
 
 def test_blank_save_destination_keeps_completed_artifact_in_memory() -> None:
@@ -130,7 +140,10 @@ def test_blank_save_destination_keeps_completed_artifact_in_memory() -> None:
     assert result.completed
     assert controller.last_run is not None
     assert controller.last_saved_path is None
-    assert "No destination selected" in "\n".join(terminal.output)
+    rendered = "\n".join(terminal.output)
+    assert "No destination selected" in rendered
+    assert "Nothing was written" in rendered
+    assert "completed artifact remains in memory" in rendered
 
 
 def test_store_error_keeps_completed_artifact_in_memory() -> None:
@@ -152,7 +165,8 @@ def test_store_error_keeps_completed_artifact_in_memory() -> None:
     assert controller.last_saved_path is None
     rendered = "\n".join(terminal.output)
     assert "Refusing to overwrite" in rendered
-    assert "remains in memory" in rendered
+    assert "remains local in memory" in rendered
+    assert "Existing material was not replaced" in rendered
 
 
 def test_save_confirmation_retries_until_yes_or_no() -> None:
@@ -182,7 +196,10 @@ def test_blank_token_path_returns_unfinished() -> None:
     assert not result.completed
     assert controller.last_run is None
     assert controller.last_saved_path is None
-    assert "No Resonance Token selected" in "\n".join(terminal.output)
+    rendered = "\n".join(terminal.output)
+    assert "No Resonance Token selected" in rendered
+    assert "Nothing was written" in rendered
+    assert "Returning safely to the Atrium" in rendered
 
 
 def test_invalid_token_returns_unfinished_without_composition() -> None:
@@ -203,6 +220,10 @@ def test_invalid_token_returns_unfinished_without_composition() -> None:
     assert controller.last_saved_path is None
     rendered = "\n".join(terminal.output)
     assert "The token is not valid." in rendered
+    assert rendered.index("selected carried trace could not safely be opened") < rendered.index(
+        "The token is not valid."
+    )
+    assert "Nothing was written" in rendered
     assert "remains unfinished" in rendered
 
 

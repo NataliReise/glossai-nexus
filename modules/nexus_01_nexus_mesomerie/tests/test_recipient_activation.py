@@ -164,6 +164,28 @@ class RecipientActivationTests(unittest.TestCase):
         self.assertEqual(result, ActivationChoiceResult.CANCELLED)
         self.assertFalse(paths_for_nexus(self.nexus).activation.exists())
 
+    def test_blank_token_path_returns_to_explicit_activation_choice(self) -> None:
+        answers = iter(("2", "", "q"))
+        output: list[str] = []
+
+        result = run_recipient_activation(
+            nexus_root=self.nexus,
+            input_reader=lambda _prompt: next(answers),
+            output_writer=output.append,
+            **RECIPIENT,
+        )
+
+        self.assertEqual(result, ActivationChoiceResult.CANCELLED)
+        transcript = "\n".join(output)
+        self.assertIn("selected carried trace could not be opened", transcript)
+        self.assertIn("nothing was written", transcript)
+        self.assertIn("No nearby Token was discovered or substituted", transcript)
+        self.assertIn("Technical detail: no Token path was provided", transcript)
+        paths = paths_for_nexus(self.nexus)
+        self.assertFalse(paths.activation.exists())
+        self.assertFalse(paths.selected_context.exists())
+        self.assertFalse(paths.selected_token.exists())
+
     def test_failed_token_then_explicit_normal_activation(self) -> None:
         invalid = self.root / "invalid-token.json"
         invalid.write_text("not json", encoding="utf-8")
@@ -177,7 +199,12 @@ class RecipientActivationTests(unittest.TestCase):
         )
         self.assertEqual(result, ActivationChoiceResult.FIRST_SPARK)
         transcript = "\n".join(output)
+        self.assertLess(
+            transcript.index("selected carried trace could not safely be opened"),
+            transcript.index("Token activation failed"),
+        )
         self.assertIn("Token activation failed", transcript)
+        self.assertIn("No nearby Token was discovered or substituted", transcript)
         self.assertIn("Choose again", transcript)
         self.assertEqual(
             load_activation(paths_for_nexus(self.nexus).activation).profile_id,

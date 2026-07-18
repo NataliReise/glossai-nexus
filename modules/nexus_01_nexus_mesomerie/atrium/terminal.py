@@ -75,24 +75,30 @@ def render_atrium(runtime: NexusAtriumRuntime) -> str:
         else:
             lines.append(f"- {chamber_id}: {marker}")
 
+    commands = ["/look", "/first-spark"]
+    if state.is_enabled(RESONANCE_CHAMBER):
+        commands.append("/resonance")
+    commands.append("/quit")
     lines.append("")
-    lines.append("Type 'help' for available commands.")
+    lines.append("Available commands: " + ", ".join(commands))
+    lines.append("Use /help for command details.")
     return "\n".join(lines)
 
 
 def help_text(runtime: NexusAtriumRuntime | None = None) -> str:
     lines = [
-        "look         show the current Atrium",
-        "first-spark  enter the First Spark Chamber",
+        "/look         show the current Atrium",
+        "/help         show the current Atrium grammar",
+        "/first-spark  enter the First Spark Chamber",
     ]
     if runtime is not None and runtime.state.is_enabled(RESONANCE_CHAMBER):
         if runtime.resonance_mode is None:
-            lines.append("resonance     enter the Resonance Chamber")
+            lines.append("/resonance     enter the Resonance Chamber")
         else:
             lines.append(
-                "resonance     " + resonance_door_label(runtime.resonance_mode)
+                "/resonance     " + resonance_door_label(runtime.resonance_mode)
             )
-    lines.append("quit         leave Nexus 01")
+    lines.append("/quit         leave Nexus 01")
     return "\n".join(lines)
 
 
@@ -138,27 +144,32 @@ def run_nexus_terminal(
 
         if command == "":
             continue
-        if command == "look":
+        if command == "/look":
             output_writer(render_atrium(runtime))
             continue
-        if command == "help":
+        if command in {"/help", "help"}:
             output_writer(help_text(runtime))
             continue
-        if command in {"quit", "exit"}:
+        if command == "/quit":
             output_writer("Leaving Nexus 01.")
             break
-        if command in {"first-spark", "first spark"}:
+        if command == "/first-spark":
             runtime.enter_chamber(FIRST_SPARK_CHAMBER, first_spark_runner)
             output_writer(render_atrium(runtime))
             continue
-        if command in {"resonance", "resonance-chamber"}:
+        if command == "/resonance":
             if not runtime.state.is_enabled(RESONANCE_CHAMBER):
                 output_writer("The Resonance path is not opened by this activation.")
                 continue
+            output_writer("")
+            output_writer("The Resonance Chamber opens from the Atrium.")
             runtime.enter_chamber(RESONANCE_CHAMBER, active_resonance_runner)
             output_writer(render_atrium(runtime))
             continue
 
-        output_writer("Unknown command. Type help to see the current Atrium grammar.")
+        output_writer(
+            "Unknown Atrium command.\n"
+            "Use /help to see the commands available here."
+        )
 
     return runtime

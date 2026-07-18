@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections.abc import Callable
 
 from first_spark.config import PROMPT
+from first_spark.command_feedback import unknown_command_text
 from first_spark.game_modules import arrival, ending, spark_chamber
 from first_spark.module_response import ModuleResponse
 from first_spark.state import GameState
@@ -24,6 +25,19 @@ MODULES: dict[str, ModuleHandler] = {
 }
 
 
+PUBLIC_COMMANDS = {
+    "/help": "help",
+    "/look": "look",
+    "/trace": "trace",
+    "/walkthrough": "walkthrough",
+    "/read": "read",
+    "/link": "link",
+    "/unlock": "unlock",
+    "/resonance-node": "resonance-node",
+    "/quit": "quit",
+}
+
+
 def print_response(response: ModuleResponse) -> None:
     """Print a module response with consistent spacing."""
     if response.text:
@@ -34,8 +48,12 @@ def print_response(response: ModuleResponse) -> None:
 
 def dispatch_command(command: str, state: GameState) -> ModuleResponse:
     """Send a command to the currently active game module."""
+    internal_command = translate_public_command(command)
+    if internal_command is None:
+        return ModuleResponse(unknown_command_text())
+
     module_handler = MODULES[state.current_module]
-    response = module_handler(command, state)
+    response = module_handler(internal_command, state)
 
     if response.next_module is not None:
         state.current_module = response.next_module
@@ -44,6 +62,22 @@ def dispatch_command(command: str, state: GameState) -> ModuleResponse:
         state.should_quit = True
 
     return response
+
+
+def translate_public_command(command: str) -> str | None:
+    """Translate one accepted public command into the module vocabulary."""
+    if command == "help":
+        return "help"
+
+    exact_command = PUBLIC_COMMANDS.get(command)
+    if exact_command is not None:
+        return exact_command
+
+    for command_family in ("/read ", "/link "):
+        if command.startswith(command_family):
+            return command.removeprefix("/")
+
+    return None
 
 
 def read_command() -> str | None:

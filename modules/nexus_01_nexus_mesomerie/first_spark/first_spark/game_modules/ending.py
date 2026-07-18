@@ -44,7 +44,7 @@ Never post private activation data, private gift messages, or return artifacts p
 Later, you may also share a public-safe resonance node to show that a spark was seen.
 A resonance node must not include private messages, activation files, or return artifacts.
 
-Type 'resonance-node' to show an optional public-safe draft.
+Use /resonance-node to show an optional public-safe draft.
 You can copy that draft, edit only the public alias and public note, and share it manually if you choose."""
 
 
@@ -74,13 +74,13 @@ No private activation data, private gift text, or return artifact is included.
 
 
 HELP_TEXT = """Available commands:
-  help            Show this help text.
-  look            Look at the opened activation message.
-  unlock          Show the already opened activation message again.
-  trace           Reveal a gentle next trace.
-  resonance-node  Show a public-safe resonance node draft.
-  walkthrough     Show the full solution path with a spoiler warning.
-  quit            Exit First Spark and return to your terminal.
+  /help            Show this help text.
+  /look            Look at the opened activation message.
+  /unlock          Show the already opened activation message again.
+  /trace           Reveal a gentle next trace.
+  /resonance-node  Show a public-safe resonance node draft.
+  /walkthrough     Show the full solution path with a spoiler warning.
+  /quit            Leave First Spark.
 """
 
 
@@ -129,7 +129,7 @@ def handle_command(command: str, state: GameState) -> ModuleResponse:
     if command == "quit":
         return ModuleResponse("First Spark closed.", should_quit=True)
 
-    return ModuleResponse(unknown_command_text(command))
+    return ModuleResponse(unknown_command_text())
 
 
 def open_ending(state: GameState) -> ModuleResponse:

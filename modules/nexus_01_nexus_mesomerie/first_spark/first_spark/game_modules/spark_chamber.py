@@ -30,14 +30,14 @@ Two traces can begin to resonate.
 
 
 HELP_TEXT = """Available commands:
-  help                 Show this help text.
-  look                 Look around the First Spark chamber.
-  read <trace-name>    Read a visible trace.
-  link spark           Link the first spark fragments.
-  unlock               Open the private message after linking the spark.
-  trace                Reveal a gentle next trace.
-  walkthrough          Show the full solution path with a spoiler warning.
-  quit                 Exit First Spark and return to your terminal.
+  /help                 Show this help text.
+  /look                 Look around the First Spark chamber.
+  /read <trace-name>    Read a visible trace.
+  /link spark           Link the first spark fragments.
+  /unlock               Open the private message after linking the spark.
+  /trace                Reveal a gentle next trace.
+  /walkthrough          Show the full solution path with a spoiler warning.
+  /quit                 Leave First Spark.
 """
 
 
@@ -68,20 +68,20 @@ def handle_command(command: str, state: GameState) -> ModuleResponse:
     if command.startswith("read "):
         trace_name = command.removeprefix("read ").strip()
         if not trace_name:
-            return ModuleResponse("Usage: read <trace-name>\nType 'look' to see visible traces.")
+            return ModuleResponse("Usage: /read <trace-name>\nUse /look to see visible traces.")
         return read_trace(trace_name, state)
 
     if command == "read":
-        return ModuleResponse("Usage: read <trace-name>\nType 'look' to see visible traces.")
+        return ModuleResponse("Usage: /read <trace-name>\nUse /look to see visible traces.")
 
     if command == "link spark":
         return link_spark(state)
 
     if command.startswith("link "):
-        return ModuleResponse("Unknown link target.\nTry: link spark")
+        return ModuleResponse("Unknown link target.\nTry: /link spark")
 
     if command == "link":
-        return ModuleResponse("Usage: link spark")
+        return ModuleResponse("Usage: /link spark")
 
     if command == "unlock":
         return unlock_message(state)
@@ -89,7 +89,7 @@ def handle_command(command: str, state: GameState) -> ModuleResponse:
     if command == "quit":
         return ModuleResponse("First Spark closed.", should_quit=True)
 
-    return ModuleResponse(unknown_command_text(command))
+    return ModuleResponse(unknown_command_text())
 
 
 def read_trace(trace_name: str, state: GameState) -> ModuleResponse:
@@ -98,7 +98,7 @@ def read_trace(trace_name: str, state: GameState) -> ModuleResponse:
 
     if trace_text is None:
         return ModuleResponse(
-            f"Trace not found: {trace_name}\nType 'look' to see visible traces."
+            f"Trace not found: {trace_name}\nUse /look to see visible traces."
         )
 
     state.read_traces.add(trace_name)

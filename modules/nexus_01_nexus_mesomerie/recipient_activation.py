@@ -194,10 +194,17 @@ def run_recipient_activation(
 
     while True:
         output_writer("")
-        output_writer("Choose how to activate this Nexus 01")
-        output_writer("1. Activate normally")
-        output_writer("2. Activate with a Resonance Token")
+        output_writer("Choose how this local Nexus 01 opens")
+        output_writer("1. Activate normally — begin with First Spark")
+        output_writer(
+            "2. Activate with one deliberately selected Resonance Token — "
+            "answer a carried resonance"
+        )
         output_writer("q. Cancel without activating")
+        output_writer(
+            "Nothing is discovered, substituted, sent, uploaded, synchronized, "
+            "or published automatically."
+        )
         choice = input_reader("Activation choice: ").strip().casefold()
 
         if choice in {"q", "quit", "cancel"}:
@@ -217,9 +224,16 @@ def run_recipient_activation(
             output_writer("Nexus 01 activated normally with First Spark.")
             return ActivationChoiceResult.FIRST_SPARK
         if choice == "2":
-            token_value = input_reader("Path to the Resonance Token V2: ").strip()
+            token_value = input_reader(
+                "Path to the deliberately selected Resonance Token V2: "
+            ).strip()
             if not token_value:
-                output_writer("Token activation failed: no Token path was provided.")
+                output_writer("The selected carried trace could not be opened.")
+                output_writer("No activation state was created and nothing was written.")
+                output_writer(
+                    "No nearby Token was discovered or substituted."
+                )
+                output_writer("Technical detail: no Token path was provided.")
                 output_writer("No activation state was created. Choose again or cancel.")
                 continue
             try:
@@ -231,11 +245,17 @@ def run_recipient_activation(
                     private_message=private_message,
                 )
             except (RecipientActivationError, ResonanceTokenLoadError) as error:
-                output_writer(f"Token activation failed: {error}")
+                output_writer("The selected carried trace could not safely be opened.")
+                output_writer("No activation state was created and nothing was written.")
+                output_writer(
+                    "No nearby Token was discovered or substituted."
+                )
+                output_writer(f"Token activation failed — technical detail: {error}")
                 output_writer("No activation state was created. Choose again or cancel.")
                 continue
             output_writer(
-                "Nexus 01 activated with the deliberately selected Resonance Token."
+                "Nexus 01 activated with the deliberately selected Resonance Token. "
+                "Nothing was returned or transmitted automatically."
             )
             return ActivationChoiceResult.RETURN_RESONANCE
 

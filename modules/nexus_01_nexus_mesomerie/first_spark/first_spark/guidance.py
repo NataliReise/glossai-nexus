@@ -7,9 +7,9 @@ WALKTHROUGH_TEXT = """Spoiler warning:
 This walkthrough reveals the complete First Spark solution.
 
 Complete path:
-  look
-  read welcome.log
-  read spark.note
-  link spark
-  unlock
+  /look
+  /read welcome.log
+  /read spark.note
+  /link spark
+  /unlock
 """

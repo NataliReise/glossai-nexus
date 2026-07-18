@@ -44,12 +44,12 @@ ROUTE = {
 }
 
 FIRST_SPARK_COMPLETION_COMMANDS = (
-    "first-spark",
-    "read welcome.log",
-    "read spark.note",
-    "link spark",
-    "unlock",
-    "quit",
+    "/first-spark",
+    "/read welcome.log",
+    "/read spark.note",
+    "/link spark",
+    "/unlock",
+    "/quit",
 )
 
 
@@ -168,10 +168,10 @@ class NeutralNexusCarrierTests(unittest.TestCase):
                     if with_token
                     else None
                 )
-                answers = "\n".join(("1", *FIRST_SPARK_COMPLETION_COMMANDS, "quit", ""))
+                answers = "\n".join(("1", *FIRST_SPARK_COMPLETION_COMMANDS, "/quit", ""))
                 run = self.start(result.carrier_path, answers)
                 self.assertEqual(run.returncode, 0, run.stderr)
-                self.assertIn("begin/send a resonance", run.stdout)
+                self.assertIn("shape a resonance invitation", run.stdout)
                 self.assertNotIn("answer the carried resonance", run.stdout)
                 self.assertNotIn("Activation detected.", run.stdout)
                 self.assertNotIn("First Spark online.", run.stdout)
@@ -203,7 +203,7 @@ class NeutralNexusCarrierTests(unittest.TestCase):
             (
                 "1",
                 *FIRST_SPARK_COMPLETION_COMMANDS,
-                "resonance",
+                "/resonance",
                 "5",
                 "4",
                 "3",
@@ -211,7 +211,7 @@ class NeutralNexusCarrierTests(unittest.TestCase):
                 "yes",
                 str(travelling),
                 str(retained),
-                "quit",
+                "/quit",
                 "",
             )
         )
@@ -258,7 +258,7 @@ class NeutralNexusCarrierTests(unittest.TestCase):
         result = self.build(with_token=True)
         first = self.start(
             result.carrier_path,
-            "2\ninvitation/resonance_token.v2.json\nquit\n",
+            "2\ninvitation/resonance_token.v2.json\n/quit\n",
         )
         self.assertEqual(first.returncode, 0, first.stderr)
         self.assertIn("answer the carried resonance", first.stdout)
@@ -268,7 +268,7 @@ class NeutralNexusCarrierTests(unittest.TestCase):
                 / "first_spark/activation.local.resonance-context.json"
             ).is_file()
         )
-        restart = self.start(result.carrier_path, "quit\n")
+        restart = self.start(result.carrier_path, "/quit\n")
         self.assertEqual(restart.returncode, 0, restart.stderr)
         self.assertNotIn("Choose how to activate", restart.stdout)
         self.assertIn("answer the carried resonance", restart.stdout)
@@ -290,9 +290,9 @@ class NeutralNexusCarrierTests(unittest.TestCase):
 
     def test_unused_sidecar_can_be_removed_after_normal_activation(self) -> None:
         result = self.build(with_token=True)
-        self.assertEqual(self.start(result.carrier_path, "1\nquit\n").returncode, 0)
+        self.assertEqual(self.start(result.carrier_path, "1\n/quit\n").returncode, 0)
         (result.carrier_path / SIDECAR_PATH).unlink()
-        restart = self.start(result.carrier_path, "quit\n")
+        restart = self.start(result.carrier_path, "/quit\n")
         self.assertEqual(restart.returncode, 0, restart.stderr)
         self.assertIn("first-spark: open", restart.stdout)
         self.assertNotIn("resonance", restart.stdout.lower())
@@ -302,7 +302,7 @@ class NeutralNexusCarrierTests(unittest.TestCase):
         before = self.build(with_token=True)
         moved_before = self.root / "moved-before"
         before.carrier_path.rename(moved_before)
-        self.assertEqual(self.start(moved_before, "1\nquit\n").returncode, 0)
+        self.assertEqual(self.start(moved_before, "1\n/quit\n").returncode, 0)
 
         second_output = self.root / "second-dist"
         after = prepare_neutral_nexus_carrier(
@@ -313,13 +313,13 @@ class NeutralNexusCarrierTests(unittest.TestCase):
         self.assertEqual(
             self.start(
                 after.carrier_path,
-                "2\ninvitation/resonance_token.v2.json\nquit\n",
+                "2\ninvitation/resonance_token.v2.json\n/quit\n",
             ).returncode,
             0,
         )
         moved_after = self.root / "moved-after"
         after.carrier_path.rename(moved_after)
-        restart = self.start(moved_after, "quit\n")
+        restart = self.start(moved_after, "/quit\n")
         self.assertEqual(restart.returncode, 0, restart.stderr)
         self.assertIn("answer the carried resonance", restart.stdout)
 

@@ -52,18 +52,24 @@ def assert_walkthrough(response: str) -> None:
     """Assert that a response contains the full spoiler walkthrough."""
     assert_contains(response, "Spoiler warning:")
     assert_contains(response, "Complete path:")
-    assert_contains(response, "look")
-    assert_contains(response, "read welcome.log")
-    assert_contains(response, "read spark.note")
-    assert_contains(response, "link spark")
-    assert_contains(response, "unlock")
+    expected_path = (
+        "/look",
+        "/read welcome.log",
+        "/read spark.note",
+        "/link spark",
+        "/unlock",
+    )
+    rendered_steps = tuple(
+        line.strip() for line in response.splitlines() if line.startswith("  ")
+    )
+    assert rendered_steps == expected_path
 
 
-def assert_unknown_command_recovery(response: str) -> None:
-    """Assert that unknown commands explain possible pasted input."""
-    assert_contains(response, "Unknown command:")
-    assert_contains(response, "pasted input")
-    assert_contains(response, "fresh prompt")
+def assert_unknown_command_recovery(response: str, original_input: str) -> None:
+    """Assert that unknown commands receive neutral, non-echoing feedback."""
+    assert_contains(response, "Unknown First Spark command.")
+    assert_contains(response, "Use /help")
+    assert original_input not in response
 
 
 def assert_after_play_message(response: str) -> None:
@@ -78,7 +84,7 @@ def assert_after_play_message(response: str) -> None:
     assert_contains(response, WHAT_NEXT_GUIDE_URL)
     assert_contains(response, "Never post private activation data")
     assert_contains(response, "public-safe resonance node")
-    assert_contains(response, "Type 'resonance-node'")
+    assert_contains(response, "Use /resonance-node")
     assert_contains(response, "edit only the public alias and public note")
 
 
@@ -166,72 +172,75 @@ def test_first_spark_main_flow() -> None:
     """Test the current First Spark happy path and guidance flow."""
     state = GameState()
 
-    response = run_command(state, "help")
-    assert_contains(response, "trace")
-    assert_contains(response, "walkthrough")
-    assert_contains(response, "return to your terminal")
+    response = run_command(state, "/help")
+    assert_contains(response, "/trace")
+    assert_contains(response, "/walkthrough")
+    assert_contains(response, "/quit")
     assert state.current_module == "arrival"
 
     response = run_command(state, "git statusquit")
-    assert_unknown_command_recovery(response)
+    assert_unknown_command_recovery(response, "git statusquit")
     assert state.current_module == "arrival"
 
-    response = run_command(state, "walkthrough")
+    response = run_command(state, "/walkthrough")
     assert_walkthrough(response)
     assert state.current_module == "arrival"
 
-    response = run_command(state, "trace")
+    response = run_command(state, "/trace")
     assert_contains(response, "Look for the entrance.")
     assert state.current_module == "arrival"
 
-    response = run_command(state, "look")
+    response = run_command(state, "/look")
     assert_contains(response, "Entering the First Spark chamber.")
     assert state.current_module == "spark_chamber"
 
-    response = run_command(state, "help")
-    assert_contains(response, "walkthrough")
-    assert_contains(response, "return to your terminal")
+    response = run_command(state, "/look")
+    assert_contains(response, "Visible traces:")
 
-    response = run_command(state, "walkthrough")
+    response = run_command(state, "/help")
+    assert_contains(response, "/walkthrough")
+    assert_contains(response, "/quit")
+
+    response = run_command(state, "/walkthrough")
     assert_walkthrough(response)
     assert state.current_module == "spark_chamber"
 
-    response = run_command(state, "trace")
+    response = run_command(state, "/trace")
     assert_contains(response, "Start with what is visible.")
 
-    response = run_command(state, "unlock")
+    response = run_command(state, "/unlock")
     assert_contains(response, "The private message does not open yet.")
     assert not state.message_unlocked
     assert state.current_module == "spark_chamber"
 
-    response = run_command(state, "read welcome.log")
+    response = run_command(state, "/read welcome.log")
     assert_contains(response, "A spark does not need to become a system before it can glow.")
     assert "welcome.log" in state.read_traces
 
-    response = run_command(state, "trace")
+    response = run_command(state, "/trace")
     assert_contains(response, "The spark has another visible trace.")
 
-    response = run_command(state, "link spark")
+    response = run_command(state, "/link spark")
     assert_contains(response, "The spark is not ready to link.")
     assert not state.spark_linked
 
-    response = run_command(state, "read spark.note")
+    response = run_command(state, "/read spark.note")
     assert_contains(response, "Two traces can begin to resonate.")
     assert "spark.note" in state.read_traces
 
-    response = run_command(state, "trace")
+    response = run_command(state, "/trace")
     assert_contains(response, "Two visible traces may form one spark.")
 
-    response = run_command(state, "link spark")
+    response = run_command(state, "/link spark")
     assert_contains(response, "Fragment connection detected.")
     assert_contains(response, "The lock no longer feels silent.")
     assert state.spark_linked
     assert state.current_module == "spark_chamber"
 
-    response = run_command(state, "trace")
+    response = run_command(state, "/trace")
     assert_contains(response, "The private message reacts. Try to open it.")
 
-    response = run_command(state, "unlock")
+    response = run_command(state, "/unlock")
     assert_contains(response, "The private message opens.")
     assert_contains(response, "[activation message]")
     assert_after_play_message(response)
@@ -239,34 +248,151 @@ def test_first_spark_main_flow() -> None:
     assert state.message_unlocked
     assert state.current_module == "ending"
 
-    response = run_command(state, "look")
+    response = run_command(state, "/look")
     assert_contains(response, "The private message is already open.")
     assert_after_play_message(response)
     assert_section_divider(response)
 
-    response = run_command(state, "help")
-    assert_contains(response, "walkthrough")
-    assert_contains(response, "return to your terminal")
-    assert_contains(response, "resonance-node")
+    response = run_command(state, "/unlock")
+    assert_contains(response, "The private message is already open.")
+    assert state.message_unlocked
 
-    response = run_command(state, "resonance-node")
+    response = run_command(state, "/help")
+    assert_contains(response, "/walkthrough")
+    assert_contains(response, "/quit")
+    assert_contains(response, "/resonance-node")
+
+    response = run_command(state, "/resonance-node")
     assert_resonance_node(response)
     assert state.current_module == "ending"
 
     response = run_command(state, "git statusquit")
-    assert_unknown_command_recovery(response)
+    assert_unknown_command_recovery(response, "git statusquit")
     assert state.current_module == "ending"
 
-    response = run_command(state, "walkthrough")
+    response = run_command(state, "/walkthrough")
     assert_walkthrough(response)
     assert state.current_module == "ending"
 
-    response = run_command(state, "trace")
+    response = run_command(state, "/trace")
     assert_contains(response, "The First Spark is complete.")
 
-    response = run_command(state, "quit")
+    response = run_command(state, "/quit")
     assert_contains(response, "First Spark closed.")
     assert state.should_quit
+
+
+def test_bare_help_is_the_only_non_slash_command() -> None:
+    """Keep bare help as an unadvertised rescue alias in every module."""
+    for module_name in ("arrival", "spark_chamber", "ending"):
+        state = GameState(current_module=module_name)
+        response = run_command(state, "help")
+        assert_contains(response, "/help")
+        advertised_commands = {
+            line.strip().split()[0]
+            for line in response.splitlines()
+            if line.startswith("  ")
+        }
+        assert "help" not in advertised_commands
+
+
+def test_former_bare_commands_are_unknown_and_non_mutating() -> None:
+    """Reject every former bare action before it reaches a module handler."""
+    former_commands = (
+        "look",
+        "trace",
+        "walkthrough",
+        "quit",
+        "read",
+        "read welcome.log",
+        "read spark.note",
+        "link",
+        "link spark",
+        "unlock",
+        "resonance-node",
+    )
+
+    for command in former_commands:
+        state = GameState(current_module="spark_chamber")
+        response = run_command(state, command)
+        assert_unknown_command_recovery(response, command)
+        assert state == GameState(current_module="spark_chamber")
+
+    unknown_slash = "/unknown-secret"
+    state = GameState(current_module="spark_chamber")
+    response = run_command(state, unknown_slash)
+    assert_unknown_command_recovery(response, unknown_slash)
+    assert state == GameState(current_module="spark_chamber")
+
+
+def test_arrival_slash_quit_preserves_leaving_semantics() -> None:
+    """Allow the canonical leaving command before entering the Chamber."""
+    state = GameState()
+    response = run_command(state, "/quit")
+    assert_contains(response, "First Spark closed.")
+    assert state.current_module == "arrival"
+    assert state.should_quit is True
+
+
+def test_recognized_slash_families_keep_module_validation() -> None:
+    """Keep read/link usage and target validation inside the Chamber module."""
+    state = GameState(current_module="spark_chamber")
+
+    assert_contains(run_command(state, "/read"), "Usage: /read <trace-name>")
+    assert_contains(run_command(state, "/read missing.log"), "Trace not found")
+    assert_contains(run_command(state, "/link"), "Usage: /link spark")
+    assert_contains(run_command(state, "/link moon"), "Unknown link target")
+    assert state == GameState(current_module="spark_chamber")
+
+
+def test_resonance_node_remains_ending_only_and_view_only() -> None:
+    """Expose the static node only after completion without changing state."""
+    arrival_state = GameState()
+    response = run_command(arrival_state, "/resonance-node")
+    assert_unknown_command_recovery(response, "/resonance-node")
+    assert arrival_state == GameState()
+
+    ending_state = GameState(
+        current_module="ending",
+        read_traces={"welcome.log", "spark.note"},
+        spark_linked=True,
+        message_unlocked=True,
+    )
+    before = GameState(
+        current_module="ending",
+        read_traces=set(ending_state.read_traces),
+        spark_linked=True,
+        message_unlocked=True,
+    )
+    assert_resonance_node(run_command(ending_state, "/resonance-node"))
+    assert ending_state == before
+
+
+def test_current_player_docs_show_canonical_slash_commands() -> None:
+    """Keep current First Spark player documentation on the public grammar."""
+    readme = (FIRST_SPARK_ROOT / "README.md").read_text(encoding="utf-8")
+    for command in (
+        "/help",
+        "/look",
+        "/read <trace-name>",
+        "/link spark",
+        "/unlock",
+        "/trace",
+        "/walkthrough",
+        "/resonance-node",
+        "/quit",
+    ):
+        assert f"- `{command}`" in readme
+
+    activation_guide = (FIRST_SPARK_ROOT / "LOCAL_ACTIVATION_GUIDE.md").read_text(
+        encoding="utf-8"
+    )
+    assert "\n/help\n" in activation_guide
+    assert "\n/quit\n" in activation_guide
+
+    what_next = (FIRST_SPARK_ROOT / "WHAT_NEXT.md").read_text(encoding="utf-8")
+    assert "\n/resonance-node\n" in what_next
+    assert "Use `/resonance-node`" in what_next
 
 
 if __name__ == "__main__":
@@ -274,4 +400,10 @@ if __name__ == "__main__":
     test_activation_file_validation_errors()
     test_interrupt_text()
     test_first_spark_main_flow()
+    test_bare_help_is_the_only_non_slash_command()
+    test_former_bare_commands_are_unknown_and_non_mutating()
+    test_arrival_slash_quit_preserves_leaving_semantics()
+    test_recognized_slash_families_keep_module_validation()
+    test_resonance_node_remains_ending_only_and_view_only()
+    test_current_player_docs_show_canonical_slash_commands()
     print("First Spark flow tests passed.")
