@@ -171,13 +171,13 @@ If terminal commands are accidentally pasted into First Spark, the module may sh
 Use:
 
 ```text
-help
+/help
 ```
 
 for available Nexus commands, or:
 
 ```text
-quit
+/quit
 ```
 
 on a fresh prompt to leave First Spark and return to your terminal.

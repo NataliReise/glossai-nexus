@@ -168,15 +168,15 @@ The exact available commands depend on the current module state.
 
 Useful commands include:
 
-- `help` - Show available commands for the current module.
-- `look` - Look around or enter the next visible space.
-- `read <trace-name>` - Read a visible trace.
-- `link spark` - Link the first spark fragments after the required traces were read.
-- `unlock` - Open the activation message after the spark was linked.
-- `trace` - Reveal a gentle next hint.
-- `walkthrough` - Show the full solution path with a spoiler warning.
-- `resonance-node` - Show an optional public-safe resonance node draft after completion.
-- `quit` - Exit First Spark and return to your terminal.
+- `/help` - Show available commands for the current module.
+- `/look` - Look around or enter the next visible space.
+- `/read <trace-name>` - Read a visible trace.
+- `/link spark` - Link the first spark fragments after the required traces were read.
+- `/unlock` - Open the activation message after the spark was linked.
+- `/trace` - Reveal a gentle next hint.
+- `/walkthrough` - Show the full solution path with a spoiler warning.
+- `/resonance-node` - Show an optional public-safe resonance node draft after completion.
+- `/quit` - Leave First Spark.
 
 ## Public / private boundary
 

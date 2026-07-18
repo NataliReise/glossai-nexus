@@ -8,6 +8,50 @@ This document is the primary source of truth for the current development directi
 
 When an older design, status, audit, or experiment document conflicts with this file, this file takes precedence until a newer current-direction document explicitly replaces it.
 
+## Current play grammar
+
+Nexus 01 is a line of local retro-terminal escape modules.
+
+Its Chambers may serve very different purposes and use very different mechanics.
+Their shared identity does not come from repeating the same puzzle. It comes from
+a common exploration-based play grammar:
+
+```text
+perceive the Chamber
+-> explore its surroundings
+-> discover and read traces
+-> infer the local vocabulary
+-> request layered guidance when desired
+-> act
+-> observe how the Chamber changes
+```
+
+Atmospheric Chamber text presents the space, its mood, its perceptible traces,
+and its changes. It should not routinely explain the complete mechanic in advance.
+
+Mechanical orientation is revealed through the Chamber's discoverable local
+command language, its traces, optional help, and, where appropriate, the
+Chamber's voice.
+
+The shared support levels are:
+
+- `help` explains the current local vocabulary and available action types;
+- `trace` offers gentle, state-aware orientation toward a useful next step;
+- `walkthrough` reveals the complete remaining path after a spoiler warning.
+
+These layers are not auxiliary documentation or optional polish. They are part of
+the core gameplay of the current Nexus 01 module line.
+
+A Chamber may guide, compose, unlock, connect, transform, or reveal something
+entirely different from another Chamber. What makes it part of this module line is
+the way it allows its world and its rules to be discovered.
+
+Working formula:
+
+> The Chambers differ in what they do.
+> They belong to the Nexus 01 module line through the way they allow themselves
+> to be discovered.
+
 ## Current resonance decision
 
 The complete visible production resonance result of Nexus 01 is a compact

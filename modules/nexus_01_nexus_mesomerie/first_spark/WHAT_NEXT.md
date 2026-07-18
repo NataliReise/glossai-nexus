@@ -80,7 +80,7 @@ It can show that a First Spark was seen or completed without revealing private c
 In the terminal, after completing First Spark, type:
 
 ```text
-resonance-node
+/resonance-node
 ```
 
 First Spark will show a draft that you can copy manually.
@@ -107,7 +107,7 @@ Sharing a resonance node is optional.
 
 If you want to share one:
 
-1. Type `resonance-node` in First Spark after completion.
+1. Use `/resonance-node` in First Spark after completion.
 2. Copy the draft from the terminal.
 3. Edit only the public alias and public note.
 4. Open the project discussions.

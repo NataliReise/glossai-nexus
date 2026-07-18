@@ -55,6 +55,19 @@ Nexus 01 should feel like:
 
 It should be playable at the surface and readable in the depth.
 
+## Shared play grammar
+
+The Chambers of Nexus 01 may perform very different functions, but they share
+an exploration-based retro-terminal grammar.
+
+Players perceive a space, inspect traces, discover its local vocabulary, request
+layered guidance when needed, act, and observe how the Chamber responds.
+
+`help`, `trace`, and spoiler-marked `walkthrough` support this exploration.
+They are part of the gameplay, not merely documentation.
+
+See: [Current play grammar](CURRENT_DIRECTION.md#current-play-grammar)
+
 ## Current project layers
 
 ### 1. First Spark — stable small seed
@@ -210,6 +223,14 @@ first-spark                                      -> COMPOSE
 return-resonance + valid selected Token context -> ANSWER
 return-resonance + missing/invalid context      -> BLOCKED_ANSWER_RECOVERY
 ```
+
+After a successful corrected Resonance cycle, returning through `/resonance`
+during the same Nexus run opens a quiet post-run Chamber instead of starting
+productive work again.
+In COMPOSE, `/compose` explicitly begins another independent invitation;
+`/quit` returns to the Atrium. In ANSWER, another cycle requires leaving Nexus
+01 and deliberately activating or opening it with another Token context.
+`/results` is not part of the current post-run grammar.
 
 In V1.1, First Spark completion and the post-completion Resonance reveal are
 session-local Atrium progress. Restarting does not claim that this Chamber

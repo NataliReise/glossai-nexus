@@ -21,6 +21,27 @@ A Nexus may include:
 - developer notes,
 - optional result files.
 
+## Nexus 01 variation
+
+Nexus 01 develops these general principles as a line of local retro-terminal escape
+modules with a shared exploration grammar.
+
+Its Chambers may have very different functions, but players ordinarily encounter
+them through perception, local commands, discoverable traces, and layered
+guidance through `help`, `trace`, and spoiler-marked `walkthrough`.
+
+This is a defining grammar of the current Nexus 01 module line, not a mandatory
+interface for every possible future Nexus module.
+
+See:
+[Nexus 01 current play grammar](../modules/nexus_01_nexus_mesomerie/CURRENT_DIRECTION.md#current-play-grammar)
+
+In the current Nexus 01 Resonance Chamber, completing one productive cycle does
+not consume the Chamber or automatically begin another. A later same-process
+`/resonance` visit opens its post-run command surface. COMPOSE may begin another
+independent invitation through `/compose`; `/quit` returns to the Atrium.
+Another ANSWER requires another deliberately selected Token context.
+
 ## Recommended first path
 
 Unless a module says otherwise, the recommended first path is:
