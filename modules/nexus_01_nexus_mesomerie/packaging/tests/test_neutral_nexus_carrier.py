@@ -110,6 +110,45 @@ class NeutralNexusCarrierTests(unittest.TestCase):
         launcher = (result.carrier_path / "START_HERE.sh").read_text(encoding="utf-8")
         self.assertNotIn("--legacy-preactivated", launcher)
 
+    def test_known_source_runtime_is_byte_identical_and_imports_in_isolation(self) -> None:
+        relative = Path("atrium/known_source.py")
+        self.assertIn(relative, NEUTRAL_RUNTIME_FILES)
+        self.assertEqual(sum(path == relative for path in NEUTRAL_RUNTIME_FILES), 1)
+
+        result = self.build()
+        source = NEXUS_ROOT / relative
+        carried = result.carrier_path / relative
+        self.assertTrue(carried.is_file())
+        self.assertEqual(carried.read_bytes(), source.read_bytes())
+
+        environment = os.environ.copy()
+        environment.pop("PYTHONPATH", None)
+        environment["PYTHONDONTWRITEBYTECODE"] = "1"
+        imported = subprocess.run(
+            [
+                sys.executable,
+                "-I",
+                "-B",
+                "-c",
+                (
+                    "import pathlib, sys; "
+                    "sys.path.insert(0, '.'); "
+                    "import atrium.known_source as module; "
+                    "from atrium.known_source import ("
+                    "KnownSourceReadResult, KnownSourceReadStatus, "
+                    "read_known_source_bytes); "
+                    "expected = (pathlib.Path.cwd() / 'atrium/known_source.py').resolve(); "
+                    "actual = pathlib.Path(module.__file__).resolve(); "
+                    "raise SystemExit(0 if actual == expected else 3)"
+                ),
+            ],
+            cwd=result.carrier_path,
+            env=environment,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(imported.returncode, 0, imported.stderr or imported.stdout)
+
     def test_carrier_with_token_preserves_bytes_without_activation(self) -> None:
         source_bytes = self.token.read_bytes()
         result = self.build(with_token=True)
