@@ -14,13 +14,14 @@ WHAT_NEXT_GUIDE_URL = (
     "https://github.com/NataliReise/glossai-nexus/blob/main/"
     "modules/nexus_01_nexus_mesomerie/first_spark/WHAT_NEXT.md"
 )
-SECTION_DIVIDER = "︵‿︵‿୨ ☾𓋹☽ ୧‿︵‿︵"
+PERSONAL_DIVIDER = "︵‿︵‿୨ ☾𓋹☽ ୧‿︵‿︵"
+SOFT_SECTION_DIVIDER = "· · ────── ꒰ ✦ ꒱ ────── · ·"
+TECHNICAL_SECTION_DIVIDER = "┈┈┈✧┈┈┈◈┈┈┈✧┈┈┈"
 
 
 ACTIVATION_MESSAGE = f"""[activation message]
 
 {PRIVATE_MESSAGE}"""
-
 
 AFTER_PLAY_MESSAGE = f"""[after-play]
 
@@ -29,9 +30,15 @@ The First Spark is complete.
 You may keep this as a finished gift.
 Nothing else is required.
 
+
+{SOFT_SECTION_DIVIDER}
+
 If you want, you may let the spark travel further.
 Give a clean public copy of First Spark or the Git link to someone you choose.
 Add a private activation package only through a private channel.
+
+
+{TECHNICAL_SECTION_DIVIDER}
 
 Public project:
   {PUBLIC_REPOSITORY_URL}
@@ -39,7 +46,11 @@ Public project:
 Short guide:
   {WHAT_NEXT_GUIDE_URL}
 
+
 Never post private activation data, private gift messages, or return artifacts publicly.
+
+
+{SOFT_SECTION_DIVIDER}
 
 Later, you may also share a public-safe resonance node to show that a spark was seen.
 A resonance node must not include private messages, activation files, or return artifacts.
@@ -86,22 +97,22 @@ HELP_TEXT = """Available commands:
 
 ENDING_TEXT = f"""The private message opens.
 
-{SECTION_DIVIDER}
+{PERSONAL_DIVIDER}
 
 {ACTIVATION_MESSAGE.strip()}
 
-{SECTION_DIVIDER}
+{PERSONAL_DIVIDER}
 
 {AFTER_PLAY_MESSAGE.strip()}"""
 
 
 ALREADY_OPEN_TEXT = f"""The private message is already open.
 
-{SECTION_DIVIDER}
+{PERSONAL_DIVIDER}
 
 {ACTIVATION_MESSAGE.strip()}
 
-{SECTION_DIVIDER}
+{PERSONAL_DIVIDER}
 
 {AFTER_PLAY_MESSAGE.strip()}"""
 
