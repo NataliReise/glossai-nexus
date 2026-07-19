@@ -2,285 +2,203 @@
 
 ## Document role
 
-This is the concise living status document for the Nexus 01 gift sprint. It
-records the current technical checkpoint, accepted behavior, remaining release
-work, and immediate next steps. It is not a substitute for the canonical
-contracts:
+This is the concise living status document for the Nexus 01 gift sprint. It records the current branch position, accepted evidence, remaining release work, and immediate next steps.
 
+Current planning sources:
+
+- `NEXUS_01_GIFT_SPRINT_PLAN_V04.md`
+- `NEXUS_01_COLLABORATION_WORKFLOW_V01.md`
 - `NEXUS_01_CHAMBER_STATES_AND_RESULTS_V03.md`
-- `NEXUS_01_GIFT_SPRINT_PLAN_V03.md`
 
-When this document conflicts with a current versioned planning document, the
-current versioned document takes precedence.
+When this document conflicts with a current versioned planning or technical contract, the versioned current document takes precedence.
 
 ## Current sprint position
 
 - Branch: `gift/nexus-01-chamber-archive`
 - Technical baseline checkpoint: `59c6595`
-- Commit: `feat(nexus-01): read stable local resonance results`
-- Technical baseline status: committed and pushed
+- Planning and first editorial checkpoint before this synchronization: `a71db33`
 - Upstream: `origin/gift/nexus-01-chamber-archive`
-- Local and upstream were synchronized at the last confirmed inventory.
-- Last confirmed relation to `origin/main`: 17 commits ahead, 0 behind
+- Local and upstream were confirmed synchronized at `a71db33` before connector planning writes began.
 - Major technical slices: complete through Stable-result Revisit
-- Last confirmed canonical suite: 43 test files, 408 tests, 0 failures,
-  0 errors, 0 skipped
-- Current phase: planning-document synchronization before Slice 6A and
-  Slice 7A
+- Last confirmed canonical full suite: 43 test files, 408 tests, 0 failures, 0 errors, 0 skipped at technical baseline `59c6595`
+- Current phase: planning synchronization and transition to a document-driven, multi-stage gift-closeout workflow
 
-The checkpoint is technically implemented and automatically verified. Earlier
-manual slice-level acceptance remains valid where explicitly recorded. Final
-language-wide and full release-play acceptance has not yet occurred.
+The full-suite result belongs to the older technical baseline and must not be presented as verification of later editorial or planning commits.
 
-## Implemented technical checkpoint
+## Working-mode transition
 
-All entries in this section are implemented and technically accepted at
-checkpoint `59c6595`. Automatic verification is complete; final language-wide
-and full release-play acceptance remains pending.
+Codex supported the preceding implementation phase through bounded technical inventories, implementation slices, and focused tests.
 
-### Resonance entry and local capabilities
-
-- **4B.0a — Neutral Resonance Entry:** corrected COMPOSE and ANSWER first enter
-  a quiet `resonance>` Surface. Productive work starts only through explicit
-  `/compose` or `/answer`.
-- **4B.0b — Description, Help and Capabilities:** Pre- and Post-run share a
-  small Resonance-local typed capability source used by both help and dispatch.
-  `/look` renders room and state without a command list.
-- **4B.0c — BLOCKED Resonance Surface:** BLOCKED exposes exactly:
-
-  ```text
-  /look
-  /help
-  /quit
-  ```
-
-  It performs no productive action, result reading, Token search, selection,
-  repair, or mutation.
-
-### Atrium exploration
-
-- **4C — Atrium Exploration Surface:** room/state description and help are
-  separate. `/look` shows the Atrium and perceptible paths. `/help` shows only
-  currently available navigation actions. Help and dispatcher share one small
-  Atrium-local capability source.
-- The short `/help` orientation appears once per terminal process.
-- First Spark and Legacy retain their existing scoped behavior.
-
-### Known-source handoff and byte boundary
-
-- **4B.1 — Explicit Known-source Handoff:**
-
-  ```text
-  --known-resonance-source ABSOLUTE_PATH
-  -> run_corrected_nexus(...)
-  -> ClassifiedResonanceController
-  ```
-
-  The lexical absolute path is explicit, process-local, not resolved, not
-  searched, not persisted, and not serialized into Activation or the carrier.
-- **4B.2 — Safe Known-source Boundary:** `read_known_source_bytes()` performs
-  bounded raw-byte reading through a read-only descriptor with `O_NOFOLLOW`,
-  validates the opened descriptor as a regular file, and returns immutable
-  typed statuses without path or OS-error leakage.
-- Accepted limitation: `O_NOFOLLOW` protects the final path segment;
-  parent-directory symlinks are not fully excluded by this narrow boundary.
-
-### Same-process and Stable-source results
-
-- **4A — Same-process Results:** `CompletedComposeResult` and
-  `CompletedAnswerResult` retain the latest successful current-process result
-  for their existing allowlisted `/results` view.
-- **5B — Stable-result Revisit:** `read_stable_resonance_result()` reads one
-  explicit stable Markdown path only on an eligible explicit `/results`.
-- The Stable-result reader requires strict UTF-8 and the complete canonical
-  Markdown format. It validates the technical JSON trace but exposes only five
-  compact-Nachhall lines through `StableResonanceView`.
-- Failure statuses are `MISSING`, `SYMLINK`, `NOT_REGULAR`, `UNAVAILABLE`,
-  `TOO_LARGE`, `INVALID_UTF8`, and `INVALID_FORMAT`. Display remains calm and
-  limited to the exact known path and local status.
-- Reading is lazy: not at construction, Chamber entry, `/look`, or `/help`.
-- There is no cache. Every explicit Stable-source `/results` rereads the exact
-  known path.
-- Same-process result precedence is authoritative: when
-  `_last_completed_result` exists, the Stable-result reader is not called and
-  the known source path is not displayed.
-- Same-process result types and `StableResonanceView` remain separate models.
-
-### Existing deliberate Return Opening and Slice 5A hardening
-
-- The deliberate manual Return Opening path existed before Slice 5A and
-  remains preserved.
-- The person places an Artifact deliberately in the known private Workspace
-  `incoming/` directory and starts `OPEN_RETURN.sh` explicitly.
-- Candidate inspection is limited to that known `incoming/*.json` boundary.
-  Zero candidates fail; exactly one may be used; multiple candidates are not
-  selected automatically.
-- Opening validates the Artifact, structurally matches the Return Slot,
-  creates the stable local result once without overwrite, and may update Slot
-  state under the existing recovery contract.
-- **5A — Duplicate Return Slot Identity Hardening:** all canonical Slot
-  identities are checked globally after parsing and before any generator call,
-  writer, directory creation, temporary file, result write, or Slot-status
-  update. A duplicate causes total fail-closed abort with zero productive
-  mutation.
-- Slice 5A hardened the existing Opening; it did not introduce the complete
-  Opening mechanism.
-
-### Neutral-carrier packaging
-
-- **5B.0 — Neutral Carrier Known-source Packaging Bridge:** the existing safe
-  known-source boundary was added explicitly to the neutral runtime package.
-- `atrium/known_source.py` and `atrium/stable_result.py` are explicitly present
-  in the static neutral-runtime allowlist.
-- Both are copied byte-identically and are isolated-import capable from the
-  carrier.
-- No scanner, registry, or dynamic dependency discovery was introduced.
-
-## Opening and `/results` separation
-
-Opening:
-
-- validates a deliberately returned Artifact;
-- matches its Return Slot;
-- creates or reuses one stable local result;
-- may update Slot state under the existing contract.
-
-`/results`:
-
-- reads only an already existing allowed result source;
-- never invokes Opening;
-- never reads a Return Artifact as a prerequisite for Revisit;
-- never validates or modifies a Return Slot;
-- never starts a generator;
-- never writes, regenerates, repairs, or overwrites.
-
-## Verification status
-
-### Current canonical baseline
-
-At checkpoint `59c6595`:
+The remaining work is primarily editorial, experiential, documentary, and release-oriented. The gift sprint therefore now uses:
 
 ```text
-43 test files
-408 tests
-0 failures
-0 errors
-0 skipped
+planning
+-> fresh-context review
+-> roadmap
+-> work cards
+-> focused implementation
+-> diff and test review
+-> manual verification
 ```
 
-The checkpoint and neutral-carrier packaging are committed and pushed.
+Codex is not planned as a regular implementation tool in this phase. A later targeted use remains possible after an explicit decision.
 
-### Historical manual acceptance
+Current collaboration mode:
 
-Earlier accepted manual records remain applicable to the slices they covered,
-including corrected COMPOSE exploration, walkthrough and cancellation;
-strict Atrium and First Spark slash grammar; Slice 3 post-run behavior; and
-Slice 4A/4A.1 same-process results and neutral Return Artifact naming.
+- Natali decides goals, scope, player experience, acceptance, and release actions.
+- Synthea prepares plans, inventories, roadmaps, work cards, and explicitly authorized small connector changes.
+- Fresh contexts provide independent review without automatic decision authority.
+- Local and connector work occur sequentially, not as parallel divergent histories.
 
-These historical records do not claim final Slice-7 acceptance of every newer
-entry, BLOCKED, Known-source, Opening-hardening, Stable-result, and carrier
-combination.
+## Public identity boundary
 
-## Release boundaries
+Public project identity:
 
-The current checkpoint preserves:
+```text
+Natali / Natali Reise
+info@glossai.de
+```
 
-- no Workspace, Downloads, Token, Artifact, or old-result discovery;
-- no filename guessing or general result registry;
-- no automatic candidate selection under ambiguity;
-- no automatic transfer, publication, regeneration, repair, or overwrite;
+The connector identity `eulisiller` is acceptable for connector commits. Private professional identities and private first-name/family-name combinations must not appear in public repository, Wiki, issue, or release material.
+
+## Accepted technical baseline
+
+The technical baseline through Stable-result Revisit preserves:
+
+- neutral Resonance entry before productive action;
+- explicit `/compose` or `/answer` start;
+- strict nonproductive BLOCKED behavior;
+- separate Atrium description and help capabilities;
+- explicit known-source handoff without discovery;
+- bounded no-follow read-only known-source access;
 - separate same-process and Stable-source result models;
-- Same-process precedence;
-- lazy uncached Stable-source rereading;
-- exact nonproductive BLOCKED capabilities;
-- strict separation of Opening and `/results`;
-- private Workspace paths and stable results outside the travelling carrier.
+- same-process precedence;
+- deliberate Return Opening separate from `/results`;
+- duplicate Return Slot identity fail-closed hardening;
+- static neutral-carrier allowlisting of known-source and stable-result modules;
+- no automatic transfer, publication, repair, regeneration, overwrite, or candidate selection under ambiguity.
 
-## Remaining release work
+The canonical technical contract remains `NEXUS_01_CHAMBER_STATES_AND_RESULTS_V03.md` unless a later behavior-changing contract explicitly supersedes it.
 
-The accepted future release sequence is:
+## Manual gift-preview evidence
+
+A fresh neutral carrier was unpacked and used from an outside-recipient perspective.
+
+Confirmed happy-path evidence:
 
 ```text
-Slice 6
--> Slice 7
--> Slice 7.5
--> Slice 8
+activation
+-> First Spark
+-> unlock
+-> Resonance COMPOSE
+-> local invitation and private Return Workspace
+-> /results
+-> /quit
 ```
 
-None of these slices is complete at the current checkpoint.
+The run completed without a technical blocker. It produced a travelling invitation and private Return Workspace locally.
 
-### Slice 6A — read-only language-surface inventory
+This evidence does not yet claim complete release acceptance of ANSWER, Return Opening, Stable-result Revisit, BLOCKED, all cancellation paths, all invalid Known Source states, or all packaging combinations.
 
-Inventory all player-facing text without source edits. Classify findings as
-`MUSS`, `SOLLTE`, or `SPÄTER`, and as language error,
-text/state mismatch, technical error, or documentation drift.
+## Recorded player-facing findings
 
-### Slice 7A — manual baseline play verification
+The manual run identified a small set of editorial and presentation findings, including:
 
-In controlled overlap with Slice 6A, run a baseline play verification against
-a fresh carrier/gift copy frozen at checkpoint `59c6595`. No source edits occur
-during that baseline.
+- First Spark `/unlock` prominence and whitespace;
+- some technical Atrium status wording;
+- duplicate or internal-sounding Resonance PRE_RUN language;
+- dense COMPOSE introduction and technical review phrasing;
+- repetitive completion language;
+- diagnostic-sounding `/results` labels;
+- need for a restrained visual divider system.
 
-The later final play arc must cover:
+A first First-Spark ending layout package was implemented:
+
+- commit `60d0d70`: refined personal, soft-section, and technical dividers;
+- commit `a71db33`: focused divider test coverage.
+
+The direct First Spark flow test passed after those changes. The full suite was not rerun at that later checkpoint.
+
+## Current release objective
+
+The recipient should be able to start the local creative gift without prior project knowledge, experience First Spark, understand the Atrium and Resonance Chamber, create a resonance deliberately, and understand its voluntary human-mediated continuation.
+
+The release must remain local, explicit, privacy-preserving, understandable, atmospheric, and technically honest.
+
+## Remaining gift-closeout phases
 
 ```text
-COMPOSE
+1. planning synchronization
+2. fresh-context plan review
+3. recipient-perspective inventory
+4. editorial release roadmap
+5. small reviewed work cards
+6. documentation inventory and consolidation
+7. repository-facing cleanup
+8. Wiki synchronization
+9. documentation and outside-perspective review
+10. full gift path and safety verification
+11. release audit and freeze
+```
+
+## Documentation and repository closeout
+
+The gift sprint now explicitly includes:
+
+- updating and completing release-facing documentation and instructions;
+- defining a clear hierarchy among README, Quick Start, Playing, Gift, Return, concept, planning, and status documents;
+- marking current, historical, working-note, duplicate/drifting, and later material clearly;
+- repairing dead or misleading links;
+- reducing duplicate entry guidance;
+- reviewing `.gitignore` and release-facing placeholders;
+- bringing the Wiki into alignment after repository documentation is stable.
+
+The Wiki summarizes and links. Exact commands, formats, contracts, and version-sensitive instructions remain authoritative in the repository.
+
+Repository cleanup concerns the visible current state. History rewriting, broad structural moves, Legacy removal, and large reorganizations are not routine gift-closeout work and require separate reviewed cards.
+
+## Release acceptance still pending
+
+Final acceptance requires a fresh complete path:
+
+```text
+fresh gift package
+-> activation
+-> First Spark
+-> COMPOSE
+-> deliberate transfer
 -> ANSWER
--> RETURN OPENING
--> RESULT REVISIT
+-> deliberate Return Opening
+-> Stable-result Revisit
 ```
 
-It also covers second COMPOSE, BLOCKED, cancellation, repeated unchanged
-Opening, Same-process precedence, missing and invalid Known Source, and the
-no-discovery/no-regeneration/no-overwrite boundaries.
+It must also cover:
 
-### Slice 7.5 — read-only whole-project release audit
+- second independent COMPOSE;
+- BLOCKED;
+- relevant cancellation boundaries;
+- missing and invalid Known Source;
+- multiple Return candidates without automatic selection;
+- exactly one successful Opening;
+- repeated unchanged Opening;
+- same-process precedence;
+- no discovery, regeneration, repair, transfer, or overwrite;
+- actual usability of release-facing instructions;
+- final package isolation from recipient perspective.
 
-Slice 7.5 begins only after accepted Slice 6 and Slice 7 work and a clean,
-committed, pushed checkpoint. Its first task is a completely read-only audit of
-the project concept, architecture and responsibility boundaries, repository
-orientation, documentation drift, and small evidenced cleanup candidates.
+No final gift-release acceptance is claimed yet.
 
-Findings are classified as `RELEASE-BLOCKER`,
-`KLEINER SICHERER ABSCHLUSSFIX`, or
-`NACHFOLGEARBEIT NACH DEM RELEASE`. The audit also proposes, without writing,
-a GitHub short description, README introduction, and concise conceptual project
-description. No suggestion authorizes a change automatically. Selected work
-receives separate narrow tasks; authorized mini-documentation synchronization
-occurs in this slice. A Wiki defaults to post-release work. Slice 8 requires a
-new clean, committed, pushed checkpoint after the Slice-7.5 decisions.
-A confirmed unresolved `RELEASE-BLOCKER` blocks entry into Slice 8 and cannot
-be declined without evidence-based reclassification.
+## Immediate next steps
 
-### Slice 8 — Release Freeze
-
-Slice 8 verifies and freezes the accepted result. Planned orientation and
-mini-documentation synchronization belong to Slice 7.5, not Slice 8. The freeze
-permits only demonstrated release-error corrections, final tests, package
-creation and isolated package verification before separate PR, merge, and tag
-decisions.
-
-## Immediate next step
-
-1. Finish and review this planning-document synchronization.
-2. After explicit authorization, establish a clean committed and pushed
-   planning checkpoint.
-3. Run Slice 6A read-only language-surface inventory.
-4. In controlled overlap, run Slice 7A manual baseline play verification
-   against frozen checkpoint `59c6595`.
-5. Combine both finding sets before authorizing any language edits.
-
-Slice 7.5 is the later gate after completed and accepted Slice 6 and Slice 7;
-its audit does not begin now.
-
-No language edit, documentation expansion outside the authorized planning
-scope, PR, merge, or tag is authorized by this status update.
+1. Finish this planning-document synchronization.
+2. Pull the connector commits locally with a fast-forward after confirming the remote head.
+3. Review `NEXUS_01_GIFT_SPRINT_PLAN_V04.md` in a fresh context.
+4. Decide review findings jointly.
+5. Build the first bounded roadmap and work cards from the existing manual findings.
+6. Begin the documentation inventory before broad documentation editing.
 
 ## Maintenance rule
 
-Update this document after an accepted slice, a meaningful verified checkpoint,
-or an approved release decision. Keep it concise and status-oriented.
+Update this document after an accepted work package, meaningful verified checkpoint, planning-version change, or approved release decision.
 
-Do not place private names, local usernames, hostnames, absolute home-directory
-paths, private addresses, private Artifact or Token content, or other local
-machine identifiers in this tracked document.
+Keep it concise and evidence-based. Do not include private names, local usernames, hostnames, absolute home paths, addresses, private Token or Artifact content, or other local machine identifiers.
