@@ -41,6 +41,7 @@ planning
 -> focused implementation
 -> diff and test review
 -> manual verification
+-> acceptance or revision
 ```
 
 Reviews apply to completed planning levels or ready card packages; they do not require a separate new chat for every tiny wording correction.
