@@ -3,7 +3,8 @@
 ## Document status
 
 - Version: 0.2
-- Status: Current
+- Status: Superseded
+- Superseded by: Version 0.3
 - Date: 2026-07-18
 - Supersedes: Version 0.1
 - Purpose: Canonical Chamber-state and result concept after the repeatable Resonance-cycle clarification and the Slice 1 technical inventory.

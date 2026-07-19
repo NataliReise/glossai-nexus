@@ -3,7 +3,8 @@
 ## Document status
 
 - Version: 0.2
-- Status: Current
+- Status: Superseded
+- Superseded by: Version 0.3
 - Date: 2026-07-18
 - Supersedes: Version 0.1
 - Purpose: Current gift-release sprint plan after the Slice 1 technical inventory and the repeatable Resonance-cycle clarification.
