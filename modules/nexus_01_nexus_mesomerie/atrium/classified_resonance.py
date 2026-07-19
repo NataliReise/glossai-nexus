@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
+import secrets
 from typing import TYPE_CHECKING
 
 from chambers.resonance import (
@@ -47,6 +48,27 @@ InputReader = Callable[[str], str]
 ArtifactWriter = Callable[[ResonanceReturnArtifact, str | Path], Path]
 InvitationPreparer = Callable[..., "InvitationPreparationResult"]
 RouteFactory = Callable[[], "RouteIdentity"]
+
+
+@dataclass(frozen=True)
+class CompletedComposeResult:
+    """Latest successfully published corrected COMPOSE result."""
+
+    token: ResonanceToken
+    invitation_path: Path
+    private_workspace_path: Path
+
+
+@dataclass(frozen=True)
+class CompletedAnswerResult:
+    """Latest successfully written corrected ANSWER result."""
+
+    artifact: ResonanceReturnArtifact
+    artifact_path: Path
+    carried_public_safe_label: str
+
+
+CompletedCorrectedResult = CompletedComposeResult | CompletedAnswerResult
 
 
 DOOR_LABELS = {
@@ -104,10 +126,14 @@ class ClassifiedResonanceController:
     artifact_writer: ArtifactWriter = write_resonance_return_artifact
     invitation_preparer: InvitationPreparer | None = None
     route_factory: RouteFactory | None = None
-    _completed_cycle: bool = field(default=False, init=False, repr=False)
+    _last_completed_result: CompletedCorrectedResult | None = field(
+        default=None,
+        init=False,
+        repr=False,
+    )
 
     def __call__(self) -> ChamberRunResult:
-        if self._completed_cycle and self.mode in {
+        if self._last_completed_result is not None and self.mode in {
             ResonanceMode.COMPOSE,
             ResonanceMode.ANSWER,
         }:
@@ -145,8 +171,6 @@ class ClassifiedResonanceController:
             self.output_writer("Compose and legacy Resonance flows remain unavailable.")
             return ChamberRunResult(completed=False)
 
-        if result.completed:
-            self._completed_cycle = True
         return result
 
     def _run_post_run(self) -> ChamberRunResult:
@@ -171,6 +195,9 @@ class ClassifiedResonanceController:
                 continue
             if command == "/trace":
                 self._display_post_run_trace()
+                continue
+            if command == "/results" and self._last_completed_result is not None:
+                self._display_results()
                 continue
             if command == "/quit":
                 self.output_writer(
@@ -198,6 +225,9 @@ class ClassifiedResonanceController:
             self.output_writer(
                 "Use /look, /trace, or /help to remain with the Chamber."
             )
+            self.output_writer(
+                "Use /results to view this session's most recent completed cycle."
+            )
             self.output_writer("Use /quit to return to the Atrium.")
             return
 
@@ -208,6 +238,9 @@ class ClassifiedResonanceController:
         self.output_writer("")
         self.output_writer(
             "Use /look, /trace, or /help to remain with the Chamber."
+        )
+        self.output_writer(
+            "Use /results to view this session's most recent completed answer."
         )
         self.output_writer("Use /quit to return to the Atrium.")
         self.output_writer("")
@@ -221,6 +254,14 @@ class ClassifiedResonanceController:
         self.output_writer("  /look — perceive the completed Chamber state")
         self.output_writer("  /help — show the commands available here")
         self.output_writer("  /trace — receive a gentle next trace")
+        if self._last_completed_result is not None:
+            result_label = (
+                "cycle" if self.mode is ResonanceMode.COMPOSE else "answer"
+            )
+            self.output_writer(
+                f"  /results — view this session's most recent completed "
+                f"{result_label}"
+            )
         if self.mode is ResonanceMode.COMPOSE:
             self.output_writer(
                 "  /compose — begin another independent originating cycle"
@@ -238,6 +279,120 @@ class ClassifiedResonanceController:
             "  This answer remains with its selected Token. Another answer begins "
             "only from another deliberately selected Token context."
         )
+
+    def _display_results(self) -> None:
+        result = self._last_completed_result
+        if result is None:
+            return
+
+        catalog = build_v0_1_catalog()
+        if isinstance(result, CompletedComposeResult):
+            self._display_compose_results(result, catalog)
+            return
+        self._display_answer_results(result, catalog)
+
+    def _display_compose_results(self, result, catalog) -> None:
+        token = result.token
+        self.output_writer(
+            "Resonance results — most recent originating cycle in this session"
+        )
+        self.output_writer(
+            "  Earlier local outputs remain separate and unchanged."
+        )
+        self.output_writer("")
+        self.output_writer("[private local]")
+        self.output_writer(
+            f"    Image: {_choice_label(catalog, 'images', token.image_id)}"
+        )
+        self.output_writer(
+            f"    Scent: {_choice_label(catalog, 'scents', token.scent_id)}"
+        )
+        self.output_writer(
+            "    Movement: "
+            + _choice_label(catalog, "movements", token.movement_id)
+        )
+        self.output_writer(f"    Wish word: {token.wish_word}")
+        self.output_writer("")
+        self.output_writer("[public-safe]")
+        self.output_writer(
+            "    No public-safe summary was created for this cycle."
+        )
+        self.output_writer("")
+        self.output_writer("[local path]")
+        invitation_available = result.invitation_path.is_dir()
+        workspace_available = result.private_workspace_path.is_dir()
+        self.output_writer(
+            "    Travelling invitation: "
+            f"{result.invitation_path} — {_path_status(invitation_available)}"
+        )
+        self.output_writer(
+            "    Private Return Workspace: "
+            f"{result.private_workspace_path} — {_path_status(workspace_available)}"
+        )
+        if not invitation_available or not workspace_available:
+            self.output_writer("  No filesystem search was performed.")
+
+    def _display_answer_results(self, result, catalog) -> None:
+        artifact = result.artifact
+        self.output_writer(
+            "Resonance results — most recent answer cycle in this session"
+        )
+        self.output_writer(
+            "  Earlier local outputs remain separate and unchanged."
+        )
+        self.output_writer("")
+        self.output_writer("[private local]")
+        self.output_writer(
+            "    Carried image: "
+            + _choice_label(catalog, "images", artifact.image_id)
+        )
+        self.output_writer(
+            "    Carried scent: "
+            + _choice_label(catalog, "scents", artifact.scent_id)
+        )
+        self.output_writer(
+            "    Carried movement: "
+            + _choice_label(catalog, "movements", artifact.movement_id)
+        )
+        self.output_writer(f"    Wish word: {artifact.wish_word}")
+        self.output_writer(
+            "    Image response: "
+            + _choice_label(
+                catalog, "image_responses", artifact.image_response_id
+            )
+        )
+        self.output_writer(
+            "    Scent response: "
+            + _choice_label(
+                catalog, "scent_responses", artifact.scent_response_id
+            )
+        )
+        self.output_writer(
+            "    Movement response: "
+            + _choice_label(
+                catalog, "movement_responses", artifact.movement_response_id
+            )
+        )
+        self.output_writer(f"    Return word: {artifact.return_word}")
+        self.output_writer("")
+        self.output_writer("[public-safe]")
+        if result.carried_public_safe_label:
+            self.output_writer(
+                f"    Carried label: {result.carried_public_safe_label}"
+            )
+        else:
+            self.output_writer(
+                "    No public-safe summary was attached to the carried resonance."
+            )
+        self.output_writer("")
+        self.output_writer("[local path]")
+        artifact_available = result.artifact_path.is_file()
+        self.output_writer(
+            f"    Return Artifact: {result.artifact_path} — "
+            f"{_path_status(artifact_available)}"
+        )
+        if not artifact_available:
+            self.output_writer("  No filesystem search was performed.")
 
     def _run_compose(self) -> ChamberRunResult:
         from resonance_invitation_runtime import (
@@ -346,6 +501,12 @@ class ClassifiedResonanceController:
             )
             return ChamberRunResult(completed=False)
 
+        self._last_completed_result = CompletedComposeResult(
+            token=publication.token,
+            invitation_path=publication.invitation_path,
+            private_workspace_path=publication.private_workspace_path,
+        )
+
         self.output_writer("")
         self.output_writer("Local creation complete")
         self.output_writer(
@@ -453,21 +614,43 @@ class ClassifiedResonanceController:
             _display_answer_cancelled(self.output_writer)
             return ChamberRunResult(completed=False)
 
-        destination_text = self.input_reader(
-            "Local path for the Return Artifact (blank to cancel): "
+        parent_text = self.input_reader(
+            "Parent directory for the Return Artifact (blank to cancel): "
         ).strip()
-        if not destination_text or destination_text.casefold() == "/cancel":
+        if not parent_text or parent_text.casefold() == "/cancel":
             _display_answer_cancelled(self.output_writer)
+            return ChamberRunResult(completed=False)
+
+        parent = Path(parent_text).expanduser()
+        nexus_root = self.nexus_root.expanduser().resolve()
+        if not parent.is_dir():
+            _display_answer_creation_failure(
+                self.output_writer,
+                "The Return Artifact destination must be an existing directory.",
+            )
+            return ChamberRunResult(completed=False)
+        parent = parent.resolve()
+        if parent.is_relative_to(nexus_root):
+            _display_answer_creation_failure(
+                self.output_writer,
+                "The Return Artifact destination must remain outside the "
+                "travelling Nexus carrier.",
+            )
             return ChamberRunResult(completed=False)
 
         artifact = build_answer_resonance_return_artifact(token, contribution)
         try:
-            published = self.artifact_writer(
-                artifact, Path(destination_text).expanduser()
-            )
+            destination = _unused_return_artifact_path(parent)
+            published = self.artifact_writer(artifact, destination)
         except ResonanceArtifactStoreError as error:
             _display_answer_creation_failure(self.output_writer, str(error))
             return ChamberRunResult(completed=False)
+
+        self._last_completed_result = CompletedAnswerResult(
+            artifact=artifact,
+            artifact_path=published,
+            carried_public_safe_label=token.public_safe_label,
+        )
 
         self.output_writer("")
         self.output_writer("Local creation complete")
@@ -620,6 +803,26 @@ def _display_compose_summary(contribution, catalog, output_writer) -> None:
 def _choice_label(catalog, kind: str, choice_id: str) -> str:
     return next(
         option.label for option in getattr(catalog, kind) if option.id == choice_id
+    )
+
+
+def _path_status(available: bool) -> str:
+    if available:
+        return "available"
+    return "no longer available at the known location"
+
+
+_RETURN_ARTIFACT_NAME_ATTEMPTS = 8
+
+
+def _unused_return_artifact_path(parent: Path) -> Path:
+    for _attempt in range(_RETURN_ARTIFACT_NAME_ATTEMPTS):
+        opaque_id = secrets.token_hex(12)
+        candidate = parent / f"n01-return-artifact-{opaque_id}.json"
+        if not candidate.exists() and not candidate.is_symlink():
+            return candidate
+    raise ResonanceArtifactStoreError(
+        "Could not choose an unused Return Artifact filename. Nothing was written."
     )
 
 

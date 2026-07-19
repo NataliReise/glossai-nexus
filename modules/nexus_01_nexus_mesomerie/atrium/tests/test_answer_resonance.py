@@ -6,11 +6,18 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from atrium.classified_resonance import ClassifiedResonanceController
+from atrium.classified_resonance import (
+    ClassifiedResonanceController,
+    CompletedAnswerResult,
+)
 from atrium.resonance_mode import ResonanceMode
 from atrium.terminal import run_nexus_terminal
 from chambers.resonance import OriginatingResonanceContribution, build_resonance_token_v2
 from recipient_activation import activate_with_resonance_token, paths_for_nexus
+from return_resonance.artifact_store import (
+    ResonanceArtifactStoreError,
+    write_resonance_return_artifact,
+)
 
 
 RECIPIENT = {
@@ -78,11 +85,25 @@ class AnswerTerminalTests(unittest.TestCase):
         self.assertEqual(paths.selected_token.read_bytes(), self.before["token"])
 
     def test_confirmed_answer_displays_origin_and_publishes_exactly_one_artifact(self) -> None:
-        destination = self.root / "resonance-return.json"
-        result, prompts, transcript = self.run_answer(
-            ("5", "1", "4", "Rückkehr", "yes", str(destination))
-        )
+        destination_parent = self.root / "answers"
+        destination_parent.mkdir()
+        with patch(
+            "atrium.classified_resonance.secrets.token_hex",
+            return_value="0123456789abcdef01234567",
+        ):
+            result, prompts, transcript = self.run_answer(
+                ("5", "1", "4", "Rückkehr", "yes", str(destination_parent))
+            )
         self.assertTrue(result.completed)
+        artifacts = list(destination_parent.iterdir())
+        self.assertEqual(len(artifacts), 1)
+        destination = artifacts[0]
+        self.assertRegex(
+            destination.name,
+            r"^n01-return-artifact-[0-9a-f]{24}\.json$",
+        )
+        self.assertNotIn("Nähe".casefold(), destination.name.casefold())
+        self.assertNotIn("Rückkehr".casefold(), destination.name.casefold())
         self.assertTrue(destination.is_file())
         artifact = json.loads(destination.read_text(encoding="utf-8"))
         self.assertEqual(artifact["image_id"], "bridge-in-mist")
@@ -105,6 +126,10 @@ class AnswerTerminalTests(unittest.TestCase):
         self.assertIn("At yes/no prompts, you may also answer no", transcript)
         self.assertIn("blank input also cancels creation", transcript)
         self.assertIn("Full-cycle cancellation returns safely to the Atrium", transcript)
+        self.assertIn(
+            "Parent directory for the Return Artifact (blank to cancel): ",
+            prompts,
+        )
         self.assertNotIn("Previous confirmation forms", transcript)
         self.assertIn("No Return Artifact exists yet", transcript)
         self.assertIn("If you choose to return this Artifact", transcript)
@@ -189,26 +214,28 @@ class AnswerTerminalTests(unittest.TestCase):
 
     def test_answer_path_with_cancel_prefix_is_not_a_command(self) -> None:
         written: list[Path] = []
+        destination_parent = self.root / "cancelled"
+        destination_parent.mkdir()
 
         def capture_writer(_artifact, destination):
             path = Path(destination)
             written.append(path)
             return path
 
-        result, _, _ = self.run_answer(
-            (
-                "1",
-                "1",
-                "1",
-                "trust",
-                "yes",
-                "/cancelled/example.json",
-            ),
-            artifact_writer=capture_writer,
-        )
+        with patch(
+            "atrium.classified_resonance.secrets.token_hex",
+            return_value="111111111111111111111111",
+        ):
+            result, _, _ = self.run_answer(
+                ("1", "1", "1", "trust", "yes", str(destination_parent)),
+                artifact_writer=capture_writer,
+            )
 
         self.assertTrue(result.completed)
-        self.assertEqual(written, [Path("/cancelled/example.json")])
+        self.assertEqual(
+            written,
+            [destination_parent / "n01-return-artifact-111111111111111111111111.json"],
+        )
         self.assert_context_unchanged()
 
     def test_answer_exploration_is_nonwriting_and_reveals_only_current_step(self) -> None:
@@ -232,12 +259,14 @@ class AnswerTerminalTests(unittest.TestCase):
         self.assert_context_unchanged()
 
     def test_answer_help_preserves_prior_selection_and_completion(self) -> None:
-        destination = self.root / "guided-resonance-return.json"
+        destination_parent = self.root / "guided-results"
+        destination_parent.mkdir()
         result, _, transcript = self.run_answer(
-            ("5", "/help", "1", "4", "Rückkehr", "yes", str(destination))
+            ("5", "/help", "1", "4", "Rückkehr", "yes", str(destination_parent))
         )
 
         self.assertTrue(result.completed)
+        destination = next(destination_parent.iterdir())
         artifact = json.loads(destination.read_text(encoding="utf-8"))
         self.assertEqual(artifact["image_response_id"], "shared-silence")
         self.assertEqual(artifact["scent_response_id"], "possibility-of-encounter")
@@ -267,7 +296,8 @@ class AnswerTerminalTests(unittest.TestCase):
         self.assert_context_unchanged()
 
     def test_answer_walkthrough_guides_each_step_once_and_preserves_completion(self) -> None:
-        destination = self.root / "walkthrough-resonance-return.json"
+        destination_parent = self.root / "walkthrough-results"
+        destination_parent.mkdir()
         result, _, transcript = self.run_answer(
             (
                 "/walkthrough",
@@ -278,7 +308,7 @@ class AnswerTerminalTests(unittest.TestCase):
                 "4",
                 "Rückkehr",
                 "yes",
-                str(destination),
+                str(destination_parent),
             )
         )
 
@@ -291,6 +321,7 @@ class AnswerTerminalTests(unittest.TestCase):
             "return word without explaining",
         ):
             self.assertEqual(transcript.count(guidance), 1)
+        destination = next(destination_parent.iterdir())
         artifact = json.loads(destination.read_text(encoding="utf-8"))
         self.assertEqual(artifact["image_response_id"], "shared-silence")
         self.assertEqual(artifact["scent_response_id"], "possibility-of-encounter")
@@ -298,17 +329,180 @@ class AnswerTerminalTests(unittest.TestCase):
         self.assertEqual(artifact["return_word"], "Rückkehr")
         self.assert_context_unchanged()
 
-    def test_overwrite_is_refused_without_changing_existing_bytes(self) -> None:
-        destination = self.root / "existing.json"
-        destination.write_bytes(b"keep me")
-        result, _, transcript = self.run_answer(
-            ("1", "1", "1", "trust", "yes", str(destination))
+    def test_generated_name_collision_retries_without_changing_existing_bytes(self) -> None:
+        destination_parent = self.root / "collision-results"
+        destination_parent.mkdir()
+        collision = (
+            destination_parent
+            / "n01-return-artifact-aaaaaaaaaaaaaaaaaaaaaaaa.json"
         )
+        collision.write_bytes(b"keep me")
+        with patch(
+            "atrium.classified_resonance.secrets.token_hex",
+            side_effect=(
+                "aaaaaaaaaaaaaaaaaaaaaaaa",
+                "bbbbbbbbbbbbbbbbbbbbbbbb",
+            ),
+        ):
+            result, _, _ = self.run_answer(
+                ("1", "1", "1", "trust", "yes", str(destination_parent))
+            )
+        self.assertTrue(result.completed)
+        self.assertEqual(collision.read_bytes(), b"keep me")
+        generated = (
+            destination_parent
+            / "n01-return-artifact-bbbbbbbbbbbbbbbbbbbbbbbb.json"
+        )
+        self.assertTrue(generated.is_file())
+        self.assert_context_unchanged()
+
+    def test_two_independent_answers_create_distinct_artifacts_in_one_directory(self) -> None:
+        destination_parent = self.root / "multiple-results"
+        destination_parent.mkdir()
+        ids = (
+            "111111111111111111111111",
+            "222222222222222222222222",
+        )
+        with patch(
+            "atrium.classified_resonance.secrets.token_hex", side_effect=ids
+        ):
+            first, _, _ = self.run_answer(
+                ("1", "1", "1", "trust", "yes", str(destination_parent))
+            )
+            first_path = destination_parent / f"n01-return-artifact-{ids[0]}.json"
+            first_bytes = first_path.read_bytes()
+            second, _, _ = self.run_answer(
+                ("5", "1", "4", "return", "yes", str(destination_parent))
+            )
+
+        second_path = destination_parent / f"n01-return-artifact-{ids[1]}.json"
+        self.assertTrue(first.completed)
+        self.assertTrue(second.completed)
+        self.assertTrue(second_path.is_file())
+        self.assertNotEqual(first_path, second_path)
+        self.assertEqual(first_path.read_bytes(), first_bytes)
+        self.assertEqual(len(list(destination_parent.iterdir())), 2)
+        self.assert_context_unchanged()
+
+    def test_exhausted_name_collisions_fail_without_writing(self) -> None:
+        destination_parent = self.root / "exhausted-results"
+        destination_parent.mkdir()
+        ids = tuple(f"{index:024x}" for index in range(8))
+        original = {}
+        for opaque_id in ids:
+            path = destination_parent / f"n01-return-artifact-{opaque_id}.json"
+            path.write_bytes(f"keep-{opaque_id}".encode("ascii"))
+            original[path] = path.read_bytes()
+
+        def forbidden_writer(*_args, **_kwargs):
+            raise AssertionError("collision exhaustion invoked the artifact writer")
+
+        with patch(
+            "atrium.classified_resonance.secrets.token_hex", side_effect=ids
+        ):
+            result, _, transcript = self.run_answer(
+                ("1", "1", "1", "trust", "yes", str(destination_parent)),
+                artifact_writer=forbidden_writer,
+            )
+
         self.assertFalse(result.completed)
-        self.assertEqual(destination.read_bytes(), b"keep me")
-        self.assertIn("Refusing to overwrite", transcript)
-        self.assertIn("Nothing was written. Existing material was not replaced", transcript)
-        self.assertIn("answer route remains unfinished", transcript)
+        self.assertIn("Could not choose an unused Return Artifact filename", transcript)
+        self.assertIn("Nothing was written", transcript)
+        self.assertEqual(
+            {path: path.read_bytes() for path in destination_parent.iterdir()},
+            original,
+        )
+        self.assert_context_unchanged()
+
+    def test_invalid_answer_parent_destinations_fail_without_writing(self) -> None:
+        regular_file = self.root / "not-a-directory"
+        regular_file.write_bytes(b"keep me")
+        missing = self.root / "missing-parent"
+        inside_carrier = self.nexus / "private-answer-output"
+        inside_carrier.mkdir()
+
+        def forbidden_writer(*_args, **_kwargs):
+            raise AssertionError("invalid parent invoked the artifact writer")
+
+        for name, destination, expected in (
+            ("regular-file", regular_file, "must be an existing directory"),
+            ("missing", missing, "must be an existing directory"),
+            ("carrier", inside_carrier, "outside the travelling Nexus carrier"),
+        ):
+            with self.subTest(name=name):
+                values = iter(
+                    ("1", "1", "1", "trust", "yes", str(destination))
+                )
+                output: list[str] = []
+                controller = ClassifiedResonanceController(
+                    ResonanceMode.ANSWER,
+                    output_writer=output.append,
+                    input_reader=lambda _prompt: next(values),
+                    nexus_root=self.nexus,
+                    artifact_writer=forbidden_writer,
+                )
+                result = controller()
+                transcript = "\n".join(output)
+                self.assertFalse(result.completed)
+                self.assertIsNone(controller._last_completed_result)
+                self.assertIn(expected, transcript)
+                self.assertIn("Nothing was written", transcript)
+
+        self.assertEqual(regular_file.read_bytes(), b"keep me")
+        self.assertFalse(missing.exists())
+        self.assertEqual(list(inside_carrier.iterdir()), [])
+        self.assert_context_unchanged()
+
+    def test_failed_later_answer_write_preserves_retained_success(self) -> None:
+        destination_parent = self.root / "retained-answer"
+        destination_parent.mkdir()
+        values = iter(
+            (
+                "1",
+                "1",
+                "1",
+                "first",
+                "yes",
+                str(destination_parent),
+                "5",
+                "1",
+                "4",
+                "second",
+                "yes",
+                str(destination_parent),
+            )
+        )
+        writes = 0
+
+        def writer(artifact, destination):
+            nonlocal writes
+            writes += 1
+            if writes == 2:
+                raise ResonanceArtifactStoreError("simulated writer failure")
+            return write_resonance_return_artifact(artifact, destination)
+
+        controller = ClassifiedResonanceController(
+            ResonanceMode.ANSWER,
+            output_writer=lambda _message: None,
+            input_reader=lambda _prompt: next(values),
+            nexus_root=self.nexus,
+            artifact_writer=writer,
+        )
+        with patch(
+            "atrium.classified_resonance.secrets.token_hex",
+            side_effect=(
+                "333333333333333333333333",
+                "444444444444444444444444",
+            ),
+        ):
+            self.assertTrue(controller().completed)
+            retained = controller._last_completed_result
+            self.assertIsInstance(retained, CompletedAnswerResult)
+            self.assertFalse(controller._run_answer().completed)
+
+        self.assertIs(controller._last_completed_result, retained)
+        self.assertTrue(retained.artifact_path.is_file())
+        self.assertEqual(len(list(destination_parent.iterdir())), 1)
         self.assert_context_unchanged()
 
     def test_invalidated_selected_context_prevents_answer_before_prompting(self) -> None:
@@ -351,7 +545,8 @@ class AnswerTerminalTests(unittest.TestCase):
         self.assertEqual(runtime.resonance_mode, ResonanceMode.ANSWER)
 
     def test_successful_answer_reentry_is_nonproductive_post_run(self) -> None:
-        destination = self.root / "post-run-answer.json"
+        destination_parent = self.root / "post-run-answers"
+        destination_parent.mkdir()
         values = iter(
             (
                 "5",
@@ -359,7 +554,7 @@ class AnswerTerminalTests(unittest.TestCase):
                 "4",
                 "Rückkehr",
                 "yes",
-                str(destination),
+                str(destination_parent),
                 " /LOOK ",
                 "/trace",
                 "help",
@@ -367,6 +562,7 @@ class AnswerTerminalTests(unittest.TestCase):
                 "/new-answer",
                 "/select-token",
                 "/results",
+                "results",
                 "/leave",
                 "/quit",
             )
@@ -395,11 +591,23 @@ class AnswerTerminalTests(unittest.TestCase):
         )
 
         self.assertTrue(controller().completed)
+        retained = controller._last_completed_result
+        self.assertIsInstance(retained, CompletedAnswerResult)
+        destination = retained.artifact_path
         with patch(
             "atrium.classified_resonance.collect_answering_resonance",
             side_effect=AssertionError("post-run collected another response"),
-        ):
+        ), patch(
+            "return_resonance.local_opening.open_local_resonance_return"
+        ) as opening, patch(
+            "return_resonance.matching.match_return_artifact"
+        ) as matching, patch(
+            "return_resonance.compact_generator.generate_compact_resonance"
+        ) as generator:
             self.assertFalse(controller().completed)
+        opening.assert_not_called()
+        matching.assert_not_called()
+        generator.assert_not_called()
 
         transcript = "\n".join(output)
         post_run = transcript[transcript.index("Resonance Chamber — completed answer") :]
@@ -411,13 +619,130 @@ class AnswerTerminalTests(unittest.TestCase):
         self.assertNotIn("/answer —", post_run)
         self.assertNotIn("/new-answer —", post_run)
         self.assertNotIn("/select-token —", post_run)
-        self.assertNotIn("/results —", post_run)
+        self.assertIn(
+            "/results — view this session's most recent completed answer", post_run
+        )
+        self.assertIn(
+            "Resonance results — most recent answer cycle in this session", post_run
+        )
+        self.assertIn("Earlier local outputs remain separate and unchanged.", post_run)
+        for text in (
+            "[private local]",
+            "    Carried image: A narrow bridge in the mist",
+            "    Carried scent: Warm bread in a quiet kitchen",
+            "    Carried movement: A circle slowly opening",
+            "    Wish word: Nähe",
+            "    Image response: A silence becomes shared",
+            "    Scent response: The possibility of encounter",
+            "    Movement response: Edges curling into playful waves",
+            "    Return word: Rückkehr",
+            "[public-safe]",
+            "    Carried label: Von B",
+            "[local path]",
+            f"    Return Artifact: {destination} — available",
+        ):
+            self.assertIn(text, post_run)
+        for hidden in (
+            "artifact_version",
+            "origin_trace_id",
+            ROUTE["origin_trace_id"],
+            ROUTE["return_slot_id"],
+            ROUTE["package_id"],
+            "CompletedAnswerResult",
+            "ResonanceReturnArtifact(",
+        ):
+            self.assertNotIn(hidden, post_run)
         self.assertEqual(post_run.count("Unknown Resonance command."), 5)
-        self.assertTrue(all(prompt == "resonance> " for prompt in prompts[-9:]))
+        self.assertTrue(all(prompt == "resonance> " for prompt in prompts[-10:]))
+        self.assertIs(controller._last_completed_result, retained)
         self.assert_context_unchanged()
 
+    def test_answer_results_keep_values_when_known_artifact_is_missing(self) -> None:
+        destination_parent = self.root / "removed-results"
+        destination_parent.mkdir()
+        values = iter(
+            (
+                "5",
+                "1",
+                "4",
+                "Rückkehr",
+                "yes",
+                str(destination_parent),
+                "/results",
+                "/quit",
+            )
+        )
+        output: list[str] = []
+        controller = ClassifiedResonanceController(
+            ResonanceMode.ANSWER,
+            output_writer=output.append,
+            input_reader=lambda _prompt: next(values),
+            nexus_root=self.nexus,
+        )
+
+        self.assertIsNone(controller._last_completed_result)
+        self.assertTrue(controller().completed)
+        retained = controller._last_completed_result
+        self.assertIsInstance(retained, CompletedAnswerResult)
+        destination = retained.artifact_path
+        destination.unlink()
+        self.assertFalse(controller().completed)
+        self.assertIs(controller._last_completed_result, retained)
+
+        results = "\n".join(output)
+        self.assertIn("Return word: Rückkehr", results)
+        self.assertIn(
+            f"Return Artifact: {destination} — no longer available at the known location",
+            results,
+        )
+        self.assertEqual(results.count("No filesystem search was performed."), 1)
+        self.assert_context_unchanged()
+
+    def test_answer_results_explain_absent_public_safe_label(self) -> None:
+        destination_parent = self.root / "unlabelled-results"
+        destination_parent.mkdir()
+        token_without_label = build_resonance_token_v2(
+            OriginatingResonanceContribution(
+                "bridge-in-mist", "warm-bread", "opening-circle", "Nähe"
+            ),
+            **ROUTE,
+        )
+        values = iter(
+            (
+                "5",
+                "1",
+                "4",
+                "Rückkehr",
+                "yes",
+                str(destination_parent),
+                "/results",
+                "/quit",
+            )
+        )
+        output: list[str] = []
+        controller = ClassifiedResonanceController(
+            ResonanceMode.ANSWER,
+            output_writer=output.append,
+            input_reader=lambda _prompt: next(values),
+            nexus_root=self.nexus,
+        )
+
+        with patch(
+            "atrium.classified_resonance._load_authoritative_selected_token",
+            return_value=token_without_label,
+        ):
+            self.assertTrue(controller().completed)
+        self.assertFalse(controller().completed)
+
+        results = "\n".join(output)
+        self.assertIn(
+            "No public-safe summary was attached to the carried resonance.",
+            results,
+        )
+
     def test_only_success_activates_answer_post_run_gate(self) -> None:
-        destination = self.root / "answer-after-cancel.json"
+        destination_parent = self.root / "answer-after-cancel"
+        destination_parent.mkdir()
         values = iter(
             (
                 "/cancel",
@@ -426,7 +751,7 @@ class AnswerTerminalTests(unittest.TestCase):
                 "1",
                 "return",
                 "yes",
-                str(destination),
+                str(destination_parent),
             )
         )
         output: list[str] = []
@@ -445,8 +770,9 @@ class AnswerTerminalTests(unittest.TestCase):
         self.assert_context_unchanged()
 
     def test_answer_post_run_ctrl_c_returns_without_writing_again(self) -> None:
-        destination = self.root / "answer-before-interrupt.json"
-        values = iter(("1", "1", "1", "return", "yes", str(destination)))
+        destination_parent = self.root / "answer-before-interrupt"
+        destination_parent.mkdir()
+        values = iter(("1", "1", "1", "return", "yes", str(destination_parent)))
         output: list[str] = []
         writes = 0
 

@@ -230,7 +230,15 @@ productive work again.
 In COMPOSE, `/compose` explicitly begins another independent invitation;
 `/quit` returns to the Atrium. In ANSWER, another cycle requires leaving Nexus
 01 and deliberately activating or opening it with another Token context.
-`/results` is not part of the current post-run grammar.
+On either corrected post-run surface, `/results` displays the most recent
+successful corrected Resonance cycle retained by that controller in the current
+session. It is a session view, not an inventory of Nexus outputs. Earlier local
+invitations, private Return Workspaces, Return Artifacts, and later opening or
+Nachhall results remain separate and unchanged. Replacing the session view does
+not delete, overwrite, invalidate, or hide them. The view does not survive a
+process restart, reread output files, or search for moved results. Missing known
+output locations are reported without discovery or regeneration. No per-user
+result data is added to the reusable neutral Nexus carrier.
 
 In V1.1, First Spark completion and the post-completion Resonance reveal are
 session-local Atrium progress. Restarting does not claim that this Chamber

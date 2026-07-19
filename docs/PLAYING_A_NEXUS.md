@@ -41,6 +41,14 @@ not consume the Chamber or automatically begin another. A later same-process
 `/resonance` visit opens its post-run command surface. COMPOSE may begin another
 independent invitation through `/compose`; `/quit` returns to the Atrium.
 Another ANSWER requires another deliberately selected Token context.
+On these corrected post-run surfaces, `/results` shows the most recent successful
+corrected Resonance cycle retained by that controller in the current session. It
+is not a complete inventory of Nexus outputs. Earlier invitations, private Return
+Workspaces, Return Artifacts, and later opening or Nachhall results may coexist;
+replacing the session view does not delete, overwrite, invalidate, or hide them.
+The view does not persist across restarts, search for moved files, or regenerate
+missing output. It also adds no per-user result data to the reusable neutral
+Nexus carrier.
 
 ## Recommended first path
 

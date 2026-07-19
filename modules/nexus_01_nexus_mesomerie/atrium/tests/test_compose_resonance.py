@@ -5,7 +5,10 @@ import tempfile
 from types import SimpleNamespace
 import unittest
 
-from atrium.classified_resonance import ClassifiedResonanceController
+from atrium.classified_resonance import (
+    ClassifiedResonanceController,
+    CompletedComposeResult,
+)
 from atrium.resonance_mode import ResonanceMode
 from atrium.runtime import ChamberRunResult, NexusAtriumRuntime
 from atrium.state import AtriumState, RESONANCE_CHAMBER
@@ -245,6 +248,7 @@ class ComposeAtriumTests(unittest.TestCase):
         def capture_preparer(_token, **kwargs):
             calls.append(kwargs)
             return SimpleNamespace(
+                token=_token,
                 invitation_path=kwargs["invitation_root"] / "invitation",
                 private_workspace_path=kwargs["private_root"] / "workspace",
             )
@@ -534,7 +538,7 @@ class ComposeAtriumTests(unittest.TestCase):
         self.assertEqual(transcript.count("Resonance Chamber — shape a resonance invitation"), 2)
         self.assertNotIn("Resonance Chamber — completed cycle", transcript)
 
-    def test_compose_post_run_rejects_noncommands_and_exposes_no_results(self) -> None:
+    def test_compose_post_run_exposes_results_and_rejects_bare_results(self) -> None:
         values = iter(
             (
                 *self.successful_answers(),
@@ -542,6 +546,7 @@ class ComposeAtriumTests(unittest.TestCase):
                 "/leave",
                 "compose",
                 "/results",
+                "results",
                 "/answer",
                 "/new-answer",
                 "/unknown",
@@ -568,10 +573,115 @@ class ComposeAtriumTests(unittest.TestCase):
         transcript = "\n".join(output)
         post_run = transcript[transcript.index("Resonance Chamber — completed cycle") :]
         self.assertEqual(post_run.count("Unknown Resonance command."), 6)
-        self.assertNotIn("/results —", post_run)
+        self.assertIn(
+            "/results — view this session's most recent completed cycle", post_run
+        )
+        self.assertIn(
+            "Resonance results — most recent originating cycle in this session",
+            post_run,
+        )
+        self.assertIn("Earlier local outputs remain separate and unchanged.", post_run)
         self.assertNotIn("/answer —", post_run)
         self.assertNotIn("/new-answer —", post_run)
-        self.assertTrue(all(prompt == "resonance> " for prompt in prompts[-9:]))
+        self.assertTrue(all(prompt == "resonance> " for prompt in prompts[-10:]))
+
+    def test_compose_results_are_allowlisted_view_only_and_return_to_prompt(self) -> None:
+        values = iter((*self.successful_answers(), "/results", "/quit"))
+        output: list[str] = []
+        prompts: list[str] = []
+        preparations = 0
+
+        def read(prompt: str) -> str:
+            prompts.append(prompt)
+            return next(values)
+
+        def counted_preparer(token, **kwargs):
+            nonlocal preparations
+            preparations += 1
+            return prepare_resonance_invitation(token, **kwargs)
+
+        controller = ClassifiedResonanceController(
+            ResonanceMode.COMPOSE,
+            output_writer=output.append,
+            input_reader=read,
+            route_factory=lambda: ROUTE,
+            invitation_preparer=counted_preparer,
+        )
+
+        self.assertIsNone(controller._last_completed_result)
+        self.assertTrue(controller().completed)
+        retained = controller._last_completed_result
+        self.assertIsInstance(retained, CompletedComposeResult)
+        self.assertFalse(controller().completed)
+        self.assertIs(controller._last_completed_result, retained)
+        self.assertEqual(preparations, 1)
+
+        transcript = "\n".join(output)
+        results = transcript[transcript.index("Resonance results —") :]
+        for text in (
+            "[private local]",
+            "    Image: A narrow bridge in the mist",
+            "    Scent: Cold air before the first snow",
+            "    Movement: A tide beginning to return",
+            "    Wish word: Nähe",
+            "[public-safe]",
+            "No public-safe summary was created for this cycle",
+            "[local path]",
+            "Travelling invitation:",
+            "Private Return Workspace:",
+            "— available",
+        ):
+            self.assertIn(text, results)
+        for hidden in (
+            "token_version",
+            "origin_trace_id",
+            ROUTE.origin_trace_id,
+            ROUTE.package_id,
+            "CompletedComposeResult",
+            "ResonanceToken(",
+        ):
+            self.assertNotIn(hidden, results)
+        self.assertEqual(prompts[-2:], ["resonance> ", "resonance> "])
+
+    def test_compose_results_report_only_missing_known_paths(self) -> None:
+        invitation = self.root / "known-invitation"
+        workspace = self.root / "known-workspace"
+        invitation.mkdir()
+        workspace.mkdir()
+        values = iter((*self.successful_answers(), "/results", "/quit"))
+        output: list[str] = []
+
+        def prepare(token, **_kwargs):
+            return SimpleNamespace(
+                token=token,
+                invitation_path=invitation,
+                private_workspace_path=workspace,
+            )
+
+        controller = ClassifiedResonanceController(
+            ResonanceMode.COMPOSE,
+            output_writer=output.append,
+            input_reader=lambda _prompt: next(values),
+            route_factory=lambda: ROUTE,
+            invitation_preparer=prepare,
+        )
+
+        self.assertTrue(controller().completed)
+        invitation.rmdir()
+        workspace.rmdir()
+        self.assertFalse(controller().completed)
+
+        results = "\n".join(output)
+        self.assertIn("Wish word: Nähe", results)
+        self.assertIn(
+            f"Travelling invitation: {invitation} — no longer available at the known location",
+            results,
+        )
+        self.assertIn(
+            f"Private Return Workspace: {workspace} — no longer available at the known location",
+            results,
+        )
+        self.assertEqual(results.count("No filesystem search was performed."), 1)
 
     def test_explicit_compose_starts_fresh_independent_second_cycle(self) -> None:
         second_travelling = self.root / "travelling-two"
@@ -599,9 +709,12 @@ class ComposeAtriumTests(unittest.TestCase):
                 "yes",
                 str(second_travelling),
                 str(second_private),
+                "/results",
+                "/quit",
             )
         )
         published_tokens = []
+        output: list[str] = []
 
         def capture_preparer(token, **kwargs):
             published_tokens.append(token)
@@ -609,7 +722,7 @@ class ComposeAtriumTests(unittest.TestCase):
 
         controller = ClassifiedResonanceController(
             ResonanceMode.COMPOSE,
-            output_writer=lambda _message: None,
+            output_writer=output.append,
             input_reader=lambda _prompt: next(values),
             route_factory=lambda: next(routes),
             invitation_preparer=capture_preparer,
@@ -617,6 +730,7 @@ class ComposeAtriumTests(unittest.TestCase):
 
         self.assertTrue(controller().completed)
         self.assertTrue(controller().completed)
+        self.assertFalse(controller().completed)
         self.assertEqual(len(published_tokens), 2)
         self.assertEqual(
             [token.wish_word for token in published_tokens],
@@ -632,9 +746,23 @@ class ComposeAtriumTests(unittest.TestCase):
         self.assertTrue(
             (second_private / workspace_name("n01-slot-compose-second")).is_dir()
         )
+        self.assertTrue(
+            (self.travelling_root / invitation_name(ROUTE.return_slot_id)).is_dir()
+        )
+        self.assertTrue(
+            (self.private_root / workspace_name(ROUTE.return_slot_id)).is_dir()
+        )
+        results = "\n".join(output)
+        results = results[results.index("Resonance results —") :]
+        self.assertIn("most recent originating cycle in this session", results)
+        self.assertIn("Earlier local outputs remain separate and unchanged.", results)
+        self.assertIn("Wish word: Weite", results)
+        self.assertNotIn("Wish word: Nähe", results)
 
     def test_cancelled_second_compose_preserves_prior_atrium_milestone(self) -> None:
-        values = iter((*self.successful_answers(), "/compose", "/cancel", "/quit"))
+        values = iter(
+            (*self.successful_answers(), "/compose", "/cancel", "/results", "/quit")
+        )
         controller = ClassifiedResonanceController(
             ResonanceMode.COMPOSE,
             output_writer=lambda _message: None,
@@ -647,10 +775,16 @@ class ComposeAtriumTests(unittest.TestCase):
         )
 
         self.assertTrue(runtime.enter_chamber(RESONANCE_CHAMBER, controller).completed)
+        retained = controller._last_completed_result
+        self.assertIsNotNone(retained)
+        self.assertTrue(runtime.state.is_completed(RESONANCE_CHAMBER))
+        completed_state = runtime.state
+        self.assertFalse(runtime.enter_chamber(RESONANCE_CHAMBER, controller).completed)
+        self.assertIs(controller._last_completed_result, retained)
         self.assertTrue(runtime.state.is_completed(RESONANCE_CHAMBER))
         self.assertFalse(runtime.enter_chamber(RESONANCE_CHAMBER, controller).completed)
-        self.assertTrue(runtime.state.is_completed(RESONANCE_CHAMBER))
-        self.assertFalse(runtime.enter_chamber(RESONANCE_CHAMBER, controller).completed)
+        self.assertEqual(runtime.state, completed_state)
+        self.assertIs(controller._last_completed_result, retained)
         self.assertTrue(runtime.state.is_completed(RESONANCE_CHAMBER))
 
     def test_failed_second_compose_preserves_gate_and_prior_atrium_milestone(self) -> None:
@@ -692,7 +826,10 @@ class ComposeAtriumTests(unittest.TestCase):
         )
 
         self.assertTrue(runtime.enter_chamber(RESONANCE_CHAMBER, controller).completed)
+        retained = controller._last_completed_result
+        self.assertIsNotNone(retained)
         self.assertFalse(runtime.enter_chamber(RESONANCE_CHAMBER, controller).completed)
+        self.assertIs(controller._last_completed_result, retained)
         self.assertTrue(runtime.state.is_completed(RESONANCE_CHAMBER))
         self.assertFalse(runtime.enter_chamber(RESONANCE_CHAMBER, controller).completed)
         self.assertTrue(runtime.state.is_completed(RESONANCE_CHAMBER))

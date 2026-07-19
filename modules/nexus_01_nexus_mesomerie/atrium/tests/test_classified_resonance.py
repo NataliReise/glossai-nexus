@@ -108,6 +108,18 @@ def test_corrected_mode_entries_create_no_return_artifact(tmp_path: Path) -> Non
     assert set(tmp_path.rglob("*")) == before
 
 
+def test_fresh_and_blocked_controllers_have_no_retained_corrected_result() -> None:
+    for mode in ResonanceMode:
+        controller = ClassifiedResonanceController(
+            mode,
+            output_writer=lambda _message: None,
+            input_reader=lambda _prompt: "/cancel",
+        )
+        assert controller._last_completed_result is None
+        assert not controller().completed
+        assert controller._last_completed_result is None
+
+
 def test_blocked_recovery_remains_one_shot_on_repeated_visits() -> None:
     output: list[str] = []
     prompts: list[str] = []
