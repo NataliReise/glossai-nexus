@@ -33,7 +33,9 @@ WHAT_NEXT_GUIDE_URL = (
     "https://github.com/NataliReise/glossai-nexus/blob/main/"
     "modules/nexus_01_nexus_mesomerie/first_spark/WHAT_NEXT.md"
 )
-SECTION_DIVIDER = "︵‿︵‿୨ ☾𓋹☽ ୧‿︵‿︵"
+PERSONAL_DIVIDER = "︵‿︵‿୨ ☾𓋹☽ ୧‿︵‿︵"
+SOFT_SECTION_DIVIDER = "· · ────── ꒰ ✦ ꒱ ────── · ·"
+TECHNICAL_SECTION_DIVIDER = "┈┈┈✧┈┈┈◈┈┈┈✧┈┈┈"
 
 
 def assert_contains(text: str, expected: str) -> None:
@@ -88,12 +90,20 @@ def assert_after_play_message(response: str) -> None:
     assert_contains(response, "edit only the public alias and public note")
 
 
-def assert_section_divider(response: str) -> None:
-    """Assert that the First Spark section divider separates ending sections."""
-    assert_contains(response, SECTION_DIVIDER)
-    if response.count(SECTION_DIVIDER) < 2:
+def assert_section_dividers(response: str) -> None:
+    """Assert that the First Spark ending uses the intended section dividers."""
+    assert_contains(response, PERSONAL_DIVIDER)
+    assert_contains(response, SOFT_SECTION_DIVIDER)
+    assert_contains(response, TECHNICAL_SECTION_DIVIDER)
+
+    if response.count(PERSONAL_DIVIDER) < 2:
         raise AssertionError(
-            f"Expected at least two section dividers in response:\n{response}"
+            f"Expected at least two personal dividers in response:\n{response}"
+        )
+
+    if response.count(SOFT_SECTION_DIVIDER) < 2:
+        raise AssertionError(
+            f"Expected at least two soft section dividers in response:\n{response}"
         )
 
 
@@ -244,14 +254,14 @@ def test_first_spark_main_flow() -> None:
     assert_contains(response, "The private message opens.")
     assert_contains(response, "[activation message]")
     assert_after_play_message(response)
-    assert_section_divider(response)
+    assert_section_dividers(response)
     assert state.message_unlocked
     assert state.current_module == "ending"
 
     response = run_command(state, "/look")
     assert_contains(response, "The private message is already open.")
     assert_after_play_message(response)
-    assert_section_divider(response)
+    assert_section_dividers(response)
 
     response = run_command(state, "/unlock")
     assert_contains(response, "The private message is already open.")
