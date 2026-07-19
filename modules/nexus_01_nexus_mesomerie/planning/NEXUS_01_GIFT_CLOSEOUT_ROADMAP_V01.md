@@ -4,7 +4,9 @@
 
 - Version: 0.1
 - Status: Entwurf zur gemeinsamen Annahme
-- Ausgangscheckpoint: `193419f`
+- Roadmap-Erstellungsstand: `193419f`
+- Technische Baseline: `59c6595`
+- Letzte an dieser Baseline bestätigte kanonische Suite: 43 Testdateien, 408 Tests, 0 Fehler
 - Arbeitsbranch: `gift/nexus-01-chamber-archive`
 - Zweck: Kontrollierter Abschluss der Geschenkfassung von Nexus 01 auf Basis der bereits abgeschlossenen technischen Slices, des ersten Empfänger-/COMPOSE-Durchlaufs und der begonnenen sprachlichen Redaktion.
 
@@ -162,7 +164,7 @@ Die Restinventur konzentriert sich auf noch nicht ausreichend geprüfte Bereiche
 
 ### 2A — Noch offene Spielerstrecke
 
-Vertieft zu prüfen:
+Vertieft zu erfassen sind:
 
 ```text
 ANSWER
@@ -180,6 +182,8 @@ mehrere Return-Kandidaten
 wiederholtes Opening
 zweiter unabhängiger COMPOSE-Zyklus
 ```
+
+In dieser Phase werden vorhandene Evidenz, offene Prüffälle, betroffene Komponenten und notwendige spätere Verifikationen erfasst. Die verbindliche vollständige Positiv- und Negativabnahme erfolgt erst in den Releaseprüfungsphasen.
 
 First Spark, Atrium, COMPOSE und `/results` werden nicht vollständig neu inventarisiert. Dort werden nur:
 
@@ -232,7 +236,22 @@ Zu prüfen sind:
 
 Die Inventur darf Orientierung und öffentliche Präsentation bewerten, autorisiert aber noch keine Verschiebung, Löschung oder strukturelle Reorganisation.
 
-**Gate:** Der tatsächliche Restumfang ist vollständig genug bekannt, um begrenzte Arbeitspakete zu bilden.
+### 2D — Geschenkpaket und vorhandener Paketierungsweg
+
+Read-only zu erfassen sind:
+
+- gegenwärtiger Paketierungs-, Kopier- oder Carrier-Erzeugungsweg;
+- maßgeblicher Ausgangsstand;
+- erwartete Paketbestandteile;
+- vorhandene Ausschlussregeln;
+- lokale und generierte Nebendateien;
+- kanonische Paketierungsanweisung oder verwendeter Befehl;
+- vorhandene Packaging-Tests oder Prüfnachweise;
+- Risiken für Reproduzierbarkeit, Isolation und Paketidentität.
+
+Die Inventur bewertet den vorhandenen Weg und autorisiert weder eine neue Packaging-Architektur noch eine allgemeine Build-Infrastruktur.
+
+**Gate:** Der tatsächliche Restumfang einschließlich des vorhandenen Paketierungswegs ist vollständig genug bekannt, um begrenzte Arbeitspakete zu bilden.
 
 ## 6. Phase 3 — Priorisierte Abschlussarbeitspakete
 
@@ -316,12 +335,16 @@ Enthalten:
 - erwartete Hauptbestandteile;
 - ausgeschlossene Nebendateien;
 - isolierter Prüfort;
+- Diff-Integritätscheck des finalen Quellstands, beispielsweise `git diff --check` oder ein gleichwertiger Check;
+- erfolgreiche aktuelle kanonische vollständige automatische Testsuite;
 - SHA-256-Prüfsumme;
 - vollständiger rollengetrennter Testlauf;
 - negativer Mindesttest;
 - read-only Metadatenprüfung;
 - Release-Audit;
 - Geschenk-Freeze.
+
+Falls die aktuelle kanonische Vollsuite aus einem belegten Grund nicht ausführbar ist, wird dies als offener Releasebefund dokumentiert und gesondert entschieden. Ein älterer Suite-Lauf ersetzt dieses Gate nicht.
 
 ## 7. Phase 4 — Roadmap-Gegenprüfung
 
@@ -388,7 +411,9 @@ Aus Paket C:
 
 Aus Paket D:
 
+- vorhandener Paketierungsweg;
 - Releaseprotokoll;
+- Vollsuite- und Diff-Gate;
 - Rollenlauf;
 - Paketidentität;
 - Prüfsumme;
@@ -536,7 +561,11 @@ vollständiges Prüfergebnis
 Reihenfolge:
 
 ```text
-akzeptierter Quellcheckpoint
+alle akzeptierten Änderungen abgeschlossen
+-> Diff-Integritätscheck
+-> fokussierte Tests abgeschlossen
+-> aktuelle kanonische Vollsuite bestanden
+-> akzeptierter Quellcheckpoint
 -> frischer Paketbau
 -> Paketinhalt kontrollieren
 -> SHA-256 erzeugen
@@ -548,6 +577,20 @@ akzeptierter Quellcheckpoint
 -> öffentliche Metadaten read-only prüfen
 -> Release-Audit
 -> Geschenk-Freeze
+```
+
+Jede nach Bildung des Release Candidates angenommene Änderung am Quellstand, Paketinhalt oder an einer release-relevanten Anleitung invalidiert den Candidate, seine Prüfsumme und alle darauf beruhenden Abnahmen.
+
+Der Candidate-Zyklus beginnt anschließend erneut mit:
+
+```text
+aktuellem Quellcheckpoint
+-> erforderlichen fokussierten Tests
+-> Diff-Integritätscheck
+-> aktueller kanonischer Vollsuite
+-> frischem Paketbau
+-> neuer Prüfsumme
+-> erneuter isolierter Prüfung
 ```
 
 Nur genau das identifizierte und per Prüfsumme bestätigte Paket, das die isolierte Prüfung bestanden hat, darf übergeben werden.
@@ -565,6 +608,7 @@ Ein Befund ist ein Release-Blocker, wenn er bestätigt mindestens eine dieser Be
 - Release-Anleitungen sind materiell falsch oder praktisch nicht ausführbar.
 - Das zu übergebende Paket unterscheidet sich vom geprüften Paket.
 - Das öffentliche Repository oder Wiki führt Spielende an einer zentralen Stelle wesentlich in die Irre.
+- Die aktuelle kanonische Vollsuite ist nicht erfolgreich belegt und die Abweichung nicht als offener Releasebefund gesondert entschieden.
 
 Ein kosmetischer Wunsch, eine größere Ordnungsidee oder eine mögliche spätere Architekturverbesserung ist für sich kein Release-Blocker.
 
@@ -572,7 +616,7 @@ Ein kosmetischer Wunsch, eine größere Ordnungsidee oder eine mögliche später
 
 ```text
 bekannte Befunde konsolidiert
--> gezielte Restinventur
+-> gezielte Restinventur einschließlich Paketierungsweg
 
 Restinventur abgeschlossen
 -> priorisierte Arbeitspakete
@@ -590,10 +634,14 @@ Repository-Dokumentation stabil
 -> Wiki-Synchronisierung
 
 alle akzeptierten Änderungen abgeschlossen
--> vollständiger Rollenlauf
+-> fokussierte Tests abgeschlossen
+-> Diff-Integritätscheck
+-> aktuelle kanonische Vollsuite bestanden
+-> frischer Paketbau
+-> isolierte Paketprüfung
 
-vollständiger Rollenlauf bestanden
--> Release Candidate
+vollständiger Rollenlauf und Negativbogen bestanden
+-> Release Candidate abnahmefähig
 
 genau identifizierter Candidate isoliert geprüft
 -> Geschenk-Freeze
@@ -609,7 +657,8 @@ GP-01 bis GP-10 konsolidieren
 -> offene Textredaktion bestimmen
 -> noch ungeprüfte Spielstrecke inventarisieren
 -> Dokumentation, Repository und Wiki erfassen
+-> vorhandenen Paketierungsweg read-only erfassen
 -> daraus die vier Arbeitspakete A bis D endgültig priorisieren
 ```
 
-Danach folgt der Fresh-context Review dieser Roadmap. Erst anschließend werden die ersten Umsetzungskarten für die bereits begonnene sprachliche Redaktion erstellt.
+Danach folgt der gezielte Recheck der angenommenen Roadmap-Korrekturen. Erst anschließend werden die ersten Umsetzungskarten für die bereits begonnene sprachliche Redaktion erstellt.
