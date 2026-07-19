@@ -111,6 +111,7 @@ Während einer laufenden Umsetzungsscheibe wird der Scope nicht erweitert.
 - [x] Die technische Bestandsaufnahme für Slice 1 wurde ohne Dateiänderungen abgeschlossen.
 - [x] `TerminalChamberIO` wurde als kleinste Interaktionsnaht bestätigt.
 - [x] Die Resonance Chamber wurde konzeptionell als wiederholbarer Raum mit unabhängigen Resonanzzyklen präzisiert.
+- [x] Slice 4A ist korrekt und bleibt bestehen: `/results` zeigt das jüngste erfolgreiche COMPOSE- oder ANSWER-Ergebnis derselben Prozess-/Controller-Sitzung.
 - [x] Keine Branch- oder Push-Operation wurde im aktuellen Sprintstand vorgenommen.
 
 ---
@@ -253,6 +254,10 @@ image_response
 
 Ein ANSWER-Zyklus bezieht sich auf den aktuell ausgewählten Resonance Token und erzeugt ein Return Artifact für dessen Resonanzweg.
 
+Das Return Artifact ist zunächst ein Transportobjekt, nicht bereits das stabile
+lokale Ergebnis. Dieses entsteht erst durch ein späteres erfolgreiches,
+absichtliches Return Opening gegen den strukturell passenden Return Slot.
+
 Ein weiterer ANSWER-Zyklus setzt einen anderen bewusst ausgewählten oder aktivierten Resonance Token voraus.
 
 Für denselben individuellen Return Slot bleibt im Sprint zunächst die Semantik:
@@ -294,6 +299,31 @@ Ergebnisverfügbarkeit ist unabhängig davon, ob gerade ein produktiver Resonanz
 # E. Ergebnisprinzip
 
 ## Die Resonance Chamber als lokaler Erinnerungsraum
+
+Die drei Ergebnisstufen bleiben getrennt:
+
+```text
+1. COMPOSE
+   -> originating contribution
+   -> travelling invitation
+   -> private Return Workspace
+
+2. ANSWER
+   -> answer contribution
+   -> Return Artifact
+
+3. RETURN OPENING
+   -> returned Return Artifact
+   + matching Return Slot
+   -> stable local Resonance result
+```
+
+Das durch ANSWER erzeugte Return Artifact ist zunächst ein Transportobjekt. Das
+stabile lokale Ergebnis existiert erst nach erfolgreichem absichtlichem Return
+Opening gegen den passenden Return Slot. Es kann Resonance Artifact, Nexus Echo
+und nur dann einen Nachhall enthalten, wenn dieser bereits Teil des gespeicherten
+Ergebnisses ist. Eine genaue Dateistruktur wird erst nach der read-only Inventur
+festgelegt.
 
 Sie darf innerhalb des lokalen Nexus-Moduls anzeigen:
 
@@ -517,27 +547,180 @@ completed cycle
 
 ## Scheibe 4A — Same-process Results
 
-- [ ] First-Spark-Nachricht, soweit bereits verfügbar;
-- [ ] statischer Resonance Node;
-- [ ] aktuelle Resonance-Auswahl;
-- [ ] bekannte erzeugte Pfade;
-- [ ] mehrere aktuelle Zyklusresultate unterscheidbar;
-- [ ] keine Regeneration;
-- [ ] kein Überschreiben;
-- [ ] keine Veröffentlichung.
+**Status:** implementiert, geprüft, getestet und manuell akzeptiert. Slice 4A ist
+korrekt und bleibt bestehen.
+
+- [x] jüngstes erfolgreiches COMPOSE- oder ANSWER-Ergebnis der aktuellen
+  Prozess-/Controller-Sitzung;
+- [x] Resonance-only, process-local und view-only;
+- [x] bekannte erzeugte Pfade ohne Dateisystemsuche;
+- [x] keine Registry, Regeneration, Opening, Mutation, Übertragung oder
+  Veröffentlichung durch `/results`.
 
 ## Scheibe 4B — Persistente bestehende Quellen
 
-Nur dort, wo bereits ein maßgeblicher Pfad vorhanden ist:
+**Status:** nicht implementiert; vor jeder Umsetzungsentscheidung ist eine
+separate read-only Inventur erforderlich.
+
+Scheibe 4B untersucht und darf nur nach gesonderter Freigabe die generische
+sichere Grenze für das Wiederlesen einer ausdrücklich bekannten autoritativen
+Ergebnisquelle nach Prozessneustart schaffen.
 
 - [ ] private First-Spark-Nachricht;
 - [ ] statischer Resonance Node;
 - [ ] ausgewählter getragener Token;
 - [ ] ausdrücklich bekannter bestehender Resultatpfad.
+- [ ] keine Dateisystem-Discovery und keine automatische Kandidatenauswahl;
+- [ ] kein Return Opening und keine Validierung eines Return Artifact gegen
+  einen Return Slot;
+- [ ] kein stabiles lokales Ergebnis erzeugen;
+- [ ] vollständig read-only bleiben.
 
 Keine allgemeine Registry im Geschenksprint.
 
-## Scheibe 5 — Sprachliche Endredaktion
+## Scheibe 5 — Rückkehr, lokaler Abschluss und spätere Ergebnisanzeige
+
+**Status:** nur geplant, nicht implementiert und nicht zur Umsetzung freigegeben.
+
+### 5A — Return Opening
+
+**Ziel:** Das manuell zurückgebrachte Return Artifact wird absichtlich gegen den
+wartenden passenden Return Slot geöffnet und erzeugt genau ein stabiles lokales
+Resonance-Ergebnis.
+
+Vor jeder Umsetzung inventarisiert eine separate read-only Inventur die
+bestehenden Pfade und Verantwortlichkeiten von `OPEN_RETURN.sh`, `incoming/`,
+`results/`, Return Slot, Opening, Resonance Artifact, Nexus Echo und Nachhall.
+Erst danach wird entschieden, ob das bestehende System das bewusste Ablegen im
+privaten Return Workspace, eine bewusste Auswahl oder nur eine dieser beiden
+Interaktionen unterstützt.
+
+- [ ] Return Artifact ausschließlich manuell zurückbringen;
+- [ ] Artifact bewusst im privaten Return Workspace ablegen oder bewusst
+  auswählen, entsprechend der tatsächlich vorhandenen Architektur;
+- [ ] keine automatische Dateisystemsuche, Kandidatenauswahl, Übertragung,
+  Synchronisierung, Cloud-Publikation oder Rückkehr;
+- [ ] strukturelle Zusammengehörigkeit von Return Artifact und Return Slot
+  prüfen;
+- [ ] fremde, beschädigte, unvollständige, inkompatible, veraltete oder
+  mehrdeutige Artifacts sicher ablehnen;
+- [ ] bei mehreren Kandidaten niemals automatisch auswählen;
+- [ ] bei fehlgeschlagener Validierung oder Zuordnung nichts schreiben;
+- [ ] beim ersten erfolgreichen Validieren und Opening genau ein stabiles
+  lokales Ergebnis erzeugen;
+- [ ] spätere Openings zeigen dasselbe gespeicherte Ergebnis unverändert;
+- [ ] bestehende Ergebnisse niemals regenerieren, ersetzen oder überschreiben;
+- [ ] Recovery-, Missing-, Mismatch- und Ambiguity-Meldungen ruhig und
+  handlungsorientiert formulieren;
+- [ ] Opening bleibt eine ausdrückliche Spielerhandlung und wird niemals durch
+  `/results` ausgelöst.
+
+**Definition of Done:**
+
+```text
+COMPOSE
+-> travelling invitation + private Return Workspace
+-> ANSWER
+-> Return Artifact
+-> manual return
+-> deliberate validation against the matching Return Slot
+-> exactly one stable local result
+-> unchanged reopening of the same stored result
+```
+
+### 5B — Local Result Revisit
+
+**Ziel:** Nach erfolgreichem Return Opening kann das bereits erzeugte stabile
+lokale Ergebnis durch die Resonance Chamber erneut read-only angezeigt werden.
+
+Nur wenn die autoritative Quelle absichtlich und ausdrücklich bekannt ist, darf
+`/results` zusätzlich das bereits geöffnete stabile lokale Resonance-Ergebnis,
+das gespeicherte Resonance Artifact, den gespeicherten Nexus Echo, einen bereits
+vorhandenen gespeicherten Nachhall und den bekannten Ergebnisort anzeigen. Die
+exakte Feld-Allowlist und die exakte typisierte Ergebnisgruppe werden erst nach
+der read-only Inventur entschieden; eine neue typisierte Gruppe kann nötig sein,
+ihr endgültiger Name wird nicht vorweggenommen.
+
+`/results` darf niemals:
+
+- ein Return Artifact öffnen;
+- einen Return Slot validieren oder verändern;
+- Resonance Artifact oder Nexus Echo erzeugen;
+- Nachhall erzeugen oder regenerieren;
+- ein stabiles lokales Ergebnis erzeugen, ersetzen oder überschreiben;
+- nach Workspaces oder Ergebnisdateien suchen;
+- zwischen mehreren Kandidaten auswählen;
+- Opening-Code direkt oder indirekt aufrufen.
+
+Die Reihenfolge ist zwingend:
+
+```text
+Return Artifact deliberately opened
+-> stable local result already exists
+
+then:
+
+/results
+-> read and display that existing stable result
+```
+
+Spielerperspektiven bleiben getrennt:
+
+- **antwortende Person:** sieht den abgeschlossenen Antwortbeitrag und den Pfad
+  des erzeugten Return Artifact;
+- **ursprünglich wartende Person:** sieht nach manueller Rückkehr und
+  erfolgreichem Opening das stabile lokale Ergebnis, gespeichertes Resonance
+  Artifact und Nexus Echo, gegebenenfalls einen bereits gespeicherten Nachhall
+  sowie den bekannten lokalen Ergebnisort.
+
+Beide Perspektiven werden nicht ohne spätere Designentscheidung in ein
+generisches Ergebnisobjekt zusammengeführt.
+
+Scheibe 5B wendet die sichere Known-source-Grenze aus 4B auf das besondere, von
+5A erzeugte stabile lokale Ergebnis an oder erweitert sie begründet. Sie schafft
+keine zweite unabhängige Persistenz- oder Ladearchitektur, bleibt read-only und
+ruft niemals 5A-Opening auf. Damit ist sie weder identisch mit 4B noch bereits
+implementiert.
+
+**Definition of Done:**
+
+```text
+successful Return Opening
+-> stable local result already stored
+-> deliberate known source available
+-> read-only revisit through /results
+-> no Opening, generation, regeneration, search, or mutation
+```
+
+### Offene read-only Inventurfragen für Scheibe 5
+
+Vor jeder Implementierung muss eine separate read-only Inventur klären:
+
+1. Welche bestehende Opening-Funktion erzeugt das stabile Ergebnis?
+2. Was tun `OPEN_RETURN.sh`, `incoming/` und `results/` bereits genau?
+3. Welche konkreten Dateien enthalten Resonance Artifact, Nexus Echo und Nachhall?
+4. Ist Nachhall gespeichertes Geschwister, optionale Komponente oder spätere Stufe?
+5. Welcher exakte Pfad wird nach erfolgreichem Opening zurückgegeben oder gespeichert?
+6. Wie wird dieser Pfad der Resonance Chamber ausdrücklich bekannt gemacht?
+7. Wie kann das stabile Ergebnis nach Neustart ohne Dateisystemsuche oder allgemeine Registry wieder gelesen werden?
+8. Welche typisierte Ergebnisgruppe und explizite Rendering-Allowlist sind nötig?
+9. Wie wird garantiert, dass `/results` niemals Opening oder Regeneration aufruft?
+10. Wo liegt die bestehende Idempotenzgrenze für wiederholtes Opening?
+11. Wie werden mehrere zurückgebrachte Artifacts ohne automatische Auswahl behandelt?
+12. Welche Recovery-Zustände bestehen bereits und welche sind nur geplant?
+
+### Ausgeschlossen aus Scheibe 5
+
+- allgemeine Ergebnis-Registry;
+- automatische Dateisystemsuche oder Artifact-Auswahl;
+- Cloud-Synchronisierung oder Archivintegration;
+- automatische Rückkehr, Publikation oder Opening;
+- erneute ANSWER-Erzeugung;
+- Regeneration von Resonance Artifact, Nexus Echo oder Nachhall;
+- Überschreiben gespeicherter Ergebnisse;
+- neue Persistenzarchitektur ohne vorherige read-only Inventur.
+
+## Scheibe 6 — Sprachliche Endredaktion
 
 - [ ] Raumtexte;
 - [ ] Trace-Texte;
@@ -547,9 +730,15 @@ Keine allgemeine Registry im Geschenksprint.
 - [ ] Post-run-Raumgestalt;
 - [ ] Results-Menü;
 - [ ] technische Meldungen;
+- [ ] Return-Opening-Prompts und Bestätigungen;
+- [ ] Recovery- und Missing-Artifact-Meldungen;
+- [ ] Mismatch-, beschädigte- und unvollständige-Artifact-Meldungen;
+- [ ] Ambiguity- und Multiple-candidate-Meldungen;
+- [ ] Texte für die erneute Anzeige stabiler Ergebnisse;
+- [ ] klare sprachliche Trennung zwischen Opening und `/results`;
 - [ ] konsistente Einrückung und Zeilenlängen.
 
-## Scheibe 6 — Tests und manuelle Spielprüfung
+## Scheibe 7 — Tests und manuelle Spielprüfung
 
 ### Automatisch
 
@@ -579,18 +768,33 @@ Keine allgemeine Registry im Geschenksprint.
 - [ ] ungültiger Kontext → BLOCKED;
 - [ ] Abbruch in verschiedenen Phasen;
 - [ ] Return Artifact anzeigen;
-- [ ] lokales Ergebnis dem richtigen Resonanzweg zuordnen;
+- [ ] Return Artifact manuell in den privaten Return Workspace zurückbringen;
+- [ ] entsprechend der inventarisierten Architektur bewusst in `incoming/`
+  ablegen oder ausdrücklich auswählen;
+- [ ] gegen den richtigen Return Slot öffnen;
+- [ ] fremde Artifacts sicher ablehnen;
+- [ ] beschädigte, unvollständige, inkompatible oder mehrdeutige Artifacts sicher ablehnen;
+- [ ] unter mehreren Artifacts niemals automatisch auswählen;
+- [ ] genau ein stabiles lokales Ergebnis erzeugen;
+- [ ] dasselbe gespeicherte Ergebnis unverändert erneut öffnen;
+- [ ] sicherstellen, dass nichts regeneriert oder überschrieben wird;
 - [ ] lokale Pfade prüfen.
 
 #### Post-run
 
 - [ ] erneuter Eintritt startet nicht automatisch produktiv;
 - [ ] `results`;
+- [ ] gespeichertes lokales Ergebnis durch `/results` erneut anzeigen;
+- [ ] bestätigen, dass `/results` weder Opening auslöst noch das Dateisystem durchsucht;
 - [ ] ausdrücklich neuer Zyklus;
 - [ ] `leave`;
 - [ ] keine privaten Inhalte im öffentlichen Node.
 
-## Scheibe 7 — Release-Freeze
+#### Vollständiger Bogen
+
+- [ ] `COMPOSE -> ANSWER -> RETURN OPENING -> RESULT REVISIT` manuell vollständig durchspielen.
+
+## Scheibe 8 — Release-Freeze
 
 - [ ] keine neuen Funktionen;
 - [ ] nur noch Fehlerkorrekturen;
@@ -600,6 +804,12 @@ Keine allgemeine Registry im Geschenksprint.
 - [ ] Push und PR erst nach ausdrücklicher Freigabe;
 - [ ] README und Quick Start prüfen;
 - [ ] Geschenkpaket erstellen;
+- [ ] Return-Recovery-Anweisungen prüfen;
+- [ ] privaten Return Workspace aus Sicht der ursprünglich wartenden Person prüfen;
+- [ ] `COMPOSE -> ANSWER -> RETURN OPENING -> RESULT REVISIT` mit den Release-Paketen prüfen;
+- [ ] stabile wiederholte Openings sowie No-regeneration und No-overwrite prüfen;
+- [ ] unbeabsichtigte Dateisystemsuche ausschließen;
+- [ ] Antwortenden- und Wartenden-Ergebnisansichten klar unterscheiden;
 - [ ] Paket aus Sicht der empfangenden Person testen.
 
 ---
@@ -666,10 +876,12 @@ Dann wird nur die Resonance-Chamber-Ausgabe leicht eingerückt.
 5. Post-run und ausdrücklich neue Zyklen
 6. Same-process Results
 7. persistente bestehende Quellen
-8. sprachliche Endredaktion
-9. manuelle Durchläufe
-10. Release-Freeze
-11. Push / PR
+8. Return Opening und stabile lokale Ergebniserzeugung
+9. read-only Revisit des stabilen lokalen Ergebnisses
+10. sprachliche Endredaktion
+11. manuelle Durchläufe
+12. Release-Freeze
+13. Push / PR
 ```
 
 Nicht parallelisieren:
@@ -682,11 +894,9 @@ Nicht parallelisieren:
 
 # J. Nächster konkreter Schritt
 
-Die V0.1-Ausgangsfassungen werden zuerst in einem eigenen Dokumentationscommit festgehalten.
-
-Danach werden sie per Git-Rename zu V0.2 weitergeführt und mit den Erkenntnissen aus der technischen Bestandsaufnahme sowie der wiederholbaren Resonanzzyklus-Semantik aktualisiert.
-
-Anschließend beginnt Scheibe 2A.
+Als Nächstes wird der Dokumentationsdiff geprüft und Slice 4A sauber geschlossen.
+Erst danach folgen getrennte read-only Inventuren für Scheibe 4B und Scheibe 5;
+jede Implementierungsentscheidung benötigt eine neue ausdrückliche Freigabe.
 
 ---
 
