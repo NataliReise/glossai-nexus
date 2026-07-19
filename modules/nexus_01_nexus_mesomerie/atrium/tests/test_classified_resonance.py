@@ -25,9 +25,12 @@ def run_mode(mode: ResonanceMode) -> tuple[object, str]:
         commands = iter(
             ("/first-spark", "/resonance", "/compose", "/cancel", "/quit")
         )
-    else:
+    elif mode is ResonanceMode.ANSWER:
         activation = ActivationStub("return-resonance")
         commands = iter(("/resonance", "/answer", "/quit"))
+    else:
+        activation = ActivationStub("return-resonance")
+        commands = iter(("/resonance", "/answer", "/quit", "/quit"))
     output: list[str] = []
 
     def forbidden_legacy():
@@ -74,8 +77,8 @@ def test_blocked_shows_recovery_door_without_compose_or_legacy_flow() -> None:
     plain = transcript.index("selected carried trace could not safely be opened")
     diagnostic = transcript.index("original selected Token V2 context")
     assert plain < diagnostic
-    assert "No Chamber interaction began. Nothing was written." in transcript
-    assert "Nearby Tokens will not be selected automatically" in transcript
+    assert "Nothing was written" in transcript
+    assert "no nearby Token will be selected automatically" in transcript
     assert "Compose and legacy Resonance flows remain unavailable" in transcript
 
 
@@ -126,7 +129,7 @@ def test_fresh_and_blocked_controllers_have_no_retained_corrected_result() -> No
         assert controller._last_completed_result is None
 
 
-def test_blocked_recovery_remains_one_shot_on_repeated_visits() -> None:
+def test_blocked_recovery_surface_remains_nonproductive_on_repeated_visits() -> None:
     output: list[str] = []
     prompts: list[str] = []
     controller = ClassifiedResonanceController(
@@ -139,9 +142,9 @@ def test_blocked_recovery_remains_one_shot_on_repeated_visits() -> None:
     assert not controller().completed
     transcript = "\n".join(output)
     assert transcript.count("Resonance Chamber — carried resonance unavailable") == 2
-    assert transcript.count("No Chamber interaction began. Nothing was written.") == 2
+    assert transcript.count("Nothing was written") == 2
     assert "completed cycle" not in transcript
-    assert prompts == []
+    assert prompts == ["resonance> ", "resonance> "]
 
 
 def test_compose_pre_run_is_neutral_until_explicit_compose() -> None:
@@ -320,6 +323,12 @@ def test_surface_capability_and_help_matrices_are_identical() -> None:
             True,
             ("/look", "/help", "/trace", "/results", "/quit"),
         ),
+        (
+            ResonanceMode.BLOCKED_ANSWER_RECOVERY,
+            _SurfacePhase.BLOCKED,
+            False,
+            ("/look", "/help", "/quit"),
+        ),
     )
 
     for mode, phase, has_result, expected in cases:
@@ -389,6 +398,13 @@ def test_surface_dispatch_rejects_commands_outside_capability_matrix() -> None:
         (ResonanceMode.ANSWER, _SurfacePhase.PRE_RUN, "/compose"),
         (ResonanceMode.COMPOSE, _SurfacePhase.PRE_RUN, "/results"),
         (ResonanceMode.ANSWER, _SurfacePhase.POST_RUN, "/answer"),
+        (ResonanceMode.BLOCKED_ANSWER_RECOVERY, _SurfacePhase.BLOCKED, "/compose"),
+        (ResonanceMode.BLOCKED_ANSWER_RECOVERY, _SurfacePhase.BLOCKED, "/answer"),
+        (ResonanceMode.BLOCKED_ANSWER_RECOVERY, _SurfacePhase.BLOCKED, "/results"),
+        (ResonanceMode.BLOCKED_ANSWER_RECOVERY, _SurfacePhase.BLOCKED, "/trace"),
+        (ResonanceMode.BLOCKED_ANSWER_RECOVERY, _SurfacePhase.BLOCKED, "/cancel"),
+        (ResonanceMode.BLOCKED_ANSWER_RECOVERY, _SurfacePhase.BLOCKED, "compose"),
+        (ResonanceMode.BLOCKED_ANSWER_RECOVERY, _SurfacePhase.BLOCKED, "/unknown"),
     )
 
     for mode, phase, unavailable_command in cases:
@@ -404,12 +420,128 @@ def test_surface_dispatch_rejects_commands_outside_capability_matrix() -> None:
         compose = Mock(return_value=ChamberRunResult(completed=True))
         answer = Mock(return_value=ChamberRunResult(completed=True))
         results = Mock()
+        trace = Mock()
         controller._run_compose = compose
         controller._run_answer = answer
         controller._display_results = results
+        controller._display_post_run_trace = trace
 
         assert not controller._run_surface(phase).completed
         compose.assert_not_called()
         answer.assert_not_called()
         results.assert_not_called()
+        trace.assert_not_called()
         assert any("/help" in line for line in output)
+
+
+def test_blocked_surface_description_help_and_invalid_commands_are_safe() -> None:
+    invalid_commands = (
+        "/compose",
+        "/answer",
+        "/results",
+        "/trace",
+        "/cancel",
+        "compose",
+        "/unknown",
+    )
+    commands = iter(("/look", "/help", *invalid_commands, "/quit"))
+    output: list[str] = []
+    prompts: list[str] = []
+    writer = Mock(side_effect=AssertionError("BLOCKED invoked a writer"))
+    controller = ClassifiedResonanceController(
+        ResonanceMode.BLOCKED_ANSWER_RECOVERY,
+        output_writer=output.append,
+        input_reader=lambda prompt: prompts.append(prompt) or next(commands),
+        artifact_writer=writer,
+    )
+    compose = Mock(return_value=ChamberRunResult(completed=True))
+    answer = Mock(return_value=ChamberRunResult(completed=True))
+    results = Mock()
+    trace = Mock()
+    controller._run_compose = compose
+    controller._run_answer = answer
+    controller._display_results = results
+    controller._display_post_run_trace = trace
+    retained = Mock()
+    controller._last_completed_result = retained
+    token_loader = Mock(
+        side_effect=AssertionError("BLOCKED revalidated a selected Token")
+    )
+
+    with patch(
+        "atrium.classified_resonance._load_authoritative_selected_token",
+        token_loader,
+    ):
+        result = controller()
+
+    assert not result.completed
+    assert controller._last_completed_result is retained
+    compose.assert_not_called()
+    answer.assert_not_called()
+    results.assert_not_called()
+    trace.assert_not_called()
+    token_loader.assert_not_called()
+    writer.assert_not_called()
+
+    description: list[str] = []
+    description_controller = ClassifiedResonanceController(
+        ResonanceMode.BLOCKED_ANSWER_RECOVERY,
+        output_writer=description.append,
+    )
+    description_controller._display_surface(_SurfacePhase.BLOCKED)
+    length = len(description)
+    assert output[:length] == description
+    assert output[length : 2 * length] == description
+    assert all("/" not in line for line in description)
+
+    transcript = "\n".join(output)
+    assert "selected carried trace could not safely be opened" in transcript
+    assert "original selected Token V2 context" in transcript
+    assert "no nearby Token will be selected automatically" in transcript
+    assert "Restore the selected activation context and Token copy" in transcript
+    assert "Resonance Chamber commands" in transcript
+    for visible_command in ("/look", "/help", "/quit"):
+        assert f"  {visible_command} —" in transcript
+    for unavailable_command in ("/compose", "/answer", "/results", "/trace", "/cancel"):
+        assert f"  {unavailable_command} —" not in transcript
+    assert transcript.count("Unknown Resonance command.") == len(invalid_commands)
+    assert prompts == ["resonance> "] * 10
+    for private_detail in (
+        "origin_trace_id",
+        "return_slot_id",
+        "package_id",
+        "artifact_identity",
+        "slot_identity",
+        "seed",
+    ):
+        assert private_detail not in transcript
+
+
+def test_blocked_surface_quit_eof_and_interrupt_return_calmly() -> None:
+    readers = (
+        lambda _prompt: "/quit",
+        lambda _prompt: (_ for _ in ()).throw(EOFError),
+        lambda _prompt: (_ for _ in ()).throw(KeyboardInterrupt),
+    )
+
+    for reader in readers:
+        output: list[str] = []
+        controller = ClassifiedResonanceController(
+            ResonanceMode.BLOCKED_ANSWER_RECOVERY,
+            output_writer=output.append,
+            input_reader=reader,
+        )
+        compose = Mock(return_value=ChamberRunResult(completed=True))
+        answer = Mock(return_value=ChamberRunResult(completed=True))
+        controller._run_compose = compose
+        controller._run_answer = answer
+
+        result = controller()
+
+        assert not result.completed
+        assert controller._last_completed_result is None
+        compose.assert_not_called()
+        answer.assert_not_called()
+        transcript = "\n".join(output)
+        assert "Leaving the Resonance Chamber. Returning safely to the Atrium." in transcript
+        assert "Traceback" not in transcript

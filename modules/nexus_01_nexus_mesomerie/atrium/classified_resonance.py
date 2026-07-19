@@ -75,6 +75,7 @@ CompletedCorrectedResult = CompletedComposeResult | CompletedAnswerResult
 class _SurfacePhase(Enum):
     PRE_RUN = "pre-run"
     POST_RUN = "post-run"
+    BLOCKED = "blocked"
 
 
 @dataclass(frozen=True)
@@ -154,32 +155,7 @@ class ClassifiedResonanceController:
         if self.mode in {ResonanceMode.COMPOSE, ResonanceMode.ANSWER}:
             return self._run_pre_run()
 
-        self.output_writer(
-            "Resonance Chamber — carried resonance unavailable"
-        )
-        self.output_writer(
-            "The selected carried trace could not safely be opened."
-        )
-        self.output_writer(
-            "No Chamber interaction began. Nothing was written."
-        )
-        self.output_writer(
-            "You can return safely and choose another explicit activation path."
-        )
-        self.output_writer("")
-        self.output_writer("Technical detail")
-        self.output_writer(
-            "This activation expects its original selected Token V2 context, "
-            "but that package-relative context is missing, invalid, altered, "
-            "or mismatched."
-        )
-        self.output_writer(
-            "Restore the selected activation context and Token copy from a "
-            "trusted backup, or prepare a fresh Nexus activation. Nearby Tokens "
-            "will not be selected automatically."
-        )
-        self.output_writer("Compose and legacy Resonance flows remain unavailable.")
-        return ChamberRunResult(completed=False)
+        return self._run_surface(_SurfacePhase.BLOCKED)
 
     def _run_pre_run(self) -> ChamberRunResult:
         return self._run_surface(_SurfacePhase.PRE_RUN)
@@ -232,7 +208,11 @@ class ClassifiedResonanceController:
         self,
         phase: _SurfacePhase,
     ) -> tuple[_SurfaceCapability, ...]:
-        state_label = "quiet" if phase is _SurfacePhase.PRE_RUN else "completed"
+        state_label = {
+            _SurfacePhase.PRE_RUN: "quiet",
+            _SurfacePhase.POST_RUN: "completed",
+            _SurfacePhase.BLOCKED: "blocked",
+        }[phase]
         capabilities = [
             _SurfaceCapability(
                 "/look", f"perceive the {state_label} Chamber state"
@@ -253,7 +233,7 @@ class ClassifiedResonanceController:
                         f"view this session's most recent completed {result_label}",
                     )
                 )
-        if self.mode is ResonanceMode.COMPOSE:
+        if phase is not _SurfacePhase.BLOCKED and self.mode is ResonanceMode.COMPOSE:
             action_text = (
                 "begin an originating cycle"
                 if phase is _SurfacePhase.PRE_RUN
@@ -271,6 +251,9 @@ class ClassifiedResonanceController:
         if phase is _SurfacePhase.PRE_RUN:
             self._display_pre_run()
             return
+        if phase is _SurfacePhase.BLOCKED:
+            self._display_blocked()
+            return
         self._display_post_run()
 
     def _display_pre_run(self) -> None:
@@ -280,6 +263,28 @@ class ClassifiedResonanceController:
         self.output_writer(
             "No productive choice has been made, and nothing has been written "
             "in this Chamber."
+        )
+
+    def _display_blocked(self) -> None:
+        self.output_writer("Resonance Chamber — carried resonance unavailable")
+        self.output_writer("")
+        self.output_writer(
+            "The selected carried trace could not safely be opened."
+        )
+        self.output_writer(
+            "Its original selected Token V2 context is missing, invalid, "
+            "altered, or mismatched."
+        )
+        self.output_writer(
+            "Nothing was written, and no nearby Token will be selected "
+            "automatically."
+        )
+        self.output_writer(
+            "Restore the selected activation context and Token copy from a "
+            "trusted backup, or prepare a fresh Nexus activation."
+        )
+        self.output_writer(
+            "Compose and legacy Resonance flows remain unavailable."
         )
 
     def _display_surface_help(
