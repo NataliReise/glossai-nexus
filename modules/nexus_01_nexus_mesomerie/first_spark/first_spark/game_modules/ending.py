@@ -15,7 +15,6 @@ WHAT_NEXT_GUIDE_URL = (
     "modules/nexus_01_nexus_mesomerie/first_spark/WHAT_NEXT.md"
 )
 PERSONAL_DIVIDER = "︵‿︵‿୨ ☾𓋹☽ ୧‿︵‿︵"
-SOFT_SECTION_DIVIDER = "· · ────── ꒰ ✦ ꒱ ────── · ·"
 TECHNICAL_SECTION_DIVIDER = "┈┈┈✧┈┈┈◈┈┈┈✧┈┈┈"
 
 
@@ -31,7 +30,7 @@ You may keep this as a finished gift.
 Nothing else is required.
 
 
-{SOFT_SECTION_DIVIDER}
+{TECHNICAL_SECTION_DIVIDER}
 
 If you want, you may let the spark travel further.
 Give a clean public copy of First Spark or the Git link to someone you choose.
@@ -50,7 +49,7 @@ Short guide:
 Never post private activation data, private gift messages, or return artifacts publicly.
 
 
-{SOFT_SECTION_DIVIDER}
+{TECHNICAL_SECTION_DIVIDER}
 
 Later, you may also share a public-safe resonance node to show that a spark was seen.
 A resonance node must not include private messages, activation files, or return artifacts.
@@ -97,24 +96,24 @@ HELP_TEXT = """Available commands:
 
 ENDING_TEXT = f"""The private message opens.
 
+{AFTER_PLAY_MESSAGE.strip()}
+
 {PERSONAL_DIVIDER}
 
 {ACTIVATION_MESSAGE.strip()}
 
-{PERSONAL_DIVIDER}
-
-{AFTER_PLAY_MESSAGE.strip()}"""
+{PERSONAL_DIVIDER}"""
 
 
 ALREADY_OPEN_TEXT = f"""The private message is already open.
 
+{AFTER_PLAY_MESSAGE.strip()}
+
 {PERSONAL_DIVIDER}
 
 {ACTIVATION_MESSAGE.strip()}
 
-{PERSONAL_DIVIDER}
-
-{AFTER_PLAY_MESSAGE.strip()}"""
+{PERSONAL_DIVIDER}"""
 
 
 def handle_command(command: str, state: GameState) -> ModuleResponse:
