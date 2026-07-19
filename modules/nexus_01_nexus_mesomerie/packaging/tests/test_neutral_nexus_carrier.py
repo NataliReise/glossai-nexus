@@ -204,6 +204,7 @@ class NeutralNexusCarrierTests(unittest.TestCase):
                 "1",
                 *FIRST_SPARK_COMPLETION_COMMANDS,
                 "/resonance",
+                "/compose",
                 "5",
                 "4",
                 "3",

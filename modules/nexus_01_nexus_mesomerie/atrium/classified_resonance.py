@@ -139,39 +139,87 @@ class ClassifiedResonanceController:
         }:
             return self._run_post_run()
 
-        if self.mode is ResonanceMode.COMPOSE:
-            result = self._run_compose()
-        elif self.mode is ResonanceMode.ANSWER:
-            result = self._run_answer()
-        else:
-            self.output_writer(
-                "Resonance Chamber — carried resonance unavailable"
-            )
-            self.output_writer(
-                "The selected carried trace could not safely be opened."
-            )
-            self.output_writer(
-                "No Chamber interaction began. Nothing was written."
-            )
-            self.output_writer(
-                "You can return safely and choose another explicit activation path."
-            )
-            self.output_writer("")
-            self.output_writer("Technical detail")
-            self.output_writer(
-                "This activation expects its original selected Token V2 context, "
-                "but that package-relative context is missing, invalid, altered, "
-                "or mismatched."
-            )
-            self.output_writer(
-                "Restore the selected activation context and Token copy from a "
-                "trusted backup, or prepare a fresh Nexus activation. Nearby Tokens "
-                "will not be selected automatically."
-            )
-            self.output_writer("Compose and legacy Resonance flows remain unavailable.")
-            return ChamberRunResult(completed=False)
+        if self.mode in {ResonanceMode.COMPOSE, ResonanceMode.ANSWER}:
+            return self._run_pre_run()
 
-        return result
+        self.output_writer(
+            "Resonance Chamber — carried resonance unavailable"
+        )
+        self.output_writer(
+            "The selected carried trace could not safely be opened."
+        )
+        self.output_writer(
+            "No Chamber interaction began. Nothing was written."
+        )
+        self.output_writer(
+            "You can return safely and choose another explicit activation path."
+        )
+        self.output_writer("")
+        self.output_writer("Technical detail")
+        self.output_writer(
+            "This activation expects its original selected Token V2 context, "
+            "but that package-relative context is missing, invalid, altered, "
+            "or mismatched."
+        )
+        self.output_writer(
+            "Restore the selected activation context and Token copy from a "
+            "trusted backup, or prepare a fresh Nexus activation. Nearby Tokens "
+            "will not be selected automatically."
+        )
+        self.output_writer("Compose and legacy Resonance flows remain unavailable.")
+        return ChamberRunResult(completed=False)
+
+    def _run_pre_run(self) -> ChamberRunResult:
+        self._display_pre_run()
+        while True:
+            try:
+                command = self.input_reader("resonance> ").strip().casefold()
+            except (KeyboardInterrupt, EOFError):
+                self.output_writer("")
+                return self._leave_pre_run()
+
+            if not command:
+                continue
+            if command == "/look":
+                self._display_pre_run()
+                continue
+            if command == "/help":
+                self._display_pre_run_help()
+                continue
+            if command == "/quit":
+                return self._leave_pre_run()
+            if command == "/compose" and self.mode is ResonanceMode.COMPOSE:
+                return self._run_compose()
+            if command == "/answer" and self.mode is ResonanceMode.ANSWER:
+                return self._run_answer()
+
+            self.output_writer("That action is not available at this threshold.")
+            self.output_writer("Use /help to see the commands available here.")
+
+    def _display_pre_run(self) -> None:
+        self.output_writer("Resonance Chamber — quiet threshold")
+        self.output_writer("")
+        self.output_writer("The Chamber is open. No productive cycle has begun.")
+        self.output_writer(
+            "No productive choice has been made, and nothing has been written "
+            "in this Chamber."
+        )
+
+    def _display_pre_run_help(self) -> None:
+        self.output_writer("Resonance Chamber commands")
+        self.output_writer("  /look — perceive the quiet Chamber state")
+        self.output_writer("  /help — show the commands available here")
+        if self.mode is ResonanceMode.COMPOSE:
+            self.output_writer("  /compose — begin an originating cycle")
+        else:
+            self.output_writer("  /answer — begin the selected answer cycle")
+        self.output_writer("  /quit — return to the Atrium")
+
+    def _leave_pre_run(self) -> ChamberRunResult:
+        self.output_writer(
+            "Leaving the Resonance Chamber. Returning safely to the Atrium."
+        )
+        return ChamberRunResult(completed=False)
 
     def _run_post_run(self) -> ChamberRunResult:
         self._display_post_run()

@@ -61,7 +61,7 @@ class AnswerTerminalTests(unittest.TestCase):
         self.temporary.cleanup()
 
     def run_answer(self, answers: tuple[str, ...], **overrides):
-        values = iter(answers)
+        values = iter(("/answer", *answers))
         prompts: list[str] = []
         output: list[str] = []
 
@@ -254,7 +254,8 @@ class AnswerTerminalTests(unittest.TestCase):
         self.assertGreaterEqual(transcript.count("Answer the carried image"), 4)
         self.assertNotIn("Answer the carried scent", transcript)
         self.assertNotIn("Answer the carried movement", transcript)
-        self.assertTrue(all(prompt == "Enter a number: " for prompt in prompts))
+        self.assertEqual(prompts[0], "resonance> ")
+        self.assertTrue(all(prompt == "Enter a number: " for prompt in prompts[1:]))
         self.assertFalse(any(self.root.glob("*.return.json")))
         self.assert_context_unchanged()
 
@@ -291,7 +292,10 @@ class AnswerTerminalTests(unittest.TestCase):
         self.assertIn("response that can meet the carried image", transcript)
         self.assertIn("Guided walkthrough ended", transcript)
         self.assertEqual(transcript.count("Answer the carried image"), 3)
-        self.assertTrue(all("number" in prompt for prompt in prompts if "guided" not in prompt))
+        self.assertEqual(prompts[0], "resonance> ")
+        self.assertTrue(
+            all("number" in prompt for prompt in prompts[1:] if "guided" not in prompt)
+        )
         self.assertFalse(any(self.root.glob("*.return.json")))
         self.assert_context_unchanged()
 
@@ -431,7 +435,7 @@ class AnswerTerminalTests(unittest.TestCase):
         ):
             with self.subTest(name=name):
                 values = iter(
-                    ("1", "1", "1", "trust", "yes", str(destination))
+                    ("/answer", "1", "1", "1", "trust", "yes", str(destination))
                 )
                 output: list[str] = []
                 controller = ClassifiedResonanceController(
@@ -458,6 +462,7 @@ class AnswerTerminalTests(unittest.TestCase):
         destination_parent.mkdir()
         values = iter(
             (
+                "/answer",
                 "1",
                 "1",
                 "1",
@@ -509,7 +514,7 @@ class AnswerTerminalTests(unittest.TestCase):
         paths_for_nexus(self.nexus).selected_token.write_bytes(b"{}\n")
         result, prompts, transcript = self.run_answer(())
         self.assertFalse(result.completed)
-        self.assertEqual(prompts, [])
+        self.assertEqual(prompts, ["resonance> "])
         self.assertIn("ANSWER cannot begin", transcript)
         self.assertLess(
             transcript.index("selected carried trace could not safely be opened"),
@@ -520,7 +525,9 @@ class AnswerTerminalTests(unittest.TestCase):
         self.assertFalse(any(self.root.glob("*.return.json")))
 
     def test_corrected_answer_route_cannot_reach_legacy_controller(self) -> None:
-        values = iter(("/resonance", "1", "1", "1", "trust", "no", "/quit"))
+        values = iter(
+            ("/resonance", "/answer", "1", "1", "1", "trust", "no", "/quit")
+        )
 
         class ReturnActivation:
             profile_id = "return-resonance"
@@ -549,6 +556,7 @@ class AnswerTerminalTests(unittest.TestCase):
         destination_parent.mkdir()
         values = iter(
             (
+                "/answer",
                 "5",
                 "1",
                 "4",
@@ -662,6 +670,7 @@ class AnswerTerminalTests(unittest.TestCase):
         destination_parent.mkdir()
         values = iter(
             (
+                "/answer",
                 "5",
                 "1",
                 "4",
@@ -709,6 +718,7 @@ class AnswerTerminalTests(unittest.TestCase):
         )
         values = iter(
             (
+                "/answer",
                 "5",
                 "1",
                 "4",
@@ -745,7 +755,9 @@ class AnswerTerminalTests(unittest.TestCase):
         destination_parent.mkdir()
         values = iter(
             (
+                "/answer",
                 "/cancel",
+                "/answer",
                 "1",
                 "1",
                 "1",
@@ -772,7 +784,9 @@ class AnswerTerminalTests(unittest.TestCase):
     def test_answer_post_run_ctrl_c_returns_without_writing_again(self) -> None:
         destination_parent = self.root / "answer-before-interrupt"
         destination_parent.mkdir()
-        values = iter(("1", "1", "1", "return", "yes", str(destination_parent)))
+        values = iter(
+            ("/answer", "1", "1", "1", "return", "yes", str(destination_parent))
+        )
         output: list[str] = []
         writes = 0
 

@@ -45,7 +45,7 @@ class ComposeAtriumTests(unittest.TestCase):
         self.temporary.cleanup()
 
     def run_compose(self, answers: tuple[str, ...], **overrides):
-        values = iter(answers)
+        values = iter(("/compose", *answers))
         prompts: list[str] = []
         output: list[str] = []
 
@@ -285,7 +285,8 @@ class ComposeAtriumTests(unittest.TestCase):
         self.assertGreaterEqual(transcript.count("Begin with one image"), 4)
         self.assertNotIn("Now choose one scent", transcript)
         self.assertNotIn("Let the trace move", transcript)
-        self.assertTrue(all(prompt == "Enter a number: " for prompt in prompts))
+        self.assertEqual(prompts[0], "resonance> ")
+        self.assertTrue(all(prompt == "Enter a number: " for prompt in prompts[1:]))
         self.assertFalse(self.travelling_root.exists())
         self.assertFalse(self.private_root.exists())
 
@@ -338,7 +339,10 @@ class ComposeAtriumTests(unittest.TestCase):
         self.assertIn("image that will be carried", transcript)
         self.assertIn("Guided walkthrough ended", transcript)
         self.assertEqual(transcript.count("Begin with one image"), 3)
-        self.assertTrue(all("number" in prompt for prompt in prompts if "guided" not in prompt))
+        self.assertEqual(prompts[0], "resonance> ")
+        self.assertTrue(
+            all("number" in prompt for prompt in prompts[1:] if "guided" not in prompt)
+        )
         self.assertFalse(self.travelling_root.exists())
         self.assertFalse(self.private_root.exists())
 
@@ -466,7 +470,9 @@ class ComposeAtriumTests(unittest.TestCase):
         self.assertFalse(self.travelling_root.exists())
 
     def test_corrected_compose_route_never_reaches_legacy_controller(self) -> None:
-        values = iter(("/first-spark", "/resonance", "/cancel", "/quit"))
+        values = iter(
+            ("/first-spark", "/resonance", "/compose", "/cancel", "/quit")
+        )
 
         class GiftActivation:
             profile_id = "first-spark"
@@ -492,7 +498,16 @@ class ComposeAtriumTests(unittest.TestCase):
         self.assertEqual(runtime.resonance_mode, ResonanceMode.COMPOSE)
 
     def test_successful_compose_reentry_waits_in_post_run_until_quit(self) -> None:
-        values = iter((*self.successful_answers(), " /LOOK ", "help", "/trace", "/quit"))
+        values = iter(
+            (
+                "/compose",
+                *self.successful_answers(),
+                " /LOOK ",
+                "help",
+                "/trace",
+                "/quit",
+            )
+        )
         output: list[str] = []
         preparations = 0
 
@@ -522,7 +537,9 @@ class ComposeAtriumTests(unittest.TestCase):
         self.assertIn("Returning safely to the Atrium", transcript)
 
     def test_only_success_activates_compose_post_run_gate(self) -> None:
-        values = iter(("/cancel", *self.successful_answers()))
+        values = iter(
+            ("/compose", "/cancel", "/compose", *self.successful_answers())
+        )
         output: list[str] = []
         controller = ClassifiedResonanceController(
             ResonanceMode.COMPOSE,
@@ -541,6 +558,7 @@ class ComposeAtriumTests(unittest.TestCase):
     def test_compose_post_run_exposes_results_and_rejects_bare_results(self) -> None:
         values = iter(
             (
+                "/compose",
                 *self.successful_answers(),
                 "",
                 "/leave",
@@ -586,7 +604,9 @@ class ComposeAtriumTests(unittest.TestCase):
         self.assertTrue(all(prompt == "resonance> " for prompt in prompts[-10:]))
 
     def test_compose_results_are_allowlisted_view_only_and_return_to_prompt(self) -> None:
-        values = iter((*self.successful_answers(), "/results", "/quit"))
+        values = iter(
+            ("/compose", *self.successful_answers(), "/results", "/quit")
+        )
         output: list[str] = []
         prompts: list[str] = []
         preparations = 0
@@ -648,7 +668,9 @@ class ComposeAtriumTests(unittest.TestCase):
         workspace = self.root / "known-workspace"
         invitation.mkdir()
         workspace.mkdir()
-        values = iter((*self.successful_answers(), "/results", "/quit"))
+        values = iter(
+            ("/compose", *self.successful_answers(), "/results", "/quit")
+        )
         output: list[str] = []
 
         def prepare(token, **_kwargs):
@@ -700,6 +722,7 @@ class ComposeAtriumTests(unittest.TestCase):
         )
         values = iter(
             (
+                "/compose",
                 *self.successful_answers(),
                 "/compose",
                 "1",
@@ -761,7 +784,14 @@ class ComposeAtriumTests(unittest.TestCase):
 
     def test_cancelled_second_compose_preserves_prior_atrium_milestone(self) -> None:
         values = iter(
-            (*self.successful_answers(), "/compose", "/cancel", "/results", "/quit")
+            (
+                "/compose",
+                *self.successful_answers(),
+                "/compose",
+                "/cancel",
+                "/results",
+                "/quit",
+            )
         )
         controller = ClassifiedResonanceController(
             ResonanceMode.COMPOSE,
@@ -792,6 +822,7 @@ class ComposeAtriumTests(unittest.TestCase):
         second_private = self.root / "failed-private"
         values = iter(
             (
+                "/compose",
                 *self.successful_answers(),
                 "/compose",
                 "1",
