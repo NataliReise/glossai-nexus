@@ -60,7 +60,7 @@ NEUTRAL_RUNTIME_FILES = frozenset(
             "__init__.py", "activation_bridge.py", "classified_resonance.py",
             "first_spark_adapter.py", "known_source.py", "profiles.py",
             "resonance_adapter.py", "resonance_mode.py", "resonance_terminal.py",
-            "runtime.py", "state.py", "terminal.py",
+            "runtime.py", "stable_result.py", "state.py", "terminal.py",
         )),
         *(Path("chambers/resonance") / name for name in (
             "__init__.py", "choices.py", "compose.py", "composer.py", "flow.py",

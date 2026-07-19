@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, call, patch
 
 from atrium import (
     ChamberRunResult,
@@ -11,6 +11,11 @@ from atrium import (
     run_nexus_terminal,
 )
 from atrium.classified_resonance import _SurfacePhase
+from atrium.stable_result import (
+    StableResonanceView,
+    StableResultReadResult,
+    StableResultReadStatus,
+)
 
 
 @dataclass(frozen=True)
@@ -313,6 +318,20 @@ def test_surface_capability_and_help_matrices_are_identical() -> None:
         ),
         (
             ResonanceMode.COMPOSE,
+            _SurfacePhase.PRE_RUN,
+            False,
+            ("/look", "/help", "/results", "/compose", "/quit"),
+            Path("/tmp/nexus-stable-result.md"),
+        ),
+        (
+            ResonanceMode.ANSWER,
+            _SurfacePhase.PRE_RUN,
+            False,
+            ("/look", "/help", "/results", "/answer", "/quit"),
+            Path("/tmp/nexus-stable-result.md"),
+        ),
+        (
+            ResonanceMode.COMPOSE,
             _SurfacePhase.POST_RUN,
             True,
             ("/look", "/help", "/trace", "/results", "/compose", "/quit"),
@@ -331,12 +350,14 @@ def test_surface_capability_and_help_matrices_are_identical() -> None:
         ),
     )
 
-    for mode, phase, has_result, expected in cases:
+    for case in cases:
+        mode, phase, has_result, expected, *source = case
         output: list[str] = []
         controller = ClassifiedResonanceController(
             mode,
             output_writer=output.append,
             input_reader=lambda _prompt: "/quit",
+            known_resonance_source=source[0] if source else None,
         )
         if has_result:
             controller._last_completed_result = Mock()
@@ -547,33 +568,108 @@ def test_blocked_surface_quit_eof_and_interrupt_return_calmly() -> None:
         assert "Traceback" not in transcript
 
 
-def test_known_resonance_source_is_private_inert_and_surface_neutral() -> None:
+def test_known_resonance_source_is_lazy_and_reread_only_by_results() -> None:
     source = Path("/tmp/nexus-known-source.md")
-    commands = iter(("/look", "/help", "/quit"))
+    commands = iter(("/look", "/help", "/results", "/results", "/quit"))
     output: list[str] = []
-    controller = ClassifiedResonanceController(
-        ResonanceMode.COMPOSE,
-        output_writer=output.append,
-        input_reader=lambda _prompt: next(commands),
-        known_resonance_source=source,
+    stable = StableResultReadResult(
+        StableResultReadStatus.AVAILABLE,
+        StableResonanceView(("one", "two", "three", "four", "five")),
     )
+    with patch(
+        "atrium.classified_resonance.read_stable_resonance_result",
+        return_value=stable,
+    ) as reader:
+        controller = ClassifiedResonanceController(
+            ResonanceMode.COMPOSE,
+            output_writer=output.append,
+            input_reader=lambda _prompt: next(commands),
+            known_resonance_source=source,
+        )
 
-    assert controller._known_resonance_source is source
-    assert controller._last_completed_result is None
-    capabilities = controller._surface_capabilities(_SurfacePhase.PRE_RUN)
+        reader.assert_not_called()
+        capabilities = controller._surface_capabilities(_SurfacePhase.PRE_RUN)
+        reader.assert_not_called()
+        result = controller()
+
     assert tuple(item.command for item in capabilities) == (
-        "/look",
-        "/help",
-        "/compose",
-        "/quit",
+        "/look", "/help", "/results", "/compose", "/quit"
     )
-
-    result = controller()
-
+    assert reader.call_args_list == [call(source), call(source)]
     assert not result.completed
     assert controller._known_resonance_source is source
     assert controller._last_completed_result is None
     transcript = "\n".join(output)
-    assert str(source) not in transcript
-    assert "  /results —" not in transcript
+    assert transcript.count(str(source)) == 2
+    assert "  /results —" in transcript
     assert "  /trace —" not in transcript
+    assert "one" in transcript
+
+
+def test_stable_result_statuses_show_only_path_and_calm_status() -> None:
+    source = Path("/tmp/nexus-stable-result.md")
+    expected = {
+        StableResultReadStatus.MISSING: "missing at the known location",
+        StableResultReadStatus.SYMLINK: "symbolic link refused",
+        StableResultReadStatus.NOT_REGULAR: "not a regular file",
+        StableResultReadStatus.UNAVAILABLE: "unavailable for safe reading",
+        StableResultReadStatus.TOO_LARGE: "larger than the safe reading limit",
+        StableResultReadStatus.INVALID_UTF8: "not valid UTF-8",
+        StableResultReadStatus.INVALID_FORMAT: "not a valid stable Resonance result",
+    }
+    for status, status_text in expected.items():
+        output: list[str] = []
+        controller = ClassifiedResonanceController(
+            ResonanceMode.ANSWER,
+            output_writer=output.append,
+            known_resonance_source=source,
+        )
+        with patch(
+            "atrium.classified_resonance.read_stable_resonance_result",
+            return_value=StableResultReadResult(status),
+        ):
+            controller._display_results()
+        transcript = "\n".join(output)
+        assert str(source) in transcript
+        assert status_text in transcript
+        assert "[private local]" not in transcript
+        assert "Traceback" not in transcript
+
+
+def test_same_process_result_precedes_stable_source_without_path_leak() -> None:
+    source = Path("/tmp/nexus-stable-result.md")
+    output: list[str] = []
+    controller = ClassifiedResonanceController(
+        ResonanceMode.ANSWER,
+        output_writer=output.append,
+        known_resonance_source=source,
+    )
+    retained = Mock()
+    controller._last_completed_result = retained
+    same_process = Mock()
+    controller._display_answer_results = same_process
+
+    with patch("atrium.classified_resonance.read_stable_resonance_result") as reader:
+        controller._display_results()
+
+    reader.assert_not_called()
+    same_process.assert_called_once()
+    assert controller._last_completed_result is retained
+    assert str(source) not in "\n".join(output)
+
+
+def test_blocked_known_source_never_enables_or_reads_results() -> None:
+    source = Path("/tmp/nexus-stable-result.md")
+    output: list[str] = []
+    controller = ClassifiedResonanceController(
+        ResonanceMode.BLOCKED_ANSWER_RECOVERY,
+        output_writer=output.append,
+        input_reader=lambda _prompt: "/quit",
+        known_resonance_source=source,
+    )
+    capabilities = controller._surface_capabilities(_SurfacePhase.BLOCKED)
+    with patch("atrium.classified_resonance.read_stable_resonance_result") as reader:
+        assert not controller().completed
+    assert tuple(item.command for item in capabilities) == ("/look", "/help", "/quit")
+    reader.assert_not_called()
+    assert str(source) not in "\n".join(output)

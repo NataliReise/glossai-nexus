@@ -35,6 +35,10 @@ from return_resonance.token import (
 
 from .resonance_mode import ResonanceMode
 from .runtime import ChamberRunResult
+from .stable_result import (
+    StableResultReadStatus,
+    read_stable_resonance_result,
+)
 
 
 if TYPE_CHECKING:
@@ -242,6 +246,16 @@ class ClassifiedResonanceController:
                         f"view this session's most recent completed {result_label}",
                     )
                 )
+        elif (
+            phase is _SurfacePhase.PRE_RUN
+            and self._known_resonance_source is not None
+        ):
+            capabilities.append(
+                _SurfaceCapability(
+                    "/results",
+                    "revisit the explicitly known stable local result",
+                )
+            )
         if phase is not _SurfacePhase.BLOCKED and self.mode is ResonanceMode.COMPOSE:
             action_text = (
                 "begin an originating cycle"
@@ -355,6 +369,8 @@ class ClassifiedResonanceController:
     def _display_results(self) -> None:
         result = self._last_completed_result
         if result is None:
+            if self._known_resonance_source is not None:
+                self._display_stable_results(self._known_resonance_source)
             return
 
         catalog = build_v0_1_catalog()
@@ -362,6 +378,30 @@ class ClassifiedResonanceController:
             self._display_compose_results(result, catalog)
             return
         self._display_answer_results(result, catalog)
+
+    def _display_stable_results(self, path: Path) -> None:
+        result = read_stable_resonance_result(path)
+        status_text = {
+            StableResultReadStatus.AVAILABLE: "available",
+            StableResultReadStatus.MISSING: "missing at the known location",
+            StableResultReadStatus.SYMLINK: "symbolic link refused",
+            StableResultReadStatus.NOT_REGULAR: "not a regular file",
+            StableResultReadStatus.UNAVAILABLE: "unavailable for safe reading",
+            StableResultReadStatus.TOO_LARGE: "larger than the safe reading limit",
+            StableResultReadStatus.INVALID_UTF8: "not valid UTF-8",
+            StableResultReadStatus.INVALID_FORMAT: "not a valid stable Resonance result",
+        }[result.status]
+        self.output_writer("Resonance results — explicitly known stable local result")
+        self.output_writer("")
+        self.output_writer("[local path]")
+        self.output_writer(f"    Stable result: {path}")
+        self.output_writer(f"    Availability: {status_text}")
+        if result.view is None:
+            return
+        self.output_writer("")
+        self.output_writer("[private local]")
+        for line in result.view.lines:
+            self.output_writer(f"    {line}")
 
     def _display_compose_results(self, result, catalog) -> None:
         token = result.token

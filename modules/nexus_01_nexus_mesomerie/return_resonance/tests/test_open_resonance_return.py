@@ -20,6 +20,10 @@ from open_resonance_return import (
     open_resonance_return_files,
 )
 from chambers.resonance.choices import build_v0_1_catalog
+from atrium.stable_result import (
+    StableResultReadStatus,
+    read_stable_resonance_result,
+)
 from return_resonance.compact_generator import generate_compact_resonance
 from return_resonance.resonance_render_bridge import (
     ChamberSelections,
@@ -201,6 +205,36 @@ def test_first_open_creates_result_and_marks_slot_opened() -> None:
         assert '"composition_plan"' in result.content
         assert '"artifact_identity"' in result.content
         assert _slot_status(slots_path) == "opened"
+
+
+def test_real_opening_writer_is_compatible_with_stable_result_reader() -> None:
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        artifact_path, slots_path, output_dir = _write_inputs(root)
+        opened = open_resonance_return_files(
+            artifact_path,
+            slots_path,
+            output_dir,
+        )
+
+        reread = read_stable_resonance_result(opened.path)
+
+        assert reread.status is StableResultReadStatus.AVAILABLE
+        assert reread.view is not None
+        assert opened.generation is not None
+        assert reread.view.lines == tuple(opened.generation.text.splitlines())
+        visible = "\n".join(reread.view.lines)
+        for hidden in (
+            "Technical trace",
+            '"deterministic_seed"',
+            '"composition_plan"',
+            '"artifact_identity"',
+            '"slot_identity"',
+            "n01-test-origin",
+            "test-return-slot",
+            "test-package",
+        ):
+            assert hidden not in visible
 
 
 def test_direct_duplicate_slot_identity_aborts_before_productive_work() -> None:
@@ -716,6 +750,7 @@ def test_invalid_manual_free_words_publish_nothing_and_preserve_slot() -> None:
 
 if __name__ == "__main__":
     test_first_open_creates_result_and_marks_slot_opened()
+    test_real_opening_writer_is_compatible_with_stable_result_reader()
     test_direct_duplicate_slot_identity_aborts_before_productive_work()
     test_nonadjacent_duplicate_aborts_before_any_unique_slot_is_processed()
     test_same_identity_with_different_payload_is_still_duplicate_and_private()

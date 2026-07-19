@@ -149,6 +149,52 @@ class NeutralNexusCarrierTests(unittest.TestCase):
         )
         self.assertEqual(imported.returncode, 0, imported.stderr or imported.stdout)
 
+    def test_stable_result_runtime_and_dependency_import_in_isolation(self) -> None:
+        stable_relative = Path("atrium/stable_result.py")
+        known_relative = Path("atrium/known_source.py")
+        self.assertIn(stable_relative, NEUTRAL_RUNTIME_FILES)
+        self.assertEqual(
+            sum(path == stable_relative for path in NEUTRAL_RUNTIME_FILES), 1
+        )
+
+        result = self.build()
+        carried = result.carrier_path / stable_relative
+        self.assertTrue(carried.is_file())
+        self.assertEqual(carried.read_bytes(), (NEXUS_ROOT / stable_relative).read_bytes())
+
+        environment = os.environ.copy()
+        environment.pop("PYTHONPATH", None)
+        environment["PYTHONDONTWRITEBYTECODE"] = "1"
+        imported = subprocess.run(
+            [
+                sys.executable,
+                "-I",
+                "-B",
+                "-c",
+                (
+                    "import pathlib, sys; "
+                    "sys.path.insert(0, '.'); "
+                    "import atrium.stable_result as stable; "
+                    "import atrium.known_source as known; "
+                    "from atrium.stable_result import ("
+                    "StableResultReadStatus, StableResultReadResult, "
+                    "StableResonanceView, read_stable_resonance_result); "
+                    "root = pathlib.Path.cwd().resolve(); "
+                    "stable_path = pathlib.Path(stable.__file__).resolve(); "
+                    "known_path = pathlib.Path(known.__file__).resolve(); "
+                    "expected_stable = (root / 'atrium/stable_result.py').resolve(); "
+                    "expected_known = (root / 'atrium/known_source.py').resolve(); "
+                    "raise SystemExit(0 if stable_path == expected_stable and "
+                    "known_path == expected_known else 3)"
+                ),
+            ],
+            cwd=result.carrier_path,
+            env=environment,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(imported.returncode, 0, imported.stderr or imported.stdout)
+
     def test_carrier_with_token_preserves_bytes_without_activation(self) -> None:
         source_bytes = self.token.read_bytes()
         result = self.build(with_token=True)
