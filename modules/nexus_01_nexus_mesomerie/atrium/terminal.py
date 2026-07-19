@@ -7,6 +7,7 @@ Chamber adapters and their own terminal controllers.
 from __future__ import annotations
 
 from collections.abc import Callable
+from dataclasses import dataclass
 from pathlib import Path
 import sys
 from typing import Protocol
@@ -24,6 +25,13 @@ from .state import AtriumPhase, FIRST_SPARK_CHAMBER, RESONANCE_CHAMBER
 
 
 PROMPT = "nexus> "
+ORIENTATION_HINT = "Use /help to see the actions available here."
+
+
+@dataclass(frozen=True, slots=True)
+class _AtriumCapability:
+    command: str
+    help_text: str
 
 
 class ActivationLoader(Protocol):
@@ -75,31 +83,32 @@ def render_atrium(runtime: NexusAtriumRuntime) -> str:
         else:
             lines.append(f"- {chamber_id}: {marker}")
 
-    commands = ["/look", "/first-spark"]
-    if state.is_enabled(RESONANCE_CHAMBER):
-        commands.append("/resonance")
-    commands.append("/quit")
-    lines.append("")
-    lines.append("Available commands: " + ", ".join(commands))
-    lines.append("Use /help for command details.")
     return "\n".join(lines)
 
 
-def help_text(runtime: NexusAtriumRuntime | None = None) -> str:
-    lines = [
-        "/look         show the current Atrium",
-        "/help         show the current Atrium grammar",
-        "/first-spark  enter the First Spark Chamber",
+def _atrium_capabilities(
+    runtime: NexusAtriumRuntime | None,
+) -> tuple[_AtriumCapability, ...]:
+    capabilities = [
+        _AtriumCapability("/look", "show the current Atrium"),
+        _AtriumCapability("/help", "show the current Atrium grammar"),
+        _AtriumCapability("/first-spark", "enter the First Spark Chamber"),
     ]
     if runtime is not None and runtime.state.is_enabled(RESONANCE_CHAMBER):
         if runtime.resonance_mode is None:
-            lines.append("/resonance     enter the Resonance Chamber")
+            resonance_help = "enter the Resonance Chamber"
         else:
-            lines.append(
-                "/resonance     " + resonance_door_label(runtime.resonance_mode)
-            )
-    lines.append("/quit         leave Nexus 01")
-    return "\n".join(lines)
+            resonance_help = resonance_door_label(runtime.resonance_mode)
+        capabilities.append(_AtriumCapability("/resonance", resonance_help))
+    capabilities.append(_AtriumCapability("/quit", "leave Nexus 01"))
+    return tuple(capabilities)
+
+
+def help_text(runtime: NexusAtriumRuntime | None = None) -> str:
+    return "\n".join(
+        f"{capability.command:<14}{capability.help_text}"
+        for capability in _atrium_capabilities(runtime)
+    )
 
 
 def run_nexus_terminal(
@@ -133,6 +142,7 @@ def run_nexus_terminal(
             )
         )
     output_writer(render_atrium(runtime))
+    output_writer(ORIENTATION_HINT)
 
     while True:
         try:
@@ -144,10 +154,26 @@ def run_nexus_terminal(
 
         if command == "":
             continue
+        capabilities = _atrium_capabilities(runtime)
+        visible_commands = frozenset(
+            capability.command for capability in capabilities
+        )
+        if command == "help":
+            output_writer(help_text(runtime))
+            continue
+        if command == "/resonance" and command not in visible_commands:
+            output_writer("The Resonance path is not opened by this activation.")
+            continue
+        if command not in visible_commands:
+            output_writer(
+                "Unknown Atrium command.\n"
+                "Use /help to see the commands available here."
+            )
+            continue
         if command == "/look":
             output_writer(render_atrium(runtime))
             continue
-        if command in {"/help", "help"}:
+        if command == "/help":
             output_writer(help_text(runtime))
             continue
         if command == "/quit":
@@ -158,18 +184,10 @@ def run_nexus_terminal(
             output_writer(render_atrium(runtime))
             continue
         if command == "/resonance":
-            if not runtime.state.is_enabled(RESONANCE_CHAMBER):
-                output_writer("The Resonance path is not opened by this activation.")
-                continue
             output_writer("")
             output_writer("The Resonance Chamber opens from the Atrium.")
             runtime.enter_chamber(RESONANCE_CHAMBER, active_resonance_runner)
             output_writer(render_atrium(runtime))
             continue
-
-        output_writer(
-            "Unknown Atrium command.\n"
-            "Use /help to see the commands available here."
-        )
 
     return runtime

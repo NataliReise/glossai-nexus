@@ -17,7 +17,13 @@ from atrium import (
     RESONANCE_CHAMBER,
     ResonanceMode,
 )
-from atrium.terminal import help_text, render_atrium, run_nexus_terminal
+from atrium.terminal import (
+    ORIENTATION_HINT,
+    _atrium_capabilities,
+    help_text,
+    render_atrium,
+    run_nexus_terminal,
+)
 
 
 @dataclass(frozen=True)
@@ -171,15 +177,17 @@ def test_help_is_state_dependent_and_unknown_command_is_local() -> None:
     assert "Use /help" in "\n".join(output)
 
 
-def test_atrium_points_to_help_without_listing_commands() -> None:
+def test_atrium_description_has_no_commands_or_orientation_hint() -> None:
     from atrium import NexusAtriumRuntime
 
     runtime = NexusAtriumRuntime.from_activation(ActivationStub("first-spark"))
     rendered = render_atrium(runtime)
 
-    assert "Available commands: /look, /first-spark, /quit" in rendered
-    assert "Use /help for command details." in rendered
-    assert "/resonance" not in rendered
+    assert "Nexus Atrium" in rendered
+    assert "first-spark: open" in rendered
+    assert "Available commands:" not in rendered
+    assert ORIENTATION_HINT not in rendered
+    assert "/" not in rendered
 
 
 def test_rendered_return_state_keeps_unfinished_resonance_visible() -> None:
@@ -204,20 +212,42 @@ def test_help_and_rendering_use_only_canonical_visible_grammar() -> None:
 
     first_help = help_text(first_spark_runtime)
     resonance_help = help_text(resonance_runtime)
-    assert "/look         show the current Atrium" in first_help
-    assert "/help         show the current Atrium grammar" in first_help
-    assert "/first-spark  enter the First Spark Chamber" in first_help
-    assert "/quit         leave Nexus 01" in first_help
-    assert "/resonance" not in first_help
-    assert "/resonance" in resonance_help
+    assert [line.split()[0] for line in first_help.splitlines()] == [
+        "/look",
+        "/help",
+        "/first-spark",
+        "/quit",
+    ]
+    assert [line.split()[0] for line in resonance_help.splitlines()] == [
+        "/look",
+        "/help",
+        "/first-spark",
+        "/resonance",
+        "/quit",
+    ]
     assert all(line.startswith("/") for line in resonance_help.splitlines())
 
     first_render = render_atrium(first_spark_runtime)
     resonance_render = render_atrium(resonance_runtime)
-    assert "Available commands: /look, /first-spark, /quit" in first_render
-    assert "/resonance" not in first_render
-    assert "Available commands: /look, /first-spark, /resonance, /quit" in resonance_render
+    assert "Available commands:" not in first_render
+    assert "Available commands:" not in resonance_render
+    assert "/" not in first_render
+    assert "/" not in resonance_render
     assert "Type 'help'" not in first_render
+
+
+def test_help_commands_equal_local_visible_capabilities() -> None:
+    from atrium import NexusAtriumRuntime
+
+    for profile_id in ("first-spark", "return-resonance"):
+        runtime = NexusAtriumRuntime.from_activation(ActivationStub(profile_id))
+        help_commands = tuple(
+            line.split()[0] for line in help_text(runtime).splitlines()
+        )
+        capability_commands = tuple(
+            capability.command for capability in _atrium_capabilities(runtime)
+        )
+        assert help_commands == capability_commands
 
 
 def test_bare_help_is_an_unadvertised_rescue_alias() -> None:
@@ -231,7 +261,57 @@ def test_bare_help_is_an_unadvertised_rescue_alias() -> None:
     visible_help = help_text(runtime)
     assert output.count(visible_help) == 2
     assert all(not line.startswith("help ") for line in visible_help.splitlines())
-    assert "Available commands: /look, /first-spark, /quit" in output[0]
+    assert "Available commands:" not in output[0]
+
+
+def test_look_repeats_only_room_state_without_start_hint_or_runner() -> None:
+    output: list[str] = []
+    calls: list[str] = []
+    runtime = run_nexus_terminal(
+        activation_loader=lambda: ActivationStub("first-spark"),
+        first_spark_runner=lambda: (
+            calls.append(FIRST_SPARK_CHAMBER) or ChamberRunResult(completed=True)
+        ),
+        input_reader=scripted_input(["/look", "/quit"]),
+        output_writer=output.append,
+    )
+
+    assert output[0] == render_atrium(runtime)
+    assert output[2] == output[0]
+    assert output.count(ORIENTATION_HINT) == 1
+    assert ORIENTATION_HINT not in output[2]
+    assert "Available commands:" not in output[2]
+    assert calls == []
+    assert runtime.state.phase is AtriumPhase.ARRIVAL
+
+
+def test_orientation_hint_appears_once_across_chamber_returns() -> None:
+    output: list[str] = []
+    calls: list[str] = []
+
+    runtime = run_nexus_terminal(
+        activation_loader=lambda: ActivationStub("first-spark"),
+        first_spark_runner=lambda: (
+            calls.append(FIRST_SPARK_CHAMBER) or ChamberRunResult(completed=True)
+        ),
+        resonance_runner=lambda: (
+            calls.append(RESONANCE_CHAMBER) or ChamberRunResult(completed=False)
+        ),
+        input_reader=scripted_input(
+            ["/look", "/first-spark", "/resonance", "/quit"]
+        ),
+        output_writer=output.append,
+    )
+
+    assert calls == [FIRST_SPARK_CHAMBER, RESONANCE_CHAMBER]
+    assert runtime.state.is_completed(FIRST_SPARK_CHAMBER)
+    assert not runtime.state.is_completed(RESONANCE_CHAMBER)
+    assert output.count(ORIENTATION_HINT) == 1
+    assert all(
+        "Available commands:" not in message
+        for message in output
+        if "Nexus Atrium" in message
+    )
 
 
 def test_slash_commands_are_stripped_and_case_normalized() -> None:
@@ -345,10 +425,13 @@ if __name__ == "__main__":
     test_resonance_command_completes_and_returns_to_atrium()
     test_unavailable_resonance_does_not_call_runner()
     test_help_is_state_dependent_and_unknown_command_is_local()
-    test_atrium_points_to_help_without_listing_commands()
+    test_atrium_description_has_no_commands_or_orientation_hint()
     test_rendered_return_state_keeps_unfinished_resonance_visible()
     test_help_and_rendering_use_only_canonical_visible_grammar()
+    test_help_commands_equal_local_visible_capabilities()
     test_bare_help_is_an_unadvertised_rescue_alias()
+    test_look_repeats_only_room_state_without_start_hint_or_runner()
+    test_orientation_hint_appears_once_across_chamber_returns()
     test_slash_commands_are_stripped_and_case_normalized()
     test_unknown_slash_is_neutral_and_nonmutating()
     test_former_bare_commands_are_unknown_and_do_not_dispatch_or_exit()
