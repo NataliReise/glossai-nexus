@@ -10,6 +10,7 @@ from atrium import (
     ResonanceMode,
     run_nexus_terminal,
 )
+from atrium.classified_resonance import _SurfacePhase
 
 
 @dataclass(frozen=True)
@@ -291,3 +292,124 @@ def test_answer_pre_run_eof_returns_without_token_revalidation() -> None:
     assert "Leaving the Resonance Chamber. Returning safely to the Atrium." in transcript
     assert "Unknown Resonance command." not in transcript
     assert "Traceback" not in transcript
+
+
+def test_surface_capability_and_help_matrices_are_identical() -> None:
+    cases = (
+        (
+            ResonanceMode.COMPOSE,
+            _SurfacePhase.PRE_RUN,
+            False,
+            ("/look", "/help", "/compose", "/quit"),
+        ),
+        (
+            ResonanceMode.ANSWER,
+            _SurfacePhase.PRE_RUN,
+            False,
+            ("/look", "/help", "/answer", "/quit"),
+        ),
+        (
+            ResonanceMode.COMPOSE,
+            _SurfacePhase.POST_RUN,
+            True,
+            ("/look", "/help", "/trace", "/results", "/compose", "/quit"),
+        ),
+        (
+            ResonanceMode.ANSWER,
+            _SurfacePhase.POST_RUN,
+            True,
+            ("/look", "/help", "/trace", "/results", "/quit"),
+        ),
+    )
+
+    for mode, phase, has_result, expected in cases:
+        output: list[str] = []
+        controller = ClassifiedResonanceController(
+            mode,
+            output_writer=output.append,
+            input_reader=lambda _prompt: "/quit",
+        )
+        if has_result:
+            controller._last_completed_result = Mock()
+
+        capabilities = controller._surface_capabilities(phase)
+        visible_commands = tuple(item.command for item in capabilities)
+        controller._display_surface_help(capabilities)
+        help_commands = tuple(
+            line.strip().split(" — ", 1)[0] for line in output[1:]
+        )
+
+        assert visible_commands == expected
+        assert help_commands == expected
+
+    controller = ClassifiedResonanceController(ResonanceMode.COMPOSE)
+    assert "/results" not in {
+        item.command
+        for item in controller._surface_capabilities(_SurfacePhase.POST_RUN)
+    }
+
+
+def test_surface_entry_and_look_share_command_free_description() -> None:
+    for mode in (ResonanceMode.COMPOSE, ResonanceMode.ANSWER):
+        for phase in (_SurfacePhase.PRE_RUN, _SurfacePhase.POST_RUN):
+            description: list[str] = []
+            controller = ClassifiedResonanceController(
+                mode,
+                output_writer=description.append,
+            )
+            if phase is _SurfacePhase.POST_RUN:
+                controller._last_completed_result = Mock()
+            controller._display_surface(phase)
+
+            output: list[str] = []
+            commands = iter(("/look", "/quit"))
+            controller.output_writer = output.append
+            controller.input_reader = lambda _prompt: next(commands)
+
+            assert not controller._run_surface(phase).completed
+            length = len(description)
+            assert output[:length] == description
+            assert output[length : 2 * length] == description
+            assert all("/" not in line for line in description)
+            rendered = "\n".join(description)
+            for private_detail in (
+                "origin_trace_id",
+                "return_slot_id",
+                "package_id",
+                "artifact_identity",
+                "slot_identity",
+                "seed",
+            ):
+                assert private_detail not in rendered
+
+
+def test_surface_dispatch_rejects_commands_outside_capability_matrix() -> None:
+    cases = (
+        (ResonanceMode.COMPOSE, _SurfacePhase.PRE_RUN, "/answer"),
+        (ResonanceMode.ANSWER, _SurfacePhase.PRE_RUN, "/compose"),
+        (ResonanceMode.COMPOSE, _SurfacePhase.PRE_RUN, "/results"),
+        (ResonanceMode.ANSWER, _SurfacePhase.POST_RUN, "/answer"),
+    )
+
+    for mode, phase, unavailable_command in cases:
+        output: list[str] = []
+        commands = iter((unavailable_command, "/quit"))
+        controller = ClassifiedResonanceController(
+            mode,
+            output_writer=output.append,
+            input_reader=lambda _prompt: next(commands),
+        )
+        if phase is _SurfacePhase.POST_RUN:
+            controller._last_completed_result = Mock()
+        compose = Mock(return_value=ChamberRunResult(completed=True))
+        answer = Mock(return_value=ChamberRunResult(completed=True))
+        results = Mock()
+        controller._run_compose = compose
+        controller._run_answer = answer
+        controller._display_results = results
+
+        assert not controller._run_surface(phase).completed
+        compose.assert_not_called()
+        answer.assert_not_called()
+        results.assert_not_called()
+        assert any("/help" in line for line in output)

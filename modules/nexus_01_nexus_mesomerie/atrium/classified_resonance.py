@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from dataclasses import dataclass, field
+from enum import Enum
 from pathlib import Path
 import secrets
 from typing import TYPE_CHECKING
@@ -69,6 +70,17 @@ class CompletedAnswerResult:
 
 
 CompletedCorrectedResult = CompletedComposeResult | CompletedAnswerResult
+
+
+class _SurfacePhase(Enum):
+    PRE_RUN = "pre-run"
+    POST_RUN = "post-run"
+
+
+@dataclass(frozen=True)
+class _SurfaceCapability:
+    command: str
+    help_text: str
 
 
 DOOR_LABELS = {
@@ -170,31 +182,96 @@ class ClassifiedResonanceController:
         return ChamberRunResult(completed=False)
 
     def _run_pre_run(self) -> ChamberRunResult:
-        self._display_pre_run()
+        return self._run_surface(_SurfacePhase.PRE_RUN)
+
+    def _run_post_run(self) -> ChamberRunResult:
+        return self._run_surface(_SurfacePhase.POST_RUN)
+
+    def _run_surface(self, phase: _SurfacePhase) -> ChamberRunResult:
+        self._display_surface(phase)
+        capabilities = self._surface_capabilities(phase)
+        visible_commands = frozenset(
+            capability.command for capability in capabilities
+        )
         while True:
             try:
                 command = self.input_reader("resonance> ").strip().casefold()
             except (KeyboardInterrupt, EOFError):
                 self.output_writer("")
-                return self._leave_pre_run()
+                return self._leave_surface()
 
             if not command:
                 continue
+            if command == "help" and phase is _SurfacePhase.POST_RUN:
+                command = "/help"
+            if command not in visible_commands:
+                self._display_unknown_surface_command(phase)
+                continue
             if command == "/look":
-                self._display_pre_run()
+                self._display_surface(phase)
                 continue
             if command == "/help":
-                self._display_pre_run_help()
+                self._display_surface_help(capabilities)
+                continue
+            if command == "/trace":
+                self._display_post_run_trace()
+                continue
+            if command == "/results":
+                self._display_results()
                 continue
             if command == "/quit":
-                return self._leave_pre_run()
-            if command == "/compose" and self.mode is ResonanceMode.COMPOSE:
+                return self._leave_surface()
+            if command == "/compose":
                 return self._run_compose()
-            if command == "/answer" and self.mode is ResonanceMode.ANSWER:
+            if command == "/answer":
                 return self._run_answer()
 
-            self.output_writer("That action is not available at this threshold.")
-            self.output_writer("Use /help to see the commands available here.")
+            raise AssertionError(f"Unhandled Resonance Surface command: {command}")
+
+    def _surface_capabilities(
+        self,
+        phase: _SurfacePhase,
+    ) -> tuple[_SurfaceCapability, ...]:
+        state_label = "quiet" if phase is _SurfacePhase.PRE_RUN else "completed"
+        capabilities = [
+            _SurfaceCapability(
+                "/look", f"perceive the {state_label} Chamber state"
+            ),
+            _SurfaceCapability("/help", "show the commands available here"),
+        ]
+        if phase is _SurfacePhase.POST_RUN:
+            capabilities.append(
+                _SurfaceCapability("/trace", "receive a gentle next trace")
+            )
+            if self._last_completed_result is not None:
+                result_label = (
+                    "cycle" if self.mode is ResonanceMode.COMPOSE else "answer"
+                )
+                capabilities.append(
+                    _SurfaceCapability(
+                        "/results",
+                        f"view this session's most recent completed {result_label}",
+                    )
+                )
+        if self.mode is ResonanceMode.COMPOSE:
+            action_text = (
+                "begin an originating cycle"
+                if phase is _SurfacePhase.PRE_RUN
+                else "begin another independent originating cycle"
+            )
+            capabilities.append(_SurfaceCapability("/compose", action_text))
+        elif self.mode is ResonanceMode.ANSWER and phase is _SurfacePhase.PRE_RUN:
+            capabilities.append(
+                _SurfaceCapability("/answer", "begin the selected answer cycle")
+            )
+        capabilities.append(_SurfaceCapability("/quit", "return to the Atrium"))
+        return tuple(capabilities)
+
+    def _display_surface(self, phase: _SurfacePhase) -> None:
+        if phase is _SurfacePhase.PRE_RUN:
+            self._display_pre_run()
+            return
+        self._display_post_run()
 
     def _display_pre_run(self) -> None:
         self.output_writer("Resonance Chamber — quiet threshold")
@@ -205,58 +282,28 @@ class ClassifiedResonanceController:
             "in this Chamber."
         )
 
-    def _display_pre_run_help(self) -> None:
+    def _display_surface_help(
+        self,
+        capabilities: tuple[_SurfaceCapability, ...],
+    ) -> None:
         self.output_writer("Resonance Chamber commands")
-        self.output_writer("  /look — perceive the quiet Chamber state")
-        self.output_writer("  /help — show the commands available here")
-        if self.mode is ResonanceMode.COMPOSE:
-            self.output_writer("  /compose — begin an originating cycle")
-        else:
-            self.output_writer("  /answer — begin the selected answer cycle")
-        self.output_writer("  /quit — return to the Atrium")
+        for capability in capabilities:
+            self.output_writer(
+                f"  {capability.command} — {capability.help_text}"
+            )
 
-    def _leave_pre_run(self) -> ChamberRunResult:
+    def _leave_surface(self) -> ChamberRunResult:
         self.output_writer(
             "Leaving the Resonance Chamber. Returning safely to the Atrium."
         )
         return ChamberRunResult(completed=False)
 
-    def _run_post_run(self) -> ChamberRunResult:
-        self._display_post_run()
-        while True:
-            try:
-                command = self.input_reader("resonance> ").strip().casefold()
-            except KeyboardInterrupt:
-                self.output_writer("")
-                self.output_writer(
-                    "Leaving the Resonance Chamber. Returning safely to the Atrium."
-                )
-                return ChamberRunResult(completed=False)
-
-            if not command:
-                continue
-            if command == "/look":
-                self._display_post_run()
-                continue
-            if command in {"/help", "help"}:
-                self._display_post_run_help()
-                continue
-            if command == "/trace":
-                self._display_post_run_trace()
-                continue
-            if command == "/results" and self._last_completed_result is not None:
-                self._display_results()
-                continue
-            if command == "/quit":
-                self.output_writer(
-                    "Leaving the Resonance Chamber. Returning safely to the Atrium."
-                )
-                return ChamberRunResult(completed=False)
-            if command == "/compose" and self.mode is ResonanceMode.COMPOSE:
-                return self._run_compose()
-
+    def _display_unknown_surface_command(self, phase: _SurfacePhase) -> None:
+        if phase is _SurfacePhase.PRE_RUN:
+            self.output_writer("That action is not available at this threshold.")
+        else:
             self.output_writer("Unknown Resonance command.")
-            self.output_writer("Use /help to see the commands available here.")
+        self.output_writer("Use /help to see the commands available here.")
 
     def _display_post_run(self) -> None:
         if self.mode is ResonanceMode.COMPOSE:
@@ -266,55 +313,18 @@ class ClassifiedResonanceController:
             self.output_writer(
                 "The Chamber remains available, but no new cycle has begun."
             )
-            self.output_writer("")
             self.output_writer(
-                "Use /compose to shape another independent invitation."
+                "A completed originating trace rests quietly in the Chamber."
             )
-            self.output_writer(
-                "Use /look, /trace, or /help to remain with the Chamber."
-            )
-            self.output_writer(
-                "Use /results to view this session's most recent completed cycle."
-            )
-            self.output_writer("Use /quit to return to the Atrium.")
             return
 
         self.output_writer("Resonance Chamber — completed answer")
         self.output_writer("")
         self.output_writer("This answer cycle is complete.")
         self.output_writer("No second answer has begun from the selected Token.")
-        self.output_writer("")
         self.output_writer(
-            "Use /look, /trace, or /help to remain with the Chamber."
+            "A completed answering trace rests quietly in the Chamber."
         )
-        self.output_writer(
-            "Use /results to view this session's most recent completed answer."
-        )
-        self.output_writer("Use /quit to return to the Atrium.")
-        self.output_writer("")
-        self.output_writer(
-            "To answer another invitation, leave Nexus 01 and deliberately "
-            "activate or open it with another Token."
-        )
-
-    def _display_post_run_help(self) -> None:
-        self.output_writer("Resonance Chamber commands")
-        self.output_writer("  /look — perceive the completed Chamber state")
-        self.output_writer("  /help — show the commands available here")
-        self.output_writer("  /trace — receive a gentle next trace")
-        if self._last_completed_result is not None:
-            result_label = (
-                "cycle" if self.mode is ResonanceMode.COMPOSE else "answer"
-            )
-            self.output_writer(
-                f"  /results — view this session's most recent completed "
-                f"{result_label}"
-            )
-        if self.mode is ResonanceMode.COMPOSE:
-            self.output_writer(
-                "  /compose — begin another independent originating cycle"
-            )
-        self.output_writer("  /quit — return to the Atrium")
 
     def _display_post_run_trace(self) -> None:
         if self.mode is ResonanceMode.COMPOSE:

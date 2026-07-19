@@ -623,7 +623,10 @@ class AnswerTerminalTests(unittest.TestCase):
         self.assertIn("This answer cycle will not begin again automatically", transcript)
         self.assertGreaterEqual(post_run.count("Resonance Chamber — completed answer"), 2)
         self.assertIn("another deliberately selected Token context", post_run)
-        self.assertIn("leave Nexus 01", post_run)
+        self.assertIn(
+            "A completed answering trace rests quietly in the Chamber.",
+            post_run,
+        )
         self.assertNotIn("/answer —", post_run)
         self.assertNotIn("/new-answer —", post_run)
         self.assertNotIn("/select-token —", post_run)
