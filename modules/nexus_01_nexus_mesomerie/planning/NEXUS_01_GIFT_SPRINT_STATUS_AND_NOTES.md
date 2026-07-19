@@ -53,17 +53,21 @@ development diary.
 - Slice 4A.1 — automatic neutral Return Artifact filename:
   implemented, reviewed, automatically verified, and manually accepted
 - Slice 4B — deliberate rereading of known existing sources after restart:
-  not implemented; a separate read-only inventory is next after Slice 4A is
-  committed or otherwise explicitly closed
+  inventory completed and decisions recorded; not implemented and not
+  authorized; the deliberate path-handoff inventory is next
 - Slice 5 — Return, Local Completion, and Result Revisit:
-  added to planning only, not implemented, and internally divided into 5A
-  Return Opening and 5B Local Result Revisit
+  inventory completed and planning updated; operative technical Opening
+  infrastructure exists, but 5A and 5B remain unimplemented and unauthorized
 - Implementation authorization:
   none for Slice 4B or Slice 5
-- Index:
-  empty
-- Current implementation work:
-  uncommitted
+- Slice 4A / 4A.1 repository closure:
+  committed and pushed
+- Implementation commit:
+  `0da16511d3c068b7afbad7632d36566a0d14de4d`
+- Acceptance, status, and planning commit:
+  `62dc94b0d08a57d8b61127d7f01bfb723981896e`
+- Published branch:
+  `origin/gift/nexus-01-chamber-archive`
 
 ---
 
@@ -573,7 +577,7 @@ The following remain outside the accepted implementation:
 - expanded blocked-recovery dialogue;
 - persistent exploration state;
 - a general result registry;
-- automatic filesystem search or Artifact selection;
+- general filesystem search or automatic selection among multiple Artifacts;
 - automatic Return Artifact transfer, return, publication, or Opening;
 - cloud synchronization or archive integration;
 - regeneration or overwrite of Resonance Artifact, Nexus Echo, Nachhall, or a
@@ -824,7 +828,8 @@ final acceptance.
 Slice 4A does not survive restart, discover old output folders, scan the
 filesystem, guess filenames, gather Tokens automatically, build an archive or
 registry, synchronize remotely, or reread files to reconstruct same-process
-state. Slice 4B remains a separate, unapproved design problem.
+state. The Slice 4B/5 read-only inventory is complete; implementation remains a
+separate, unapproved problem.
 
 ## Planned result stages and future boundaries
 
@@ -847,21 +852,50 @@ The result stages are distinct:
 ```
 
 The Return Artifact produced by ANSWER is initially a transport object. It is
-not itself the final stable local result. That result arises only from a
-successful deliberate Return Opening against the structurally matching Return
-Slot. The stored result may contain the Resonance Artifact, Nexus Echo, and an
-existing Nachhall only if Nachhall is already part of that stored result. The
-exact file layout remains an inventory question.
+not itself the final stable local result. The inventory confirmed that the
+current operative production Opening is implemented by
+`open_resonance_return.py`, centrally through
+`open_resonance_return_files()`. It creates, atomically and without overwrite,
+exactly one stable Markdown file at:
+
+```text
+<private Return Workspace>/results/<ReturnSlot.result_file>
+```
+
+Decision taken: this existing Markdown file is the authoritative stable local
+production result for the gift sprint. It contains the visible compact Nachhall,
+an embedded technical trace, and may later contain manual additions. In the
+current production path, the compact Nachhall is not an optional later component
+but the complete visible stable result form. No new separate production files
+for Resonance Artifact or Nexus Echo will be introduced for the gift sprint.
+Existing renderers and terminology for those outputs are legacy material, not
+the current production contract.
 
 ### Slice 4B — known-source rereading after restart
 
-Status: **not implemented; separate read-only inventory required**
+Status: **inventory completed; decision taken; planning updated; not implemented
+and not authorized**
 
-Slice 4B investigates and, only after separate authorization, may establish a
-generic safe boundary for rereading an explicitly known authoritative result
-source after process restart. It performs no filesystem discovery, Return
-Opening, Return Artifact/Return Slot validation, or stable-result creation and
-remains read-only.
+The inventory found several source-specific read-only loaders but no existing
+generic known-source loading boundary. Slice 4B remains limited to deliberately
+known authoritative sources after process restart. It performs no general
+registry or filesystem search, Return Opening, Return Artifact/Return Slot
+validation, generation, mutation, or stable-result creation.
+
+The main unresolved architecture question is how the exact authoritative stable
+result path is deliberately handed to the Resonance Chamber after restart.
+During Opening it exists as `LocalResonanceResult.path`, the CLI prints it, and
+it can be determined from a deliberately known Workspace plus
+`slot.result_file`; the Chamber does not currently receive or persist it. A
+general registry, automatic search, result database, shadow copy, or second
+persistence layer remains excluded.
+
+The next separate read-only inventory must inspect the smallest existing handoff
+seam: post-restart Chamber construction and entry, explicit path parameters,
+launcher or activation context, existing controller inputs, deliberately known
+Workspace paths, and package-relative or local source handoffs. Any later
+solution must remain deliberate, local, explicit, registry-free, discovery-free,
+independent of Opening, and without a second persistence layer.
 
 ### Slice 5 — Return, Local Completion, and Result Revisit
 
@@ -869,25 +903,86 @@ Status: **planning only; not implemented and not authorized**
 
 #### 5A — Return Opening
 
-The manually returned Return Artifact is deliberately placed in the private
-Return Workspace or explicitly selected, according to the architecture found by
-the read-only inventory. It is validated against its matching Return Slot. A
-first successful validation and Opening creates exactly one stable local result;
-later openings reuse it unchanged. Failure or ambiguity writes nothing, multiple
-candidates are never selected automatically, and existing results are never
-regenerated, replaced, or overwritten. Opening is always an explicit player
-action and is never triggered by `/results`.
+Status: **operative technical infrastructure present; integrated, hardened, and
+manually accepted play slice not implemented and not authorized**
+
+The deliberate player action is decided:
+
+```text
+copy the Artifact deliberately into incoming/
+-> start OPEN_RETURN.sh explicitly
+-> use it when exactly one Artifact is present
+-> refuse every automatic selection when several are present
+```
+
+This is sufficiently deliberate because the person manually brings the Artifact
+into the private Return Workspace and explicitly starts Opening afterward. The
+launcher performs bounded candidate determination only inside the known
+Workspace's `incoming/*.json`; it rejects zero candidates, automatically uses
+only one deliberately placed candidate, lists multiple candidates, and refuses
+to select among them. No additional prompt is required for exactly one such
+candidate. This is not general discovery.
+
+5A must use the existing production Opening infrastructure rather than introduce
+a parallel architecture. Existing idempotency and no-overwrite boundaries remain
+valuable: an existing result is read unchanged; an opened slot with a missing
+result is rejected without regeneration; atomic creation prevents overwrite;
+symlinks and unsafe targets are rejected; manual additions remain intact; and a
+preserved result can repair a failed slot update later without regeneration.
+
+Prioritized hardening finding: duplicate identical Return Slot identities may be
+rejected unambiguously only during the slot update, after the result file has
+already been created. This can leave a partial state:
+
+```text
+result file exists
+-> slot update fails because identity is ambiguous
+```
+
+The relevant slot identity must be proven unique before any generation or file
+creation. This hardening is not implemented or authorized, must be implemented
+and tested separately before or within 5A integration, and must not be mixed with
+5B.
 
 #### 5B — Local Result Revisit
 
-After successful 5A Opening, `/results` may read and display the already stored
-stable local result only from a deliberately and explicitly known authoritative
-source. It may show the stored Resonance Artifact, Nexus Echo, an existing
-stored Nachhall if applicable, and the known result path. The answering person
-continues to see the completed answer contribution and generated Return Artifact
-path; the originally waiting person sees the opened stable result and its stored
-components. These perspectives are not merged into one generic result object
-without a later design decision.
+Status: **inventory completed; Option C established; not implemented and not
+authorized**
+
+The existing public Opening orchestrator is not an admissible reader for
+`/results`. Depending on state it can create a result, parse and match Return
+Artifact and Return Slot, call the generator, change slot state, or perform
+recovery and slot repair. The only existing pure file reader is currently a
+private helper inside this mutating Opening path.
+
+Therefore Option C applies: before Slice 5B integration, a narrow separation is
+required between reading an existing result and opening a Return. 5B may later
+read only the already existing authoritative Markdown file from an explicitly
+known path. It must never import or call Opening orchestration, Return Artifact
+parsing as a prerequisite for revisit, slot matching, generator logic, slot
+updates, regeneration, repair, candidate search, or candidate selection.
+
+The initial explicit rendering allowlist is:
+
+```text
+[private local]
+stored compact Nachhall
+
+[local path]
+exact deliberately known result path
+availability of that path
+```
+
+The complete Markdown file must never be rendered unfiltered. The technical
+trace, `artifact_identity`, `slot_identity`, route/package/slot/origin IDs,
+deterministic seed and derivation, Composition Plan, generator internals,
+profile/source IDs, slot status, slot notes, generic object representations, and
+unclassified manual additions are not player-facing.
+
+Manual notes remain an interesting possible personal extension, but they are not
+part of the initial 5B allowlist. Until a separate privacy, format, and player-
+experience decision is taken, they are neither detected nor displayed
+automatically.
 
 Slice 5B applies or extends the safe known-source rereading boundary investigated
 by 4B to the special stable result created by 5A. It must not create a second
@@ -907,28 +1002,30 @@ creates Resonance Artifact, Nexus Echo, Nachhall, or a stable result; regenerate
 replaces, or overwrites stored output; searches for Workspaces or result files;
 selects candidates; or invokes Opening code directly or indirectly.
 
-### Open Slice 5 read-only inventory questions
+### Inventory conclusion and planned sequence
 
-A separate read-only inventory before implementation must answer:
+The inventory findings and decisions are documented. The cautious next sequence
+is:
 
-1. Which existing Opening function creates the stable result?
-2. What exactly do `OPEN_RETURN.sh`, `incoming/`, and `results/` already do?
-3. Which concrete files contain the Resonance Artifact, Nexus Echo, and Nachhall?
-4. Is Nachhall a stored sibling, an optional component, or a later stage?
-5. Which exact path is returned or stored after successful Opening?
-6. How is that path made explicitly known to the Resonance Chamber?
-7. How can the stable result be reread after restart without filesystem search or a general registry?
-8. Which typed result group and explicit rendering allowlist are required?
-9. How is it guaranteed that `/results` never invokes Opening or regeneration?
-10. What is the existing idempotency boundary for repeated Opening?
-11. How are multiple returned Artifacts handled without automatic selection?
-12. Which recovery states already exist and which are only planned?
+```text
+1. perform a separate read-only inventory of deliberate path handoff
+2. determine the smallest known-source reading boundary
+3. harden 5A by rejecting duplicate slot identities before every write
+4. integrate the existing Opening as a deliberate play step
+5. create a pure stable-result reader
+6. connect 5B to /results through the allowlist
+7. edit recovery and result language
+```
 
-No exact file layout, typed-result-group name, or interaction method is fixed
-before that inventory. General registries, automatic search or selection, cloud
-synchronization, archive integration, automatic return/publication/Opening,
-renewed ANSWER generation, regeneration or overwrite, and a new persistence
-architecture are excluded.
+This is planning, not implementation authorization. Slice 4A remains complete
+and unchanged. Slices 4B, 5A, and 5B remain unimplemented and unauthorized. The
+deliberate path-handoff inventory is the immediate next technical step.
+
+Older documentation and legacy modules still describe Resonance Artifact and
+Nexus Echo as result forms. Current production code and current direction use
+the compact Nachhall as the complete stable result. Those legacy terms will be
+synchronized in a later documentation cleanup; historical files are unchanged
+by this update.
 
 ## Deferred accessibility layer
 
@@ -947,14 +1044,14 @@ Status: **deferred beyond the current gift sprint**
 
 ## Immediate next step
 
-1. Review the documentation-only diff.
-2. Close Slice 4A cleanly after review and separate authorization for any Git action.
-3. Perform a separate read-only Slice 4B inventory.
-4. Perform a separate read-only Slice 5 inventory.
-5. Decide only after those inventories whether to authorize either implementation.
+1. Perform the separate read-only inventory of deliberate result-path handoff.
+2. Determine the smallest existing known-source reading boundary.
+3. Request separate authorization before any implementation or Git action.
 
-Slices 4B and 5 are not approved for implementation. This documentation-only
-task runs no new tests and leaves the working tree uncommitted.
+Slices 4B, 5A, and 5B are not approved for implementation. This
+documentation-only update runs no new tests. Any staging, commit, push,
+implementation, or other Git write action requires separate explicit
+authorization.
 
 ---
 

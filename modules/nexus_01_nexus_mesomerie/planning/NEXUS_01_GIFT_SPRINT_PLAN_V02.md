@@ -320,10 +320,12 @@ Die drei Ergebnisstufen bleiben getrennt:
 
 Das durch ANSWER erzeugte Return Artifact ist zunächst ein Transportobjekt. Das
 stabile lokale Ergebnis existiert erst nach erfolgreichem absichtlichem Return
-Opening gegen den passenden Return Slot. Es kann Resonance Artifact, Nexus Echo
-und nur dann einen Nachhall enthalten, wenn dieser bereits Teil des gespeicherten
-Ergebnisses ist. Eine genaue Dateistruktur wird erst nach der read-only Inventur
-festgelegt.
+Opening gegen den passenden Return Slot. Die abgeschlossene read-only Inventur
+bestätigt für den Geschenk-Sprint genau eine autoritative stabile Markdown-Datei
+mit dem kompakten Nachhall als vollständiger sichtbarer Ergebnisform. Ihr
+technischer Trace und unklassifizierte manuelle Ergänzungen sind nicht
+player-facing. Separate Produktionsdateien für Resonance Artifact oder Nexus
+Echo werden nicht eingeführt.
 
 Sie darf innerhalb des lokalen Nexus-Moduls anzeigen:
 
@@ -559,24 +561,43 @@ korrekt und bleibt bestehen.
 
 ## Scheibe 4B — Persistente bestehende Quellen
 
-**Status:** nicht implementiert; vor jeder Umsetzungsentscheidung ist eine
-separate read-only Inventur erforderlich.
+**Status:** Inventur abgeschlossen, Entscheidungen getroffen und Planung
+aktualisiert; nicht implementiert und nicht zur Umsetzung freigegeben.
 
-Scheibe 4B untersucht und darf nur nach gesonderter Freigabe die generische
-sichere Grenze für das Wiederlesen einer ausdrücklich bekannten autoritativen
-Ergebnisquelle nach Prozessneustart schaffen.
+Die Inventur fand mehrere quellspezifische read-only Loader, aber keine bereits
+bestehende generische Known-source-Ladegrenze. Scheibe 4B bleibt auf bewusst
+bekannte autoritative Quellen nach Prozessneustart begrenzt und vollständig
+read-only:
 
 - [ ] private First-Spark-Nachricht;
 - [ ] statischer Resonance Node;
 - [ ] ausgewählter getragener Token;
-- [ ] ausdrücklich bekannter bestehender Resultatpfad.
-- [ ] keine Dateisystem-Discovery und keine automatische Kandidatenauswahl;
-- [ ] kein Return Opening und keine Validierung eines Return Artifact gegen
-  einen Return Slot;
-- [ ] kein stabiles lokales Ergebnis erzeugen;
-- [ ] vollständig read-only bleiben.
+- [ ] ausdrücklich bekannter bestehender Resultatpfad;
+- [ ] keine allgemeine Registry oder Dateisystemsuche;
+- [ ] kein Return Opening, Matching, Generieren oder Mutieren;
+- [ ] keine automatische Discovery oder Auswahl einer unbekannten Quelle.
 
-Keine allgemeine Registry im Geschenksprint.
+Die wichtigste noch offene Architekturfrage lautet:
+
+```text
+Wie gelangt der exakte autoritative stabile Resultatpfad
+nach einem Prozessneustart bewusst zur Resonance Chamber?
+```
+
+Während des bestehenden Openings liegt dieser Pfad als
+`LocalResonanceResult.path` vor und wird von der CLI ausgegeben. Er kann außerdem
+aus einem bewusst bekannten privaten Return Workspace und `slot.result_file`
+bestimmt werden. Die Resonance Chamber erhält oder persistiert ihn derzeit nicht.
+Eine Registry, automatische Suche, Ergebnisdatenbank, Schattenkopie oder zweite
+Persistenzschicht bleibt ausgeschlossen.
+
+Der nächste separate read-only Schritt untersucht deshalb die kleinste bereits
+vorhandene Übergabenaht: Konstruktion und Eintritt der Resonance Chamber nach
+Neustart, explizite Pfadparameter, Launcher- oder Aktivierungskontext, bestehende
+Controller-Eingaben, bewusst bekannte Workspace-Pfade sowie paketrelative oder
+lokale Source-Übergaben. Eine spätere Lösung muss bewusst, lokal, explizit, ohne
+Registry, ohne Discovery, ohne zweite Persistenzschicht und ohne Kopplung an
+Opening arbeiten.
 
 ## Scheibe 5 — Rückkehr, lokaler Abschluss und spätere Ergebnisanzeige
 
@@ -588,17 +609,52 @@ Keine allgemeine Registry im Geschenksprint.
 wartenden passenden Return Slot geöffnet und erzeugt genau ein stabiles lokales
 Resonance-Ergebnis.
 
-Vor jeder Umsetzung inventarisiert eine separate read-only Inventur die
-bestehenden Pfade und Verantwortlichkeiten von `OPEN_RETURN.sh`, `incoming/`,
-`results/`, Return Slot, Opening, Resonance Artifact, Nexus Echo und Nachhall.
-Erst danach wird entschieden, ob das bestehende System das bewusste Ablegen im
-privaten Return Workspace, eine bewusste Auswahl oder nur eine dieser beiden
-Interaktionen unterstützt.
+**Status:** Inventur abgeschlossen und Entscheidung getroffen; operative
+technische Infrastruktur vorhanden, aber die integrierte, gehärtete und manuell
+akzeptierte Spielscheibe ist nicht implementiert und nicht zur Umsetzung
+freigegeben.
+
+Das gegenwärtige operative Return Opening wird von
+`open_resonance_return.py` und der zentralen Funktion
+`open_resonance_return_files()` getragen. Der bestehende Produktionspfad erzeugt
+atomar und ohne Überschreiben genau eine stabile Markdown-Datei unter:
+
+```text
+<private Return Workspace>/results/<ReturnSlot.result_file>
+```
+
+Diese vorhandene Markdown-Datei mit dem kompakten Nachhall ist für den
+Geschenk-Sprint das autoritative stabile lokale Produktionsresultat. Sie enthält
+den sichtbaren kompakten Nachhall, einen eingebetteten technischen Trace und
+möglicherweise spätere manuelle Ergänzungen. Im aktuellen Produktionspfad ist
+der kompakte Nachhall nicht nur eine optionale spätere Komponente, sondern die
+vollständige sichtbare stabile Ergebnisform. Für den Geschenk-Sprint werden
+keine neuen separaten Produktionsdateien für Resonance Artifact oder Nexus Echo
+eingeführt; vorhandene entsprechende Renderer und Begriffe gehören zum
+Legacy-Bestand.
+
+Die bewusste Return-Handlung ist entschieden:
+
+```text
+Artifact bewusst nach incoming/ kopieren
+-> OPEN_RETURN.sh ausdrücklich starten
+-> bei genau einem Artifact dieses verwenden
+-> bei mehreren Artifacts jede automatische Auswahl verweigern
+```
+
+Das ist hinreichend bewusst, weil das Artifact manuell in den privaten Return
+Workspace gebracht und das Opening danach ausdrücklich gestartet wird. Es gibt
+nur eine begrenzte Ermittlung innerhalb des ausdrücklich bekannten
+`incoming/`-Verzeichnisses, automatische Verwendung nur bei genau einem bewusst
+dort abgelegten Kandidaten, keine Auswahl bei Mehrdeutigkeit und keine allgemeine
+Discovery. Null Kandidaten werden abgelehnt; mehrere werden aufgelistet, aber
+nicht automatisch ausgewählt. Für genau einen bewusst abgelegten Kandidaten ist
+kein zusätzlicher Auswahlprompt erforderlich.
 
 - [ ] Return Artifact ausschließlich manuell zurückbringen;
-- [ ] Artifact bewusst im privaten Return Workspace ablegen oder bewusst
-  auswählen, entsprechend der tatsächlich vorhandenen Architektur;
-- [ ] keine automatische Dateisystemsuche, Kandidatenauswahl, Übertragung,
+- [ ] Artifact bewusst in `incoming/` des bekannten privaten Return Workspace
+  ablegen und `OPEN_RETURN.sh` ausdrücklich starten;
+- [ ] keine allgemeine Dateisystemsuche, Kandidatenauswahl, Übertragung,
   Synchronisierung, Cloud-Publikation oder Rückkehr;
 - [ ] strukturelle Zusammengehörigkeit von Return Artifact und Return Slot
   prüfen;
@@ -614,6 +670,24 @@ Interaktionen unterstützt.
   handlungsorientiert formulieren;
 - [ ] Opening bleibt eine ausdrückliche Spielerhandlung und wird niemals durch
   `/results` ausgelöst.
+
+Priorisierter 5A-Härtungsbefund: Doppelte identische Return-Slot-Identitäten
+werden im allgemeinen Produktionspfad möglicherweise erst nach der
+Ergebnisdateierzeugung beim Slot-Update eindeutig abgelehnt. Dadurch kann der
+partielle Zustand `Ergebnisdatei existiert -> Slot-Update scheitert wegen
+Mehrdeutigkeit` entstehen. Die Eindeutigkeit der maßgeblichen Slot-Identität muss
+vor jeder Generierung oder Dateierzeugung vollständig geprüft werden. Diese
+Härtung ist nicht implementiert, nicht freigegeben, muss vor oder innerhalb der
+5A-Integration separat umgesetzt und getestet werden und darf nicht mit 5B
+vermischt werden.
+
+Die vorhandenen Produktionsgrenzen bleiben verbindlich: bestehende Ergebnisse
+werden unverändert gelesen; ein geöffneter Slot ohne Ergebnis wird hart und ohne
+Regeneration abgelehnt; atomare Erzeugung überschreibt nichts; Symlinks und
+unsichere Ziele werden abgelehnt; manuelle Ergänzungen bleiben erhalten; nach
+einem fehlgeschlagenen Slot-Update kann das vorhandene Ergebnis später ohne
+Regeneration zur Slot-Reparatur dienen. 5A soll diese Infrastruktur verwenden
+und nicht durch eine parallele Opening-Architektur ersetzen.
 
 **Definition of Done:**
 
@@ -633,13 +707,50 @@ COMPOSE
 **Ziel:** Nach erfolgreichem Return Opening kann das bereits erzeugte stabile
 lokale Ergebnis durch die Resonance Chamber erneut read-only angezeigt werden.
 
-Nur wenn die autoritative Quelle absichtlich und ausdrücklich bekannt ist, darf
-`/results` zusätzlich das bereits geöffnete stabile lokale Resonance-Ergebnis,
-das gespeicherte Resonance Artifact, den gespeicherten Nexus Echo, einen bereits
-vorhandenen gespeicherten Nachhall und den bekannten Ergebnisort anzeigen. Die
-exakte Feld-Allowlist und die exakte typisierte Ergebnisgruppe werden erst nach
-der read-only Inventur entschieden; eine neue typisierte Gruppe kann nötig sein,
-ihr endgültiger Name wird nicht vorweggenommen.
+**Status:** Inventur abgeschlossen und Architekturlage entschieden; nicht
+implementiert und nicht zur Umsetzung freigegeben.
+
+Der bestehende öffentliche Opening-Orchestrator ist kein zulässiger Reader für
+`/results`. Er kann je nach Zustand Ergebnisse erzeugen, Return Artifact und
+Return Slot matchen, den Generator aufrufen, den Slotstatus verändern oder
+Recovery und Slot-Reparatur ausführen. Der einzige bestehende reine Dateireader
+ist derzeit ein privater Helfer innerhalb dieses mutierenden Opening-Pfads.
+
+Damit gilt Option C:
+
+```text
+Vor einer Slice-5B-Integration ist eine schmale Trennung
+zwischen „bestehendes Ergebnis lesen“ und „Return öffnen“ erforderlich.
+```
+
+5B darf später nur die bereits bestehende autoritative Markdown-Datei über einen
+explizit bekannten Pfad read-only lesen. Es darf Opening-Orchestrierung,
+Return-Artifact-Parsing als Voraussetzung für Revisit, Slot-Matching, Generator,
+Slot-Update, Regeneration, Reparatur, Kandidatensuche oder Kandidatenauswahl weder
+importieren noch aufrufen.
+
+Die erste verbindliche Rendering-Allowlist lautet:
+
+```text
+[private local]
+gespeicherter kompakter Nachhall
+
+[local path]
+exakter bewusst bekannter Resultatpfad
+Verfügbarkeit dieses Pfades
+```
+
+Die ganze Markdown-Datei darf niemals ungefiltert dargestellt werden. Nicht
+player-facing sind technischer Trace, `artifact_identity`, `slot_identity`,
+Route-, Package-, Slot- und Origin-IDs, deterministischer Seed und
+Seed-Ableitung, Composition Plan, Generatorinternas, Profil- oder Source-IDs,
+Slotstatus, Slotnotizen, generische Objektrepräsentationen und unklassifizierte
+manuelle Anhänge.
+
+Manuelle Notizen bleiben eine interessante mögliche spätere persönliche
+Erweiterung, gehören aber nicht zur ersten 5B-Allowlist. Vor einer eigenen
+Datenschutz-, Format- und Spielerlebnisentscheidung werden sie weder automatisch
+erkannt noch automatisch dargestellt.
 
 `/results` darf niemals:
 
@@ -669,9 +780,8 @@ Spielerperspektiven bleiben getrennt:
 - **antwortende Person:** sieht den abgeschlossenen Antwortbeitrag und den Pfad
   des erzeugten Return Artifact;
 - **ursprünglich wartende Person:** sieht nach manueller Rückkehr und
-  erfolgreichem Opening das stabile lokale Ergebnis, gespeichertes Resonance
-  Artifact und Nexus Echo, gegebenenfalls einen bereits gespeicherten Nachhall
-  sowie den bekannten lokalen Ergebnisort.
+  erfolgreichem Opening allowlist-basiert den gespeicherten kompakten Nachhall,
+  den bekannten lokalen Ergebnisort und dessen Verfügbarkeit.
 
 Beide Perspektiven werden nicht ohne spätere Designentscheidung in ein
 generisches Ergebnisobjekt zusammengeführt.
@@ -692,33 +802,44 @@ successful Return Opening
 -> no Opening, generation, regeneration, search, or mutation
 ```
 
-### Offene read-only Inventurfragen für Scheibe 5
+### Inventurergebnis und nächste Planungsreihenfolge
 
-Vor jeder Implementierung muss eine separate read-only Inventur klären:
+Die Inventurbefunde und Entscheidungen sind dokumentiert. Die nächste
+vorsichtige Arbeitsreihenfolge ist:
 
-1. Welche bestehende Opening-Funktion erzeugt das stabile Ergebnis?
-2. Was tun `OPEN_RETURN.sh`, `incoming/` und `results/` bereits genau?
-3. Welche konkreten Dateien enthalten Resonance Artifact, Nexus Echo und Nachhall?
-4. Ist Nachhall gespeichertes Geschwister, optionale Komponente oder spätere Stufe?
-5. Welcher exakte Pfad wird nach erfolgreichem Opening zurückgegeben oder gespeichert?
-6. Wie wird dieser Pfad der Resonance Chamber ausdrücklich bekannt gemacht?
-7. Wie kann das stabile Ergebnis nach Neustart ohne Dateisystemsuche oder allgemeine Registry wieder gelesen werden?
-8. Welche typisierte Ergebnisgruppe und explizite Rendering-Allowlist sind nötig?
-9. Wie wird garantiert, dass `/results` niemals Opening oder Regeneration aufruft?
-10. Wo liegt die bestehende Idempotenzgrenze für wiederholtes Opening?
-11. Wie werden mehrere zurückgebrachte Artifacts ohne automatische Auswahl behandelt?
-12. Welche Recovery-Zustände bestehen bereits und welche sind nur geplant?
+```text
+1. separate read-only Inventur der bewussten Pfadübergabe
+2. kleinste Known-source-Lesegrenze bestimmen
+3. 5A-Härtung: doppelte Slot-Identitäten vor jedem Schreiben ablehnen
+4. bestehendes Opening als bewussten Spielschritt integrieren
+5. reinen Stable-result-Reader schaffen
+6. 5B allowlist-basiert an /results anbinden
+7. Recovery- und Ergebnistexte sprachlich bearbeiten
+```
+
+Dies ist eine Planungsreihenfolge und keine Implementierungsfreigabe. Slice 4A
+bleibt abgeschlossen und unverändert. Slice 4B, 5A und 5B bleiben nicht
+implementiert und nicht zur Umsetzung freigegeben. Unmittelbar nächster
+technischer Schritt ist die separate read-only Inventur der bewussten
+Pfadübergabe.
 
 ### Ausgeschlossen aus Scheibe 5
 
 - allgemeine Ergebnis-Registry;
-- automatische Dateisystemsuche oder Artifact-Auswahl;
+- allgemeine Dateisystemsuche oder automatische Auswahl bei mehreren
+  Artifacts;
 - Cloud-Synchronisierung oder Archivintegration;
 - automatische Rückkehr, Publikation oder Opening;
 - erneute ANSWER-Erzeugung;
 - Regeneration von Resonance Artifact, Nexus Echo oder Nachhall;
 - Überschreiben gespeicherter Ergebnisse;
 - neue Persistenzarchitektur ohne vorherige read-only Inventur.
+
+Ältere Dokumente und Legacy-Module beschreiben Resonance Artifact und Nexus Echo
+teilweise noch als Ergebnisform. Der aktuelle Produktionscode und die aktuelle
+Richtung verwenden den kompakten Nachhall als vollständiges stabiles Ergebnis.
+Diese Begriffe werden in einer späteren Dokumentationsbereinigung synchronisiert;
+historische Dokumente bleiben in dieser Aktualisierung unverändert.
 
 ## Scheibe 6 — Sprachliche Endredaktion
 
@@ -769,8 +890,8 @@ Vor jeder Implementierung muss eine separate read-only Inventur klären:
 - [ ] Abbruch in verschiedenen Phasen;
 - [ ] Return Artifact anzeigen;
 - [ ] Return Artifact manuell in den privaten Return Workspace zurückbringen;
-- [ ] entsprechend der inventarisierten Architektur bewusst in `incoming/`
-  ablegen oder ausdrücklich auswählen;
+- [ ] bewusst in `incoming/` des bekannten privaten Return Workspace ablegen
+  und `OPEN_RETURN.sh` ausdrücklich starten;
 - [ ] gegen den richtigen Return Slot öffnen;
 - [ ] fremde Artifacts sicher ablehnen;
 - [ ] beschädigte, unvollständige, inkompatible oder mehrdeutige Artifacts sicher ablehnen;
@@ -866,7 +987,10 @@ Dann wird nur die Resonance-Chamber-Ausgabe leicht eingerückt.
 
 ---
 
-# I. Aktuelle Sprintreihenfolge
+# I. Gesamte Sprintreihenfolge
+
+Die Liste zeigt den Gesamtverlauf einschließlich bereits abgeschlossener
+Schritte. Der aktuell nächste konkrete Schritt steht in Abschnitt J.
 
 ```text
 1. Planungsdokumente versioniert in Git ablegen
@@ -894,9 +1018,18 @@ Nicht parallelisieren:
 
 # J. Nächster konkreter Schritt
 
-Als Nächstes wird der Dokumentationsdiff geprüft und Slice 4A sauber geschlossen.
-Erst danach folgen getrennte read-only Inventuren für Scheibe 4B und Scheibe 5;
-jede Implementierungsentscheidung benötigt eine neue ausdrückliche Freigabe.
+Als Nächstes wird in einer separaten read-only Inventur die kleinste vorhandene
+Übergabenaht untersucht, über die ein bewusst bekannter autoritativer stabiler
+Resultatpfad nach einem Prozessneustart zur Resonance Chamber gelangen kann.
+
+Diese Inventur untersucht insbesondere Chamber-Konstruktion und -Eintritt,
+bestehende Controller-Eingaben, explizite Pfadparameter, Launcher- oder
+Aktivierungskontext, bewusst bekannte Workspace-Pfade sowie paketrelative oder
+lokale Source-Übergaben.
+
+Sie führt keine Implementierung aus und nimmt keine Registry, Discovery, zweite
+Persistenzschicht oder Kopplung an Return Opening vorweg. Slice 4B, 5A und 5B
+bleiben nicht implementiert und nicht zur Umsetzung freigegeben.
 
 ---
 
