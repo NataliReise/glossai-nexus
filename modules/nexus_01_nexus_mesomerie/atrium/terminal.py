@@ -90,7 +90,7 @@ def _atrium_capabilities(
     runtime: NexusAtriumRuntime | None,
 ) -> tuple[_AtriumCapability, ...]:
     capabilities = [
-        _AtrumCapability("/look", "show the current Atrium"),
+        _AtriumCapability("/look", "show the current Atrium"),
         _AtriumCapability("/help", "show the current Atrium grammar"),
         _AtriumCapability("/first-spark", "enter the First Spark Chamber"),
     ]
