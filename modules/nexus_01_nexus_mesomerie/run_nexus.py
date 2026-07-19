@@ -26,6 +26,15 @@ InputReader = Callable[[str], str]
 OutputWriter = Callable[[str], None]
 
 
+def _absolute_known_resonance_source(raw_value: str) -> Path:
+    path = Path(raw_value)
+    if not path.is_absolute():
+        raise argparse.ArgumentTypeError(
+            "known Resonance source must be an absolute path"
+        )
+    return path
+
+
 def run_corrected_nexus(
     *,
     nexus_root: Path = NEXUS_ROOT,
@@ -34,6 +43,7 @@ def run_corrected_nexus(
     private_message: str = "A Nexus 01 gift is waiting for you.",
     input_reader: InputReader = input,
     output_writer: OutputWriter = print,
+    known_resonance_source: Path | None = None,
     activation_controller: Callable[..., ActivationChoiceResult] = run_recipient_activation,
     classifier: Callable[..., ResonanceMode] = classify_runtime_interpretation,
     atrium_runner: Callable[..., NexusAtriumRuntime] = run_nexus_terminal,
@@ -71,6 +81,7 @@ def run_corrected_nexus(
             output_writer=output_writer,
             input_reader=input_reader,
             nexus_root=nexus_root,
+            known_resonance_source=known_resonance_source,
         ),
     )
 
@@ -88,6 +99,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "--private-message", default="A Nexus 01 gift is waiting for you."
     )
+    parser.add_argument(
+        "--known-resonance-source",
+        type=_absolute_known_resonance_source,
+        metavar="ABSOLUTE_PATH",
+    )
     return parser.parse_args(argv)
 
 
@@ -102,6 +118,7 @@ def main(argv: list[str] | None = None) -> int:
             recipient_alias=args.recipient_alias,
             activation_purpose=args.activation_purpose,
             private_message=args.private_message,
+            known_resonance_source=args.known_resonance_source,
         )
     except (EOFError, KeyboardInterrupt):
         print("\nNexus 01 start cancelled. No automatic fallback was used.")

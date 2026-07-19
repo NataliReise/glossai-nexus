@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable
-from dataclasses import dataclass, field
+from dataclasses import InitVar, dataclass, field
 from enum import Enum
 from pathlib import Path
 import secrets
@@ -139,11 +139,20 @@ class ClassifiedResonanceController:
     artifact_writer: ArtifactWriter = write_resonance_return_artifact
     invitation_preparer: InvitationPreparer | None = None
     route_factory: RouteFactory | None = None
+    known_resonance_source: InitVar[Path | None] = None
+    _known_resonance_source: Path | None = field(
+        default=None,
+        init=False,
+        repr=False,
+    )
     _last_completed_result: CompletedCorrectedResult | None = field(
         default=None,
         init=False,
         repr=False,
     )
+
+    def __post_init__(self, known_resonance_source: Path | None) -> None:
+        self._known_resonance_source = known_resonance_source
 
     def __call__(self) -> ChamberRunResult:
         if self._last_completed_result is not None and self.mode in {

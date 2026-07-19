@@ -545,3 +545,35 @@ def test_blocked_surface_quit_eof_and_interrupt_return_calmly() -> None:
         transcript = "\n".join(output)
         assert "Leaving the Resonance Chamber. Returning safely to the Atrium." in transcript
         assert "Traceback" not in transcript
+
+
+def test_known_resonance_source_is_private_inert_and_surface_neutral() -> None:
+    source = Path("/tmp/nexus-known-source.md")
+    commands = iter(("/look", "/help", "/quit"))
+    output: list[str] = []
+    controller = ClassifiedResonanceController(
+        ResonanceMode.COMPOSE,
+        output_writer=output.append,
+        input_reader=lambda _prompt: next(commands),
+        known_resonance_source=source,
+    )
+
+    assert controller._known_resonance_source is source
+    assert controller._last_completed_result is None
+    capabilities = controller._surface_capabilities(_SurfacePhase.PRE_RUN)
+    assert tuple(item.command for item in capabilities) == (
+        "/look",
+        "/help",
+        "/compose",
+        "/quit",
+    )
+
+    result = controller()
+
+    assert not result.completed
+    assert controller._known_resonance_source is source
+    assert controller._last_completed_result is None
+    transcript = "\n".join(output)
+    assert str(source) not in transcript
+    assert "  /results —" not in transcript
+    assert "  /trace —" not in transcript

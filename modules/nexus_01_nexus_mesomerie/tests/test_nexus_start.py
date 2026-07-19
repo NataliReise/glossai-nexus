@@ -76,6 +76,9 @@ class NexusStartTests(unittest.TestCase):
         self.assertIsNotNone(runtime)
         self.assertEqual(captured["resonance_mode"], ResonanceMode.COMPOSE)
         self.assertEqual(runtime.resonance_mode, ResonanceMode.COMPOSE)
+        self.assertIsNone(
+            captured["classified_resonance_runner"]._known_resonance_source
+        )
 
     def test_first_launch_token_v2_activates_then_opens_answer_atrium(self) -> None:
         runtime, captured = self.start_with_answers("2", str(self.token))
@@ -204,6 +207,77 @@ class NexusStartTests(unittest.TestCase):
         with patch("run_nexus.run_nexus_terminal") as legacy_runner:
             self.assertEqual(start_module.main(["--legacy-preactivated"]), 0)
         legacy_runner.assert_called_once_with()
+
+    def test_known_resonance_source_cli_is_optional_and_forwarded_exactly(self) -> None:
+        self.assertIsNone(start_module.parse_args([]).known_resonance_source)
+        lexical_source = Path("/tmp/nexus-a/../nexus-known-source.md")
+
+        with patch("run_nexus.run_corrected_nexus") as runner:
+            self.assertEqual(
+                start_module.main(
+                    ["--known-resonance-source", str(lexical_source)]
+                ),
+                0,
+            )
+
+        runner.assert_called_once()
+        self.assertEqual(
+            runner.call_args.kwargs["known_resonance_source"], lexical_source
+        )
+        self.assertEqual(
+            str(runner.call_args.kwargs["known_resonance_source"]),
+            "/tmp/nexus-a/../nexus-known-source.md",
+        )
+
+    def test_relative_known_resonance_source_stops_before_runtime(self) -> None:
+        with patch("run_nexus.run_corrected_nexus") as runner:
+            with self.assertRaises(SystemExit):
+                start_module.main(
+                    ["--known-resonance-source", "relative/result.md"]
+                )
+
+        runner.assert_not_called()
+
+    def test_missing_absolute_source_reaches_controller_without_file_io(self) -> None:
+        class NoFileSystemPath(type(Path())):
+            def _forbid(self, *_args, **_kwargs):
+                raise AssertionError("known source touched the filesystem")
+
+            exists = _forbid
+            is_file = _forbid
+            stat = _forbid
+            open = _forbid
+            read_text = _forbid
+            resolve = _forbid
+            glob = _forbid
+            rglob = _forbid
+
+        activate_normally(nexus_root=self.nexus, **RECIPIENT)
+        source = NoFileSystemPath(
+            "/tmp/nexus-a/../nexus-known-source-not-present.md"
+        )
+        captured: dict[str, object] = {}
+
+        def atrium_runner(**kwargs):
+            captured.update(kwargs)
+            return NexusAtriumRuntime.from_activation(
+                kwargs["activation_loader"](), kwargs["resonance_mode"]
+            )
+
+        runtime = run_corrected_nexus(
+            nexus_root=self.nexus,
+            known_resonance_source=source,
+            atrium_runner=atrium_runner,
+            **RECIPIENT,
+        )
+
+        self.assertIsNotNone(runtime)
+        controller = captured["classified_resonance_runner"]
+        self.assertIs(controller._known_resonance_source, source)
+        self.assertEqual(
+            str(controller._known_resonance_source),
+            "/tmp/nexus-a/../nexus-known-source-not-present.md",
+        )
 
 
 if __name__ == "__main__":
