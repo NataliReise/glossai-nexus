@@ -2,16 +2,23 @@
 
 from __future__ import annotations
 
+from contextlib import redirect_stdout
+from io import StringIO
 import json
 from itertools import product
 from pathlib import Path
 import sys
 import tempfile
+from unittest.mock import Mock, patch
 
 NEXUS_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(NEXUS_ROOT))
 
-from open_resonance_return import LocalResonanceOpenError, open_resonance_return_files
+from open_resonance_return import (
+    LocalResonanceOpenError,
+    main,
+    open_resonance_return_files,
+)
 from chambers.resonance.choices import build_v0_1_catalog
 from return_resonance.compact_generator import generate_compact_resonance
 from return_resonance.resonance_render_bridge import (
@@ -119,6 +126,44 @@ def _fail_generator(*args: object, **kwargs: object) -> object:
     raise AssertionError("generator must not be called")
 
 
+def _assert_duplicate_preflight(
+    root: Path,
+    slots: list[dict[str, str]],
+) -> str:
+    artifact_path, slots_path, output_dir = _write_inputs(root, slots=slots)
+    slots_before = slots_path.read_bytes()
+    generator = Mock(side_effect=AssertionError("generator must not be called"))
+    updater = Mock(side_effect=AssertionError("updater must not be called"))
+
+    with (
+        patch("open_resonance_return._derive_seed") as derive_seed,
+        patch("open_resonance_return._write_new_file") as writer,
+        patch("open_resonance_return.tempfile.mkstemp") as make_temporary,
+        patch.object(Path, "mkdir", side_effect=AssertionError("mkdir must not run")),
+    ):
+        try:
+            open_resonance_return_files(
+                artifact_path,
+                slots_path,
+                output_dir,
+                generator=generator,
+                slot_state_updater=updater,
+            )
+        except LocalResonanceOpenError as error:
+            message = str(error)
+        else:
+            raise AssertionError("Expected duplicate Return-Slot identity rejection")
+
+    generator.assert_not_called()
+    updater.assert_not_called()
+    derive_seed.assert_not_called()
+    writer.assert_not_called()
+    make_temporary.assert_not_called()
+    assert slots_path.read_bytes() == slots_before
+    assert not output_dir.exists()
+    return message
+
+
 def test_first_open_creates_result_and_marks_slot_opened() -> None:
     with tempfile.TemporaryDirectory() as directory:
         root = Path(directory)
@@ -156,6 +201,156 @@ def test_first_open_creates_result_and_marks_slot_opened() -> None:
         assert '"composition_plan"' in result.content
         assert '"artifact_identity"' in result.content
         assert _slot_status(slots_path) == "opened"
+
+
+def test_direct_duplicate_slot_identity_aborts_before_productive_work() -> None:
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        slot = _slot_item()
+        message = _assert_duplicate_preflight(root, [slot, dict(slot)])
+
+        assert message == (
+            "The return slot document contains duplicate return-slot identities. "
+            "Nothing was generated or written."
+        )
+
+
+def test_nonadjacent_duplicate_aborts_before_any_unique_slot_is_processed() -> None:
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        first = _slot_item()
+        middle = _slot_item(
+            origin_trace_id="n01-other-origin",
+            return_slot_id="other-return-slot",
+            result_file="other-return.local.md",
+        )
+        message = _assert_duplicate_preflight(root, [first, middle, dict(first)])
+
+        assert "duplicate return-slot identities" in message
+
+
+def test_same_identity_with_different_payload_is_still_duplicate_and_private() -> None:
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        first = _slot_item()
+        different_payload = dict(first)
+        different_payload.update(
+            {
+                "package_id": "private-alternate-package",
+                "layer_id": "private-alternate-layer",
+                "result_file": "alternate-return.local.md",
+                "public_safe_label": "private alternate label",
+                "note": "private alternate note",
+            }
+        )
+        message = _assert_duplicate_preflight(root, [first, different_payload])
+
+        assert "private" not in message
+        assert str(root) not in message
+        assert "test-return-slot" not in message
+        assert "Traceback" not in message
+
+
+def test_duplicate_cli_error_is_calm_and_does_not_disclose_slot_data() -> None:
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        private_slot = _slot_item()
+        private_slot["note"] = "private relationship note"
+        artifact_path, slots_path, output_dir = _write_inputs(
+            root,
+            slots=[private_slot, dict(private_slot)],
+        )
+        output = StringIO()
+
+        with redirect_stdout(output):
+            exit_code = main(
+                [
+                    "--artifact",
+                    str(artifact_path),
+                    "--slots",
+                    str(slots_path),
+                    "--output-dir",
+                    str(output_dir),
+                ]
+            )
+
+        transcript = output.getvalue()
+        assert exit_code == 2
+        assert "duplicate return-slot identities" in transcript
+        assert "Nothing was generated or written" in transcript
+        assert "test-return-slot" not in transcript
+        assert "private relationship note" not in transcript
+        assert str(root) not in transcript
+        assert "Traceback" not in transcript
+        assert not output_dir.exists()
+
+
+def test_distinct_identities_with_same_descriptive_payload_open_normally() -> None:
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        selected = _slot_item()
+        other = _slot_item(
+            origin_trace_id="n01-other-origin",
+            return_slot_id="other-return-slot",
+            result_file="other-return.local.md",
+        )
+        artifact_path, slots_path, output_dir = _write_inputs(
+            root,
+            slots=[other, selected],
+        )
+        generator = Mock(side_effect=generate_compact_resonance)
+
+        result = open_resonance_return_files(
+            artifact_path,
+            slots_path,
+            output_dir,
+            generator=generator,
+        )
+
+        assert result.created is True
+        assert result.path == output_dir / "test-return.local.md"
+        generator.assert_called_once()
+        document = json.loads(slots_path.read_text(encoding="utf-8"))
+        assert [slot["status"] for slot in document["slots"]] == [
+            "waiting",
+            "opened",
+        ]
+
+
+def test_duplicate_preflight_wins_over_existing_result_reuse() -> None:
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        artifact_path, slots_path, output_dir = _write_inputs(
+            root,
+            slots=[_slot_item(), _slot_item(result_file="duplicate.local.md")],
+        )
+        output_dir.mkdir()
+        result_path = output_dir / "test-return.local.md"
+        preserved = b"existing private local result\n"
+        result_path.write_bytes(preserved)
+        slots_before = slots_path.read_bytes()
+
+        with (
+            patch("open_resonance_return._read_existing_result") as reader,
+            patch("open_resonance_return._write_new_file") as writer,
+        ):
+            try:
+                open_resonance_return_files(
+                    artifact_path,
+                    slots_path,
+                    output_dir,
+                    generator=_fail_generator,
+                )
+            except LocalResonanceOpenError as error:
+                assert "duplicate return-slot identities" in str(error)
+            else:
+                raise AssertionError("Expected duplicate Return-Slot identity rejection")
+
+        reader.assert_not_called()
+        writer.assert_not_called()
+        assert result_path.read_bytes() == preserved
+        assert slots_path.read_bytes() == slots_before
+        assert tuple(output_dir.iterdir()) == (result_path,)
 
 
 def test_second_open_reuses_result_without_overwriting() -> None:
@@ -521,6 +716,12 @@ def test_invalid_manual_free_words_publish_nothing_and_preserve_slot() -> None:
 
 if __name__ == "__main__":
     test_first_open_creates_result_and_marks_slot_opened()
+    test_direct_duplicate_slot_identity_aborts_before_productive_work()
+    test_nonadjacent_duplicate_aborts_before_any_unique_slot_is_processed()
+    test_same_identity_with_different_payload_is_still_duplicate_and_private()
+    test_duplicate_cli_error_is_calm_and_does_not_disclose_slot_data()
+    test_distinct_identities_with_same_descriptive_payload_open_normally()
+    test_duplicate_preflight_wins_over_existing_result_reuse()
     test_second_open_reuses_result_without_overwriting()
     test_opened_slot_without_result_is_rejected()
     test_mismatched_package_creates_nothing_and_changes_no_state()

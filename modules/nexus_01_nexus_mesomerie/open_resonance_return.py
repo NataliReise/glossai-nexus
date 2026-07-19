@@ -103,6 +103,7 @@ def open_resonance_return_files(
 
     artifact = load_resonance_return_artifact(artifact_file)
     slots = load_return_slots(slot_file)
+    _validate_unique_return_slot_identities(slots)
     match = _match_artifact(artifact, slots)
     slot = match.slot
     if slot is None:
@@ -261,6 +262,18 @@ def _match_artifact(
             "the artifact does not match the module for this slot."
         )
     return match
+
+
+def _validate_unique_return_slot_identities(slots: list[ReturnSlot]) -> None:
+    seen: set[tuple[str, str]] = set()
+    for slot in slots:
+        identity = (slot.origin_trace_id, slot.return_slot_id)
+        if identity in seen:
+            raise LocalResonanceOpenError(
+                "The return slot document contains duplicate return-slot identities. "
+                "Nothing was generated or written."
+            )
+        seen.add(identity)
 
 
 def _validate_result_target(slot: ReturnSlot, slots: list[ReturnSlot]) -> str:
