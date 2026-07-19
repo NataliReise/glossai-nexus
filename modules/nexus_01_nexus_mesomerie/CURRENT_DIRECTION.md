@@ -52,6 +52,28 @@ Working formula:
 > They belong to the Nexus 01 module line through the way they allow themselves
 > to be discovered.
 
+## Exploration-first terminal principle
+
+The following is a binding construction principle for corrected Atrium and
+corrected Resonance. It is the confirmed target direction; it is not yet fully
+implemented.
+
+- A room describes itself and its current state.
+- Entering a room never starts a productive action automatically.
+- `/look` repeats only the room and state description.
+- `/help` reveals the currently available actions.
+- Full command lists do not appear automatically in room descriptions.
+- Unknown input receives a calm short response and may point to `/help`.
+- Productive actions begin only after an explicit command.
+- Help and the local dispatcher should derive from the same small room-local
+  capability source.
+- Unavailable actions remain hidden instead of being advertised as disabled.
+- No Nexus-wide general command framework is required.
+
+First Spark is an existing design precedent for this exploration-first
+principle. Legacy remains an isolated compatibility path and is not part of the
+first Surface migration.
+
 ## Current resonance decision
 
 The complete visible production resonance result of Nexus 01 is a compact

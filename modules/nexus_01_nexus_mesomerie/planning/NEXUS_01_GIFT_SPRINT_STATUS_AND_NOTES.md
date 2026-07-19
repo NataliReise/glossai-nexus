@@ -52,9 +52,13 @@ development diary.
   implemented, reviewed, automatically verified, and manually accepted
 - Slice 4A.1 — automatic neutral Return Artifact filename:
   implemented, reviewed, automatically verified, and manually accepted
-- Slice 4B — deliberate rereading of known existing sources after restart:
-  inventory completed and decisions recorded; not implemented and not
-  authorized; the deliberate path-handoff inventory is next
+- Slice 4B — Resonance entry and known-source rereading after restart:
+  entry/help and path-handoff inventories completed; architecture decisions
+  recorded; subdivided into 4B.0a-c and 4B.1-2; not implemented or authorized
+- Next implementation candidate:
+  4B.0a — Neutral Resonance Entry; no implementation authorization exists
+- Slice 4C — Atrium Exploration Surface:
+  planned; not implemented and not authorized
 - Slice 5 — Return, Local Completion, and Result Revisit:
   inventory completed and planning updated; operative technical Opening
   infrastructure exists, but 5A and 5B remain unimplemented and unauthorized
@@ -604,7 +608,12 @@ Slice 2D-C    Resonance grammar consistency review
 Slice 3       post-run and explicitly new cycles
 Slice 4A      same-process results
 Slice 4A.1    automatic neutral Return Artifact filename
-Slice 4B      known-source read-only rereading after restart
+Slice 4B.0a   neutral Resonance entry
+Slice 4B.0b   Resonance description, help, and capabilities
+Slice 4B.0c   BLOCKED Resonance surface
+Slice 4B.1    known-source handoff
+Slice 4B.2    known-source read-only rereading after restart
+Slice 4C      Atrium Exploration Surface
 Slice 5A      manual Return Opening and stable local result creation
 Slice 5B      read-only revisit of that already created stable local result
 Slice 6       language editing
@@ -871,31 +880,100 @@ for Resonance Artifact or Nexus Echo will be introduced for the gift sprint.
 Existing renderers and terminology for those outputs are legacy material, not
 the current production contract.
 
-### Slice 4B — known-source rereading after restart
+### Slice 4B — Resonance entry and known-source rereading
 
-Status: **inventory completed; decision taken; planning updated; not implemented
-and not authorized**
+Status: **entry/help and path-handoff inventories completed; decisions taken;
+planning updated; all subsections not implemented and not authorized**
 
-The inventory found several source-specific read-only loaders but no existing
-generic known-source loading boundary. Slice 4B remains limited to deliberately
-known authoritative sources after process restart. It performs no general
-registry or filesystem search, Return Opening, Return Artifact/Return Slot
-validation, generation, mutation, or stable-result creation.
+The read-only inventory left the repository unchanged. It confirmed these
+current facts:
 
-The main unresolved architecture question is how the exact authoritative stable
-result path is deliberately handed to the Resonance Chamber after restart.
-During Opening it exists as `LocalResonanceResult.path`, the CLI prints it, and
-it can be determined from a deliberately known Workspace plus
-`slot.result_file`; the Chamber does not currently receive or persist it. A
-general registry, automatic search, result database, shadow copy, or second
-persistence layer remains excluded.
+- `ClassifiedResonanceController.__call__()` immediately starts
+  `_run_compose()` or `_run_answer()` on first entry today;
+- the Slice 4A post-run Surface already provides the useful base model for a
+  shared Resonance Surface;
+- Atrium description and help/menu behavior are currently functionally mixed;
+- help and dispatch are partly maintained from separate sources;
+- no Nexus-wide command framework is required.
 
-The next separate read-only inventory must inspect the smallest existing handoff
-seam: post-restart Chamber construction and entry, explicit path parameters,
-launcher or activation context, existing controller inputs, deliberately known
-Workspace paths, and package-relative or local source handoffs. Any later
-solution must remain deliberate, local, explicit, registry-free, discovery-free,
-independent of Opening, and without a second persistence layer.
+The confirmed target contract is `/resonance` -> state-dependent description ->
+`resonance>` prompt. `/help` alone reveals currently available actions; `/look`
+describes only room and state. COMPOSE may expose `/compose`, ANSWER may expose
+`/answer`, and BLOCKED exposes no productive action. `/results` appears only
+when an allowed source exists. A room description may hint atmospherically that
+a result is present without naming `/results`. Unavailable actions remain
+hidden.
+
+`/cancel` exists only inside an active productive cycle, and `/results` is not
+visible there. `/compose` is absent in ANSWER and BLOCKED; `/answer` is absent in
+COMPOSE and BLOCKED. `/quit` remains the current return command to the Atrium.
+After a productive cycle, the existing return-to-Atrium contract remains in
+place for now; a later direct return to the same Surface is deferred.
+
+#### 4B.0a — Neutral Resonance Entry
+
+Status: **next implementation candidate; not implemented and not authorized**
+
+First COMPOSE or ANSWER entry no longer starts productive work in the target
+contract. `/compose` or `/answer` explicitly starts the existing
+`_run_compose()` or `_run_answer()` mechanics. Success, cancellation, and error
+continue to return to the Atrium initially, and Slice 4A remains unchanged.
+
+#### 4B.0b — Resonance Description, Help and Capabilities
+
+Status: **not implemented and not authorized**
+
+This planned slice provides one local pre-/post-run Surface. `/look` renders
+only room and state; `/help` and the dispatcher derive from the same small
+Resonance-local capability source. It introduces neither a general registry nor
+a general command framework and preserves the Slice 4A `/results` source.
+
+#### 4B.0c — BLOCKED Resonance Surface
+
+Status: **not implemented and not authorized**
+
+The planned BLOCKED Surface is calm and nonproductive: `/look`, `/help`, safe
+recovery information, and `/quit`, with no COMPOSE, ANSWER, Legacy action, Token
+search, or automatic repair.
+
+#### 4B.1 — Known-source Handoff
+
+Status: **not implemented and not authorized**
+
+4B.1 is the shared explicit handoff for a deliberately known local source:
+`run_nexus.py` -> `run_corrected_nexus()` ->
+`ClassifiedResonanceController`. The source is process-local and supplied again
+after restart. Source-specific types remain separate. No persistence, registry,
+discovery, private-source Activation schema, or private travelling-carrier field
+is introduced. The exact stable-result Markdown path remains the preferred
+later 5B application of this seam; 4B.1 does not implement that complete revisit.
+
+#### 4B.2 — Known-source Rereading
+
+Status: **not implemented and not authorized**
+
+4B.2 is the shared source-specific read-only safety boundary: explicit known
+source, source-specific validation, allowlist-based rendering, and no mutation.
+It keeps source types and readers separate, may prepare common calm
+missing/unavailable semantics and capability wiring, and performs no discovery,
+Opening, matching, generation, regeneration, repair, or mutation. It does not
+implement the stable-result-specific Markdown reader, Compact Resonance parsing,
+or complete 5B `/results` revisit.
+
+### Slice 4C — Atrium Exploration Surface
+
+Status: **planned; not implemented and not authorized**
+
+4C separates Atrium description from menu behavior. `/look` shows the room,
+perceptible paths, and current states; `/help` shows only available navigation
+actions. Help and dispatch derive from the same small Atrium-local capability
+source. Unknown input remains calm and may briefly point to `/help`; there is no
+new `/chambers` command or general menu framework.
+
+One short `/help` hint appears on the first Atrium entry of a process start, not
+after every Chamber change. First Spark and Legacy remain outside this initial
+migration. 4C follows 4B.2 unless a later implementation inventory proves a
+strictly smaller prerequisite.
 
 ### Slice 5 — Return, Local Completion, and Result Revisit
 
@@ -956,11 +1034,14 @@ recovery and slot repair. The only existing pure file reader is currently a
 private helper inside this mutating Opening path.
 
 Therefore Option C applies: before Slice 5B integration, a narrow separation is
-required between reading an existing result and opening a Return. 5B may later
-read only the already existing authoritative Markdown file from an explicitly
-known path. It must never import or call Opening orchestration, Return Artifact
-parsing as a prerequisite for revisit, slot matching, generator logic, slot
-updates, regeneration, repair, candidate search, or candidate selection.
+required between reading an existing result and opening a Return. 5B receives
+the exact path through the 4B.1 handoff and uses the 4B.2 read-only boundary. Its
+own stable-result Markdown reader accepts only a regular non-symlink UTF-8 file,
+parses the Compact Resonance sections, and provides the stable-result-specific
+allowlist to `/results`. It must never import or call Opening orchestration,
+Return Artifact parsing as a prerequisite for revisit, slot matching, generator
+logic, slot updates, regeneration, repair, candidate search, or candidate
+selection.
 
 The initial explicit rendering allowlist is:
 
@@ -984,10 +1065,10 @@ part of the initial 5B allowlist. Until a separate privacy, format, and player-
 experience decision is taken, they are neither detected nor displayed
 automatically.
 
-Slice 5B applies or extends the safe known-source rereading boundary investigated
-by 4B to the special stable result created by 5A. It must not create a second
-independent persistence/loading architecture without explicit justification. It
-remains read-only and never invokes 5A Opening, so 4B and 5B are not identical.
+Slice 5B is the stable-result-specific application of the 4B.1 handoff and 4B.2
+read-only boundary to the special result already created by 5A. It creates no
+second independent persistence or loading architecture, remains read-only, and
+never invokes 5A Opening, so 4B and 5B are not identical.
 
 The order is strict:
 
@@ -1004,22 +1085,34 @@ selects candidates; or invokes Opening code directly or indirectly.
 
 ### Inventory conclusion and planned sequence
 
-The inventory findings and decisions are documented. The cautious next sequence
-is:
+The entry/help and path-handoff inventories are complete, and their decisions
+are documented. The cautious next sequence is:
 
 ```text
-1. perform a separate read-only inventory of deliberate path handoff
-2. determine the smallest known-source reading boundary
-3. harden 5A by rejecting duplicate slot identities before every write
-4. integrate the existing Opening as a deliberate play step
-5. create a pure stable-result reader
-6. connect 5B to /results through the allowlist
-7. edit recovery and result language
+1. 4B.0a — Neutral Resonance Entry
+2. 4B.0b — Resonance Description, Help and Capabilities
+3. 4B.0c — BLOCKED Resonance Surface
+4. 4B.1 — Known-source Handoff
+5. 4B.2 — Known-source Rereading
+6. 4C — Atrium Exploration Surface
+7. harden 5A by rejecting duplicate slot identities before every write
+8. integrate the existing Opening as a deliberate play step
+9. implement the stable-result-specific 5B reader and /results revisit only
+   through the authorized 4B.1 handoff and 4B.2 read-only boundary
+10. edit recovery and result language
 ```
 
 This is planning, not implementation authorization. Slice 4A remains complete
-and unchanged. Slices 4B, 5A, and 5B remain unimplemented and unauthorized. The
-deliberate path-handoff inventory is the immediate next technical step.
+and unchanged. 4B.0a is the next implementation candidate, but it is not
+authorized. The remaining 4B subsections, 4C, 5A, and 5B are likewise
+unimplemented and unauthorized.
+
+The following questions are deliberately deferred and do not block 4B.0a:
+whether `/atrium` later supplements or replaces `/quit` as the canonical return
+command; whether a productive cycle later returns directly to the Resonance
+Surface; whether the exploration/help principle later extends to Legacy;
+whether standalone First Spark `/look` semantics are unified; and when manual
+notes receive a separate allowlist-based area.
 
 Older documentation and legacy modules still describe Resonance Artifact and
 Nexus Echo as result forms. Current production code and current direction use
@@ -1044,11 +1137,11 @@ Status: **deferred beyond the current gift sprint**
 
 ## Immediate next step
 
-1. Perform the separate read-only inventory of deliberate result-path handoff.
-2. Determine the smallest existing known-source reading boundary.
-3. Request separate authorization before any implementation or Git action.
+The decisions are documented. The next implementation candidate is 4B.0a —
+Neutral Resonance Entry, but no implementation is authorized yet. Request
+separate authorization before any implementation or Git action.
 
-Slices 4B, 5A, and 5B are not approved for implementation. This
+Slices 4B.0a-c, 4B.1-2, 4C, 5A, and 5B are not approved for implementation. This
 documentation-only update runs no new tests. Any staging, commit, push,
 implementation, or other Git write action requires separate explicit
 authorization.

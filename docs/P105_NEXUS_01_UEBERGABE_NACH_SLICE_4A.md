@@ -16,6 +16,11 @@ und die Planung ist aktualisiert. Operative technische Opening-Infrastruktur ist
 vorhanden; das ist ausdrücklich nicht gleichbedeutend mit einer integrierten,
 gehärteten und manuell akzeptierten Spielscheibe 5A.
 
+Auch die read-only Inventuren der bewussten Resultatpfad-Übergabe sowie der
+Resonance-Eingangsoberfläche und des Hilfe-Prinzips sind abgeschlossen. Der
+Repository-Stand blieb dabei unverändert; die Architekturentscheidungen sind
+bestätigt und in die Sprintgliederung übernommen.
+
 ## Repository- und Prüfstand
 
 - Branch: `gift/nexus-01-chamber-archive`
@@ -156,14 +161,20 @@ Abnahme.
 Keine privaten Testwerte, lokalen absoluten Pfade oder zufälligen realen IDs sind
 in dieser Notiz festgehalten.
 
-## Persistenzgrenze
+## Persistenz- und Surface-Grenze
 
 ```text
 Slice 4A
 same-process COMPOSE/ANSWER result view
 
-Slice 4B
-known-source read-only rereading after restart
+Slice 4B.0a-c
+neutraler Resonance-Eintritt, lokale Surface und BLOCKED-Surface
+
+Slice 4B.1-2
+bewusste Pfadübergabe und known-source read-only rereading after restart
+
+Slice 4C
+Atrium Exploration Surface
 
 Slice 5A
 manual Return Opening and stable local result creation
@@ -183,6 +194,44 @@ bekannte autoritative Quellen nach Neustart begrenzt, vollständig read-only und
 ohne Registry, allgemeine Dateisystemsuche, Return Opening, Matching,
 Generierung oder Mutation. Slice 4B ist nicht implementiert und nicht zur
 Umsetzung freigegeben.
+
+Der bestätigte Resonance-Zielvertrag trennt Eintritt und produktive Handlung:
+
+```text
+/resonance
+-> zustandsabhängige Resonance-Surface
+-> resonance>-Prompt
+-> produktive Handlung erst nach /compose oder /answer
+```
+
+`/look` beschreibt nur Raum und Zustand; `/help` zeigt die aktuell erlaubten
+sichtbaren Handlungen. Nicht verfügbare Handlungen bleiben verborgen. BLOCKED
+erhält eine ruhige nichtproduktive Surface. `/results` erscheint nur bei einer
+erlaubten vorhandenen Quelle und nie während produktiver Arbeit. `/cancel`
+bleibt auf den aktiven produktiven Zyklus begrenzt. `/quit` bleibt zunächst der
+bestehende Rückkehrbefehl zum Atrium.
+
+Ein vorhandenes Ergebnis darf in der Raumbeschreibung atmosphärisch angedeutet
+werden, ohne `/results` zu nennen.
+
+Die technische Inventur bestätigte knapp:
+
+- `ClassifiedResonanceController.__call__()` startet beim ersten Eintritt heute
+  sofort `_run_compose()` oder `_run_answer()`;
+- die Slice-4A-Post-run-Surface besitzt bereits das brauchbare Grundmodell für
+  eine gemeinsame Resonance-Surface;
+- Atriumbeschreibung und Hilfefunktion sind derzeit funktional vermischt;
+- Help und Dispatcher werden teilweise aus getrennten Quellen gepflegt;
+- ein Nexus-weites Command-Framework ist nicht erforderlich.
+
+Die geplante Gliederung lautet: 4B.0a Neutral Resonance Entry, 4B.0b Resonance
+Description, Help and Capabilities, 4B.0c BLOCKED Resonance Surface, 4B.1 als
+gemeinsame explizite Known-source-Übergabenaht und 4B.2 als gemeinsame
+quellspezifische read-only Sicherheitsgrenze. Alle diese Unterpunkte sind nicht
+implementiert und nicht zur Umsetzung freigegeben. Danach folgt 4C als eigener
+geplanter, nicht implementierter und nicht freigegebener Schritt für die Atrium
+Exploration Surface. First Spark und Legacy bleiben zunächst außerhalb dieser
+Migration.
 
 ## Geplante Ergebnisstufen
 
@@ -296,8 +345,11 @@ Vor einer Slice-5B-Integration ist eine schmale Trennung
 zwischen „bestehendes Ergebnis lesen“ und „Return öffnen“ erforderlich.
 ```
 
-5B darf nur die bereits bestehende autoritative Markdown-Datei über einen
-explizit bekannten Pfad read-only lesen. Es darf Opening-Orchestrierung,
+5B erhält den exakten bekannten Pfad über die 4B.1-Übergabenaht und nutzt die
+gemeinsame 4B.2-read-only-Sicherheitsgrenze. Der konkrete
+Stable-result-Markdown-Reader gehört zu 5B: Regular file, no symlink, UTF-8,
+Compact-Resonance-Abschnittsparsing und ausschließlich allowlist-basierte
+`/results`-Darstellung ohne technischen Trace. Er darf Opening-Orchestrierung,
 Return-Artifact-Parsing als Voraussetzung für Revisit, Slot-Matching, Generator,
 Slot-Update, Regeneration, Reparatur, Kandidatensuche oder Kandidatenauswahl
 weder importieren noch aufrufen. Slice 5B bleibt nicht implementiert und nicht
@@ -369,33 +421,34 @@ werden. Diese Härtung ist nicht implementiert, nicht freigegeben, muss vor oder
 innerhalb der 5A-Integration separat umgesetzt und getestet werden und darf nicht
 mit 5B vermischt werden.
 
-## Offene Architekturfrage: bewusste Pfadübergabe
+## Bestätigte Grenzen für Handoff und Rereading
 
-Die wichtigste verbleibende Frage lautet:
+4B.1 besitzt die kleine gemeinsame äußere Übergabenaht für eine bewusst bekannte
+lokale Quelle. Sie ist process-local, wird nach Neustart erneut ausdrücklich
+angegeben und hält quellspezifische Typen getrennt:
 
 ```text
-Wie gelangt der exakte autoritative stabile Resultatpfad
-nach einem Prozessneustart bewusst zur Resonance Chamber?
+run_nexus.py
+-> run_corrected_nexus()
+-> ClassifiedResonanceController
 ```
 
-Belegte Ausgangslage:
+Die Resonance Chamber persistiert private Quellen nicht. Es entsteht kein
+Activation-Schema dafür, keine Registry, keine automatische Discovery, keine
+Schattenkopie, keine zweite Persistenzschicht und kein privates Feld im
+travelling carrier.
 
-- während des Openings existiert der Pfad als `LocalResonanceResult.path`;
-- die CLI gibt ihn aus;
-- er kann aus bewusst bekanntem Workspace plus `slot.result_file` bestimmt
-  werden;
-- die Resonance Chamber erhält oder persistiert ihn derzeit nicht;
-- Registry, automatische Suche, Ergebnisdatenbank und Schattenkopie sind
-  ausgeschlossen.
+4B.2 besitzt die gemeinsame quellspezifische read-only Sicherheitsgrenze:
+explizit bekannte Quelle, quellspezifische Validierung, allowlist-basiertes
+Rendering, ruhige Missing-/Unavailable-Semantik und keine Mutation. 4B.2 ist
+nicht das vollständige spezielle Stable-result-Revisit.
 
-Die technische Lösung wird noch nicht vorweggenommen. Als nächster separater
-read-only Schritt wird die kleinste vorhandene Übergabenaht untersucht:
-Konstruktion und Eintritt der Resonance Chamber nach Neustart, vorhandene
-explizite Pfadparameter, Launcher- oder Aktivierungskontext, bestehende
-Controller-Eingaben, bewusst bekannte Workspace-Pfade und paketrelative oder
-lokale Source-Übergaben. Eine spätere Lösung muss bewusst, lokal, explizit, ohne
-Registry, ohne Discovery, ohne zweite Persistenzschicht und ohne Kopplung an
-Opening arbeiten.
+Die Resultatpfad-Inventur bleibt gültig: Der exakte autoritative
+Stable-result-Markdown-Pfad ist die bevorzugte spätere 5B-Anwendung der
+4B.1-Naht. Der konkrete Stable-result-Markdown-Reader, das
+Compact-Resonance-Abschnittsparsing und die `/results`-Anbindung nach 5A gehören
+zu 5B. Die read-only Einbindung erfolgt erst nach 4B.0a-c und bleibt von Return
+Opening entkoppelt.
 
 ## Nächster sicherer Schritt
 
@@ -403,17 +456,28 @@ Die Inventurbefunde und Entscheidungen sind dokumentiert. Die nächste
 vorsichtige Arbeitsreihenfolge ist:
 
 ```text
-1. separate read-only Inventur der bewussten Pfadübergabe
-2. kleinste Known-source-Lesegrenze bestimmen
-3. 5A-Härtung: doppelte Slot-Identitäten vor jedem Schreiben ablehnen
-4. bestehendes Opening als bewussten Spielschritt integrieren
-5. reinen Stable-result-Reader schaffen
-6. 5B allowlist-basiert an /results anbinden
-7. Recovery- und Ergebnistexte sprachlich bearbeiten
+1. 4B.0a — Neutral Resonance Entry
+2. 4B.0b — Resonance Description, Help and Capabilities
+3. 4B.0c — BLOCKED Resonance Surface
+4. 4B.1 — Known-source Handoff
+5. 4B.2 — Known-source Rereading
+6. 4C — Atrium Exploration Surface
+7. 5A-Härtung: doppelte Slot-Identitäten vor jedem Schreiben ablehnen
+8. bestehendes Opening als bewussten Spielschritt integrieren
+9. Stable-result-spezifischen 5B-Reader und /results-Revisit ausschließlich über
+   die autorisierte 4B.1-Übergabenaht und 4B.2-read-only-Grenze umsetzen
+10. Recovery- und Ergebnistexte sprachlich bearbeiten
 ```
 
 Dies ist eine vorsichtige Planungsreihenfolge und keine
 Implementierungsfreigabe. Slice 4A bleibt unverändert und abgeschlossen. Slice
-4B, 5A und 5B bleiben nicht implementiert und nicht zur Umsetzung freigegeben.
-Die Pfadübergabe-Inventur ist der unmittelbar nächste technische Schritt. Jede
-Umsetzung benötigt eine neue ausdrückliche Autorisierung.
+4B.0a ist der nächste Implementierungskandidat, aber nicht zur Umsetzung
+freigegeben. Auch die weiteren 4B-Unterpunkte, 4C, 5A und 5B bleiben nicht
+implementiert und nicht zur Umsetzung freigegeben. Jede Umsetzung benötigt eine
+neue ausdrückliche Autorisierung.
+
+Bewusst vertagt und für 4B.0a nicht blockierend sind: ob `/atrium` später
+`/quit` ergänzt oder ersetzt; ob ein produktiver Zyklus direkt auf die
+Resonance-Surface zurückkehrt; ob das Exploration-/Help-Prinzip auf Legacy
+ausgedehnt wird; ob standalone First-Spark-`/look` vereinheitlicht wird; und
+wann manuelle Notizen einen eigenen allowlist-basierten Bereich erhalten.
