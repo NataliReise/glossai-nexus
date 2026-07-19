@@ -34,7 +34,6 @@ WHAT_NEXT_GUIDE_URL = (
     "modules/nexus_01_nexus_mesomerie/first_spark/WHAT_NEXT.md"
 )
 PERSONAL_DIVIDER = "︵‿︵‿୨ ☾𓋹☽ ୧‿︵‿︵"
-SOFT_SECTION_DIVIDER = "· · ────── ꒰ ✦ ꒱ ────── · ·"
 TECHNICAL_SECTION_DIVIDER = "┈┈┈✧┈┈┈◈┈┈┈✧┈┈┈"
 
 
@@ -93,17 +92,16 @@ def assert_after_play_message(response: str) -> None:
 def assert_section_dividers(response: str) -> None:
     """Assert that the First Spark ending uses the intended section dividers."""
     assert_contains(response, PERSONAL_DIVIDER)
-    assert_contains(response, SOFT_SECTION_DIVIDER)
     assert_contains(response, TECHNICAL_SECTION_DIVIDER)
 
-    if response.count(PERSONAL_DIVIDER) < 2:
+    if response.count(PERSONAL_DIVIDER) != 2:
         raise AssertionError(
-            f"Expected at least two personal dividers in response:\n{response}"
+            f"Expected exactly two personal dividers in response:\n{response}"
         )
 
-    if response.count(SOFT_SECTION_DIVIDER) < 2:
+    if response.count(TECHNICAL_SECTION_DIVIDER) != 3:
         raise AssertionError(
-            f"Expected at least two soft section dividers in response:\n{response}"
+            f"Expected exactly three technical section dividers in response:\n{response}"
         )
 
 
