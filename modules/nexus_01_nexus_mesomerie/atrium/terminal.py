@@ -55,6 +55,14 @@ def load_nexus_activation() -> ActivationProfileSource:
     return load_activation()
 
 
+def _atrium_resonance_label(mode: ResonanceMode) -> str:
+    """Return the player-facing Atrium wording for a Resonance path."""
+
+    if mode is ResonanceMode.COMPOSE:
+        return "leave a resonance note"
+    return resonance_door_label(mode)
+
+
 def render_atrium(runtime: NexusAtriumRuntime) -> str:
     """Render the current Atrium state without interpreting Chamber mechanics."""
 
@@ -74,11 +82,11 @@ def render_atrium(runtime: NexusAtriumRuntime) -> str:
     lines.append("")
     lines.append("Visible paths:")
     for chamber_id in state.visible_paths:
-        marker = "completed" if state.is_completed(chamber_id) else "open"
+        marker = "visited" if state.is_completed(chamber_id) else "waiting"
         if chamber_id == RESONANCE_CHAMBER and runtime.resonance_mode is not None:
             if runtime.resonance_mode is ResonanceMode.BLOCKED_ANSWER_RECOVERY:
                 marker = "blocked — recovery guidance available"
-            label = resonance_door_label(runtime.resonance_mode)
+            label = _atrium_resonance_label(runtime.resonance_mode)
             lines.append(f"- {chamber_id} — {label}: {marker}")
         else:
             lines.append(f"- {chamber_id}: {marker}")
@@ -98,7 +106,7 @@ def _atrium_capabilities(
         if runtime.resonance_mode is None:
             resonance_help = "enter the Resonance Chamber"
         else:
-            resonance_help = resonance_door_label(runtime.resonance_mode)
+            resonance_help = _atrium_resonance_label(runtime.resonance_mode)
         capabilities.append(_AtriumCapability("/resonance", resonance_help))
     capabilities.append(_AtriumCapability("/quit", "leave Nexus 01"))
     return tuple(capabilities)
