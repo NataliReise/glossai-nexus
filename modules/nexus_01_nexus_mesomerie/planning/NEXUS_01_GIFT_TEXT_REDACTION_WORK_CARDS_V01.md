@@ -3,9 +3,10 @@
 ## Dokumentstatus
 
 - Version: 0.1
-- Status: Entwurf für gezielten Fresh-context Kartenreview
+- Status: Nach gezieltem Fresh-context Kartenreview angenommen
 - Arbeitsbranch: `gift/nexus-01-chamber-archive`
 - Ausgangsstand: `d898d72`
+- Review-Korrekturstand: `c956239`
 - Übergeordnete Roadmap: `NEXUS_01_GIFT_CLOSEOUT_ROADMAP_V01.md`
 - Zweck: Erstes begrenztes Arbeitskartenpaket für die bereits begonnene player-facing Text- und Darstellungsredaktion.
 
@@ -46,7 +47,7 @@ Ausdrücklich nicht enthalten sind:
 | GP-07 | COMPOSE-Review | Review-Formulierung wirkt technisch. | OFFEN | In Karte TR-04 player-facing präzisieren. |
 | GP-08 | POST_RUN | Abschluss wiederholt sich. | OFFEN | In Karte TR-05 straffen. |
 | GP-09 | `/results` | Ergebnislabels wirken diagnostisch. | OFFEN | In Karte TR-05 sprachlich enttechnisieren, ohne Ergebnisarten zu vermischen. |
-| GP-10 | Gesamtdarstellung | Visuelle Sprache und Divider benötigen Konsistenz. | TEILWEISE ERLEDIGT | Akzeptierte Divider bewahren, sparsam anwenden und im Hauptpfad verifizieren. |
+| GP-10 | Gesamtdarstellung | Visuelle Sprache und Divider benötigen Konsistenz. | TEILWEISE ERLEDIGT | First-Spark-Anteil in TR-01 verifizieren; verbleibenden Hauptpfadanteil als querschnittliche Prüfanforderung in TR-02 bis TR-05 berücksichtigen. |
 
 ## 3. Unveränderliche Grenzen für alle Karten
 
@@ -58,6 +59,7 @@ Ausdrücklich nicht enthalten sind:
 - Keine neue Terminal-UI-Abstraktion oder allgemeines Text-/Divider-Framework.
 - Keine Erweiterung des Kartenumfangs auf ANSWER, Return, Revisit oder Dokumentation.
 - GP-06 ist eine Schutzanforderung: Die kreative Auswahl bleibt inhaltlich erhalten.
+- Der verbleibende Hauptpfadanteil von GP-10 ist eine querschnittliche Prüfanforderung für TR-02 bis TR-05. Er erlaubt ausschließlich die sparsame und kontextgerechte Verwendung der bereits akzeptierten Divider-Palette. Neue Divider-Typen, eine flächige Umgestaltung oder eine eigenständige Divider-Redaktion sind nicht Teil dieses Kartenpakets.
 - Ein positiver fokussierter Test ersetzt keine spätere kanonische Vollsuite.
 
 ## 4. Akzeptierte Divider-Palette
@@ -117,7 +119,7 @@ Primär zur Verifikation:
 - `first_spark/first_spark/game_modules/ending.py`
 - `first_spark/tests/test_first_spark_flow.py`
 
-Weitere Datei nur, wenn der Kartenreview oder die Verifikation einen konkreten, belegten Bedarf zeigt.
+Weitere Datei nur, wenn die Verifikation einen konkreten, belegten Bedarf zeigt.
 
 ## Tests
 
@@ -136,7 +138,8 @@ Weitere Datei nur, wenn der Kartenreview oder die Verifikation einen konkreten, 
 
 - entweder bestehende Darstellung ausdrücklich angenommen;
 - oder ein eng begrenzter Restfix umgesetzt, fokussiert getestet und manuell angenommen;
-- GP-01 und der First-Spark-Anteil von GP-10 danach als ERLEDIGT oder weiterhin klar begründet offen markiert.
+- GP-01 und der First-Spark-Anteil von GP-10 danach als `ERLEDIGT` markiert;
+- falls ein bestätigter Restbefund nicht innerhalb dieser Karte klein lösbar ist, Status `VERIFIZIERT — RESTBEFUND OFFEN` mit Begründung und ohne falsche Schließung.
 
 ## Abbruchkriterium
 
@@ -163,14 +166,16 @@ Status und unmittelbare Resonance-Orientierung sind verständlich, ehrlich und k
 - player-facing Atrium-Statuszeilen;
 - kurze Orientierung zum verfügbaren Resonance-Weg;
 - Begriffe, die unmittelbar im normalen Hauptpfad erscheinen;
-- GP-02.
+- GP-02;
+- GP-10 ausschließlich als querschnittliche Prüfung der vorhandenen Divider-Sprache.
 
 ## Nicht in Scope
 
 - Atrium-Navigation oder Command-Set ändern;
 - Statusmodell ändern;
 - neue Räume oder Wege;
-- allgemeine Dokumentation.
+- allgemeine Dokumentation;
+- eigenständige Divider-Redaktion.
 
 ## Voraussichtlich betroffene Dateien
 
@@ -191,11 +196,13 @@ Read-only zuerst prüfen, dann minimal eingrenzen:
 - Atrium nach First Spark betreten;
 - Status und Resonance-Orientierung laut beziehungsweise am Stück lesen;
 - prüfen, ob der nächste mögliche Schritt erkennbar ist;
-- prüfen, ob keine Fähigkeit versprochen wird, die nicht existiert.
+- prüfen, ob keine Fähigkeit versprochen wird, die nicht existiert;
+- GP-10 querschnittlich prüfen, ohne zusätzliche Divider-Redaktion zu eröffnen.
 
 ## Definition of Done
 
 - GP-02 ist mit minimalen Textänderungen geschlossen oder nachvollziehbar zurückgestellt;
+- GP-10 für diesen Abschnitt geprüft;
 - keine funktionale Änderung;
 - vorhandene Wege und Sicherheitsgrenzen bleiben korrekt beschrieben.
 
@@ -231,14 +238,18 @@ PRE_RUN und Hilfe erklären knapp:
 - GP-04;
 - PRE_RUN-Übergang zur Chamber;
 - unmittelbar zugehörige `/help`-Texte;
-- bestehende `/look`, `/help`, `/trace`, `/walkthrough` und `/cancel`-Erklärungen sprachlich, nicht funktional.
+- bestehende `/look`, `/help`, `/trace`, `/walkthrough` und `/cancel`-Erklärungen sprachlich, nicht funktional;
+- GP-10 ausschließlich als querschnittliche Prüfung der vorhandenen Divider-Sprache.
 
 ## Nicht in Scope
 
 - Commands hinzufügen, entfernen oder umbenennen;
 - Cancel-Verhalten ändern;
 - Walkthrough-Logik ändern;
-- ANSWER-Texte, soweit sie nicht aus gemeinsam genutzter Formulierung zwingend mitbetroffen sind; gemeinsame Texte dürfen nicht unbeabsichtigt verschlechtert werden.
+- eigenständige ANSWER-Redaktion;
+- eigenständige Divider-Redaktion.
+
+Eine gemeinsam von COMPOSE und ANSWER genutzte Fundstelle darf nur geändert werden, wenn die Änderung für ANSWER semantisch neutral bleibt. Die vorhandene ANSWER-Ausgabe wird in diesem Zusammenhang ausschließlich regressiv auf unbeabsichtigte Verschlechterungen geprüft. Das erfordert keinen vollständigen ANSWER-Durchlauf.
 
 ## Voraussichtlich betroffene Dateien
 
@@ -250,6 +261,7 @@ PRE_RUN und Hilfe erklären knapp:
 
 - fokussierte Tests für PRE_RUN/Hilfe und Informationskommandos;
 - prüfen, dass Commands unverändert erkannt werden;
+- bei gemeinsam genutzter Fundstelle regressiv prüfen, dass ANSWER semantisch unverändert bleibt;
 - `git diff --check`.
 
 ## Manuelle Prüfung
@@ -257,18 +269,21 @@ PRE_RUN und Hilfe erklären knapp:
 - Resonance neutral betreten;
 - Hilfe vor produktiver Handlung aufrufen;
 - `/look`, `/trace` und `/walkthrough` stichprobenartig prüfen;
-- sicherstellen, dass die Sprache nicht behauptet, es sei bereits etwas erzeugt worden.
+- sicherstellen, dass die Sprache nicht behauptet, es sei bereits etwas erzeugt worden;
+- GP-10 querschnittlich prüfen, ohne zusätzliche Divider-Redaktion zu eröffnen.
 
 ## Definition of Done
 
 - GP-03 und GP-04 geschlossen;
+- GP-10 für diesen Abschnitt geprüft;
 - Einstieg ist kürzer und verständlicher;
 - Sicherheits- und Command-Information vollständig korrekt;
-- keine funktionale Verhaltensänderung.
+- keine funktionale Verhaltensänderung;
+- keine eigenständige ANSWER-Redaktion.
 
 ## Abbruchkriterium
 
-Wenn eine Textänderung unterschiedliche COMPOSE-/ANSWER-Zustände nicht mehr korrekt abbilden kann, Karte stoppen und gemeinsamen Textbestand separat analysieren.
+Karte stoppen, sobald eine sinnvolle COMPOSE-Verbesserung eine eigenständige ANSWER-Formulierung, Verzweigung oder Zustandsunterscheidung erfordern würde oder ein gemeinsamer Textbestand unterschiedliche COMPOSE-/ANSWER-Zustände nicht korrekt abbilden kann.
 
 ---
 
@@ -300,9 +315,12 @@ wobei die bestehende Wahlvielfalt und poetische Offenheit erhalten bleiben.
 - GP-05;
 - GP-06 als Schutzanforderung;
 - GP-07;
-- Textdichte, Reihenfolge und Zwischenüberschriften;
+- Textdichte, Zwischenüberschriften sowie Reihenfolge und Gliederung der player-facing Erklärungselemente innerhalb der bestehenden Schritte;
 - sparsame Verwendung vorhandener Divider;
-- player-facing Labels und Review-Sätze.
+- player-facing Labels und Review-Sätze;
+- GP-10 ausschließlich als querschnittliche Prüfung der vorhandenen Divider-Sprache.
+
+Die mechanische Schrittfolge `image -> scent -> movement -> wish_word -> review` sowie Auswahlreihenfolge, Rückgabewerte und Zustandsübergänge bleiben unverändert.
 
 ## Nicht in Scope
 
@@ -310,7 +328,8 @@ wobei die bestehende Wahlvielfalt und poetische Offenheit erhalten bleiben.
 - Anzahl oder Inhalt der kreativen Optionen neu gestalten, außer ein einzelnes Label ist nachweislich unverständlich;
 - Datenmodell oder Tokenbau ändern;
 - neue Bestätigungsschritte oder Commands;
-- ANSWER.
+- ANSWER;
+- eigenständige Divider-Redaktion.
 
 ## Voraussichtlich betroffene Dateien
 
@@ -325,7 +344,7 @@ Read-only zuerst eingrenzen:
 ## Tests
 
 - bestehende COMPOSE-Flow- und Terminaltests;
-- Auswahlreihenfolge und Rückgabewerte unverändert;
+- mechanische Schritt- und Auswahlreihenfolge sowie Rückgabewerte unverändert;
 - keine internen IDs in player-facing Ausgabe;
 - `git diff --check`.
 
@@ -335,18 +354,20 @@ Read-only zuerst eingrenzen:
 - prüfen, ob vor der ersten Wahl schnell verständlich ist, was geschieht;
 - prüfen, ob jede Wahl genug Raum erhält;
 - prüfen, ob Review verständlich ist, ohne technisch zu klingen;
-- prüfen, ob GP-06 weiterhin klar erfüllt ist.
+- prüfen, ob GP-06 weiterhin klar erfüllt ist;
+- GP-10 querschnittlich prüfen, ohne zusätzliche Divider-Redaktion zu eröffnen.
 
 ## Definition of Done
 
 - GP-05 und GP-07 geschlossen;
 - GP-06 nach manueller Prüfung weiterhin positiv bestätigt;
-- Auswahlmechanik und Ergebnis unverändert;
+- GP-10 für diesen Abschnitt geprüft;
+- Auswahlmechanik, Schrittfolge und Ergebnis unverändert;
 - Textfluss ist kürzer, nicht ärmer.
 
 ## Abbruchkriterium
 
-Wenn die Redaktion Änderungen an Katalog, Auswahlmechanik, Token oder Chamber-Grammatik verlangt, Karte stoppen.
+Wenn die Redaktion Änderungen an Katalog, Auswahlmechanik, mechanischer Schrittfolge, Token oder Chamber-Grammatik verlangt, Karte stoppen.
 
 ---
 
@@ -377,7 +398,8 @@ Nach COMPOSE ist klar und ruhig erkennbar:
 - POST_RUN-Ausgaben des COMPOSE-Hauptpfads;
 - `/results`-Überschriften und player-facing Labels;
 - Wiederholungen reduzieren;
-- Same-process- und Stable-source-Bezeichnungen verständlich darstellen, ohne sie fachlich zu vermischen.
+- Same-process- und Stable-source-Bezeichnungen verständlich darstellen, ohne sie fachlich zu vermischen;
+- GP-10 ausschließlich als querschnittliche Prüfung der vorhandenen Divider-Sprache.
 
 ## Nicht in Scope
 
@@ -385,7 +407,8 @@ Nach COMPOSE ist klar und ruhig erkennbar:
 - Return Opening in `/results` integrieren;
 - automatische Dateisuche oder Auswahl;
 - Speicherorte, Formate oder Artefakte ändern;
-- ANSWER-/Return-Abschluss.
+- ANSWER-/Return-Abschluss;
+- eigenständige Divider-Redaktion.
 
 ## Voraussichtlich betroffene Dateien
 
@@ -410,11 +433,13 @@ Read-only zuerst lokalisieren:
 - Abschlussausgabe vollständig lesen;
 - `/results` im selben Prozess aufrufen;
 - prüfen, ob Ergebnisarten verständlich, aber nicht diagnostisch benannt sind;
-- prüfen, ob Wiederholungen reduziert wurden, ohne Privacy-Aussagen zu verlieren.
+- prüfen, ob Wiederholungen reduziert wurden, ohne Privacy-Aussagen zu verlieren;
+- GP-10 querschnittlich prüfen, ohne zusätzliche Divider-Redaktion zu eröffnen.
 
 ## Definition of Done
 
 - GP-08 und GP-09 geschlossen;
+- GP-10 für diesen Abschnitt geprüft;
 - POST_RUN wirkt ruhig und eindeutig;
 - `/results` bleibt technisch ehrlich und funktional unverändert;
 - keine Vermischung mit Return Opening oder Stable-result Revisit.
@@ -439,17 +464,16 @@ TR-01 First-Spark-Verifikation
 
 TR-02 bis TR-05 dürfen bei eindeutig getrennten Dateien redaktionell vorbereitet werden, werden aber einzeln umgesetzt, geprüft und angenommen.
 
-Vor Umsetzung:
+Der gezielte Fresh-context Review wurde durchgeführt, seine vier kleinen Klarstellungen wurden gemeinsam angenommen und in diese Fassung eingearbeitet. Das Kartenpaket ist damit für den Einzelkartenzyklus angenommen.
 
-1. gezielter Fresh-context Review dieses vollständigen Kartenpakets;
-2. gemeinsame Entscheidung über Reviewbefunde;
-3. ausdrückliche Annahme des umsetzungsreifen Kartenpakets.
+Vor jeder Änderung werden die exakten Produktionsfundstellen sowie die vorhandenen betroffenen Testdateien und Testfälle read-only benannt und im Arbeitsprotokoll der Karte festgehalten. Erst danach wird der tatsächliche Änderungsumfang innerhalb der bereits angenommenen Karte festgelegt. Diese Benennung dient der Scope-Kontrolle und erfordert keine zusätzliche strategische Freigabe, solange keine neue Datei, Funktion oder technische Grenze hinzukommt.
 
-Für jede Karte danach:
+Für jede Karte:
 
 ```text
 Branch und Synchronisierung prüfen
--> genaue Fundstellen read-only bestätigen
+-> exakte Produktions- und Testfundstellen read-only benennen
+-> tatsächlichen Umfang innerhalb der Karte festlegen
 -> kleinste Textänderung umsetzen
 -> Diff prüfen
 -> fokussierte Tests
@@ -457,16 +481,24 @@ Branch und Synchronisierung prüfen
 -> acceptance or revision
 ```
 
-## 6. Reviewauftrag für dieses Kartenpaket
+## 6. Reviewabschluss
 
-Der Kartenreview soll ausschließlich prüfen:
+Der gezielte Fresh-context Kartenreview bestätigte:
 
-- Sind GP-01 bis GP-10 korrekt und ohne Doppelarbeit zugeordnet?
-- Ist bereits Erledigtes als Verifikation statt Neuimplementierung behandelt?
-- Sind die fünf Karten klein und voneinander ausreichend getrennt?
-- Sind betroffene Dateien nur als zu bestätigende Kandidaten benannt, wo die Fundstelle noch nicht abschließend belegt ist?
-- Schützen die Karten GP-06 sowie alle technischen und Privacy-Grenzen?
-- Greift eine Karte unzulässig auf ANSWER, Return, Revisit, Dokumentation oder Paketierung über?
-- Sind Tests, manuelle Prüfung, Definition of Done und Abbruchkriterien konkret genug?
+- keine Karten-Blocker;
+- fünf tragfähige, ausreichend kleine Karten;
+- korrekte Behandlung der bereits umgesetzten First-Spark-Arbeit als Verifikation;
+- Schutz von GP-06;
+- keine neue Scope- oder Architekturöffnung;
+- Umsetzungsreife nach den eingearbeiteten Klarstellungen.
 
-Der Review autorisiert keine Umsetzung.
+Die vier geschlossenen Klarstellungen betreffen:
+
+1. querschnittliche Restzuordnung von GP-10 zu TR-02 bis TR-05;
+2. eindeutige Trennung zwischen textlicher Gliederung und mechanischer Schrittfolge in TR-04;
+3. semantisch neutrale Behandlung gemeinsam genutzter COMPOSE-/ANSWER-Fundstellen in TR-03;
+4. Benennung exakter Produktions- und Testfundstellen vor jeder Änderung.
+
+Zusätzlich gilt für TR-01 der präzise Status `VERIFIZIERT — RESTBEFUND OFFEN`, falls ein bestätigtes Problem nicht innerhalb der Karte klein lösbar ist.
+
+Der Reviewabschluss autorisiert die kleinteilige Umsetzung ab TR-01 innerhalb der festgelegten Karten- und Freigabegrenzen.
