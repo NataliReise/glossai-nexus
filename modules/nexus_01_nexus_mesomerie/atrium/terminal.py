@@ -70,6 +70,7 @@ def render_atrium(runtime: NexusAtriumRuntime) -> str:
         lines.append("The paths opened by this activation are waiting.")
     else:
         lines.append("You return to the Atrium. Its paths now carry your progress.")
+
     lines.append("")
     lines.append("Visible paths:")
     for chamber_id in state.visible_paths:
@@ -89,7 +90,7 @@ def _atrium_capabilities(
     runtime: NexusAtriumRuntime | None,
 ) -> tuple[_AtriumCapability, ...]:
     capabilities = [
-        _AtriumCapability("/look", "show the current Atrium"),
+        _AtrumCapability("/look", "show the current Atrium"),
         _AtriumCapability("/help", "show the current Atrium grammar"),
         _AtriumCapability("/first-spark", "enter the First Spark Chamber"),
     ]
