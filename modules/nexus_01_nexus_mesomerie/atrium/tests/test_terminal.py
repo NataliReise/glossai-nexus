@@ -82,12 +82,14 @@ def test_gift_progression_hides_then_reveals_mode_aware_resonance() -> None:
     )
 
     first_render = output[0]
-    assert "first-spark: open" in first_render
+    assert "first-spark: waiting" in first_render
     assert "resonance" not in first_render.lower()
     assert "not opened by this activation" in "\n".join(output)
     assert runtime.state.is_completed(FIRST_SPARK_CHAMBER)
-    assert "resonance — shape a resonance invitation: open" in "\n".join(output)
+    assert "resonance — leave a resonance note: waiting" in "\n".join(output)
     assert resonance_calls == [RESONANCE_CHAMBER]
+    assert "leave a resonance note" in help_text(runtime)
+    assert "shape a resonance invitation" not in help_text(runtime)
 
 
 def test_interrupted_first_spark_does_not_change_atrium() -> None:
@@ -114,7 +116,7 @@ def test_return_resonance_profile_shows_both_connected_paths() -> None:
 
     assert runtime.state.visible_paths == (FIRST_SPARK_CHAMBER, RESONANCE_CHAMBER)
     rendered = "\n".join(output)
-    assert "resonance: open" in rendered
+    assert "resonance: waiting" in rendered
     assert "terminal passage not connected" not in rendered
 
 
@@ -184,7 +186,7 @@ def test_atrium_description_has_no_commands_or_orientation_hint() -> None:
     rendered = render_atrium(runtime)
 
     assert "Nexus Atrium" in rendered
-    assert "first-spark: open" in rendered
+    assert "first-spark: waiting" in rendered
     assert "Available commands:" not in rendered
     assert ORIENTATION_HINT not in rendered
     assert "/" not in rendered
@@ -200,8 +202,8 @@ def test_rendered_return_state_keeps_unfinished_resonance_visible() -> None:
     )
 
     rendered = render_atrium(runtime)
-    assert "first-spark: completed" in rendered
-    assert "resonance: open" in rendered
+    assert "first-spark: visited" in rendered
+    assert "resonance: waiting" in rendered
 
 
 def test_help_and_rendering_use_only_canonical_visible_grammar() -> None:
