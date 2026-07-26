@@ -55,7 +55,7 @@ def run_mode(mode: ResonanceMode) -> tuple[object, str]:
 def test_compose_shows_one_canonical_door_with_compose_wording() -> None:
     runtime, transcript = run_mode(ResonanceMode.COMPOSE)
     assert runtime.state.visible_paths.count("resonance") == 1
-    assert "resonance — shape a resonance invitation" in transcript
+    assert "resonance — leave a resonance note" in transcript
     assert "begin/send" not in transcript
     assert "Nothing is sent, uploaded, synchronized, or published automatically" in transcript
     assert "one choice at a time" in transcript
@@ -180,12 +180,15 @@ def test_compose_pre_run_is_neutral_until_explicit_compose() -> None:
     productive.assert_not_called()
     transcript = "\n".join(output)
     assert transcript.count("Resonance Chamber — quiet threshold") == 2
-    assert "No productive cycle has begun." in transcript
+    assert "Nothing has begun yet." in transcript
     assert (
-        "No productive choice has been made, and nothing has been written "
+        "No choice has been made, and nothing has been written "
         "in this Chamber."
     ) in transcript
-    assert "  /compose — begin an originating cycle" in transcript
+    assert "  /compose — begin shaping a resonance note" in transcript
+    assert "productive cycle" not in transcript
+    assert "productive choice" not in transcript
+    assert "originating cycle" not in transcript
     assert "  /answer —" not in transcript
     assert "  /results —" not in transcript
     assert "  /cancel —" not in transcript
@@ -231,10 +234,12 @@ def test_answer_pre_run_is_neutral_until_explicit_answer() -> None:
     transcript = "\n".join(output)
     assert transcript.count("Resonance Chamber — quiet threshold") == 2
     assert (
-        "No productive choice has been made, and nothing has been written "
+        "No choice has been made, and nothing has been written "
         "in this Chamber."
     ) in transcript
-    assert "  /answer — begin the selected answer cycle" in transcript
+    assert "  /answer — begin the selected answer" in transcript
+    assert "productive choice" not in transcript
+    assert "selected answer cycle" not in transcript
     assert "  /compose —" not in transcript
     assert "  /results —" not in transcript
     assert "  /cancel —" not in transcript

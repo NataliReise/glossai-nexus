@@ -256,7 +256,7 @@ class NeutralNexusCarrierTests(unittest.TestCase):
                 answers = "\n".join(("1", *FIRST_SPARK_COMPLETION_COMMANDS, "/quit", ""))
                 run = self.start(result.carrier_path, answers)
                 self.assertEqual(run.returncode, 0, run.stderr)
-                self.assertIn("shape a resonance invitation", run.stdout)
+                self.assertIn("leave a resonance note", run.stdout)
                 self.assertNotIn("answer the carried resonance", run.stdout)
                 self.assertNotIn("Activation detected.", run.stdout)
                 self.assertNotIn("First Spark online.", run.stdout)
@@ -380,7 +380,7 @@ class NeutralNexusCarrierTests(unittest.TestCase):
         (result.carrier_path / SIDECAR_PATH).unlink()
         restart = self.start(result.carrier_path, "/quit\n")
         self.assertEqual(restart.returncode, 0, restart.stderr)
-        self.assertIn("first-spark: open", restart.stdout)
+        self.assertIn("first-spark: waiting", restart.stdout)
         self.assertNotIn("resonance", restart.stdout.lower())
         self.assertNotIn("Choose how to activate", restart.stdout)
 

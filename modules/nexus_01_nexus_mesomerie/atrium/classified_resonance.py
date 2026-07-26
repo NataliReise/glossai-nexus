@@ -258,14 +258,14 @@ class ClassifiedResonanceController:
             )
         if phase is not _SurfacePhase.BLOCKED and self.mode is ResonanceMode.COMPOSE:
             action_text = (
-                "begin an originating cycle"
+                "begin shaping a resonance note"
                 if phase is _SurfacePhase.PRE_RUN
                 else "begin another independent originating cycle"
             )
             capabilities.append(_SurfaceCapability("/compose", action_text))
         elif self.mode is ResonanceMode.ANSWER and phase is _SurfacePhase.PRE_RUN:
             capabilities.append(
-                _SurfaceCapability("/answer", "begin the selected answer cycle")
+                _SurfaceCapability("/answer", "begin the selected answer")
             )
         capabilities.append(_SurfaceCapability("/quit", "return to the Atrium"))
         return tuple(capabilities)
@@ -282,9 +282,9 @@ class ClassifiedResonanceController:
     def _display_pre_run(self) -> None:
         self.output_writer("Resonance Chamber — quiet threshold")
         self.output_writer("")
-        self.output_writer("The Chamber is open. No productive cycle has begun.")
+        self.output_writer("The Chamber is ready. Nothing has begun yet.")
         self.output_writer(
-            "No productive choice has been made, and nothing has been written "
+            "No choice has been made, and nothing has been written "
             "in this Chamber."
         )
 
