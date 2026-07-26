@@ -533,10 +533,12 @@ class ComposeAtriumTests(unittest.TestCase):
         transcript = "\n".join(output)
         self.assertEqual(preparations, 1)
         self.assertIn("Resonance cycle complete", transcript)
+        self.assertIn("Your resonance note is complete.", transcript)
+        self.assertIn("Your completed note rests quietly in the Chamber.", transcript)
         self.assertIn("This cycle will not begin again automatically", transcript)
-        self.assertGreaterEqual(transcript.count("Resonance Chamber — completed cycle"), 2)
-        self.assertIn("Another originating trace begins only if you choose /compose", transcript)
-        self.assertIn("/compose — begin another independent originating cycle", transcript)
+        self.assertGreaterEqual(transcript.count("Resonance Chamber — resonance note complete"), 2)
+        self.assertIn("Another resonance note begins only if you choose /compose", transcript)
+        self.assertIn("/compose — begin another independent resonance note", transcript)
         self.assertIn("Returning safely to the Atrium", transcript)
 
     def test_only_success_activates_compose_post_run_gate(self) -> None:
@@ -556,7 +558,7 @@ class ComposeAtriumTests(unittest.TestCase):
 
         transcript = "\n".join(output)
         self.assertEqual(transcript.count("Resonance Chamber — leave a resonance note"), 2)
-        self.assertNotIn("Resonance Chamber — completed cycle", transcript)
+        self.assertNotIn("Resonance Chamber — resonance note complete", transcript)
 
     def test_compose_post_run_exposes_results_and_rejects_bare_results(self) -> None:
         values = iter(
@@ -592,13 +594,13 @@ class ComposeAtriumTests(unittest.TestCase):
         self.assertFalse(controller().completed)
 
         transcript = "\n".join(output)
-        post_run = transcript[transcript.index("Resonance Chamber — completed cycle") :]
+        post_run = transcript[transcript.index("Resonance Chamber — resonance note complete") :]
         self.assertEqual(post_run.count("Unknown Resonance command."), 6)
         self.assertIn(
-            "/results — view this session's most recent completed cycle", post_run
+            "/results — view the most recent resonance note from this session", post_run
         )
         self.assertIn(
-            "Resonance results — most recent originating cycle in this session",
+            "Resonance results — most recent resonance note in this session",
             post_run,
         )
         self.assertIn("Earlier local outputs remain separate and unchanged.", post_run)
@@ -642,14 +644,14 @@ class ComposeAtriumTests(unittest.TestCase):
         transcript = "\n".join(output)
         results = transcript[transcript.index("Resonance results —") :]
         for text in (
-            "[private local]",
+            "[your private choices]",
             "    Image: A narrow bridge in the mist",
             "    Scent: Cold air before the first snow",
             "    Movement: A tide beginning to return",
             "    Wish word: Nähe",
-            "[public-safe]",
-            "No public-safe summary was created for this cycle",
-            "[local path]",
+            "[shareable information]",
+            "No shareable summary was created for this resonance note",
+            "[saved locally]",
             "Travelling invitation:",
             "Private Return Workspace:",
             "— available",
@@ -780,7 +782,7 @@ class ComposeAtriumTests(unittest.TestCase):
         )
         results = "\n".join(output)
         results = results[results.index("Resonance results —") :]
-        self.assertIn("most recent originating cycle in this session", results)
+        self.assertIn("most recent resonance note in this session", results)
         self.assertIn("Earlier local outputs remain separate and unchanged.", results)
         self.assertIn("Wish word: Weite", results)
         self.assertNotIn("Wish word: Nähe", results)

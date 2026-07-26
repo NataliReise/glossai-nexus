@@ -238,12 +238,14 @@ class ClassifiedResonanceController:
             )
             if self._last_completed_result is not None:
                 result_label = (
-                    "cycle" if self.mode is ResonanceMode.COMPOSE else "answer"
+                    "resonance note"
+                    if self.mode is ResonanceMode.COMPOSE
+                    else "answer"
                 )
                 capabilities.append(
                     _SurfaceCapability(
                         "/results",
-                        f"view this session's most recent completed {result_label}",
+                        f"view the most recent {result_label} from this session",
                     )
                 )
         elif (
@@ -260,7 +262,7 @@ class ClassifiedResonanceController:
             action_text = (
                 "begin shaping a resonance note"
                 if phase is _SurfacePhase.PRE_RUN
-                else "begin another independent originating cycle"
+                else "begin another independent resonance note"
             )
             capabilities.append(_SurfaceCapability("/compose", action_text))
         elif self.mode is ResonanceMode.ANSWER and phase is _SurfacePhase.PRE_RUN:
@@ -335,35 +337,35 @@ class ClassifiedResonanceController:
 
     def _display_post_run(self) -> None:
         if self.mode is ResonanceMode.COMPOSE:
-            self.output_writer("Resonance Chamber — completed cycle")
+            self.output_writer("Resonance Chamber — resonance note complete")
             self.output_writer("")
-            self.output_writer("One originating cycle is complete.")
+            self.output_writer("Your resonance note is complete.")
             self.output_writer(
-                "The Chamber remains available, but no new cycle has begun."
+                "The Chamber remains available, but no new note has begun."
             )
             self.output_writer(
-                "A completed originating trace rests quietly in the Chamber."
+                "Your completed note rests quietly in the Chamber."
             )
             return
 
-        self.output_writer("Resonance Chamber — completed answer")
+        self.output_writer("Resonance Chamber — answer complete")
         self.output_writer("")
-        self.output_writer("This answer cycle is complete.")
+        self.output_writer("Your answer is complete.")
         self.output_writer("No second answer has begun from the selected Token.")
         self.output_writer(
-            "A completed answering trace rests quietly in the Chamber."
+            "Your completed answer rests quietly in the Chamber."
         )
 
     def _display_post_run_trace(self) -> None:
         if self.mode is ResonanceMode.COMPOSE:
             self.output_writer(
                 "  The completed invitation rests where you placed it. Another "
-                "originating trace begins only if you choose /compose."
+                "resonance note begins only if you choose /compose."
             )
             return
         self.output_writer(
-            "  This answer remains with its selected Token. Another answer begins "
-            "only from another deliberately selected Token context."
+            "  This answer remains with its selected Token. A new answer can begin "
+            "only from another deliberately selected Token."
         )
 
     def _display_results(self) -> None:
@@ -406,13 +408,13 @@ class ClassifiedResonanceController:
     def _display_compose_results(self, result, catalog) -> None:
         token = result.token
         self.output_writer(
-            "Resonance results — most recent originating cycle in this session"
+            "Resonance results — most recent resonance note in this session"
         )
         self.output_writer(
             "  Earlier local outputs remain separate and unchanged."
         )
         self.output_writer("")
-        self.output_writer("[private local]")
+        self.output_writer("[your private choices]")
         self.output_writer(
             f"    Image: {_choice_label(catalog, 'images', token.image_id)}"
         )
@@ -425,12 +427,12 @@ class ClassifiedResonanceController:
         )
         self.output_writer(f"    Wish word: {token.wish_word}")
         self.output_writer("")
-        self.output_writer("[public-safe]")
+        self.output_writer("[shareable information]")
         self.output_writer(
-            "    No public-safe summary was created for this cycle."
+            "    No shareable summary was created for this resonance note."
         )
         self.output_writer("")
-        self.output_writer("[local path]")
+        self.output_writer("[saved locally]")
         invitation_available = result.invitation_path.is_dir()
         workspace_available = result.private_workspace_path.is_dir()
         self.output_writer(
@@ -447,13 +449,13 @@ class ClassifiedResonanceController:
     def _display_answer_results(self, result, catalog) -> None:
         artifact = result.artifact
         self.output_writer(
-            "Resonance results — most recent answer cycle in this session"
+            "Resonance results — most recent answer in this session"
         )
         self.output_writer(
             "  Earlier local outputs remain separate and unchanged."
         )
         self.output_writer("")
-        self.output_writer("[private local]")
+        self.output_writer("[your private choices]")
         self.output_writer(
             "    Carried image: "
             + _choice_label(catalog, "images", artifact.image_id)
@@ -487,17 +489,17 @@ class ClassifiedResonanceController:
         )
         self.output_writer(f"    Return word: {artifact.return_word}")
         self.output_writer("")
-        self.output_writer("[public-safe]")
+        self.output_writer("[shareable information]")
         if result.carried_public_safe_label:
             self.output_writer(
                 f"    Carried label: {result.carried_public_safe_label}"
             )
         else:
             self.output_writer(
-                "    No public-safe summary was attached to the carried resonance."
+                "    No shareable summary was attached to the carried resonance."
             )
         self.output_writer("")
-        self.output_writer("[local path]")
+        self.output_writer("[saved locally]")
         artifact_available = result.artifact_path.is_file()
         self.output_writer(
             f"    Return Artifact: {result.artifact_path} — "

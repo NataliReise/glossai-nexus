@@ -618,27 +618,28 @@ class AnswerTerminalTests(unittest.TestCase):
         generator.assert_not_called()
 
         transcript = "\n".join(output)
-        post_run = transcript[transcript.index("Resonance Chamber — completed answer") :]
+        post_run = transcript[transcript.index("Resonance Chamber — answer complete") :]
         self.assertEqual(writes, 1)
+        self.assertIn("Your answer is complete.", post_run)
         self.assertIn("This answer cycle will not begin again automatically", transcript)
-        self.assertGreaterEqual(post_run.count("Resonance Chamber — completed answer"), 2)
-        self.assertIn("another deliberately selected Token context", post_run)
+        self.assertGreaterEqual(post_run.count("Resonance Chamber — answer complete"), 2)
+        self.assertIn("another deliberately selected Token", post_run)
         self.assertIn(
-            "A completed answering trace rests quietly in the Chamber.",
+            "Your completed answer rests quietly in the Chamber.",
             post_run,
         )
         self.assertNotIn("/answer —", post_run)
         self.assertNotIn("/new-answer —", post_run)
         self.assertNotIn("/select-token —", post_run)
         self.assertIn(
-            "/results — view this session's most recent completed answer", post_run
+            "/results — view the most recent answer from this session", post_run
         )
         self.assertIn(
-            "Resonance results — most recent answer cycle in this session", post_run
+            "Resonance results — most recent answer in this session", post_run
         )
         self.assertIn("Earlier local outputs remain separate and unchanged.", post_run)
         for text in (
-            "[private local]",
+            "[your private choices]",
             "    Carried image: A narrow bridge in the mist",
             "    Carried scent: Warm bread in a quiet kitchen",
             "    Carried movement: A circle slowly opening",
@@ -647,9 +648,9 @@ class AnswerTerminalTests(unittest.TestCase):
             "    Scent response: The possibility of encounter",
             "    Movement response: Edges curling into playful waves",
             "    Return word: Rückkehr",
-            "[public-safe]",
+            "[shareable information]",
             "    Carried label: Von B",
-            "[local path]",
+            "[saved locally]",
             f"    Return Artifact: {destination} — available",
         ):
             self.assertIn(text, post_run)
@@ -749,7 +750,7 @@ class AnswerTerminalTests(unittest.TestCase):
 
         results = "\n".join(output)
         self.assertIn(
-            "No public-safe summary was attached to the carried resonance.",
+            "No shareable summary was attached to the carried resonance.",
             results,
         )
 
@@ -781,7 +782,7 @@ class AnswerTerminalTests(unittest.TestCase):
         self.assertTrue(controller().completed)
         transcript = "\n".join(output)
         self.assertEqual(transcript.count("Resonance Chamber — answer the carried resonance"), 2)
-        self.assertNotIn("Resonance Chamber — completed answer", transcript)
+        self.assertNotIn("Resonance Chamber — answer complete", transcript)
         self.assert_context_unchanged()
 
     def test_answer_post_run_ctrl_c_returns_without_writing_again(self) -> None:
