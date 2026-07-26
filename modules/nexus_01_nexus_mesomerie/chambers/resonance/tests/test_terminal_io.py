@@ -393,7 +393,7 @@ def test_walkthrough_confirmation_guides_current_step_without_selecting() -> Non
     assert session.last_guided_step_shown == "image"
     assert terminal.output.count("  Chamber voice") == 1
     assert terminal.output.count(
-        "  Choose the image that will be carried into this originating resonance."
+        "  Choose the image you would like to place in the note."
     ) == 1
     assert terminal.output.count("Begin with one image") == 2
     assert terminal.output.count("Enter a number: ") == 2
@@ -438,10 +438,10 @@ def test_active_walkthrough_guides_new_steps_once_despite_invalid_input() -> Non
     assert io.choose("scent", catalog.option_ids("scents")) == "summer-rain"
     assert terminal.output.count("  Chamber voice") == 2
     assert terminal.output.count(
-        "  Choose the image that will be carried into this originating resonance."
+        "  Choose the image you would like to place in the note."
     ) == 1
     assert terminal.output.count(
-        "  Choose the scent that will stand beside the image already chosen."
+        "  Choose the scent that will stand beside your image."
     ) == 1
 
 
@@ -465,7 +465,7 @@ def test_information_commands_do_not_repeat_active_walkthrough_guidance() -> Non
     assert io.choose("image", catalog.option_ids("images")) == "waiting-lantern"
     assert terminal.output.count("  Chamber voice") == 1
     assert terminal.output.count(
-        "  Choose the image that will be carried into this originating resonance."
+        "  Choose the image you would like to place in the note."
     ) == 1
     assert terminal.output.count("  Unknown Chamber command.") == 1
 
@@ -491,7 +491,7 @@ def test_walkthrough_stop_suppresses_current_replay_and_later_steps() -> None:
     assert terminal.output.count("  Chamber voice") == 2
     assert terminal.output.count("Now choose one scent") == 2
     assert any("Guided walkthrough ended" in line for line in terminal.output)
-    assert not any("originating trace will move" in line for line in terminal.output)
+    assert not any("note will move" in line for line in terminal.output)
 
 
 def test_walkthrough_can_restart_and_guide_the_current_step_again() -> None:
@@ -516,7 +516,7 @@ def test_walkthrough_can_restart_and_guide_the_current_step_again() -> None:
     assert session.walkthrough_active
     assert session.last_guided_step_shown == "movement"
     assert terminal.output.count(
-        "  Choose how the originating trace will move."
+        "  Choose how the note will move."
     ) == 1
 
 

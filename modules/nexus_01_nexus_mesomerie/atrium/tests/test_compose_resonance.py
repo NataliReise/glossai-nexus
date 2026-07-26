@@ -131,12 +131,15 @@ class ComposeAtriumTests(unittest.TestCase):
         )
         self.assertFalse(any("response" in line.casefold() for line in transcript.splitlines()))
         self.assertFalse(any("return word" in line.casefold() for line in transcript.splitlines()))
-        self.assertIn("Your originating resonance", transcript)
+        self.assertIn("Review your resonance note", transcript)
+        self.assertIn("Your resonance note is ready to review", transcript)
+        self.assertIn("Nothing has been created yet.", transcript)
+        self.assertNotIn("originating contribution", transcript)
         self.assertIn("Travelling Resonance invitation", transcript)
         self.assertIn("Private Return Workspace", transcript)
         self.assertIn("manually", transcript)
         self.assertIn("does not choose the recipient's activation mode", transcript)
-        self.assertIn("one choice at a time", transcript)
+        self.assertIn("four small traces for your note", transcript)
         self.assertIn("private reasons are not stored", transcript)
         self.assertIn("Nothing is sent, uploaded, synchronized, or published", transcript)
         self.assertIn("Use /cancel at any interactive prompt", transcript)
@@ -148,7 +151,7 @@ class ComposeAtriumTests(unittest.TestCase):
         self.assertIn("If you choose to carry this invitation", transcript)
         self.assertIn("Nothing requires you to carry, forward, publish, or share", transcript)
         self.assertLess(
-            transcript.index("Resonance invitation shaped"),
+            transcript.index("Your resonance note is ready to review"),
             transcript.index("Travelling Resonance invitation:"),
         )
         self.assertLess(
@@ -336,7 +339,7 @@ class ComposeAtriumTests(unittest.TestCase):
 
         self.assertFalse(result.completed)
         self.assertEqual(transcript.count("Chamber voice"), 1)
-        self.assertIn("image that will be carried", transcript)
+        self.assertIn("image you would like to place in the note", transcript)
         self.assertIn("Guided walkthrough ended", transcript)
         self.assertEqual(transcript.count("Begin with one image"), 3)
         self.assertEqual(prompts[0], "resonance> ")
@@ -374,9 +377,9 @@ class ComposeAtriumTests(unittest.TestCase):
         self.assertEqual(preparations, 1)
         self.assertEqual(transcript.count("Chamber voice"), 4)
         for guidance in (
-            "image that will be carried",
-            "scent that will stand beside",
-            "originating trace will move",
+            "image you would like to place in the note",
+            "scent that will stand beside your image",
+            "note will move",
             "wish word without explaining",
         ):
             self.assertEqual(transcript.count(guidance), 1)
@@ -552,7 +555,7 @@ class ComposeAtriumTests(unittest.TestCase):
         self.assertTrue(controller().completed)
 
         transcript = "\n".join(output)
-        self.assertEqual(transcript.count("Resonance Chamber — shape a resonance invitation"), 2)
+        self.assertEqual(transcript.count("Resonance Chamber — leave a resonance note"), 2)
         self.assertNotIn("Resonance Chamber — completed cycle", transcript)
 
     def test_compose_post_run_exposes_results_and_rejects_bare_results(self) -> None:

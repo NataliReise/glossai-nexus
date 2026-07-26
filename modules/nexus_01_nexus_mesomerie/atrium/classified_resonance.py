@@ -89,14 +89,14 @@ class _SurfaceCapability:
 
 
 DOOR_LABELS = {
-    ResonanceMode.COMPOSE: "shape a resonance invitation",
+    ResonanceMode.COMPOSE: "leave a resonance note",
     ResonanceMode.ANSWER: "answer the carried resonance",
     ResonanceMode.BLOCKED_ANSWER_RECOVERY: "the carried invitation needs attention",
 }
 
 
 COMPOSE_THRESHOLD = (
-    "Shape a Resonance invitation one choice at a time: an image, a scent, "
+    "Choose four small traces for your note: an image, a scent, "
     "a movement, and one wish word.\n"
     "No private explanation is requested, and private reasons are not stored.\n"
     "This Chamber creates local material only. Nothing is sent, uploaded, "
@@ -513,7 +513,7 @@ class ClassifiedResonanceController:
             prepare_resonance_invitation,
         )
 
-        self.output_writer("Resonance Chamber — shape a resonance invitation")
+        self.output_writer("Resonance Chamber — leave a resonance note")
         self.output_writer(COMPOSE_THRESHOLD)
         catalog = build_v0_1_catalog()
         guidance = ResonanceGuidanceSession(
@@ -543,11 +543,8 @@ class ClassifiedResonanceController:
             return ChamberRunResult(completed=False)
 
         self.output_writer("")
-        self.output_writer("Resonance invitation shaped")
-        self.output_writer(
-            "The Chamber has gathered your originating contribution. "
-            "No local output exists yet."
-        )
+        self.output_writer("Your resonance note is ready to review")
+        self.output_writer("Nothing has been created yet.")
         self.output_writer(
             "Creation still requires your explicit confirmation. The travelling "
             "invitation and private Return Workspace will remain separate."
@@ -898,7 +895,7 @@ def _display_answer_confirmation(contribution, catalog, output_writer) -> None:
 
 def _display_compose_summary(contribution, catalog, output_writer) -> None:
     output_writer("")
-    output_writer("Your originating resonance — review")
+    output_writer("Review your resonance note")
     output_writer(
         f"Image: {_choice_label(catalog, 'images', contribution.image_id)}"
     )

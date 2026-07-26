@@ -58,7 +58,7 @@ def test_compose_shows_one_canonical_door_with_compose_wording() -> None:
     assert "resonance — leave a resonance note" in transcript
     assert "begin/send" not in transcript
     assert "Nothing is sent, uploaded, synchronized, or published automatically" in transcript
-    assert "one choice at a time" in transcript
+    assert "four small traces for your note" in transcript
     assert "Use /cancel" in transcript
     assert "No invitation or workspace was created" in transcript
 

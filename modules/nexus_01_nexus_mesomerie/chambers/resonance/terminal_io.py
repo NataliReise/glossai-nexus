@@ -72,7 +72,7 @@ _ROOM_TEXT = {
 _TRACE_TEXT = {
     "image": "Notice which image you are willing to place at the beginning.",
     "scent": "Attend to the scent that can stand beside the image already chosen.",
-    "movement": "Notice how the resonance might move without searching for a correct path.",
+    "movement": "Notice how the note might move without searching for a correct path.",
     "wish_word": "Let one word hold the wish without explaining its private reason.",
     "image_response": "Attend to the kind of response the carried image makes possible.",
     "scent_response": "Notice what can answer the carried scent without copying it.",
@@ -82,9 +82,9 @@ _TRACE_TEXT = {
 
 
 _WALKTHROUGH_TEXT = {
-    "image": "Choose the image that will be carried into this originating resonance.",
-    "scent": "Choose the scent that will stand beside the image already chosen.",
-    "movement": "Choose how the originating trace will move.",
+    "image": "Choose the image you would like to place in the note.",
+    "scent": "Choose the scent that will stand beside your image.",
+    "movement": "Choose how the note will move.",
     "wish_word": "Leave one wish word without explaining its private reason.",
     "image_response": "Choose a response that can meet the carried image.",
     "scent_response": "Choose a response that can meet the carried scent.",
