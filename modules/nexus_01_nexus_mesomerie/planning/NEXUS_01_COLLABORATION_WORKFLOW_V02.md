@@ -1,10 +1,11 @@
-# Nexus 01 Collaboration Workflow V0.1
+# Nexus 01 Collaboration Workflow V0.2
 
 ## Document status
 
-- Version: 0.1
-- Status: Superseded by V0.2
-- Date: 2026-07-19
+- Version: 0.2
+- Status: Current
+- Date: 2026-07-26
+- Supersedes: NEXUS_01_COLLABORATION_WORKFLOW_V01.md
 - Purpose: Working agreement for planning, review, implementation, testing, documentation, repository curation, and release work after the major technical gift-sprint slices.
 
 ## 1. Principle
@@ -52,7 +53,9 @@ Codex is not planned as a regular implementation tool in this phase. A later tar
 - performs authorized scope-conforming connector changes;
 - reviews diffs and available test evidence;
 - protects scope, privacy boundaries, history integrity, and the project thread;
-- states uncertainty and incomplete verification explicitly.
+- states uncertainty and incomplete verification explicitly;
+- chooses connector or local work according to the task shape and explains the choice when risk is non-trivial;
+- stops after an unexpected write result instead of starting an improvised repair chain.
 
 ### Fresh-context reviewer
 
@@ -118,8 +121,9 @@ For each accepted card:
 ```text
 confirm branch and synchronization
 -> inspect exact files
+-> choose connector or local work
 -> implement only the card scope
--> inspect the resulting diff
+-> inspect the resulting changed-file set and diff
 -> run focused tests where available
 -> perform a short manual verification
 -> accept, revise, or decide that restoration is required
@@ -145,7 +149,7 @@ git branch --show-current
 git rev-parse --short HEAD
 ```
 
-Local work and connector work must not create parallel divergent histories. Work occurs at one location at a time and synchronization happens before the other location resumes.
+Local work and connector work must not create parallel divergent histories. Work occurs at one location at a time, and synchronization happens before the other location resumes.
 
 An explicit approval applies to one clearly described work package. It includes the ordinary scope-conforming file reads, file writes, connector commits, diff checks, and branch synchronization steps needed to complete that package on the named working branch. Individual confirmation is not required for every routine substep.
 
@@ -163,6 +167,100 @@ A new discussion and explicit approval are required when:
 - an unexpected risk requires a substantially different solution.
 
 A normal fast-forward synchronization after an authorized connector work package belongs to that work package. It must still be shown transparently and must not conceal divergence, conflicts, or an unexpected branch state.
+
+### 6.1 Choosing between connector work and local work
+
+The connector remains an accepted repository tool for both read-only inspection and bounded write work.
+
+Connector use is valuable because it can substantially reduce implementation effort and speed up small, well-scoped changes. The workflow does not require error-free connector work. It requires that unexpected results remain visible, bounded, reviewable, and repairable through Git.
+
+Before every connector write, Synthea must verify that:
+
+- the complete current content of every affected file is available;
+- the complete intended replacement content has been prepared;
+- the expected changed-file set is known;
+- the work can safely create an immediate remote commit;
+- no required test or manual verification must occur before that commit;
+- the task can be completed without relying on an improvised repair sequence.
+
+`update_file` replaces the complete file. It is not a patch operation.
+
+Connector work is generally suitable when:
+
+- the scope is small and clearly bounded;
+- the complete affected file content is available;
+- the intended replacement can be prepared and checked in full;
+- the expected changed-file set is small and known;
+- an immediate commit is acceptable;
+- the resulting commit can be inspected immediately.
+
+Local work is preferred when:
+
+- displayed content is truncated, partial, paginated, or uncertain;
+- production code and existing tests must change together;
+- multiple files must form one atomic change;
+- tests or manual terminal verification should run before commit;
+- exact formatting, Unicode, indentation, or line endings are especially sensitive;
+- the task involves rollback, restoration, or repair;
+- a previous connector write in the same work package produced an unexpected result;
+- the full replacement would be disproportionately difficult to verify compared with a small local patch.
+
+The choice is based on the task shape and the available evidence, not on a fixed line-count or file-size threshold.
+
+### 6.2 Immediate post-write verification
+
+After every connector write, inspect immediately:
+
+1. the changed-file set;
+2. the complete diff;
+3. the commit message and scope;
+4. whether the result matches the approved work card;
+5. whether any unexpected deletion, truncation, formatting change, or unrelated edit occurred.
+
+A connector write is not treated as successful merely because a commit was created.
+
+### 6.3 Unexpected connector results
+
+If a connector write produces an unexpected result:
+
+```text
+stop
+-> inspect read-only
+-> describe the exact difference
+-> inform Natali
+-> propose one controlled repair path
+```
+
+No further connector write or repair commit is started automatically.
+
+A failed or imperfect connector commit is not automatically a reason for history rewriting. Git may preserve a transparent correction history when that is safer and clearer.
+
+A repair may continue through a normal follow-up commit when:
+
+- the faulty state is understood;
+- the repair scope is bounded;
+- the repair method is explicitly accepted;
+- the resulting diff can be verified;
+- no hidden history change is involved.
+
+Local restoration is preferred when the repair would otherwise require repeated full-file replacements or when confidence in the connector payload is reduced.
+
+### 6.4 Git as a recovery and accountability mechanism
+
+Git is expected to record both successful changes and occasional corrected mistakes.
+
+The goal is not cosmetic history at any cost. The goals are:
+
+- traceable decisions;
+- bounded changes;
+- reversible states;
+- visible corrections;
+- reliable current content;
+- no concealed divergence or silent history manipulation.
+
+A small number of transparent corrective commits is acceptable when they preserve safety and clarity.
+
+No reset, rebase, amend, force push, branch-ref rewrite, squash of published work, or other history rewrite may be performed without explicit approval.
 
 ## 7. Public identity and privacy
 
@@ -230,7 +328,9 @@ Claims must match evidence:
 - `focused test passed` does not mean the full suite passed;
 - an older full-suite result remains historical evidence, not proof for later commits;
 - a manual happy-path run does not prove every error path;
-- a review finding remains a proposal until accepted.
+- a review finding remains a proposal until accepted;
+- a created connector commit does not by itself prove that the intended change was applied correctly;
+- a successful repair does not erase the historical fact that a correction was needed.
 
 ## 11. Gift-sprint and post-gift boundary
 
