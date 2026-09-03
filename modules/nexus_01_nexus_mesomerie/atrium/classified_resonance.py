@@ -97,11 +97,11 @@ DOOR_LABELS = {
 
 COMPOSE_THRESHOLD = (
     "Choose four small traces for your note: an image, a scent, "
-    "a movement, and one wish word.\n"
-    "No private explanation is requested, and private reasons are not stored.\n"
+    "a movement, and one wish word.\n\n"
+    "No private explanation is requested, and private reasons are not stored.\n\n"
     "This Chamber creates local material only. Nothing is sent, uploaded, "
     "synchronized, or published automatically. "
-    "Local outputs are created only after your explicit confirmation.\n"
+    "Local outputs are created only after your explicit confirmation.\n\n"
     "Use /cancel at any interactive prompt to end the current Resonance cycle "
     "safely without creating a new output. At yes/no prompts, you may also "
     "answer no. At a destination prompt, blank input also cancels creation. "
@@ -112,12 +112,12 @@ COMPOSE_THRESHOLD = (
 
 ANSWER_THRESHOLD = (
     "A carried Resonance contribution is present. You may answer it in your "
-    "own way, one response at a time: three responses and one return word.\n"
-    "No private explanation is requested, and private reasons are not stored.\n"
+    "own way, one response at a time: three responses and one return word.\n\n"
+    "No private explanation is requested, and private reasons are not stored.\n\n"
     "This Chamber creates local material only. Nothing is returned, sent, "
     "uploaded, synchronized, or published automatically. A Return Artifact is "
     "written only after your explicit "
-    "confirmation and a valid local destination.\n"
+    "confirmation and a valid local destination.\n\n"
     "Use /cancel at any interactive prompt to end the current Resonance cycle "
     "safely without creating a new output. At yes/no prompts, you may also "
     "answer no. At a destination prompt, blank input also cancels creation. "
