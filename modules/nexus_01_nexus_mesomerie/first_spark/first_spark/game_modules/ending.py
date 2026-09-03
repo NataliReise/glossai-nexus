@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from first_spark.command_feedback import unknown_command_text
-from first_spark.config import PRIVATE_MESSAGE
+from first_spark.config import HAS_PRIVATE_ACTIVATION, PRIVATE_MESSAGE
 from first_spark.guidance import WALKTHROUGH_TEXT
 from first_spark.module_response import ModuleResponse
 from first_spark.state import GameState
@@ -94,26 +94,32 @@ HELP_TEXT = """Available commands:
 """
 
 
-ENDING_TEXT = f"""The private message opens.
+def build_ending_text(opening_text: str, has_private_activation: bool) -> str:
+    """Render the ending, exposing a private message only for real activation."""
 
-{AFTER_PLAY_MESSAGE.strip()}
+    response = f"""{opening_text}
 
-{PERSONAL_DIVIDER}
+{AFTER_PLAY_MESSAGE.strip()}"""
 
-{ACTIVATION_MESSAGE.strip()}
+    if not has_private_activation:
+        return response
 
-{PERSONAL_DIVIDER}"""
-
-
-ALREADY_OPEN_TEXT = f"""The private message is already open.
-
-{AFTER_PLAY_MESSAGE.strip()}
+    return f"""{response}
 
 {PERSONAL_DIVIDER}
 
 {ACTIVATION_MESSAGE.strip()}
 
 {PERSONAL_DIVIDER}"""
+
+
+ENDING_TEXT = build_ending_text(
+    "The private message opens.", HAS_PRIVATE_ACTIVATION
+)
+
+ALREADY_OPEN_TEXT = build_ending_text(
+    "The private message is already open.", HAS_PRIVATE_ACTIVATION
+)
 
 
 def handle_command(command: str, state: GameState) -> ModuleResponse:

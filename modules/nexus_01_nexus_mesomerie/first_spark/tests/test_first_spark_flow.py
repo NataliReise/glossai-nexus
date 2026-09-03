@@ -91,13 +91,7 @@ def assert_after_play_message(response: str) -> None:
 
 def assert_section_dividers(response: str) -> None:
     """Assert that the First Spark ending uses the intended section dividers."""
-    assert_contains(response, PERSONAL_DIVIDER)
     assert_contains(response, TECHNICAL_SECTION_DIVIDER)
-
-    if response.count(PERSONAL_DIVIDER) != 2:
-        raise AssertionError(
-            f"Expected exactly two personal dividers in response:\n{response}"
-        )
 
     if response.count(TECHNICAL_SECTION_DIVIDER) != 3:
         raise AssertionError(
@@ -250,7 +244,6 @@ def test_first_spark_main_flow() -> None:
 
     response = run_command(state, "/unlock")
     assert_contains(response, "The private message opens.")
-    assert_contains(response, "[activation message]")
     assert_after_play_message(response)
     assert_section_dividers(response)
     assert state.message_unlocked

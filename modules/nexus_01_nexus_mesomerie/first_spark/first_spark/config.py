@@ -17,5 +17,6 @@ MODULE_TITLE = "Nexus 0.1 - First Spark"
 RECIPIENT_ALIAS = ACTIVATION.recipient_alias
 PRIVATE_MESSAGE = ACTIVATION.private_message
 ACTIVATION_PURPOSE = ACTIVATION.activation_purpose
+HAS_PRIVATE_ACTIVATION = ACTIVATION.has_private_activation
 PROMPT = "nexus> "
 START_MODULE = "arrival"

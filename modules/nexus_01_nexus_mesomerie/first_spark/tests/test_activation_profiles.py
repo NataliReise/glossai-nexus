@@ -29,6 +29,7 @@ def assert_contains(text: str, expected: str) -> None:
 def test_default_activation_uses_first_spark_profile() -> None:
     activation = default_activation()
     assert activation.profile_id == FIRST_SPARK_PROFILE_ID
+    assert activation.has_private_activation is False
 
 
 def test_legacy_activation_normalizes_to_first_spark() -> None:
@@ -43,6 +44,7 @@ def test_legacy_activation_normalizes_to_first_spark() -> None:
     assert activation.profile_id == FIRST_SPARK_PROFILE_ID
     assert activation.recipient_alias == "legacy-recipient"
     assert activation.private_message == "Legacy message"
+    assert activation.has_private_activation is False
 
 
 def test_explicit_first_spark_profile_is_preserved() -> None:
@@ -90,6 +92,7 @@ def test_file_loader_preserves_legacy_and_explicit_profiles() -> None:
             json.dumps({"recipient_alias": "legacy-file"}), encoding="utf-8"
         )
         assert load_activation(legacy_path).profile_id == FIRST_SPARK_PROFILE_ID
+        assert load_activation(legacy_path).has_private_activation is True
 
         resonance_path = root / "resonance.json"
         resonance_path.write_text(
@@ -105,6 +108,7 @@ def test_file_loader_preserves_legacy_and_explicit_profiles() -> None:
             load_activation(resonance_path).profile_id
             == RETURN_RESONANCE_PROFILE_ID
         )
+        assert load_activation(resonance_path).has_private_activation is True
 
 
 def test_file_loader_wraps_unknown_profile_with_path_context() -> None:

@@ -10,7 +10,7 @@ profile model happens later at the Nexus boundary.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 import json
 from json import JSONDecodeError
 from pathlib import Path
@@ -47,6 +47,7 @@ class Activation:
     recipient_alias: str
     activation_purpose: str
     private_message: str
+    has_private_activation: bool = False
 
 
 def default_activation() -> Activation:
@@ -92,7 +93,8 @@ def load_activation(path: Path = LOCAL_ACTIVATION_PATH) -> Activation:
         raise ActivationFileError(activation_error_text(path, detail))
 
     try:
-        return activation_from_mapping(data)
+        activation = activation_from_mapping(data)
+        return replace(activation, has_private_activation=True)
     except ActivationFileError as error:
         raise ActivationFileError(activation_error_text(path, str(error))) from error
 
