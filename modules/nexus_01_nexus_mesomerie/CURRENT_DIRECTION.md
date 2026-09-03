@@ -54,9 +54,8 @@ Working formula:
 
 ## Exploration-first terminal principle
 
-The following is a binding construction principle for corrected Atrium and
-corrected Resonance. It is the confirmed target direction; it is not yet fully
-implemented.
+The following is the binding implemented construction principle for the
+current Atrium and corrected Resonance surfaces.
 
 - A room describes itself and its current state.
 - Entering a room never starts a productive action automatically.

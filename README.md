@@ -4,15 +4,20 @@ An open-source seed for modular software game artifacts in the glossAI cosmos.
 
 ## Status
 
-This repository is an early experimental seed. It is not a finished game yet.
+This repository is an experimental open-source game project. Its first module line, **Nexus 01 - Nexus-Mesomerie**, now has a functionally complete local gift path.
 
-The current focus is **Nexus 01 - Nexus-Mesomerie** and its first small playable slice:
+The current playable path combines:
 
-**[Nexus 0.1 - First Spark](modules/nexus_01_nexus_mesomerie/first_spark/)**
+- First Spark;
+- the Nexus Atrium;
+- the Human Resonance Chamber;
+- deliberate COMPOSE and ANSWER flows;
+- local Return Artifacts and private Return Workspaces;
+- stable local Return Results that can be reopened unchanged.
 
-First Spark is a local terminal prototype. It can be played as a neutral public demo or combined with a private activation package to become a personal gift.
+**[Nexus 01 - Nexus-Mesomerie](modules/nexus_01_nexus_mesomerie/)**
 
-The next design direction explores a small local return layer based on return slots, matching return artifacts, and generated local return resonance. This is narrative decryption first, not a cryptographic security promise.
+The design remains local-first and human-mediated. Nothing is sent, uploaded, synchronized, discovered, or published automatically. Return mechanics provide narrative and structural matching, not a cryptographic security promise.
 
 ## Current platform focus
 
@@ -31,14 +36,16 @@ git clone https://github.com/NataliReise/glossai-nexus.git
 cd glossai-nexus
 ```
 
-Run First Spark from the repository root:
+Start Nexus 01 from the repository root:
 
 ```bash
-python3 modules/nexus_01_nexus_mesomerie/first_spark/run_first_spark.py
+python3 modules/nexus_01_nexus_mesomerie/run_nexus.py
 ```
 
-For a short player-facing guide after completion, see:
+For current Nexus 01 orientation and player-facing guidance, see:
 
+- [Nexus 01 - Nexus-Mesomerie](modules/nexus_01_nexus_mesomerie/)
+- [Playing a Nexus](docs/PLAYING_A_NEXUS.md)
 - [What next after First Spark](modules/nexus_01_nexus_mesomerie/first_spark/WHAT_NEXT.md)
 
 ## Core idea
@@ -117,9 +124,11 @@ The first module line is:
 
 **[Nexus 01 - Nexus-Mesomerie](modules/nexus_01_nexus_mesomerie/)**
 
-Its first playable slice is:
+Its original playable seed is:
 
 **[Nexus 0.1 - First Spark](modules/nexus_01_nexus_mesomerie/first_spark/)**
+
+The current Nexus 01 gift path extends that seed through the Atrium, Human Resonance Chamber, deliberate return exchange, local Return Opening, and stable-result revisit.
 
 Larger questions about AI, open source, democracy, and human response-ability may appear as optional quest traces rather than as a closed plot.
 

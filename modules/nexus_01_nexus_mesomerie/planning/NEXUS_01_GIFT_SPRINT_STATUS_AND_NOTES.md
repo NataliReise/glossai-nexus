@@ -7,7 +7,7 @@ This is the concise living status document for the Nexus 01 gift sprint. It reco
 Current planning sources:
 
 - `NEXUS_01_GIFT_SPRINT_PLAN_V04.md`
-- `NEXUS_01_COLLABORATION_WORKFLOW_V01.md`
+- `NEXUS_01_COLLABORATION_WORKFLOW_V02.md`
 - `NEXUS_01_CHAMBER_STATES_AND_RESULTS_V03.md`
 
 When this document conflicts with a current versioned planning or technical contract, the versioned current document takes precedence.
@@ -16,14 +16,13 @@ When this document conflicts with a current versioned planning or technical cont
 
 - Branch: `gift/nexus-01-chamber-archive`
 - Technical baseline checkpoint: `59c6595`
-- Planning checkpoint before the first V0.4 synchronization: `a71db33`
-- First V0.4 planning checkpoint: `4904606`
+- Current verified implementation checkpoint: `087855a`
 - Upstream: `origin/gift/nexus-01-chamber-archive`
 - Major technical slices: complete through Stable-result Revisit
-- Last confirmed canonical full suite: 43 test files, 408 tests, 0 failures, 0 errors, 0 skipped at technical baseline `59c6595`
-- Current phase: accepted plan-review clarifications and preparation of the bounded gift-closeout roadmap
-
-The full-suite result belongs to the older technical baseline and must not be presented as verification of later editorial or planning commits.
+- Current canonical full suite: 44 test files, 412 tests, 0 failures, 0 errors, 0 skipped at `087855a`
+- Full player-facing gift path: manually completed through Stable-result Revisit
+- Neutral Nexus Carrier directory and ZIP: independently verified from `087855a`
+- Current phase: documentation and public-repository closeout before final candidate rebuild, checksum, release audit, and freeze
 
 ## Working-mode transition
 
@@ -89,7 +88,7 @@ The technical baseline through Stable-result Revisit preserves:
 
 The canonical technical contract remains `NEXUS_01_CHAMBER_STATES_AND_RESULTS_V03.md` unless a later behavior-changing contract explicitly supersedes it.
 
-## Manual gift-preview evidence
+## Earlier manual gift-preview evidence
 
 A fresh neutral carrier was unpacked and used from an outside-recipient perspective.
 
@@ -126,7 +125,42 @@ A first First-Spark ending layout package was implemented:
 - commit `60d0d70`: refined personal, soft-section, and technical dividers;
 - commit `a71db33`: focused divider test coverage.
 
-The direct First Spark flow test passed after those changes. The full suite was not rerun at that later checkpoint.
+The direct First Spark flow test passed after those changes. At that checkpoint, the full suite had not yet been rerun.
+
+## Current full-path acceptance evidence
+
+A fresh role-separated local gift path has now been completed manually from the current implementation checkpoint.
+
+Confirmed positive path:
+
+```text
+recipient-controlled normal activation
+-> First Spark
+-> Atrium
+-> Resonance COMPOSE
+-> travelling invitation + retained private Return Workspace
+-> deliberate Token activation
+-> Resonance ANSWER
+-> Return Artifact
+-> deliberate copy into the matching private workspace
+-> Return Opening
+-> Stable-result Revisit
+-> explicit stable-result display inside the Resonance Chamber
+```
+
+Additional confirmed behavior includes:
+
+- COMPOSE and ANSWER PRE_RUN, review, completion, POST_RUN, and `/results`;
+- stepwise display of each carried Resonance element during ANSWER;
+- safe ANSWER cancellation without output;
+- nonproductive BLOCKED behavior for missing selected Token context;
+- refusal to replace an existing selected Token context silently;
+- refusal to accept a directory as a selected Token;
+- stable Return Result creation on first opening and exact reuse on reopening;
+- no automatic discovery, transfer, publication, synchronization, or replacement;
+- successful generation and independent verification of both the Neutral Nexus Carrier directory and ZIP.
+
+The latest canonical full suite at this checkpoint contains 44 test files and 412 tests with no failures, errors, or skips.
 
 ## Current release objective
 
@@ -254,13 +288,13 @@ No final gift-release acceptance is claimed yet.
 
 ## Immediate next steps
 
-1. Complete the accepted clarification package in the three planning documents.
-2. Synchronize the authorized connector commits locally by normal fast-forward once the remote head is confirmed.
-3. Run a targeted fresh-context recheck against the ten earlier findings.
-4. Decide only newly identified residual contradictions.
-5. Build the first bounded gift-closeout roadmap.
-6. Review that roadmap before creating implementation-ready work-card packages.
-7. Begin the documentation and public-repository inventory before broad editing.
+1. Complete the bounded repository and release-facing documentation closeout.
+2. Review release-relevant public navigation and remaining documentation drift without reopening finished technical scope.
+3. Commit and synchronize the accepted documentation closeout.
+4. Rebuild the final Neutral Nexus Carrier from the resulting source checkpoint.
+5. Verify the final carrier directory and ZIP independently.
+6. Run the current canonical full suite and final diff-integrity check on the exact source checkpoint.
+7. Record package identity and SHA-256 checksum, complete the release audit, and freeze the accepted gift package.
 
 ## Maintenance rule
 

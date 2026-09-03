@@ -2,11 +2,11 @@
 
 Nexus 01 - Nexus-Mesomerie is the first module line in the **glossai-nexus** project.
 
-Its first stable playable slice is:
+Its original stable playable seed is:
 
 **[Nexus 0.1 - First Spark](first_spark/)**
 
-First Spark is a local terminal prototype. It can be played as a neutral public demo or combined with a private activation package to become a personal gift.
+The current Nexus 01 gift path now connects First Spark with the Nexus Atrium, the Human Resonance Chamber, deliberate COMPOSE and ANSWER flows, local Return Opening, and stable-result revisit. The complete exchange remains local and human-mediated.
 
 ## Read the current direction first
 
@@ -143,7 +143,7 @@ generated once and reopened unchanged
 Production entries:
 
 - `return_resonance/compact_generator.py`
-- `return_resonance/open_resonance_return.py`
+- `open_resonance_return.py`
 
 The V0.3 experiment remains review lineage:
 
