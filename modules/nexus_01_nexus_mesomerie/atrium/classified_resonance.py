@@ -685,20 +685,34 @@ class ClassifiedResonanceController:
 
         self.output_writer(ANSWER_THRESHOLD)
         catalog = build_v0_1_catalog()
-        _display_originating_contribution(token, catalog, self.output_writer)
+        if token.public_safe_label:
+            self.output_writer("")
+            self.output_writer(
+                f"Carried resonance from: {token.public_safe_label}"
+            )
         guidance = ResonanceGuidanceSession(
             "answer",
             self.output_writer,
             allow_cancel=True,
             input_fn=self.input_reader,
         )
+
+        def before_answer_prompt(step, prompt_kind):
+            guidance.before_prompt(step, prompt_kind)
+            _display_carried_answer_step(
+                token,
+                catalog,
+                step,
+                self.output_writer,
+            )
+
         io = TerminalChamberIO(
             catalog,
             input_fn=self.input_reader,
             output_fn=self.output_writer,
             allow_cancel=True,
             information_handler=guidance.handle,
-            before_prompt=guidance.before_prompt,
+            before_prompt=before_answer_prompt,
         )
         try:
             contribution = collect_answering_resonance(io, catalog)
@@ -868,17 +882,28 @@ def _load_authoritative_selected_token(nexus_root: Path) -> ResonanceToken:
     return token
 
 
-def _display_originating_contribution(token, catalog, output_writer) -> None:
+def _display_carried_answer_step(token, catalog, step, output_writer) -> None:
+    carried = {
+        "image_response": (
+            "Carried image",
+            _choice_label(catalog, "images", token.image_id),
+        ),
+        "scent_response": (
+            "Carried scent",
+            _choice_label(catalog, "scents", token.scent_id),
+        ),
+        "movement_response": (
+            "Carried movement",
+            _choice_label(catalog, "movements", token.movement_id),
+        ),
+        "return_word": (
+            "Carried wish word",
+            token.wish_word,
+        ),
+    }
+    label, value = carried[step]
     output_writer("")
-    output_writer("Carried Resonance contribution")
-    if token.public_safe_label:
-        output_writer(f"From: {token.public_safe_label}")
-    output_writer(f"Image: {_choice_label(catalog, 'images', token.image_id)}")
-    output_writer(f"Scent: {_choice_label(catalog, 'scents', token.scent_id)}")
-    output_writer(
-        f"Movement: {_choice_label(catalog, 'movements', token.movement_id)}"
-    )
-    output_writer(f"Wish word: {token.wish_word}")
+    output_writer(f"{label}: {value}")
 
 
 def _display_answer_confirmation(contribution, catalog, output_writer) -> None:

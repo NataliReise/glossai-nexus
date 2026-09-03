@@ -112,11 +112,32 @@ class AnswerTerminalTests(unittest.TestCase):
         self.assertEqual(artifact["scent_response_id"], "possibility-of-encounter")
         self.assertEqual(artifact["movement_response_id"], "playful-waves")
         self.assertEqual(artifact["return_word"], "Rückkehr")
-        self.assertIn("From: Von B", transcript)
-        self.assertIn("A narrow bridge in the mist", transcript)
-        self.assertIn("Warm bread in a quiet kitchen", transcript)
-        self.assertIn("A circle slowly opening", transcript)
-        self.assertIn("Wish word: Nähe", transcript)
+        self.assertIn("Carried resonance from: Von B", transcript)
+        self.assertNotIn("Carried Resonance contribution", transcript)
+        carried_steps = (
+            (
+                "Carried image: A narrow bridge in the mist",
+                "Answer the carried image",
+            ),
+            (
+                "Carried scent: Warm bread in a quiet kitchen",
+                "Answer the carried scent",
+            ),
+            (
+                "Carried movement: A circle slowly opening",
+                "Answer the carried movement",
+            ),
+            (
+                "Carried wish word: Nähe",
+                "Leave one return word",
+            ),
+        )
+        for carried, prompt_title in carried_steps:
+            self.assertIn(carried, transcript)
+            self.assertLess(
+                transcript.index(carried),
+                transcript.index(prompt_title),
+            )
         self.assertIn("manually", transcript)
         self.assertIn("one response at a time", transcript)
         self.assertIn("private reasons are not stored", transcript)
@@ -252,6 +273,14 @@ class AnswerTerminalTests(unittest.TestCase):
         self.assertIn("Enter one of the numbers shown for this step", transcript)
         self.assertIn("Attend to the kind of response", transcript)
         self.assertGreaterEqual(transcript.count("Answer the carried image"), 4)
+        self.assertGreaterEqual(
+            transcript.count("Carried image: A narrow bridge in the mist"),
+            4,
+        )
+        self.assertNotIn("Carried Resonance contribution", transcript)
+        self.assertNotIn("Carried scent:", transcript)
+        self.assertNotIn("Carried movement:", transcript)
+        self.assertNotIn("Carried wish word:", transcript)
         self.assertNotIn("Answer the carried scent", transcript)
         self.assertNotIn("Answer the carried movement", transcript)
         self.assertEqual(prompts[0], "resonance> ")
