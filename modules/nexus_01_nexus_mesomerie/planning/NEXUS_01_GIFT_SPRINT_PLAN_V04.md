@@ -1,5 +1,13 @@
 # Nexus 01 Sprintplan — Geschenkfassung V0.4
 
+> **Statushinweis:** V0.4 bleibt die wichtige Planungsbaseline des
+> Geschenkabschlusses. Später ausdrücklich angenommene Archive- und Builder-Arbeit
+> hat einzelne damalige Timing- und Scope-Aussagen fortgeschrieben. Der heutige
+> operative Stand wird im Living Status
+> `NEXUS_01_GIFT_SPRINT_STATUS_AND_NOTES.md` und im Archive-V0.1-Implementierungsplan
+> `NEXUS_01_ARCHIVE_V01_IMPLEMENTATION_PLAN.md` dokumentiert. Der historische
+> Planinhalt unten bleibt unverändert.
+
 ## Dokumentstatus
 
 - Version: 0.4

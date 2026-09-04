@@ -1,8 +1,14 @@
 # Nexus 01 Archive V0.1 — Implementation Plan
 
-Status: PROPOSED
+Original plan status: PROPOSED
 Baseline: accepted pre-Archive gift candidate at source commit `624fa79948c325edec66999add2ef23213457710`
 Scope: one small read-only Archive plus the first data-only Chamber Block boundary
+
+Implementation status at `1bec2232c5e7b7ed05362132e293245473bc7f30`:
+Slices A–F are complete through safe Builder coupling, including the accepted
+race and rollback gates. Slice G — Travelling Constellation Export is
+**DEFERRED AFTER GIFT**. The final gift-release closeout for the Archive-capable
+candidate remains pending; this status note does not rewrite the original plan.
 
 ## 1. Baseline and fallback
 
@@ -365,7 +371,11 @@ Archive V0.1 should be deferred from the gift if implementation requires:
 The pre-Archive candidate exists specifically so that this experiment can remain
 optional rather than becoming a release emergency.
 
-## 14. Immediate next action
+## 14. Original immediate next action — historical
+
+The following was the immediate next action when this implementation plan was
+proposed. Slices A–F have since been completed, so it is retained as planning
+history and is not a current work instruction.
 
 After review of this plan and the Block contract:
 

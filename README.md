@@ -11,6 +11,7 @@ The current playable path combines:
 - First Spark;
 - the Nexus Atrium;
 - the Human Resonance Chamber;
+- the local read-only Resonance Archive;
 - deliberate COMPOSE and ANSWER flows;
 - local Return Artifacts and private Return Workspaces;
 - stable local Return Results that can be reopened unchanged.
@@ -128,7 +129,7 @@ Its original playable seed is:
 
 **[Nexus 0.1 - First Spark](modules/nexus_01_nexus_mesomerie/first_spark/)**
 
-The current Nexus 01 gift path extends that seed through the Atrium, Human Resonance Chamber, deliberate return exchange, local Return Opening, and stable-result revisit.
+The current Nexus 01 gift path extends that seed through the Atrium, Human Resonance Chamber, deliberate return exchange, local Return Opening, stable-result revisit, and a local read-only Resonance Archive.
 
 Larger questions about AI, open source, democracy, and human response-ability may appear as optional quest traces rather than as a closed plot.
 

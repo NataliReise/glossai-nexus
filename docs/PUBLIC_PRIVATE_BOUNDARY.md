@@ -1,6 +1,6 @@
 # Public / Private Boundary
 
-This project is designed so that public modules can be shared without exposing private activation data.
+This project is designed so that public modules and public-safe carried content can be shared without exposing private activation or Return data.
 
 ## Public repository
 
@@ -8,6 +8,7 @@ The public repository may contain:
 
 - module code
 - public demo content
+- public-safe built-in Archive Blocks and example Archive content
 - placeholder configuration
 - architecture notes
 - documentation
@@ -22,9 +23,16 @@ Recommended placeholder patterns:
 - `SAMPLE_RETURN_CODE_DO_NOT_USE`
 - `DEMO_ONLY_NOT_A_SECRET`
 
-## Private activation layer
+## Local public-safe carried content
 
-The private activation layer must not be committed to the public repository.
+A compatible data-only Archive Block may be deliberately coupled to a local Nexus.
+That does not publish it externally, upload it, synchronize it, or make it part of a
+travelling carrier automatically. Public-safe carried content remains distinct from private
+Activation and Return history.
+
+## Private local state
+
+Private local state must not be committed to the public repository.
 
 It may contain:
 
@@ -32,7 +40,9 @@ It may contain:
 - private gift messages
 - personal configuration
 - real activation codes
-- real return codes
+- selected Token context
+- private Return Workspaces and Return Slots
+- Return Artifacts and local Return Results
 - personal notes
 - contact data
 - any credential, access token, password, private key, or API key
@@ -55,5 +65,6 @@ Use clearly harmless placeholders instead.
 
 ## Core principle
 
-The module may be public.
-The activation remains private.
+The module and public-safe Archive content may be public.
+Private Activation and Return history remain private.
+Nothing becomes public merely because it exists in a local Nexus.

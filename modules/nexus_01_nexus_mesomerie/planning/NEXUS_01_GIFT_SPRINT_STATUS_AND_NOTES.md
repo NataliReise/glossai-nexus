@@ -7,6 +7,7 @@ This is the concise living status document for the Nexus 01 gift sprint. It reco
 Current planning sources:
 
 - `NEXUS_01_GIFT_SPRINT_PLAN_V04.md`
+- `NEXUS_01_ARCHIVE_V01_IMPLEMENTATION_PLAN.md`
 - `NEXUS_01_COLLABORATION_WORKFLOW_V02.md`
 - `NEXUS_01_CHAMBER_STATES_AND_RESULTS_V03.md`
 
@@ -16,13 +17,24 @@ When this document conflicts with a current versioned planning or technical cont
 
 - Branch: `gift/nexus-01-chamber-archive`
 - Technical baseline checkpoint: `59c6595`
-- Current verified implementation checkpoint: `087855a`
+- Current verified implementation checkpoint: `1bec2232c5e7b7ed05362132e293245473bc7f30`
 - Upstream: `origin/gift/nexus-01-chamber-archive`
 - Major technical slices: complete through Stable-result Revisit
-- Current canonical full suite: 44 test files, 412 tests, 0 failures, 0 errors, 0 skipped at `087855a`
+- Archive implementation: complete through the Archive Block contract, built-in
+  Origin Block, read-only Resonance Archive surface, shared constellation
+  loading, Builder inspect/verify, and safe Builder coupling
+- Current canonical full suite: 48 test files, 460 tests, 0 failures, 0 errors,
+  0 skipped at `1bec2232c5e7b7ed05362132e293245473bc7f30`
 - Full player-facing gift path: manually completed through Stable-result Revisit
-- Neutral Nexus Carrier directory and ZIP: independently verified from `087855a`
-- Current phase: documentation and public-repository closeout before final candidate rebuild, checksum, release audit, and freeze
+- Earlier Neutral Nexus Carrier directory and ZIP: independently verified from
+  `087855a`; this is earlier evidence, not final acceptance of the Archive-capable
+  candidate
+- Slice G — Travelling Constellation Export: **DEFERRED AFTER GIFT**
+- Current phase: documentation, public-repository, Wiki, integration, and release
+  closeout before final candidate rebuild, checksum, release audit, and freeze
+- Branch integration: open release gate; the latest read-only inventory classifies
+  the current branch relationship as a fast-forward candidate, but no integration
+  has been performed
 
 ## Working-mode transition
 
@@ -84,9 +96,14 @@ The technical baseline through Stable-result Revisit preserves:
 - deliberate Return Opening separate from `/results`;
 - duplicate Return Slot identity fail-closed hardening;
 - static neutral-carrier allowlisting of known-source and stable-result modules;
+- a built-in public-safe Resonance Archive Origin Block in the Neutral Nexus Carrier;
+- read-only Archive access through the corrected Resonance surface;
+- explicit local Builder inspection, verification, and safe coupling without discovery;
 - no automatic transfer, publication, repair, regeneration, overwrite, or candidate selection under ambiguity.
 
 The canonical technical contract remains `NEXUS_01_CHAMBER_STATES_AND_RESULTS_V03.md` unless a later behavior-changing contract explicitly supersedes it.
+The Archive Block format, loading, reading, and coupling boundary is defined by
+`../contracts/NEXUS_01_ARCHIVE_BLOCK_CONTRACT_V01.md`.
 
 ## Earlier manual gift-preview evidence
 
@@ -160,7 +177,25 @@ Additional confirmed behavior includes:
 - no automatic discovery, transfer, publication, synchronization, or replacement;
 - successful generation and independent verification of both the Neutral Nexus Carrier directory and ZIP.
 
-The latest canonical full suite at this checkpoint contains 44 test files and 412 tests with no failures, errors, or skips.
+This role-separated evidence predates the Archive implementation and remains
+valid evidence for the gift path it exercised. It is not presented as a final
+manual acceptance of the not-yet-built Archive-capable gift candidate.
+
+Subsequent accepted Archive evidence includes:
+
+- the Archive Block contract and built-in Origin Block;
+- the read-only Resonance Archive surface;
+- shared built-in and coupled constellation loading;
+- Builder inspection and verification;
+- safe deliberate coupling, including race and rollback gates;
+- a temporary manual coupling check through player-facing `/archive` readability.
+
+The latest canonical full suite at the current implementation checkpoint contains
+48 test files and 460 tests with no failures, errors, or skips.
+
+Slice G — Travelling Constellation Export is explicitly **DEFERRED AFTER GIFT**.
+The current Neutral Nexus Carrier is not a Carried Constellation export product
+and does not export additionally coupled Archive Blocks.
 
 ## Current release objective
 
@@ -171,20 +206,16 @@ The release must remain local, explicit, privacy-preserving, understandable, atm
 ## Remaining gift-closeout phases
 
 ```text
-1. planning synchronization and accepted clarification package
-2. targeted fresh-context recheck
-3. recipient-perspective inventory
-4. editorial and release roadmap
-5. roadmap review
-6. small work-card packages
-7. work-card review
-8. implementation, diff, tests, and short manual checks
-9. documentation inventory and consolidation
-10. public repository curation
-11. release-relevant Wiki synchronization
-12. documentation and outside-perspective review
-13. full role-separated gift path and safety verification
-14. release audit and freeze
+1. documentation closeout
+2. public repository curation
+3. release-relevant Wiki synchronization
+4. documentation/outside-perspective review and accepted documentation synchronization
+5. branch-integration release gate
+6. accepted final source checkpoint and canonical full suite
+7. fresh Neutral Nexus Carrier build
+8. independent directory and ZIP verification
+9. final manual gift-path verification
+10. SHA-256, release identity, and freeze
 ```
 
 ## Documentation, repository, and Wiki closeout
@@ -226,6 +257,24 @@ Role A2: returning waiting side
 The simulation must use separate local areas, deliberate copy or packaging steps, no unintended reuse of old Tokens or results, and no access by one role to files that role would not possess in the real exchange.
 
 ## Final package identity
+
+The accepted pre-Archive fallback remains identified as:
+
+```text
+source commit:
+624fa79948c325edec66999add2ef23213457710
+
+package:
+nexus-01-neutral-carrier-gift-final.zip
+
+SHA-256:
+0f24deaf938490501da359cd33046fc2107ea93e12c17de216ec9de8afb7e0e7
+```
+
+This is historical fallback identity only. It is not the identity of the current
+Archive-capable source and must not be reused for the final Archive candidate.
+That candidate has not yet completed its final build, verification, checksum,
+release-identity, and freeze cycle.
 
 The release candidate must record:
 
@@ -290,11 +339,18 @@ No final gift-release acceptance is claimed yet.
 
 1. Complete the bounded repository and release-facing documentation closeout.
 2. Review release-relevant public navigation and remaining documentation drift without reopening finished technical scope.
-3. Commit and synchronize the accepted documentation closeout.
-4. Rebuild the final Neutral Nexus Carrier from the resulting source checkpoint.
-5. Verify the final carrier directory and ZIP independently.
-6. Run the current canonical full suite and final diff-integrity check on the exact source checkpoint.
-7. Record package identity and SHA-256 checksum, complete the release audit, and freeze the accepted gift package.
+3. Synchronize the release-relevant Wiki after repository documentation is stable;
+   this remains open until it has actually been performed.
+4. Commit and synchronize the accepted documentation closeout.
+5. Recheck and explicitly decide the open branch-integration gate without hiding
+   any later divergence.
+6. Accept the resulting final source checkpoint and run the current canonical full
+   suite plus final diff-integrity check on that exact source.
+7. Rebuild the final Neutral Nexus Carrier from that checkpoint and verify the
+   directory and ZIP independently.
+8. Complete the final manual gift-path check on the identified candidate.
+9. Record package identity and SHA-256 checksum, complete the release audit, and
+   freeze the accepted gift package.
 
 ## Maintenance rule
 

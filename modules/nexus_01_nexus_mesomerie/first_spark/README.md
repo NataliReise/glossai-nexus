@@ -63,6 +63,11 @@ After completing First Spark, see:
 
 - [`WHAT_NEXT.md`](WHAT_NEXT.md)
 
+When First Spark is played inside the current full Nexus 01 runtime, completion
+opens back into a larger local experience: the Atrium and Resonance Chamber are
+already implemented. A standalone First Spark package remains a valid smaller
+artifact in its own right.
+
 For project orientation, see the project wiki:
 
 ```text
@@ -194,7 +199,14 @@ See also:
 - [`WHAT_NEXT.md`](WHAT_NEXT.md)
 - [`FIRST_SPARK_0_1_REVIEW.md`](FIRST_SPARK_0_1_REVIEW.md)
 
-## Public handoff
+## Standalone First Spark handoff lineage
+
+The following handoff documents describe the earlier narrow standalone First Spark
+package boundary. They remain useful for that artifact, but the current full Nexus 01
+gift product is the Neutral Nexus Carrier documented in
+[`../packaging/README.md`](../packaging/README.md).
+
+### Public handoff
 
 Before sharing First Spark publicly, use:
 
@@ -204,9 +216,9 @@ Public handoff means sharing a neutral, inspectable version of First Spark witho
 
 Private gift handoff is a separate process and should use a separate private activation package.
 
-## Private gift package
+### Private gift package
 
-A private gift package is a private wrapper around the public First Spark module.
+A private gift package is a private wrapper around the public standalone First Spark module.
 
 It may carry private activation for a specific recipient, but it must not redefine what belongs to the public module or the public repository.
 
@@ -236,8 +248,14 @@ For legal notice and contact information for the project, see:
 
 - [`LEGAL_NOTICE.md`](../../../LEGAL_NOTICE.md)
 
-## Possible next running units
+## Current Nexus 01 continuation
 
-- Add optional activation field validation for future fields.
-- Refine the resonance node draft language after external reading.
-- Prepare resonance artifact and return artifact concepts after the after-play layer works.
+First Spark is now the opening slice of a larger implemented Nexus 01 path. For the
+current module, continue with:
+
+- [`../README.md`](../README.md) for the Nexus 01 overview;
+- [`WHAT_NEXT.md`](WHAT_NEXT.md) for player-facing continuation;
+- [`../packaging/README.md`](../packaging/README.md) for the current Neutral Nexus Carrier.
+
+Older First Spark review and package documents remain useful lineage for the smaller
+standalone artifact; they should not be read as the current full Nexus 01 roadmap.

@@ -4,8 +4,13 @@ This folder contains small packaging helpers for **Nexus 01 - Nexus-Mesomerie**.
 
 ## Prepare a Neutral Nexus Carrier
 
-The canonical corrected travelling product is the **Neutral Nexus Carrier**: an
-activation-ready Nexus with no completed activation and no preselected mode.
+The current gift product is the **Neutral Nexus Carrier**: an activation-ready
+Nexus with no completed activation and no preselected mode.
+
+Its explicit public runtime includes the built-in public-safe Resonance Archive
+Origin Block. It does not export additionally coupled Archive Blocks and is not a
+Carried Constellation export product. Slice G — Travelling Constellation Export
+is **DEFERRED AFTER GIFT**.
 
 ```bash
 python3 modules/nexus_01_nexus_mesomerie/packaging/prepare_neutral_nexus_carrier.py \
@@ -35,8 +40,27 @@ python3 modules/nexus_01_nexus_mesomerie/packaging/verify_neutral_nexus_carrier.
   --zip dist/nexus-01-neutral-carrier-sunday-gift.zip
 ```
 
-The carrier contains neither a Return Slot nor a private Return Workspace. All
-transport remains manual.
+The carrier contains no private Activation or selected Token-context history, no
+Return Slot or private Return Workspace, and no Return Artifact or generated
+Return Result. All transport remains manual.
+
+## Inspect, verify, or couple local Archive Blocks
+
+Nexus Builder V0.1 operates on one explicit local Nexus or Archive Block. Its
+current commands are:
+
+```bash
+python3 modules/nexus_01_nexus_mesomerie/packaging/nexus_builder.py inspect-nexus
+python3 modules/nexus_01_nexus_mesomerie/packaging/nexus_builder.py inspect-block path/to/archive-block
+python3 modules/nexus_01_nexus_mesomerie/packaging/nexus_builder.py show-constellation
+python3 modules/nexus_01_nexus_mesomerie/packaging/nexus_builder.py verify
+python3 modules/nexus_01_nexus_mesomerie/packaging/nexus_builder.py couple path/to/archive-block
+```
+
+`couple` deliberately changes the selected local Nexus after validating the
+source and target. It refuses overwrite and verifies the resulting constellation.
+It does not export a new carrier or Carried Constellation. Use `--nexus-root` only
+when deliberately targeting a different explicit Nexus 01 root.
 
 The earlier First Spark and explicitly legacy Resonance gift boundary remains:
 
@@ -207,7 +231,8 @@ python3 modules/nexus_01_nexus_mesomerie/packaging/verify_return_workspace.py \
   --gift path/to/nexus-01-resonance-gift-resonance-gift
 ```
 
-The current helpers build and verify two package types for:
+The older standalone First Spark helpers described below build and verify two
+First Spark package types for:
 
 ```text
 Nexus 0.1 - First Spark
@@ -405,6 +430,27 @@ Before sharing a package manually, check:
 4. No unintended local result or return files are present.
 5. The package is shared manually, not by an automated workflow.
 ```
+
+## Final gift-candidate release cycle
+
+The Archive-capable final gift candidate has not yet completed this cycle. A new
+candidate must be built from the accepted final source rather than inheriting the
+identity or checksum of an earlier package:
+
+```text
+accepted source commit
+-> canonical full suite
+-> Neutral Nexus Carrier build
+-> directory verification
+-> ZIP verification
+-> manual final-path check
+-> SHA-256
+-> release identity
+-> freeze
+```
+
+Any accepted later release-relevant source or documentation change restarts the
+applicable verification and identity cycle.
 
 ## Design boundary
 

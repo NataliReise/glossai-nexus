@@ -33,7 +33,7 @@ For the controlled migration plan, use:
 
 - [Resonance Transition Inventory](RESONANCE_TRANSITION_INVENTORY_01.md)
 - [Resonance Dependency Audit](RESONANCE_DEPENDENCY_AUDIT_01.md)
-- [Intentional Archive Policy](archive/README.md)
+- [Historical implementation archive policy](archive/README.md)
 
 ## Core idea
 
@@ -160,6 +160,22 @@ The production result enforces:
 - return word exactly once in line 5;
 - Same-Word behaviour;
 - enough variation without a large grammar engine.
+
+### 5. Resonance Archive and local Builder — current
+
+The current Resonance Chamber includes a small read-only Archive opened through
+`/archive`. Its built-in public-safe Origin Block travels with the Neutral Nexus
+Carrier.
+
+Nexus Builder V0.1 is a small local terminal utility that can inspect a Nexus or
+Archive Block, show and verify the current Archive constellation, and deliberately
+couple one compatible public-safe Archive Block. It does not discover Blocks
+automatically, use a network, or read private Activation or Return history.
+
+These Archive Blocks are distinct from [`archive/`](archive/README.md), which is
+the historical implementation archive for superseded code and design lineage.
+The Resonance Archive is current player-facing data; the historical implementation
+archive is not part of the production runtime.
 
 ## Older runnable resonance paths
 
@@ -290,9 +306,12 @@ The public repository must not contain:
 - key material;
 - generated gift packages or ZIP archives.
 
-The current First Spark builders copy only the explicit First Spark package set. They do not package V0.1, V0.2, the archive, or the V0.3 experiment.
+The current First Spark builders copy only the explicit First Spark package set.
+They do not package V0.1, V0.2, the historical implementation archive under
+`archive/`, or the V0.3 experiment.
 
-The corrected travelling runtime is the **Neutral Nexus Carrier**:
+The current gift product and corrected travelling runtime is the **Neutral Nexus
+Carrier**:
 
 ```bash
 python3 modules/nexus_01_nexus_mesomerie/packaging/prepare_neutral_nexus_carrier.py \
@@ -311,6 +330,12 @@ The carrier's explicit runtime allowlist includes the production compact
 generator and the opening dependencies needed when a new private Return
 Workspace is created. The carrier itself still contains no private workspace
 instance, Return Slot, Artifact, or generated result.
+
+The allowlist also includes the built-in public-safe Resonance Archive Origin
+Block. It does not include additionally coupled Archive Blocks, so this carrier is
+not a Carried Constellation export product. Travelling Constellation Export is
+deferred until after the gift. See [Nexus 01 Packaging](packaging/README.md) for
+the current operational packaging boundary.
 
 ## Run the complete Nexus 01 test suite
 

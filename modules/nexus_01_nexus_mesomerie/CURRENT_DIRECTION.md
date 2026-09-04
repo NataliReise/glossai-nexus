@@ -4,6 +4,8 @@ Status: current implementation direction
 
 Decision date: 2026-07-17
 
+Implementation status updated: 2026-09-04
+
 This document is the primary source of truth for the current development direction of Nexus 01.
 
 When an older design, status, audit, or experiment document conflicts with this file, this file takes precedence until a newer current-direction document explicitly replaces it.
@@ -130,6 +132,23 @@ The following existing Nexus responsibilities remain valuable:
 - strict five-line and word-count validation.
 
 The current redesign is therefore a replacement of the visible poetic production layer, not a rejection of the entire Nexus structure.
+
+## Current Archive and Block boundary
+
+Nexus 01 now includes a local read-only Resonance Archive. Its built-in public-safe
+Origin Block is part of the current runtime and can be opened deliberately from
+the Resonance Chamber through `/archive`.
+
+The small local Nexus Builder V0.1 can inspect a Nexus or Archive Block, verify an
+Archive constellation, and deliberately couple one compatible public-safe Archive
+Block. It performs no automatic Block discovery, network access, synchronization,
+external publication, or inspection of private Activation, Token-context, Return,
+or Result history.
+
+The current gift product remains the Neutral Nexus Carrier. It contains the
+built-in Origin Block but does not export additionally coupled Blocks. Travelling
+Constellation Export is not part of the current gift release and is deferred until
+after the gift.
 
 ## Superseded production directions
 

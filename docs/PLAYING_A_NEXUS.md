@@ -50,6 +50,11 @@ The view does not persist across restarts, search for moved files, or regenerate
 missing output. It also adds no per-user result data to the reusable neutral
 Nexus carrier.
 
+The current Resonance surfaces also expose `/archive`, a local read-only Archive
+of public-safe traces carried by the Nexus. Opening it does not begin COMPOSE or
+ANSWER work, and it is not a history of players, private activations, Tokens,
+Return Workspaces, Return Artifacts, or local results.
+
 ## Recommended first path
 
 Unless a module says otherwise, the recommended first path is:

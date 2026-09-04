@@ -30,7 +30,16 @@ You may simply keep First Spark as a completed gift.
 
 Nothing else is required.
 
-If you want, you can let the spark travel further:
+If you opened First Spark as part of the current full Nexus 01 runtime, First Spark
+is also the completed opening slice of a larger local experience. You can return to
+the Atrium and explore the Resonance Chamber. Productive COMPOSE or ANSWER work begins
+only after an explicit choice, and `/archive` opens a local read-only Resonance
+Archive of public-safe traces.
+
+Nothing in that continuation is sent, uploaded, synchronized, or published
+externally automatically.
+
+If you want to carry the spark separately, you can also:
 
 1. Share the clean public repository or a clean public copy of First Spark.
 2. Add private activation data only through a private channel.
@@ -44,12 +53,13 @@ You can also explore the public repository.
 
 You might look at:
 
+- the current Nexus 01 overview,
 - the First Spark source code,
 - the public/private boundary notes,
-- the gift package specification,
+- the current Resonance Chamber and read-only Resonance Archive,
 - the review notes for First Spark 0.1,
 - the resonance arc and discussions guide,
-- future modules and ideas as they appear.
+- later modules and ideas as they appear.
 
 For a friendly introduction to project terms, public/private layers, resonance nodes, discussions, and future modules, visit the project wiki:
 
@@ -138,7 +148,9 @@ Do not publish:
 - `activation.local.json`
 - private gift messages
 - recipient-specific private data
-- return artifacts
+- selected Token context
+- private Return Workspaces or Return Slots
+- Return Artifacts or local Return Results
 - private notes from the gift package
 
 ## What is safe to share publicly?
@@ -147,6 +159,7 @@ Usually safe:
 
 - the public repository link
 - a neutral public copy of First Spark
+- public-safe Archive content already intended for public sharing
 - a public-safe resonance node draft
 - a short public note that does not reveal private gift content
 
@@ -170,6 +183,12 @@ Project discussions:
 
 ```text
 https://github.com/NataliReise/glossai-nexus/discussions
+```
+
+Nexus 01 overview:
+
+```text
+modules/nexus_01_nexus_mesomerie/README.md
 ```
 
 First Spark folder:

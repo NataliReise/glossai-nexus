@@ -1,8 +1,15 @@
 # Nexus 01 Archive Block Contract V0.1
 
-Status: PROPOSED
+Status: IMPLEMENTED V0.1 TECHNICAL BOUNDARY; RELEASE CLOSEOUT PENDING
 Scope: Nexus 01 / Resonance Chamber / data-only Archive content
-Purpose: first concrete Chamber Block contract for a future extensible Nexus architecture
+Purpose: concrete Chamber Block contract for the implemented Archive V0.1 boundary
+
+Implementation status: the V0.1 Block format, loader, built-in Origin Block,
+read-only Resonance Archive surface, shared constellation loading, and deliberate
+local Builder coupling are implemented at
+`1bec2232c5e7b7ed05362132e293245473bc7f30`. The final Archive-capable gift
+candidate release-verification cycle remains pending. Carried-constellation
+export remains future work and is **DEFERRED AFTER GIFT**.
 
 ## Concept lineage and normative relationship
 
@@ -507,8 +514,10 @@ It may show:
 - an invitation to inspect an entry;
 - no claim of network access or automatic memory.
 
-Exact command grammar is an implementation decision to be reviewed against the
-current exploration-first Chamber grammar before coding.
+The implemented V0.1 surface follows the current exploration-first Chamber
+grammar. `/archive` opens the local read-only Archive; within it, the visitor may
+use `/look`, `/help`, `/read <entry-id>`, and `/back`. Archive access does not
+start or alter a productive COMPOSE or ANSWER action.
 
 ## 16. Explicit non-goals
 
@@ -547,7 +556,7 @@ All refusal paths should preserve the existing Nexus unchanged.
 
 ## 18. First reference Block
 
-The first implementation should include one built-in Block:
+The V0.1 implementation includes one built-in Block:
 
 ```text
 block_id:
@@ -557,8 +566,8 @@ n01-resonance-archive-origin
 Its purpose is twofold:
 
 1. give the Resonance Chamber a small real Archive at gift-release time;
-2. act as the reference fixture for validation, rendering, packaging, and later
-   Builder coupling tests.
+2. act as the reference fixture for validation, rendering, packaging, and Builder
+   coupling tests.
 
 Its prose content should be drawn first from the existing prototype in
 `docs/concepts/NEXUS_ARCHIVE_FIRST_ENTRIES.md`.
@@ -585,13 +594,20 @@ This contract is successfully implemented when:
 
 ## 20. Future direction
 
-If Archive V0.1 proves the Block boundary useful, later work may add:
+Archive V0.1 already includes deliberate coupling of external compatible
+`archive-content` Blocks and a small local Nexus Builder interface for inspection,
+verification, and coupling.
 
-- deliberate coupling of external `archive-content` Blocks;
-- a small Nexus Builder / Workshop interface;
+Later work may add:
+
+- a user-facing Nexus Workshop interface over the existing Builder Core;
 - a constellation manifest;
 - carried-constellation export and verification;
 - additional data-only Chamber Block types.
+
+Carried-constellation export and verification remain future work and are
+**DEFERRED AFTER GIFT**. The current Neutral Nexus Carrier is not a
+Carried Constellation export product.
 
 Those additions should grow from real Chamber needs rather than from a universal
 plugin abstraction.
