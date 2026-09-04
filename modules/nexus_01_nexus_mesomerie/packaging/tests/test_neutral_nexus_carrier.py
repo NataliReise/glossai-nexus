@@ -238,13 +238,15 @@ class NeutralNexusCarrierTests(unittest.TestCase):
                 (
                     "import pathlib, sys; "
                     "sys.path.insert(0, '.'); "
-                    "from atrium.classified_resonance import _load_builtin_archive; "
-                    "block = _load_builtin_archive(pathlib.Path.cwd()); "
+                    "from atrium.classified_resonance import _load_archive_constellation; "
+                    "archive = _load_archive_constellation(pathlib.Path.cwd()); "
                     "expected = ('what-is-a-nexus', 'first-spark-chamber', "
                     "'resonance-as-a-gift'); "
-                    "actual = tuple(entry.entry_id for entry in block.entries); "
+                    "actual = tuple(entry.entry_id for entry in archive.entries); "
+                    "block_ids = tuple(block.block_id for block in archive.blocks); "
                     "raise SystemExit(0 if "
-                    "block.block_id == 'n01-resonance-archive-origin' "
+                    "block_ids == ('n01-resonance-archive-origin',) "
+                    "and archive.coupled_blocks == () "
                     "and actual == expected else 3)"
                 ),
             ],

@@ -14,6 +14,7 @@ sys.path.insert(0, str(NEXUS_01_ROOT))
 from chambers.resonance.archive_content import (
     ArchiveBlockLoadError,
     load_archive_block,
+    load_archive_constellation,
 )
 
 
@@ -65,10 +66,11 @@ def _write_json(path: Path, data: object) -> None:
 def _make_block(
     root: Path,
     *,
+    name: str = "block",
     manifest: dict[str, object] | None = None,
     entries: tuple[dict[str, object], ...] | None = None,
 ) -> Path:
-    block = root / "block"
+    block = root / name
     content = block / "content"
     content.mkdir(parents=True)
     _write_json(block / "manifest.json", _manifest() if manifest is None else manifest)
@@ -307,6 +309,183 @@ def test_content_rejects_non_json_files_and_symbolic_links(tmp_path: Path) -> No
     root_link = tmp_path / "root-link"
     root_link.symlink_to(target, target_is_directory=True)
     _expect_load_error(root_link, "must not be a symbolic link")
+
+
+def _manifest_for(block_id: str) -> dict[str, object]:
+    manifest = _manifest()
+    manifest["block_id"] = block_id
+    manifest["title"] = block_id
+    return manifest
+
+
+def test_constellation_accepts_missing_coupled_root_without_creating_it(
+    tmp_path: Path,
+) -> None:
+    builtin_root = tmp_path / "builtin"
+    coupled_root = tmp_path / "coupled"
+    _make_block(
+        builtin_root,
+        name="source-folder",
+        manifest=_manifest_for("origin-block"),
+        entries=(_open_entry("origin-entry"),),
+    )
+    assert not coupled_root.exists()
+
+    constellation = load_archive_constellation(builtin_root, coupled_root)
+
+    assert tuple(block.block_id for block in constellation.builtin_blocks) == (
+        "origin-block",
+    )
+    assert constellation.coupled_blocks == ()
+    assert tuple(entry.entry_id for entry in constellation.entries) == (
+        "origin-entry",
+    )
+    assert not coupled_root.exists()
+
+
+def test_constellation_orders_blocks_by_id_and_preserves_block_entry_order(
+    tmp_path: Path,
+) -> None:
+    builtin_root = tmp_path / "builtin"
+    coupled_root = tmp_path / "coupled"
+    _make_block(
+        builtin_root,
+        name="z-source",
+        manifest=_manifest_for("z-block"),
+        entries=(_open_entry("z-first"), _open_entry("z-second")),
+    )
+    _make_block(
+        builtin_root,
+        name="a-source",
+        manifest=_manifest_for("a-block"),
+        entries=(_open_entry("a-entry"),),
+    )
+    _make_block(
+        coupled_root,
+        name="m-source",
+        manifest=_manifest_for("m-block"),
+        entries=(_open_entry("m-entry"),),
+    )
+
+    constellation = load_archive_constellation(builtin_root, coupled_root)
+
+    assert tuple(block.block_id for block in constellation.builtin_blocks) == (
+        "a-block",
+        "z-block",
+    )
+    assert tuple(block.block_id for block in constellation.coupled_blocks) == (
+        "m-block",
+    )
+    assert tuple(entry.entry_id for entry in constellation.entries) == (
+        "a-entry",
+        "z-first",
+        "z-second",
+        "m-entry",
+    )
+
+
+def test_constellation_rejects_duplicate_block_and_entry_ids(tmp_path: Path) -> None:
+    duplicate_block_builtin = tmp_path / "duplicate-block" / "builtin"
+    duplicate_block_coupled = tmp_path / "duplicate-block" / "coupled"
+    _make_block(
+        duplicate_block_builtin,
+        manifest=_manifest_for("same-block"),
+        entries=(_open_entry("first-entry"),),
+    )
+    _make_block(
+        duplicate_block_coupled,
+        manifest=_manifest_for("same-block"),
+        entries=(_open_entry("second-entry"),),
+    )
+    try:
+        load_archive_constellation(
+            duplicate_block_builtin,
+            duplicate_block_coupled,
+        )
+    except ArchiveBlockLoadError as error:
+        assert "duplicate block_id: same-block" in str(error)
+    else:
+        raise AssertionError("Duplicate constellation block_id was accepted.")
+
+    duplicate_entry_builtin = tmp_path / "duplicate-entry" / "builtin"
+    duplicate_entry_coupled = tmp_path / "duplicate-entry" / "coupled"
+    _make_block(
+        duplicate_entry_builtin,
+        manifest=_manifest_for("first-block"),
+        entries=(_open_entry("same-entry"),),
+    )
+    _make_block(
+        duplicate_entry_coupled,
+        manifest=_manifest_for("second-block"),
+        entries=(_open_entry("same-entry"),),
+    )
+    try:
+        load_archive_constellation(
+            duplicate_entry_builtin,
+            duplicate_entry_coupled,
+        )
+    except ArchiveBlockLoadError as error:
+        assert "duplicate entry_id: same-entry" in str(error)
+        assert "first-block" in str(error)
+        assert "second-block" in str(error)
+    else:
+        raise AssertionError("Duplicate constellation entry_id was accepted.")
+
+
+def test_constellation_rejects_symlink_root_and_foreign_root_child(
+    tmp_path: Path,
+) -> None:
+    builtin_root = tmp_path / "builtin"
+    _make_block(
+        builtin_root,
+        manifest=_manifest_for("origin-block"),
+        entries=(_open_entry("origin-entry"),),
+    )
+
+    real_coupled = tmp_path / "real-coupled"
+    real_coupled.mkdir()
+    linked_coupled = tmp_path / "linked-coupled"
+    linked_coupled.symlink_to(real_coupled, target_is_directory=True)
+    try:
+        load_archive_constellation(builtin_root, linked_coupled)
+    except ArchiveBlockLoadError as error:
+        assert "root must not be a symbolic link" in str(error)
+    else:
+        raise AssertionError("Symlink constellation root was accepted.")
+
+    foreign_coupled = tmp_path / "foreign-coupled"
+    foreign_coupled.mkdir()
+    (foreign_coupled / "README.txt").write_text("not a Block\n", encoding="utf-8")
+    try:
+        load_archive_constellation(builtin_root, foreign_coupled)
+    except ArchiveBlockLoadError as error:
+        assert "may contain only Block directories" in str(error)
+    else:
+        raise AssertionError("Foreign constellation root child was accepted.")
+
+
+def test_constellation_does_not_discover_unrelated_sibling_blocks(
+    tmp_path: Path,
+) -> None:
+    builtin_root = tmp_path / "selected" / "builtin"
+    coupled_root = tmp_path / "selected" / "coupled"
+    _make_block(
+        builtin_root,
+        manifest=_manifest_for("selected-block"),
+        entries=(_open_entry("selected-entry"),),
+    )
+    unrelated = _make_block(
+        tmp_path / "nearby",
+        manifest=_manifest_for("must-not-be-discovered"),
+        entries=(_open_entry("nearby-entry"),),
+    )
+
+    constellation = load_archive_constellation(builtin_root, coupled_root)
+
+    assert tuple(block.block_id for block in constellation.blocks) == (
+        "selected-block",
+    )
+    assert unrelated.is_dir()
 
 
 def test_selected_block_does_not_discover_or_validate_siblings(tmp_path: Path) -> None:

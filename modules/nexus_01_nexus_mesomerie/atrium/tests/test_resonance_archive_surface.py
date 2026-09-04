@@ -8,7 +8,11 @@ from atrium.classified_resonance import (
     _ArchiveSurfaceLoadError,
     _SurfacePhase,
 )
-from chambers.resonance.archive_content import ArchiveContentBlock, ArchiveEntry
+from chambers.resonance.archive_content import (
+    ArchiveContentBlock,
+    ArchiveContentConstellation,
+    ArchiveEntry,
+)
 
 
 def _block_with_entries(*entries: ArchiveEntry) -> ArchiveContentBlock:
@@ -24,6 +28,16 @@ def _block_with_entries(*entries: ArchiveEntry) -> ArchiveContentBlock:
     )
 
 
+def _constellation(
+    *builtin_blocks: ArchiveContentBlock,
+    coupled_blocks: tuple[ArchiveContentBlock, ...] = (),
+) -> ArchiveContentConstellation:
+    return ArchiveContentConstellation(
+        builtin_blocks=tuple(builtin_blocks),
+        coupled_blocks=coupled_blocks,
+    )
+
+
 def test_archive_is_lazy_until_explicit_command() -> None:
     commands = iter(("/look", "/help", "/quit"))
     output: list[str] = []
@@ -36,7 +50,7 @@ def test_archive_is_lazy_until_explicit_command() -> None:
     loader = Mock(
         side_effect=AssertionError("Archive loaded without explicit /archive")
     )
-    with patch("atrium.classified_resonance._load_builtin_archive", loader):
+    with patch("atrium.classified_resonance._load_archive_constellation", loader):
         result = controller()
 
     assert not result.completed
@@ -169,8 +183,8 @@ def test_archive_help_and_dispatch_share_local_capability_source() -> None:
             return_value=reduced_capabilities,
         ),
         patch(
-            "atrium.classified_resonance._load_builtin_archive",
-            return_value=_block_with_entries(),
+            "atrium.classified_resonance._load_archive_constellation",
+            return_value=_constellation(_block_with_entries()),
         ),
     ):
         result = controller()
@@ -212,6 +226,59 @@ def test_unknown_archive_entry_stays_inside_archive() -> None:
     assert "Traceback" not in transcript
 
 
+def test_archive_surface_reads_entry_from_coupled_block() -> None:
+    builtin_entry = ArchiveEntry(
+        entry_id="builtin-entry",
+        title="Built-in Entry",
+        access="open",
+        poetic_indication=("A built-in trace.",),
+        clear_orientation=("Built-in orientation.",),
+    )
+    coupled_entry = ArchiveEntry(
+        entry_id="carried-entry",
+        title="Carried Entry",
+        access="open",
+        poetic_indication=("A carried trace arrives.",),
+        clear_orientation=("It was deliberately coupled to this Nexus.",),
+    )
+    builtin = _block_with_entries(builtin_entry)
+    coupled = ArchiveContentBlock(
+        format="nexus.chamber-block.v1",
+        block_type="archive-content",
+        block_id="carried-archive",
+        target_module="nexus-01",
+        target_chamber="resonance",
+        schema_version=1,
+        title="Carried Archive",
+        entries=(coupled_entry,),
+    )
+    commands = iter(("/archive", "/read carried-entry", "/back", "/quit"))
+    output: list[str] = []
+    controller = ClassifiedResonanceController(
+        ResonanceMode.COMPOSE,
+        output_writer=output.append,
+        input_reader=lambda _prompt: next(commands),
+    )
+
+    with patch(
+        "atrium.classified_resonance._load_archive_constellation",
+        return_value=_constellation(
+            builtin,
+            coupled_blocks=(coupled,),
+        ),
+    ):
+        result = controller()
+
+    assert not result.completed
+    transcript = "\n".join(output)
+    assert "Resonance Archive" in transcript
+    assert "builtin-entry — Built-in Entry" in transcript
+    assert "carried-entry — Carried Entry" in transcript
+    assert "Archive entry — Carried Entry" in transcript
+    assert "A carried trace arrives." in transcript
+    assert "It was deliberately coupled to this Nexus." in transcript
+
+
 def test_sealed_archive_entry_never_renders_deeper_material() -> None:
     sealed = ArchiveEntry(
         entry_id="sealed-entry",
@@ -231,8 +298,8 @@ def test_sealed_archive_entry_never_renders_deeper_material() -> None:
     )
 
     with patch(
-        "atrium.classified_resonance._load_builtin_archive",
-        return_value=block,
+        "atrium.classified_resonance._load_archive_constellation",
+        return_value=_constellation(block),
     ):
         result = controller()
 
@@ -264,8 +331,8 @@ def test_invalid_archive_is_calm_and_does_not_block_productive_action() -> None:
         setattr(controller, method_name, productive)
 
         with patch(
-            "atrium.classified_resonance._load_builtin_archive",
-            side_effect=_ArchiveSurfaceLoadError("invalid test Block"),
+            "atrium.classified_resonance._load_archive_constellation",
+            side_effect=_ArchiveSurfaceLoadError("invalid test constellation"),
         ):
             result = controller()
 

@@ -43,7 +43,10 @@ from .stable_result import (
 
 
 if TYPE_CHECKING:
-    from chambers.resonance.archive_content import ArchiveContentBlock, ArchiveEntry
+    from chambers.resonance.archive_content import (
+        ArchiveContentConstellation,
+        ArchiveEntry,
+    )
     from resonance_invitation_runtime import (
         InvitationPreparationResult,
         RouteIdentity,
@@ -78,13 +81,8 @@ class CompletedAnswerResult:
 CompletedCorrectedResult = CompletedComposeResult | CompletedAnswerResult
 
 
-_BUILTIN_ARCHIVE_RELATIVE_PATH = Path(
-    "chambers/resonance/archive_blocks/builtin/n01-resonance-archive-origin"
-)
-
-
 class _ArchiveSurfaceLoadError(RuntimeError):
-    """Raised when the local built-in Archive cannot be opened safely."""
+    """Raised when the local Archive constellation cannot be opened safely."""
 
 
 @dataclass(frozen=True)
@@ -152,13 +150,17 @@ def resonance_door_label(mode: ResonanceMode) -> str:
     return DOOR_LABELS[mode]
 
 
-def _load_builtin_archive(nexus_root: Path) -> "ArchiveContentBlock":
-    """Load only the explicitly known built-in Resonance Archive Block."""
+def _load_archive_constellation(
+    nexus_root: Path,
+) -> "ArchiveContentConstellation":
+    """Load only the explicit built-in and coupled Resonance Archive roots."""
 
     try:
         from chambers.resonance.archive_content import (
+            ARCHIVE_BUILTIN_ROOT,
+            ARCHIVE_COUPLED_ROOT,
             ArchiveBlockLoadError,
-            load_archive_block,
+            load_archive_constellation,
         )
     except ImportError as error:
         raise _ArchiveSurfaceLoadError(
@@ -166,10 +168,13 @@ def _load_builtin_archive(nexus_root: Path) -> "ArchiveContentBlock":
         ) from error
 
     try:
-        return load_archive_block(nexus_root / _BUILTIN_ARCHIVE_RELATIVE_PATH)
+        return load_archive_constellation(
+            nexus_root / ARCHIVE_BUILTIN_ROOT,
+            nexus_root / ARCHIVE_COUPLED_ROOT,
+        )
     except ArchiveBlockLoadError as error:
         raise _ArchiveSurfaceLoadError(
-            "Built-in Archive Block could not be loaded."
+            "Archive constellation could not be loaded."
         ) from error
 
 
@@ -388,7 +393,7 @@ class ClassifiedResonanceController:
             self.nexus_root or Path(__file__).resolve().parents[1]
         ).expanduser().resolve()
         try:
-            block = _load_builtin_archive(nexus_root)
+            constellation = _load_archive_constellation(nexus_root)
         except _ArchiveSurfaceLoadError:
             self.output_writer("Resonance Archive — unavailable")
             self.output_writer("")
@@ -396,10 +401,12 @@ class ClassifiedResonanceController:
             self.output_writer("Nothing was changed.")
             return
 
-        entries_by_id = {entry.entry_id: entry for entry in block.entries}
+        entries_by_id = {
+            entry.entry_id: entry for entry in constellation.entries
+        }
         capabilities = self._archive_capabilities()
         available_commands = {capability.command for capability in capabilities}
-        self._display_archive_index(block)
+        self._display_archive_index(constellation)
 
         while True:
             try:
@@ -428,7 +435,7 @@ class ClassifiedResonanceController:
                 return
 
             if command == "/look" and not argument:
-                self._display_archive_index(block)
+                self._display_archive_index(constellation)
                 continue
 
             if command == "/help" and not argument:
@@ -453,8 +460,17 @@ class ClassifiedResonanceController:
                 "Use /help to see the commands available here."
             )
 
-    def _display_archive_index(self, block: "ArchiveContentBlock") -> None:
-        self.output_writer(block.title)
+    def _display_archive_index(
+        self,
+        constellation: "ArchiveContentConstellation",
+    ) -> None:
+        blocks = constellation.blocks
+        heading = (
+            blocks[0].title
+            if len(blocks) == 1
+            else "Resonance Archive"
+        )
+        self.output_writer(heading)
         self.output_writer("")
         write_wrapped_text(
             self.output_writer,
@@ -465,7 +481,7 @@ class ClassifiedResonanceController:
             "Archive entries open only when you choose /read <entry-id>.",
         )
         self.output_writer("")
-        for entry in block.entries:
+        for entry in constellation.entries:
             sealed_label = " [sealed]" if entry.access == "sealed" else ""
             self.output_writer(
                 f"  {entry.entry_id} — {entry.title}{sealed_label}"

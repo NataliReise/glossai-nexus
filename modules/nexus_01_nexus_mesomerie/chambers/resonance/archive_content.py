@@ -14,6 +14,8 @@ ARCHIVE_BLOCK_TYPE = "archive-content"
 ARCHIVE_TARGET_MODULE = "nexus-01"
 ARCHIVE_TARGET_CHAMBER = "resonance"
 ARCHIVE_SCHEMA_VERSION = 1
+ARCHIVE_BUILTIN_ROOT = Path("chambers/resonance/archive_blocks/builtin")
+ARCHIVE_COUPLED_ROOT = Path("chambers/resonance/archive_blocks/coupled")
 
 _MANIFEST_FIELDS = frozenset(
     {
@@ -42,7 +44,7 @@ _IDENTIFIER_PATTERN = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,79}")
 
 
 class ArchiveBlockLoadError(RuntimeError):
-    """Raised when one explicitly selected Archive Block is invalid or unreadable."""
+    """Raised when selected Archive data or an explicit constellation is invalid."""
 
 
 @dataclass(frozen=True)
@@ -69,6 +71,26 @@ class ArchiveContentBlock:
     schema_version: int
     title: str
     entries: tuple[ArchiveEntry, ...]
+
+
+@dataclass(frozen=True)
+class ArchiveContentConstellation:
+    """Validated immutable Archive Blocks carried by one Nexus."""
+
+    builtin_blocks: tuple[ArchiveContentBlock, ...]
+    coupled_blocks: tuple[ArchiveContentBlock, ...]
+
+    @property
+    def blocks(self) -> tuple[ArchiveContentBlock, ...]:
+        return (*self.builtin_blocks, *self.coupled_blocks)
+
+    @property
+    def entries(self) -> tuple[ArchiveEntry, ...]:
+        return tuple(
+            entry
+            for block in self.blocks
+            for entry in block.entries
+        )
 
 
 def load_archive_block(path: str | Path) -> ArchiveContentBlock:
@@ -103,6 +125,96 @@ def load_archive_block(path: str | Path) -> ArchiveContentBlock:
         title=manifest["title"],
         entries=tuple(entries),
     )
+
+
+def load_archive_constellation(
+    builtin_root: str | Path,
+    coupled_root: str | Path,
+) -> ArchiveContentConstellation:
+    """Load only the two explicit Archive Block roots for one Nexus."""
+
+    builtin_blocks = _load_block_root(
+        Path(builtin_root).expanduser(),
+        required=True,
+    )
+    coupled_blocks = _load_block_root(
+        Path(coupled_root).expanduser(),
+        required=False,
+    )
+
+    seen_block_ids: set[str] = set()
+    seen_entry_ids: dict[str, str] = {}
+    for block in (*builtin_blocks, *coupled_blocks):
+        if block.block_id in seen_block_ids:
+            raise ArchiveBlockLoadError(
+                "Archive constellation contains duplicate block_id: "
+                f"{block.block_id}"
+            )
+        seen_block_ids.add(block.block_id)
+
+        for entry in block.entries:
+            previous_block_id = seen_entry_ids.get(entry.entry_id)
+            if previous_block_id is not None:
+                raise ArchiveBlockLoadError(
+                    "Archive constellation contains duplicate entry_id: "
+                    f"{entry.entry_id} "
+                    f"(Blocks {previous_block_id} and {block.block_id})"
+                )
+            seen_entry_ids[entry.entry_id] = block.block_id
+
+    return ArchiveContentConstellation(
+        builtin_blocks=builtin_blocks,
+        coupled_blocks=coupled_blocks,
+    )
+
+
+def _load_block_root(
+    block_root: Path,
+    *,
+    required: bool,
+) -> tuple[ArchiveContentBlock, ...]:
+    try:
+        if block_root.is_symlink():
+            raise ArchiveBlockLoadError(
+                f"Archive Block root must not be a symbolic link: {block_root}"
+            )
+        if not block_root.exists():
+            if required:
+                raise ArchiveBlockLoadError(
+                    f"Required Archive Block root is missing: {block_root}"
+                )
+            return ()
+        if not block_root.is_dir():
+            raise ArchiveBlockLoadError(
+                f"Archive Block root is not a directory: {block_root}"
+            )
+
+        children = tuple(sorted(block_root.iterdir(), key=lambda path: path.name))
+        if required and not children:
+            raise ArchiveBlockLoadError(
+                f"Required Archive Block root contains no Blocks: {block_root}"
+            )
+
+        blocks: list[ArchiveContentBlock] = []
+        for child in children:
+            if child.is_symlink():
+                raise ArchiveBlockLoadError(
+                    f"Archive Block root contains a symbolic link: {child}"
+                )
+            if not child.is_dir():
+                raise ArchiveBlockLoadError(
+                    "Archive Block root may contain only Block directories: "
+                    f"{child}"
+                )
+            blocks.append(load_archive_block(child))
+
+        return tuple(sorted(blocks, key=lambda block: block.block_id))
+    except ArchiveBlockLoadError:
+        raise
+    except OSError as error:
+        raise ArchiveBlockLoadError(
+            f"Archive Block root could not be inspected: {block_root}: {error}"
+        ) from error
 
 
 def _validate_block_shape(block_path: Path) -> None:

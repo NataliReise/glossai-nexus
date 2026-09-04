@@ -436,6 +436,15 @@ local Return Results
 other private/generated state
 ```
 
+For Archive V0.1, `entry_id` is also required to be unique across all Archive
+Blocks loaded into one constellation. This is a **constellation compatibility
+rule**, not a claim that either Block is intrinsically malformed.
+
+If two individually valid Blocks contain the same `entry_id`, that constellation
+must be refused until the conflict is removed. This keeps the player-facing
+`/read <entry-id>` grammar unambiguous without introducing a more complex Block-
+qualified command syntax in V0.1.
+
 A later Builder slice may write a machine-readable constellation manifest. It is
 not required for the first Archive reader slice.
 
