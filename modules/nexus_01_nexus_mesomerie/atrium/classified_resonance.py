@@ -35,6 +35,7 @@ from return_resonance.token import (
 
 from .resonance_mode import ResonanceMode
 from .runtime import ChamberRunResult
+from .terminal_text import write_wrapped_text
 from .stable_result import (
     StableResultReadStatus,
     read_stable_resonance_result,
@@ -42,6 +43,7 @@ from .stable_result import (
 
 
 if TYPE_CHECKING:
+    from chambers.resonance.archive_content import ArchiveContentBlock, ArchiveEntry
     from resonance_invitation_runtime import (
         InvitationPreparationResult,
         RouteIdentity,
@@ -74,6 +76,24 @@ class CompletedAnswerResult:
 
 
 CompletedCorrectedResult = CompletedComposeResult | CompletedAnswerResult
+
+
+_BUILTIN_ARCHIVE_RELATIVE_PATH = Path(
+    "chambers/resonance/archive_blocks/builtin/n01-resonance-archive-origin"
+)
+
+
+class _ArchiveSurfaceLoadError(RuntimeError):
+    """Raised when the local built-in Archive cannot be opened safely."""
+
+
+@dataclass(frozen=True)
+class _ArchiveSurfaceCapability:
+    """Describe one command available inside the Resonance Archive subspace."""
+
+    command: str
+    display_command: str
+    help_text: str
 
 
 class _SurfacePhase(Enum):
@@ -130,6 +150,27 @@ def resonance_door_label(mode: ResonanceMode) -> str:
     """Return mode-specific wording without changing Chamber identity."""
 
     return DOOR_LABELS[mode]
+
+
+def _load_builtin_archive(nexus_root: Path) -> "ArchiveContentBlock":
+    """Load only the explicitly known built-in Resonance Archive Block."""
+
+    try:
+        from chambers.resonance.archive_content import (
+            ArchiveBlockLoadError,
+            load_archive_block,
+        )
+    except ImportError as error:
+        raise _ArchiveSurfaceLoadError(
+            "Archive runtime is unavailable."
+        ) from error
+
+    try:
+        return load_archive_block(nexus_root / _BUILTIN_ARCHIVE_RELATIVE_PATH)
+    except ArchiveBlockLoadError as error:
+        raise _ArchiveSurfaceLoadError(
+            "Built-in Archive Block could not be loaded."
+        ) from error
 
 
 @dataclass
@@ -202,6 +243,9 @@ class ClassifiedResonanceController:
             if command == "/help":
                 self._display_surface_help(capabilities)
                 continue
+            if command == "/archive":
+                self._run_archive_surface()
+                continue
             if command == "/trace":
                 self._display_post_run_trace()
                 continue
@@ -231,6 +275,9 @@ class ClassifiedResonanceController:
                 "/look", f"perceive the {state_label} Chamber state"
             ),
             _SurfaceCapability("/help", "show the commands available here"),
+            _SurfaceCapability(
+                "/archive", "open the local read-only Resonance Archive"
+            ),
         ]
         if phase is _SurfacePhase.POST_RUN:
             capabilities.append(
@@ -321,6 +368,156 @@ class ClassifiedResonanceController:
             self.output_writer(
                 f"  {capability.command} — {capability.help_text}"
             )
+
+    def _archive_capabilities(self) -> tuple[_ArchiveSurfaceCapability, ...]:
+        return (
+            _ArchiveSurfaceCapability("/look", "/look", "show the Archive index"),
+            _ArchiveSurfaceCapability(
+                "/help", "/help", "show the commands available here"
+            ),
+            _ArchiveSurfaceCapability(
+                "/read", "/read <entry-id>", "read one Archive entry"
+            ),
+            _ArchiveSurfaceCapability(
+                "/back", "/back", "return to the Resonance Chamber"
+            ),
+        )
+
+    def _run_archive_surface(self) -> None:
+        nexus_root = (
+            self.nexus_root or Path(__file__).resolve().parents[1]
+        ).expanduser().resolve()
+        try:
+            block = _load_builtin_archive(nexus_root)
+        except _ArchiveSurfaceLoadError:
+            self.output_writer("Resonance Archive — unavailable")
+            self.output_writer("")
+            self.output_writer("The local Archive could not be opened safely.")
+            self.output_writer("Nothing was changed.")
+            return
+
+        entries_by_id = {entry.entry_id: entry for entry in block.entries}
+        capabilities = self._archive_capabilities()
+        available_commands = {capability.command for capability in capabilities}
+        self._display_archive_index(block)
+
+        while True:
+            try:
+                raw_command = self.input_reader("resonance|archive> ").strip()
+            except (KeyboardInterrupt, EOFError):
+                self.output_writer("")
+                self.output_writer("Returning to the Resonance Chamber.")
+                return
+
+            if not raw_command:
+                continue
+
+            parts = raw_command.split(maxsplit=1)
+            command = parts[0].casefold()
+            argument = parts[1].strip() if len(parts) == 2 else ""
+
+            if command not in available_commands:
+                self.output_writer("Unknown Archive command.")
+                self.output_writer(
+                    "Use /help to see the commands available here."
+                )
+                continue
+
+            if command == "/back" and not argument:
+                self.output_writer("Returning to the Resonance Chamber.")
+                return
+
+            if command == "/look" and not argument:
+                self._display_archive_index(block)
+                continue
+
+            if command == "/help" and not argument:
+                self._display_archive_help(capabilities)
+                continue
+
+            if command == "/read":
+                if not argument:
+                    self.output_writer(
+                        "Use /read <entry-id> to open an Archive entry."
+                    )
+                    continue
+                selected = entries_by_id.get(argument)
+                if selected is None:
+                    self.output_writer("That Archive entry is not available.")
+                    continue
+                self._display_archive_entry(selected)
+                continue
+
+            self.output_writer("Unknown Archive command.")
+            self.output_writer(
+                "Use /help to see the commands available here."
+            )
+
+    def _display_archive_index(self, block: "ArchiveContentBlock") -> None:
+        self.output_writer(block.title)
+        self.output_writer("")
+        write_wrapped_text(
+            self.output_writer,
+            "These are local read-only traces carried by this Nexus.",
+        )
+        write_wrapped_text(
+            self.output_writer,
+            "Archive entries open only when you choose /read <entry-id>.",
+        )
+        self.output_writer("")
+        for entry in block.entries:
+            sealed_label = " [sealed]" if entry.access == "sealed" else ""
+            self.output_writer(
+                f"  {entry.entry_id} — {entry.title}{sealed_label}"
+            )
+        self.output_writer("")
+        self.output_writer("Use /read <entry-id> to open an Archive entry.")
+        self.output_writer("Use /help to see Archive commands.")
+
+    def _display_archive_help(
+        self,
+        capabilities: tuple[_ArchiveSurfaceCapability, ...],
+    ) -> None:
+        self.output_writer("Resonance Archive commands")
+        for capability in capabilities:
+            self.output_writer(
+                f"  {capability.display_command} — {capability.help_text}"
+            )
+
+    def _display_archive_entry(self, entry: "ArchiveEntry") -> None:
+        self.output_writer(f"Archive entry — {entry.title}")
+        self.output_writer("")
+
+        if entry.access == "sealed":
+            self.output_writer("[sealed]")
+            for line in entry.poetic_indication:
+                write_wrapped_text(
+                    self.output_writer,
+                    line,
+                    indent="  ",
+                )
+            self.output_writer(
+                "This entry remains sealed. No deeper trace is shown."
+            )
+            self.output_writer("")
+            return
+
+        sections = (
+            ("poetic indication", entry.poetic_indication),
+            ("clear orientation", entry.clear_orientation),
+            ("deeper trace", entry.deeper_trace),
+        )
+        for label, lines in sections:
+            if not lines:
+                continue
+            self.output_writer(f"[{label}]")
+            for line in lines:
+                write_wrapped_text(
+                    self.output_writer,
+                    line,
+                    indent="  ",
+                )
+            self.output_writer("")
 
     def _leave_surface(self) -> ChamberRunResult:
         self.output_writer(

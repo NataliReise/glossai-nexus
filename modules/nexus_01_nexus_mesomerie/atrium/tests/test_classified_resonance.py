@@ -313,45 +313,45 @@ def test_surface_capability_and_help_matrices_are_identical() -> None:
             ResonanceMode.COMPOSE,
             _SurfacePhase.PRE_RUN,
             False,
-            ("/look", "/help", "/compose", "/quit"),
+            ("/look", "/help", "/archive", "/compose", "/quit"),
         ),
         (
             ResonanceMode.ANSWER,
             _SurfacePhase.PRE_RUN,
             False,
-            ("/look", "/help", "/answer", "/quit"),
+            ("/look", "/help", "/archive", "/answer", "/quit"),
         ),
         (
             ResonanceMode.COMPOSE,
             _SurfacePhase.PRE_RUN,
             False,
-            ("/look", "/help", "/results", "/compose", "/quit"),
+            ("/look", "/help", "/archive", "/results", "/compose", "/quit"),
             Path("/tmp/nexus-stable-result.md"),
         ),
         (
             ResonanceMode.ANSWER,
             _SurfacePhase.PRE_RUN,
             False,
-            ("/look", "/help", "/results", "/answer", "/quit"),
+            ("/look", "/help", "/archive", "/results", "/answer", "/quit"),
             Path("/tmp/nexus-stable-result.md"),
         ),
         (
             ResonanceMode.COMPOSE,
             _SurfacePhase.POST_RUN,
             True,
-            ("/look", "/help", "/trace", "/results", "/compose", "/quit"),
+            ("/look", "/help", "/archive", "/trace", "/results", "/compose", "/quit"),
         ),
         (
             ResonanceMode.ANSWER,
             _SurfacePhase.POST_RUN,
             True,
-            ("/look", "/help", "/trace", "/results", "/quit"),
+            ("/look", "/help", "/archive", "/trace", "/results", "/quit"),
         ),
         (
             ResonanceMode.BLOCKED_ANSWER_RECOVERY,
             _SurfacePhase.BLOCKED,
             False,
-            ("/look", "/help", "/quit"),
+            ("/look", "/help", "/archive", "/quit"),
         ),
     )
 
@@ -526,7 +526,7 @@ def test_blocked_surface_description_help_and_invalid_commands_are_safe() -> Non
     assert "no nearby Token will be selected automatically" in transcript
     assert "Restore the selected activation context and Token copy" in transcript
     assert "Resonance Chamber commands" in transcript
-    for visible_command in ("/look", "/help", "/quit"):
+    for visible_command in ("/look", "/help", "/archive", "/quit"):
         assert f"  {visible_command} —" in transcript
     for unavailable_command in ("/compose", "/answer", "/results", "/trace", "/cancel"):
         assert f"  {unavailable_command} —" not in transcript
@@ -598,7 +598,7 @@ def test_known_resonance_source_is_lazy_and_reread_only_by_results() -> None:
         result = controller()
 
     assert tuple(item.command for item in capabilities) == (
-        "/look", "/help", "/results", "/compose", "/quit"
+        "/look", "/help", "/archive", "/results", "/compose", "/quit"
     )
     assert reader.call_args_list == [call(source), call(source)]
     assert not result.completed
@@ -675,6 +675,8 @@ def test_blocked_known_source_never_enables_or_reads_results() -> None:
     capabilities = controller._surface_capabilities(_SurfacePhase.BLOCKED)
     with patch("atrium.classified_resonance.read_stable_resonance_result") as reader:
         assert not controller().completed
-    assert tuple(item.command for item in capabilities) == ("/look", "/help", "/quit")
+    assert tuple(item.command for item in capabilities) == (
+        "/look", "/help", "/archive", "/quit"
+    )
     reader.assert_not_called()
     assert str(source) not in "\n".join(output)

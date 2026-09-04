@@ -61,11 +61,24 @@ NEUTRAL_RUNTIME_FILES = frozenset(
             "first_spark_adapter.py", "known_source.py", "profiles.py",
             "resonance_adapter.py", "resonance_mode.py", "resonance_terminal.py",
             "runtime.py", "stable_result.py", "state.py", "terminal.py",
+            "terminal_text.py",
         )),
         *(Path("chambers/resonance") / name for name in (
-            "__init__.py", "choices.py", "compose.py", "composer.py", "flow.py",
-            "terminal_io.py",
+            "__init__.py", "archive_content.py", "choices.py", "compose.py",
+            "composer.py", "flow.py", "terminal_io.py",
         )),
+        Path(
+            "chambers/resonance/archive_blocks/builtin/"
+            "n01-resonance-archive-origin/manifest.json"
+        ),
+        *(
+            Path(
+                "chambers/resonance/archive_blocks/builtin/"
+                "n01-resonance-archive-origin/content"
+            )
+            / name
+            for name in ("001.json", "002.json", "003.json")
+        ),
         Path("first_spark/run_first_spark.py"),
         Path("first_spark/activation.example.json"),
         *(Path("first_spark/first_spark") / name for name in (
