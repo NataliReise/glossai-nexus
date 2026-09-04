@@ -406,6 +406,24 @@ select one Block path
 
 The Builder must refuse overwrite.
 
+For V0.1, the published destination is normalized from the validated identity:
+
+```text
+coupled/<block_id>/
+```
+
+A pre-existing destination with that name must be refused regardless of its
+directory name, contents, or apparent source.
+
+Staging must remain outside the two readable Archive roots until the staged copy
+has itself passed strict Block validation and constellation compatibility checks.
+Publication must reserve the final destination without replacing pre-existing
+data, then verify the complete resulting constellation.
+
+If final verification fails after publication, the Builder must roll back only
+the Block and empty storage root created by that coupling operation. It must not
+remove or rewrite pre-existing Blocks.
+
 The Builder must not modify private activation or Return state.
 
 ## 13. Constellation

@@ -142,9 +142,29 @@ def load_archive_constellation(
         required=False,
     )
 
+    return build_archive_constellation(
+        builtin_blocks=builtin_blocks,
+        coupled_blocks=coupled_blocks,
+    )
+
+
+def build_archive_constellation(
+    *,
+    builtin_blocks: tuple[ArchiveContentBlock, ...],
+    coupled_blocks: tuple[ArchiveContentBlock, ...],
+) -> ArchiveContentConstellation:
+    """Validate compatibility and build one deterministic Archive constellation."""
+
+    ordered_builtin = tuple(
+        sorted(builtin_blocks, key=lambda block: block.block_id)
+    )
+    ordered_coupled = tuple(
+        sorted(coupled_blocks, key=lambda block: block.block_id)
+    )
+
     seen_block_ids: set[str] = set()
     seen_entry_ids: dict[str, str] = {}
-    for block in (*builtin_blocks, *coupled_blocks):
+    for block in (*ordered_builtin, *ordered_coupled):
         if block.block_id in seen_block_ids:
             raise ArchiveBlockLoadError(
                 "Archive constellation contains duplicate block_id: "
@@ -163,8 +183,8 @@ def load_archive_constellation(
             seen_entry_ids[entry.entry_id] = block.block_id
 
     return ArchiveContentConstellation(
-        builtin_blocks=builtin_blocks,
-        coupled_blocks=coupled_blocks,
+        builtin_blocks=ordered_builtin,
+        coupled_blocks=ordered_coupled,
     )
 
 

@@ -16,8 +16,10 @@ for import_root in (PACKAGING_ROOT, NEXUS_ROOT):
         sys.path.insert(0, str(import_root))
 
 from nexus_builder_core import (  # noqa: E402
+    CouplingResult,
     NexusBuilderError,
     NexusConstellation,
+    couple_archive_block,
     inspect_archive_block,
     inspect_nexus,
     verify_nexus_constellation,
@@ -51,9 +53,19 @@ def _print_constellation(constellation: NexusConstellation) -> None:
         print("  (none)")
 
 
+def _print_coupling_result(result: CouplingResult) -> None:
+    print("Archive Block coupled.")
+    print(f"Block ID: {result.block.block_id}")
+    print(f"Title: {result.block.title}")
+    print(f"Destination: {result.destination}")
+    print(f"Archive Blocks: {len(result.constellation.block_ids)}")
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Inspect and verify a local Nexus 01 Archive constellation."
+        description=(
+            "Inspect, verify, and deliberately couple local Nexus 01 Archive Blocks."
+        )
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
@@ -81,9 +93,25 @@ def main(argv: list[str] | None = None) -> int:
     )
     _add_nexus_root_argument(verify_parser)
 
+    couple_parser = subparsers.add_parser(
+        "couple",
+        help="deliberately add one compatible Archive Block to coupled/",
+    )
+    couple_parser.add_argument("block", type=Path)
+    _add_nexus_root_argument(couple_parser)
+
     args = parser.parse_args(argv)
 
     try:
+        if args.command == "couple":
+            _print_coupling_result(
+                couple_archive_block(
+                    args.block,
+                    nexus_root=args.nexus_root,
+                )
+            )
+            return 0
+
         if args.command == "inspect-block":
             block = inspect_archive_block(args.block)
             print("Archive Block inspection passed.")
