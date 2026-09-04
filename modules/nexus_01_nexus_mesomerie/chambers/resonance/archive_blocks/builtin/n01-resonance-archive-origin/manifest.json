@@ -1,0 +1,9 @@
+{
+  "format": "nexus.chamber-block.v1",
+  "block_type": "archive-content",
+  "block_id": "n01-resonance-archive-origin",
+  "target_module": "nexus-01",
+  "target_chamber": "resonance",
+  "schema_version": 1,
+  "title": "Resonance Archive — Origin"
+}
