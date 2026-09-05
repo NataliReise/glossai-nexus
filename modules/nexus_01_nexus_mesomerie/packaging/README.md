@@ -8,9 +8,10 @@ The current gift product is the **Neutral Nexus Carrier**: an activation-ready
 Nexus with no completed activation and no preselected mode.
 
 Its explicit public runtime includes the built-in public-safe Resonance Archive
-Origin Block. It does not export additionally coupled Archive Blocks and is not a
-Carried Constellation export product. Slice G — Travelling Constellation Export
-is **DEFERRED AFTER GIFT**.
+Origin Block. The carrier also includes an unchanged copy of the repository's
+canonical MIT `LICENSE`. It does not export additionally coupled Archive Blocks
+and is not a Carried Constellation export product. Slice G — Travelling
+Constellation Export is **DEFERRED AFTER GIFT**.
 
 ```bash
 python3 modules/nexus_01_nexus_mesomerie/packaging/prepare_neutral_nexus_carrier.py \

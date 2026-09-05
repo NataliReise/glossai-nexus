@@ -18,6 +18,7 @@ import zipfile
 
 SCRIPT_PATH = Path(__file__).resolve()
 NEXUS_ROOT = SCRIPT_PATH.parents[1]
+REPO_ROOT = SCRIPT_PATH.parents[3]
 if str(NEXUS_ROOT) not in sys.path:
     sys.path.insert(0, str(NEXUS_ROOT))
 
@@ -30,6 +31,7 @@ from return_resonance.token import (  # noqa: E402
 SIDECAR_PATH = Path("invitation/resonance_token.v2.json")
 START_PATH = Path("START_HERE.sh")
 README_PATH = Path("README_FOR_RECIPIENT.md")
+LICENSE_PATH = Path("LICENSE")
 
 START_SCRIPT = r'''#!/usr/bin/env bash
 set -euo pipefail
@@ -106,6 +108,7 @@ NEUTRAL_RUNTIME_FILES = frozenset(
     }
 )
 GENERATED_FILES = frozenset({START_PATH, README_PATH})
+CARRIER_METADATA_FILES = frozenset({LICENSE_PATH})
 
 FORBIDDEN_NAMES = frozenset(
     {
@@ -162,7 +165,7 @@ def verify_carrier(
             )
 
     sidecar_present = (carrier_dir / SIDECAR_PATH).is_file()
-    allowed_files = NEUTRAL_RUNTIME_FILES | GENERATED_FILES
+    allowed_files = NEUTRAL_RUNTIME_FILES | GENERATED_FILES | CARRIER_METADATA_FILES
     if sidecar_present:
         allowed_files |= {SIDECAR_PATH}
     actual_files = {
@@ -192,6 +195,7 @@ def verify_carrier(
     _verify_forbidden_content(carrier_dir, result)
     _verify_launcher(carrier_dir, result)
     _verify_readme(carrier_dir, result)
+    _verify_license(carrier_dir, result)
     _verify_sidecar(carrier_dir, expected_token_source, result)
     _verify_runtime_import(carrier_dir, result)
     return result
@@ -328,6 +332,20 @@ def _verify_readme(carrier_dir: Path, result: CarrierVerificationResult) -> None
     ):
         if phrase not in text:
             result.add_error(f"Carrier README is missing recipient guidance: {phrase}")
+
+
+def _verify_license(carrier_dir: Path, result: CarrierVerificationResult) -> None:
+    license_path = carrier_dir / LICENSE_PATH
+    if not license_path.is_file():
+        return
+    try:
+        canonical_bytes = (REPO_ROOT / LICENSE_PATH).read_bytes()
+        carried_bytes = license_path.read_bytes()
+    except OSError as error:
+        result.add_error(f"Carrier LICENSE could not be verified: {error}")
+        return
+    if carried_bytes != canonical_bytes:
+        result.add_error("Carrier LICENSE differs from the canonical repository LICENSE")
 
 
 def _verify_sidecar(

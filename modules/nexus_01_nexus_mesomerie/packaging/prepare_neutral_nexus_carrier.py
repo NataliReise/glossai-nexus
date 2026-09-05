@@ -27,6 +27,7 @@ from return_resonance.token import (  # noqa: E402
     parse_resonance_token,
 )
 from verify_neutral_nexus_carrier import (  # noqa: E402
+    LICENSE_PATH,
     NEUTRAL_RUNTIME_FILES,
     README_PATH,
     SIDECAR_PATH,
@@ -129,6 +130,7 @@ def prepare_neutral_nexus_carrier(
         staged_carrier = stage_root / package_name
         staged_carrier.mkdir()
         _copy_runtime(staged_carrier)
+        _copy_license(staged_carrier)
         _write_text(staged_carrier / START_PATH, START_SCRIPT)
         _make_executable(staged_carrier / START_PATH)
         _write_text(staged_carrier / README_PATH, RECIPIENT_README)
@@ -204,6 +206,13 @@ def _copy_runtime(carrier_dir: Path) -> None:
         target = carrier_dir / relative
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source, target)
+
+
+def _copy_license(carrier_dir: Path) -> None:
+    source = REPO_ROOT / LICENSE_PATH
+    if not source.is_file():
+        raise NeutralCarrierError(f"Canonical repository LICENSE is missing: {source}")
+    shutil.copy2(source, carrier_dir / LICENSE_PATH)
 
 
 def _require_absent(*paths: Path | None) -> None:

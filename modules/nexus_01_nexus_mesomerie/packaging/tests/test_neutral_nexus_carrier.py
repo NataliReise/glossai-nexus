@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import os
 from pathlib import Path
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -28,6 +29,8 @@ from prepare_neutral_nexus_carrier import (  # noqa: E402
     prepare_neutral_nexus_carrier,
 )
 from verify_neutral_nexus_carrier import (  # noqa: E402
+    CARRIER_METADATA_FILES,
+    LICENSE_PATH,
     NEUTRAL_RUNTIME_FILES,
     SIDECAR_PATH,
     verify_carrier,
@@ -89,6 +92,62 @@ class NeutralNexusCarrierTests(unittest.TestCase):
             capture_output=True,
             text=True,
         )
+
+    def archive_carrier(self, carrier: Path, name: str) -> Path:
+        return Path(
+            shutil.make_archive(
+                str(self.root / name),
+                "zip",
+                root_dir=carrier.parent,
+                base_dir=carrier.name,
+            )
+        )
+
+    def test_carrier_contains_canonical_license(self) -> None:
+        result = self.build(zip_package=True)
+        canonical = NEXUS_ROOT.parents[1] / LICENSE_PATH
+        carried = result.carrier_path / LICENSE_PATH
+        self.assertEqual(CARRIER_METADATA_FILES, frozenset({LICENSE_PATH}))
+        self.assertNotIn(LICENSE_PATH, NEUTRAL_RUNTIME_FILES)
+        self.assertEqual(carried.read_bytes(), canonical.read_bytes())
+        self.assertTrue(verify_carrier(result.carrier_path).passed)
+        self.assertTrue(
+            result.zip_path and verify_carrier_zip(result.zip_path).passed
+        )
+
+    def test_missing_license_is_rejected_for_directory_and_zip(self) -> None:
+        result = self.build()
+        (result.carrier_path / LICENSE_PATH).unlink()
+        directory_verification = verify_carrier(result.carrier_path)
+        zip_verification = verify_carrier_zip(
+            self.archive_carrier(result.carrier_path, "missing-license")
+        )
+        for verification in (directory_verification, zip_verification):
+            self.assertFalse(verification.passed)
+            self.assertTrue(
+                any(
+                    "Missing carrier file: LICENSE" in error
+                    for error in verification.errors
+                )
+            )
+
+    def test_changed_license_is_rejected_for_directory_and_zip(self) -> None:
+        result = self.build()
+        (result.carrier_path / LICENSE_PATH).write_text(
+            "changed license\n", encoding="utf-8"
+        )
+        directory_verification = verify_carrier(result.carrier_path)
+        zip_verification = verify_carrier_zip(
+            self.archive_carrier(result.carrier_path, "changed-license")
+        )
+        for verification in (directory_verification, zip_verification):
+            self.assertFalse(verification.passed)
+            self.assertTrue(
+                any(
+                    "differs from the canonical" in error
+                    for error in verification.errors
+                )
+            )
 
     def test_carrier_without_token_has_exact_neutral_boundary(self) -> None:
         result = self.build()
