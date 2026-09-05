@@ -19,6 +19,7 @@ from chambers.resonance.compose import (  # noqa: E402
     build_resonance_token_v2,
 )
 import prepare_resonance_invitation as invitation_module  # noqa: E402
+import resonance_invitation_runtime as runtime_module  # noqa: E402
 from prepare_nexus_gift import PreparationError  # noqa: E402
 from prepare_resonance_invitation import (  # noqa: E402
     invitation_name,
@@ -135,6 +136,49 @@ class InvitationPreparationTests(unittest.TestCase):
         ):
             with self.assertRaisesRegex(RuntimeError, "injected staging failure"):
                 self.prepare()
+        self.assertFalse(
+            (self.invitation_root / invitation_name(ROUTE["return_slot_id"])).exists()
+        )
+        self.assertFalse(
+            (self.private_root / workspace_name(ROUTE["return_slot_id"])).exists()
+        )
+
+    def test_staged_workspace_rejects_changed_license(self) -> None:
+        real_builder = invitation_module.build_return_workspace
+
+        def build_with_changed_license(
+            workspace_dir: Path,
+            slot_document: dict[str, object],
+        ) -> Path:
+            built = real_builder(workspace_dir, slot_document)
+            (built / runtime_module.WORKSPACE_LICENSE_PATH).write_bytes(
+                b"changed license\n"
+            )
+            return built
+
+        with patch(
+            "prepare_resonance_invitation.build_return_workspace",
+            side_effect=build_with_changed_license,
+        ):
+            with self.assertRaisesRegex(PreparationError, "LICENSE differs"):
+                self.prepare()
+
+        self.assertFalse(
+            (self.invitation_root / invitation_name(ROUTE["return_slot_id"])).exists()
+        )
+        self.assertFalse(
+            (self.private_root / workspace_name(ROUTE["return_slot_id"])).exists()
+        )
+
+    def test_missing_canonical_license_fails_workspace_build(self) -> None:
+        with patch.object(
+            runtime_module,
+            "LICENSE_SOURCE_ROOT",
+            self.root / "missing-repository",
+        ):
+            with self.assertRaisesRegex(PreparationError, "Canonical repository LICENSE"):
+                self.prepare()
+
         self.assertFalse(
             (self.invitation_root / invitation_name(ROUTE["return_slot_id"])).exists()
         )

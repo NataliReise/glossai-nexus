@@ -15,6 +15,8 @@ import sys
 
 SCRIPT_PATH = Path(__file__).resolve()
 NEXUS_ROOT = SCRIPT_PATH.parents[1]
+REPOSITORY_ROOT = SCRIPT_PATH.parents[3]
+LICENSE_PATH = Path("LICENSE")
 if str(NEXUS_ROOT) not in sys.path:
     sys.path.insert(0, str(NEXUS_ROOT))
 
@@ -33,7 +35,15 @@ from verify_resonance_gift_package import TOKEN_PATH, verify_package  # noqa: E4
 
 
 EXPECTED_ROOT_ENTRIES = frozenset(
-    {Path("OPEN_RETURN.sh"), Path("README.md"), Path("incoming"), Path("results"), Path("private"), Path("runtime")}
+    {
+        LICENSE_PATH,
+        Path("OPEN_RETURN.sh"),
+        Path("README.md"),
+        Path("incoming"),
+        Path("results"),
+        Path("private"),
+        Path("runtime"),
+    }
 )
 EXPECTED_PRIVATE_FILES = frozenset({SLOT_PATH})
 FORBIDDEN_PARTS = frozenset(
@@ -103,6 +113,7 @@ def verify_workspace(
     for unexpected in sorted(actual_root - EXPECTED_ROOT_ENTRIES, key=str):
         result.add_error(f"Unexpected workspace root entry: {unexpected}")
 
+    _verify_license(workspace_dir, result)
     _verify_static_files(workspace_dir, result)
     slots = _verify_slot(workspace_dir, expected_identity, result)
     _verify_incoming(workspace_dir, result)
@@ -112,6 +123,27 @@ def verify_workspace(
     if gift_dir is not None:
         _verify_gift_separation(gift_dir, slots, result)
     return result
+
+
+def _verify_license(workspace_dir: Path, result: VerificationResult) -> None:
+    canonical = REPOSITORY_ROOT / LICENSE_PATH
+    carried = workspace_dir / LICENSE_PATH
+    if canonical.is_symlink() or not canonical.is_file():
+        result.add_error(
+            f"Canonical repository LICENSE is missing or not a regular file: {canonical}"
+        )
+        return
+    if carried.is_symlink() or not carried.is_file():
+        result.add_error("LICENSE is missing or not a regular file")
+        return
+    try:
+        canonical_bytes = canonical.read_bytes()
+        carried_bytes = carried.read_bytes()
+    except OSError as error:
+        result.add_error(f"Unable to read LICENSE: {error}")
+        return
+    if carried_bytes != canonical_bytes:
+        result.add_error("LICENSE differs from the canonical repository LICENSE")
 
 
 def _verify_gift_separation(

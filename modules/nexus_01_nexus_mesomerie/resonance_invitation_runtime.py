@@ -31,10 +31,17 @@ from return_resonance.token import (
 )
 
 
-NEXUS_ROOT = Path(__file__).resolve().parent
+SCRIPT_PATH = Path(__file__).resolve()
+NEXUS_ROOT = SCRIPT_PATH.parent
+LICENSE_SOURCE_ROOT = (
+    SCRIPT_PATH.parents[2]
+    if NEXUS_ROOT.name == "nexus_01_nexus_mesomerie"
+    else NEXUS_ROOT
+)
 TOKEN_PATH = Path("resonance_token.local.json")
 INVITATION_README_PATH = Path("README.md")
 WORKSPACE_SLOT_PATH = Path("private/return_slots.local.json")
+WORKSPACE_LICENSE_PATH = Path("LICENSE")
 SLOT_NOTE = "origin_trace_id identifies a local resonance arc, not a person"
 
 WORKSPACE_RUNTIME_SOURCE_FILES = frozenset(
@@ -374,9 +381,11 @@ def _build_return_workspace(
         raise InvitationPublicationError(
             f"Refusing to replace existing staged workspace: {workspace_dir}"
         )
+    license_source = _canonical_license_source()
     workspace_dir.mkdir()
     for directory in ("incoming", "results", "private", "runtime"):
         (workspace_dir / directory).mkdir()
+    shutil.copy2(license_source, workspace_dir / WORKSPACE_LICENSE_PATH)
     for relative in sorted(WORKSPACE_RUNTIME_SOURCE_FILES, key=str):
         source = NEXUS_ROOT / relative
         if not source.is_file():
@@ -394,6 +403,35 @@ def _build_return_workspace(
         encoding="utf-8",
     )
     return workspace_dir
+
+
+def _canonical_license_source() -> Path:
+    source = LICENSE_SOURCE_ROOT / WORKSPACE_LICENSE_PATH
+    if source.is_symlink() or not source.is_file():
+        raise InvitationPublicationError(
+            f"Canonical repository LICENSE is missing or not a regular file: {source}"
+        )
+    return source
+
+
+def _verify_workspace_license(path: Path) -> None:
+    source = _canonical_license_source()
+    carried = path / WORKSPACE_LICENSE_PATH
+    if carried.is_symlink() or not carried.is_file():
+        raise InvitationPublicationError(
+            "Staged private Return Workspace LICENSE is missing or not a regular file."
+        )
+    try:
+        source_bytes = source.read_bytes()
+        carried_bytes = carried.read_bytes()
+    except OSError as error:
+        raise InvitationPublicationError(
+            f"Unable to read staged private Return Workspace LICENSE: {error}"
+        ) from error
+    if carried_bytes != source_bytes:
+        raise InvitationPublicationError(
+            "Staged private Return Workspace LICENSE differs from canonical repository LICENSE."
+        )
 
 
 def _verify_invitation(path: Path, identity: dict[str, str]) -> None:
@@ -425,7 +463,15 @@ def _verify_workspace(
     identity: dict[str, str],
     result_file: str,
 ) -> None:
-    expected_root = {"OPEN_RETURN.sh", "README.md", "incoming", "results", "private", "runtime"}
+    expected_root = {
+        WORKSPACE_LICENSE_PATH.name,
+        "OPEN_RETURN.sh",
+        "README.md",
+        "incoming",
+        "results",
+        "private",
+        "runtime",
+    }
     if {entry.name for entry in path.iterdir()} != expected_root:
         raise InvitationPublicationError(
             "Staged private Return Workspace has an invalid root structure."
@@ -434,6 +480,7 @@ def _verify_workspace(
         raise InvitationPublicationError(
             "Staged private Return Workspace contains a symbolic link."
         )
+    _verify_workspace_license(path)
     actual_runtime = {
         entry.relative_to(path)
         for entry in (path / "runtime").rglob("*")

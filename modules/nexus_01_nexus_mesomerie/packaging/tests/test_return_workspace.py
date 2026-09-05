@@ -11,6 +11,7 @@ import unittest
 
 
 NEXUS_ROOT = Path(__file__).resolve().parents[2]
+REPOSITORY_ROOT = NEXUS_ROOT.parents[1]
 PACKAGING_ROOT = NEXUS_ROOT / "packaging"
 for import_root in (NEXUS_ROOT, PACKAGING_ROOT):
     if str(import_root) not in sys.path:
@@ -23,7 +24,7 @@ from return_resonance.resonance_render_bridge import (  # noqa: E402
 )
 from return_resonance.slots import load_return_slots  # noqa: E402
 from return_resonance.token import load_resonance_token  # noqa: E402
-from verify_return_workspace import verify_workspace  # noqa: E402
+from verify_return_workspace import LICENSE_PATH, verify_workspace  # noqa: E402
 
 
 ROUTE = RouteIdentity(
@@ -62,7 +63,11 @@ class ReturnWorkspaceTests(unittest.TestCase):
     def test_workspace_layout_identity_and_private_separation(self) -> None:
         self.assertEqual(
             {path.name for path in self.workspace.iterdir()},
-            {"OPEN_RETURN.sh", "README.md", "incoming", "results", "private", "runtime"},
+            {"LICENSE", "OPEN_RETURN.sh", "README.md", "incoming", "results", "private", "runtime"},
+        )
+        self.assertEqual(
+            (self.workspace / LICENSE_PATH).read_bytes(),
+            (REPOSITORY_ROOT / LICENSE_PATH).read_bytes(),
         )
         self.assertTrue(
             verify_workspace(
@@ -236,6 +241,25 @@ class ReturnWorkspaceTests(unittest.TestCase):
         )
         self.assertTrue(
             any("plain safe relative filename" in error for error in deeply_tampered.errors)
+        )
+
+    def test_independent_verifier_rejects_missing_license(self) -> None:
+        (self.workspace / LICENSE_PATH).unlink()
+
+        result = verify_workspace(self.workspace)
+
+        self.assertFalse(result.passed)
+        self.assertTrue(any("LICENSE" in error for error in result.errors))
+
+    def test_independent_verifier_rejects_changed_license(self) -> None:
+        (self.workspace / LICENSE_PATH).write_bytes(b"changed license\n")
+
+        result = verify_workspace(self.workspace)
+
+        self.assertFalse(result.passed)
+        self.assertIn(
+            "LICENSE differs from the canonical repository LICENSE",
+            result.errors,
         )
 
     def _write_artifact(self, path: Path) -> Path:
